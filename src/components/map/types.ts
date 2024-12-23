@@ -20,3 +20,28 @@ export interface MapSettings {
   theme: 'light' | 'dark';
   unit: 'metric' | 'imperial';
 }
+
+export interface MapFiltersProps {
+  filters: MapFilters;
+  setFilters: (filters: MapFilters) => void;
+  onApplyFilters: () => void;
+  className?: string;
+}
+
+export interface MapControlsProps {
+  controls: MapControls;
+  settings: MapSettings;
+  onControlChange: (control: keyof MapControls) => void;
+  onSettingChange: (setting: keyof MapSettings, value: any) => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onReset: () => void;
+  onLocateMe: () => void;
+  className?: string;
+}
+
+export interface Cluster {
+  count: number;
+  center: google.maps.LatLng;
+  parcels: Parcel[];
+}
