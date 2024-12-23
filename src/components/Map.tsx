@@ -3,7 +3,8 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { MapFilters } from './map/MapFilters';
 import { ParcelInfo } from './map/ParcelInfo';
 import { MapFilters as MapFiltersType } from './map/types';
-import { mockParcels, Parcel } from '@/utils/mockData';
+import { mockParcels } from '@/utils/mockData/parcels';
+import type { Parcel } from '@/utils/mockData/types';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 
