@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { ChatBubble } from "@/components/chat/ChatBubble";
 
 // Public Pages
 import Home from "./pages/Home";
@@ -44,6 +45,7 @@ const App = () => {
               <Route path="/developer/*" element={<DeveloperDashboard />} />
               <Route path="/admin/*" element={<AdminDashboard />} />
             </Routes>
+            <ChatBubble />
           </BrowserRouter>
           <Toaster />
           <Sonner />
