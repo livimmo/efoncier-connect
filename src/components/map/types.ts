@@ -1,5 +1,18 @@
 import { PropertyType, ZoneType } from "@/utils/mockData/types";
 
+export interface Cluster {
+  id: string;
+  center: {
+    lat: number;
+    lng: number;
+  };
+  count: number;
+  parcels: Parcel[];
+  city: string;
+  totalArea: number;
+  averagePrice: number;
+}
+
 export interface MapFilters {
   city: string;
   propertyType: PropertyType | '';
@@ -7,12 +20,6 @@ export interface MapFilters {
   size: [number, number];
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
   bank?: string;
-}
-
-export interface MapFiltersProps {
-  filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
-  onApplyFilters: () => void;
   className?: string;
 }
 
@@ -21,6 +28,11 @@ export interface MapControls {
   show3DView: boolean;
   showComparison: boolean;
   showHistory: boolean;
+}
+
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
 }
 
 export interface MapControlsProps {
@@ -35,7 +47,9 @@ export interface MapControlsProps {
   className?: string;
 }
 
-export interface MapSettings {
-  theme: 'light' | 'dark';
-  unit: 'metric' | 'imperial';
+export interface MapFiltersProps {
+  filters: MapFilters;
+  setFilters: (filters: MapFilters) => void;
+  onApplyFilters: () => void;
+  className?: string;
 }

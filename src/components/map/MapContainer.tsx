@@ -121,19 +121,21 @@ export const MapContainer = () => {
       <WelcomeDialog />
       
       <div className="flex-1 flex flex-col lg:flex-row relative">
-        <div className="w-full lg:w-1/3 xl:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
-          <MapFilters 
-            filters={filters}
-            setFilters={setFilters}
-            onApplyFilters={() => {
-              toast({
-                title: "Filtres appliqués",
-                description: `${filteredParcels.length} parcelles trouvées`,
-              });
-            }}
-            className="sticky top-4"
-          />
-        </div>
+        {controls.showFilters && (
+          <div className="w-full lg:w-1/3 xl:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
+            <MapFilters 
+              filters={filters}
+              setFilters={setFilters}
+              onApplyFilters={() => {
+                toast({
+                  title: "Filtres appliqués",
+                  description: `${filteredParcels.length} parcelles trouvées`,
+                });
+              }}
+              className="sticky top-4"
+            />
+          </div>
+        )}
 
         <div className="flex-1 relative h-[600px] lg:h-auto">
           <div className="absolute inset-0">
