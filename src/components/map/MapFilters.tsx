@@ -27,7 +27,6 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           size="sm" 
           onClick={() => setFilters({
             city: '',
-            owner: '',
             propertyType: '',
             zoneType: '',
             size: [0, 15000],
