@@ -6,4 +6,17 @@ export interface MapFilters {
   zoneType: ZoneType | '';
   size: [number, number];
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
+  bank?: string;
+}
+
+export interface MapControls {
+  showFilters: boolean;
+  show3DView: boolean;
+  showComparison: boolean;
+  showHistory: boolean;
+}
+
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
 }
