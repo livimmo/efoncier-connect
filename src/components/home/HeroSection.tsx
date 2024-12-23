@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center bg-hero-pattern bg-cover bg-center">
+    <section className="relative min-h-[90vh] flex items-center justify-center bg-hero-pattern bg-cover bg-center">
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
       <div className="container relative z-10 mx-auto px-4 text-center space-y-8 animate-fade-in">
         <h1 className="text-4xl md:text-6xl font-bold text-foreground">
@@ -19,21 +19,21 @@ export const HeroSection = () => {
         </p>
 
         <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-          <Button asChild size="lg" className="group">
+          <Button asChild size="lg" className="group hover:scale-105 transition-transform">
             <Link to="/map">
-              <MapPin className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+              <MapPin className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
               Explorer la Carte Interactive
             </Link>
           </Button>
-          <Button asChild size="lg" variant="secondary" className="group">
+          <Button asChild size="lg" variant="secondary" className="group hover:scale-105 transition-transform">
             <Link to="/payment">
               <CreditCard className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
               Effectuer un Paiement
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="group">
+          <Button asChild size="lg" variant="outline" className="group hover:scale-105 transition-transform">
             <Link to="/about">
-              <Info className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+              <Info className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
               En Savoir Plus
             </Link>
           </Button>
