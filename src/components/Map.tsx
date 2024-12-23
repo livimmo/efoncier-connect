@@ -191,12 +191,18 @@ const Map = () => {
 
           setMap(mapInstance);
           createMarkers(mockParcels, mapInstance);
+
+          // Notification de succès
+          toast({
+            title: "Carte chargée",
+            description: "La carte a été initialisée avec succès",
+          });
         }
       } catch (error) {
         console.error("Erreur lors du chargement de la carte:", error);
         toast({
           title: "Erreur",
-          description: "Impossible de charger la carte",
+          description: "Impossible de charger la carte Google Maps",
           variant: "destructive",
         });
       }
@@ -235,7 +241,7 @@ const Map = () => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-screen flex flex-col">
       <WelcomeDialog />
       
       <div className="flex-1 relative">
@@ -248,7 +254,8 @@ const Map = () => {
         <div className="flex-1 relative">
           <div 
             ref={mapRef} 
-            className="absolute inset-0"
+            className="absolute inset-0 w-full h-full"
+            style={{ minHeight: '500px' }}
           />
 
           <MapControls
