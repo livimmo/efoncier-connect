@@ -15,6 +15,7 @@ import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Notifications from "./pages/Notifications";
 import Register from "./pages/Register";
+import Payment from "./pages/Payment";
 
 // Authenticated Pages
 import Dashboard from "./pages/Dashboard";
@@ -39,6 +40,7 @@ const App = () => {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/payment" element={<Payment />} />
               
               {/* Authenticated Routes */}
               <Route path="/dashboard" element={<Dashboard />} />
