@@ -17,7 +17,8 @@ import Notifications from "./pages/Notifications";
 import Register from "./pages/Register";
 import Payment from "./pages/Payment";
 import Directory from "./pages/Directory";
-import Messages from "./pages/Messages"; // New import for Messages
+import Messages from "./pages/Messages";
+import Support from "./pages/Support";
 
 // Authenticated Pages
 import Dashboard from "./pages/Dashboard";
@@ -44,7 +45,8 @@ const App = () => {
               <Route path="/register" element={<Register />} />
               <Route path="/payment" element={<Payment />} />
               <Route path="/directory" element={<Directory />} />
-              <Route path="/messages" element={<Messages />} /> {/* New route for Messages */}
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/support" element={<Support />} />
               
               {/* Authenticated Routes */}
               <Route path="/dashboard" element={<Dashboard />} />
