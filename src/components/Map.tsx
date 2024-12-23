@@ -4,7 +4,7 @@ import { MapFilters } from './map/MapFilters';
 import { ParcelInfo } from './map/ParcelInfo';
 import { MapHeader } from './map/MapHeader';
 import { MapToolbar } from './map/MapToolbar';
-import { MapFilters as MapFiltersType } from './map/types';
+import { MapFilters as MapFiltersType } from '@/utils/mockData/types';
 import { mockParcels } from '@/utils/mockData/parcels';
 import type { Parcel } from '@/utils/mockData/types';
 
