@@ -5,6 +5,7 @@ import { HistoryStats } from "@/components/history/HistoryStats";
 import { HistoryCharts } from "@/components/history/HistoryCharts";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { Header } from "@/components/Header";
 
 export default function History() {
   const { toast } = useToast();
@@ -24,16 +25,21 @@ export default function History() {
   };
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
-      <HistoryHeader onExport={handleExport} />
-      <HistoryFilters filters={filters} onChange={setFilters} />
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <HistoryTable filters={filters} />
-        </div>
-        <div className="space-y-6">
-          <HistoryStats />
-          <HistoryCharts />
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <div className="flex-1">
+        <div className="container mx-auto py-8 space-y-8">
+          <HistoryHeader onExport={handleExport} />
+          <HistoryFilters filters={filters} onChange={setFilters} />
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <HistoryTable filters={filters} />
+            </div>
+            <div className="space-y-6">
+              <HistoryStats />
+              <HistoryCharts />
+            </div>
+          </div>
         </div>
       </div>
     </div>

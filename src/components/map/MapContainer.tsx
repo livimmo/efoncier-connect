@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 export const MapContainer = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const { toast } = useToast();
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   
   const [filters, setFilters] = useState<MapFiltersType>({
     city: '',
@@ -46,6 +47,54 @@ export const MapContainer = () => {
       ...prev,
       [setting]: value
     }));
+  };
+
+  const handleZoomIn = () => {
+    if (mapInstance) {
+      mapInstance.setZoom((mapInstance.getZoom() || 0) + 1);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (mapInstance) {
+      mapInstance.setZoom((mapInstance.getZoom() || 0) - 1);
+    }
+  };
+
+  const handleReset = () => {
+    if (mapInstance) {
+      mapInstance.setCenter({ lat: 33.5731, lng: -7.5898 });
+      mapInstance.setZoom(12);
+    }
+  };
+
+  const handleLocateMe = async () => {
+    if (mapInstance && navigator.geolocation) {
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        
+        mapInstance.setCenter(userLocation);
+        mapInstance.setZoom(15);
+        
+        toast({
+          title: "Localisation réussie",
+          description: "La carte a été centrée sur votre position",
+        });
+      } catch (error) {
+        toast({
+          title: "Erreur de localisation",
+          description: "Impossible d'obtenir votre position",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   const filterParcels = () => {
@@ -99,6 +148,10 @@ export const MapContainer = () => {
             settings={settings}
             onControlChange={handleControlChange}
             onSettingChange={handleSettingChange}
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+            onReset={handleReset}
+            onLocateMe={handleLocateMe}
           />
 
           {selectedParcel && (
