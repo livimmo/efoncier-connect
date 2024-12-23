@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
-import { Menu, Search } from "lucide-react";
+import { Menu, Search, Sun, Moon } from "lucide-react";
 import { MainNav } from "./MainNav";
 import { MainMenu } from "./navigation/MainMenu";
 import { QuickActions } from "./navigation/QuickActions";
@@ -50,6 +50,21 @@ export const Header = () => {
         <MainMenu />
 
         <div className="flex items-center space-x-4">
+          {/* Theme Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="hover:bg-accent hover:text-accent-foreground"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+
           {/* Search Icon */}
           <Button
             variant="ghost"
