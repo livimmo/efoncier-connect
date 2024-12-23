@@ -20,30 +20,32 @@ import AdminDashboard from "./pages/admin/Dashboard";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/notifications" element={<Notifications />} />
-          
-          {/* Authenticated Routes */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/taxpayer/*" element={<TaxpayerDashboard />} />
-          <Route path="/developer/*" element={<DeveloperDashboard />} />
-          <Route path="/admin/*" element={<AdminDashboard />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/notifications" element={<Notifications />} />
+            
+            {/* Authenticated Routes */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/taxpayer/*" element={<TaxpayerDashboard />} />
+            <Route path="/developer/*" element={<DeveloperDashboard />} />
+            <Route path="/admin/*" element={<AdminDashboard />} />
+          </Routes>
+        </BrowserRouter>
+        <Toaster />
+        <Sonner />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
