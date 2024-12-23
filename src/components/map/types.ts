@@ -7,6 +7,4 @@ export interface MapFilters {
   zoneType: ZoneType | '';
   size: [number, number];
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
-  price: [number, number];
-  availability: 'AVAILABLE' | 'PENDING' | 'DISPUTED' | 'UNAVAILABLE' | '';
 }
