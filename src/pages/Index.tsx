@@ -5,7 +5,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-16">
+      <main className="h-[calc(100vh-4rem)] pt-16">
         <Map />
       </main>
     </div>
