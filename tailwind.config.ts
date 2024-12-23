@@ -25,15 +25,15 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#C1272D", // Moroccan red
+          DEFAULT: "#C1272D", // Rouge marocain
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#006233", // Moroccan green
+          DEFAULT: "#006233", // Vert marocain
           foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#D4AF37", // Gold accent
+          DEFAULT: "#D4AF37", // Accent doré
           foreground: "#000000",
         },
         destructive: {
@@ -52,6 +52,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      backgroundImage: {
+        'hero-pattern': "url('/hero-bg.jpg')",
+        'geometric-pattern': "url('/geometric-bg.svg')",
       },
       borderRadius: {
         lg: "var(--radius)",
