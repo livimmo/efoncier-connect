@@ -4,6 +4,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import Directory from "./pages/Directory";
+import History from "./pages/History";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import Payment from "./pages/Payment";
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
   {
     path: "/directory",
     element: <Directory />,
+  },
+  {
+    path: "/history",
+    element: <History />,
   },
   {
     path: "/messages",
