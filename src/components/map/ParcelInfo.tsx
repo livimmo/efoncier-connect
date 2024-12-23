@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Parcel } from "@/utils/mockData";
-import { FileText, MessageSquare } from "lucide-react";
+import { FileText, MessageSquare, Receipt } from "lucide-react";
 
 interface ParcelInfoProps {
   parcel: Parcel;
@@ -67,10 +67,22 @@ export const ParcelInfo = ({ parcel, onClose }: ParcelInfoProps) => {
       <div className="flex gap-2">
         <Button 
           className="flex-1"
-          onClick={() => window.location.href = `/payment/${parcel.id}`}
+          onClick={() => window.location.href = parcel.taxStatus === 'PAID' 
+            ? `/receipt/${parcel.id}`
+            : `/payment/${parcel.id}`
+          }
         >
-          <FileText className="w-4 h-4 mr-2" />
-          Payer
+          {parcel.taxStatus === 'PAID' ? (
+            <>
+              <Receipt className="w-4 h-4 mr-2" />
+              Reçu
+            </>
+          ) : (
+            <>
+              <FileText className="w-4 h-4 mr-2" />
+              Payer
+            </>
+          )}
         </Button>
         <Button 
           variant="outline"
