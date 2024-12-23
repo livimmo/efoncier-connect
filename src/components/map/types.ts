@@ -1,5 +1,23 @@
 import { PropertyType, ZoneType } from "@/utils/mockData/types";
 
+export interface Parcel {
+  id: string;
+  title: string;
+  address: string;
+  city: string;
+  surface: number;
+  type: PropertyType;
+  zone: ZoneType;
+  taxStatus: 'PAID' | 'PENDING' | 'OVERDUE';
+  owner: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  titleDeedNumber: string;
+  ownerName: string;
+}
+
 export interface Cluster {
   id: string;
   center: {
@@ -20,7 +38,6 @@ export interface MapFilters {
   size: [number, number];
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
   bank?: string;
-  className?: string;
 }
 
 export interface MapControls {
