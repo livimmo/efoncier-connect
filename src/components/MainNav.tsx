@@ -1,15 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-interface MainNavProps {
+interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
 }
 
-export function MainNav({ className }: MainNavProps) {
+export function MainNav({ className, ...props }: MainNavProps) {
   const location = useLocation();
 
   return (
-    <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
+    <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)} {...props}>
       <Link
         to="/"
         className={cn(
