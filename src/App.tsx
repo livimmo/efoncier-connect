@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 // Public Pages
 import Home from "./pages/Home";
@@ -24,28 +25,30 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/register" element={<Register />} />
-            
-            {/* Authenticated Routes */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/taxpayer/*" element={<TaxpayerDashboard />} />
-            <Route path="/developer/*" element={<DeveloperDashboard />} />
-            <Route path="/admin/*" element={<AdminDashboard />} />
-          </Routes>
-        </BrowserRouter>
-        <Toaster />
-        <Sonner />
-      </TooltipProvider>
+      <ThemeProvider defaultTheme="system" storageKey="efoncier-theme">
+        <TooltipProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/register" element={<Register />} />
+              
+              {/* Authenticated Routes */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/taxpayer/*" element={<TaxpayerDashboard />} />
+              <Route path="/developer/*" element={<DeveloperDashboard />} />
+              <Route path="/admin/*" element={<AdminDashboard />} />
+            </Routes>
+          </BrowserRouter>
+          <Toaster />
+          <Sonner />
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };
