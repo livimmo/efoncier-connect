@@ -1,106 +1,60 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { 
-  Map, 
-  CreditCard, 
-  MessageSquare, 
-  HelpCircle, 
-  Users,
-  Settings,
-  LogOut
-} from "lucide-react";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-
-const menuItems = [
-  {
-    title: "Carte Interactive",
-    href: "/search",
-    icon: Map,
-    description: "Explorez les parcelles sur la carte interactive",
-    subItems: [
-      { title: "Toutes les parcelles", href: "/search" },
-      { title: "Recherche avancée", href: "/search/advanced" },
-      { title: "Parcelles récentes", href: "/search/recent" },
-    ]
-  },
-  {
-    title: "Paiements",
-    href: "/payment",
-    icon: CreditCard,
-    description: "Gérez vos paiements et transactions",
-    subItems: [
-      { title: "Paiements en attente", href: "/payment/pending" },
-      { title: "Historique", href: "/payment/history" },
-      { title: "Régler une taxe", href: "/payment/new" },
-    ]
-  },
-  {
-    title: "Messages",
-    href: "/messages",
-    icon: MessageSquare,
-    description: "Consultez vos messages et conversations",
-    subItems: [
-      { title: "Boîte de réception", href: "/messages" },
-      { title: "Nouveau message", href: "/messages/new" },
-      { title: "Archivés", href: "/messages/archived" },
-    ]
-  },
-  {
-    title: "Support",
-    href: "/support",
-    icon: HelpCircle,
-    description: "Obtenez de l'aide et consultez la FAQ",
-    subItems: [
-      { title: "FAQ", href: "/support/faq" },
-      { title: "Contact", href: "/support/contact" },
-      { title: "Tutoriels", href: "/support/tutorials" },
-    ]
-  }
-];
+import { Map, CreditCard, MessageSquare, HelpCircle, History } from "lucide-react";
 
 export function MainMenu() {
   const location = useLocation();
 
+  const menuItems = [
+    {
+      href: "/map",
+      label: "Carte Interactive",
+      icon: Map,
+      description: "Explorez les parcelles sur la carte interactive"
+    },
+    {
+      href: "/payment",
+      label: "Paiements",
+      icon: CreditCard,
+      description: "Gérez vos paiements et transactions"
+    },
+    {
+      href: "/history",
+      label: "Historique",
+      icon: History,
+      description: "Consultez l'historique de vos transactions"
+    },
+    {
+      href: "/messages",
+      label: "Messages",
+      icon: MessageSquare,
+      description: "Consultez vos messages et conversations"
+    },
+    {
+      href: "/support",
+      label: "Support",
+      icon: HelpCircle,
+      description: "Obtenez de l'aide et consultez la FAQ"
+    }
+  ];
+
   return (
-    <NavigationMenu className="hidden md:flex">
-      <NavigationMenuList>
-        {menuItems.map((item) => (
-          <NavigationMenuItem key={item.href}>
-            <NavigationMenuTrigger className="h-10">
-              <item.icon className="mr-2 h-4 w-4" />
-              {item.title}
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                {item.subItems.map((subItem) => (
-                  <li key={subItem.href}>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        to={subItem.href}
-                        className={cn(
-                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                          location.pathname === subItem.href && "bg-accent"
-                        )}
-                      >
-                        <div className="text-sm font-medium leading-none">
-                          {subItem.title}
-                        </div>
-                      </Link>
-                    </NavigationMenuLink>
-                  </li>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        ))}
-      </NavigationMenuList>
-    </NavigationMenu>
+    <nav className="hidden md:flex items-center space-x-6">
+      {menuItems.map((item) => (
+        <Link
+          key={item.href}
+          to={item.href}
+          className={cn(
+            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group",
+            location.pathname === item.href 
+              ? "text-primary after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-0.5 after:bg-primary" 
+              : "text-muted-foreground"
+          )}
+        >
+          <item.icon className="h-5 w-5" />
+          <span>{item.label}</span>
+        </Link>
+      ))}
+    </nav>
   );
 }

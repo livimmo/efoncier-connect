@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Home, Map, CreditCard, MessageSquare, HelpCircle, Users } from "lucide-react";
+import { Map, CreditCard, MessageSquare, HelpCircle, History, Users } from "lucide-react";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -11,12 +11,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
 
   const navItems = [
     {
-      href: "/",
-      label: "Accueil",
-      icon: Home
-    },
-    {
-      href: "/search",
+      href: "/map",
       label: "Carte",
       icon: Map
     },
@@ -26,9 +21,9 @@ export function MainNav({ className, ...props }: MainNavProps) {
       icon: CreditCard
     },
     {
-      href: "/directory",
-      label: "Annuaire",
-      icon: Users
+      href: "/history",
+      label: "Historique",
+      icon: History
     },
     {
       href: "/messages",
@@ -45,7 +40,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
   return (
     <nav 
       className={cn(
-        "flex items-center space-x-4 lg:space-x-6", 
+        "flex items-center space-x-6 lg:space-x-8", 
         className
       )} 
       {...props}
@@ -55,13 +50,13 @@ export function MainNav({ className, ...props }: MainNavProps) {
           key={href}
           to={href}
           className={cn(
-            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary",
+            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group",
             location.pathname === href 
-              ? "text-primary" 
+              ? "text-primary after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-0.5 after:bg-primary" 
               : "text-muted-foreground"
           )}
         >
-          <Icon className="h-4 w-4" />
+          <Icon className="h-5 w-5" />
           <span>{label}</span>
         </Link>
       ))}
