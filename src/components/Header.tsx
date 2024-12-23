@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { MainNav } from "./MainNav";
 import { MainMenu } from "./navigation/MainMenu";
 import { QuickActions } from "./navigation/QuickActions";
 import { UserMenu } from "./navigation/UserMenu";
 import { useTheme } from "./theme/theme-provider";
-import { SearchBar } from "./search/SearchBar";
+import { SearchModal } from "./search/SearchModal";
+import { useState } from "react";
 
 export const Header = () => {
   const { theme, setTheme } = useTheme();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   const handleLogout = () => {
     // Implement logout logic
@@ -47,24 +49,38 @@ export const Header = () => {
         {/* Main Menu */}
         <MainMenu />
 
-        {/* Search Bar */}
-        <div className="flex-1 max-w-2xl mx-4">
-          <SearchBar />
+        <div className="flex items-center space-x-4">
+          {/* Search Icon */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSearchOpen(true)}
+            className="hover:bg-accent hover:text-accent-foreground"
+          >
+            <Search className="h-5 w-5" />
+            <span className="sr-only">Rechercher</span>
+          </Button>
+
+          {/* Quick Actions */}
+          <QuickActions
+            hasNotifications={true}
+            hasMessages={false}
+            hasPendingPayments={true}
+          />
+
+          {/* User Menu */}
+          <UserMenu
+            isAuthenticated={false}
+            onLogout={handleLogout}
+          />
         </div>
-
-        {/* Quick Actions */}
-        <QuickActions
-          hasNotifications={true}
-          hasMessages={false}
-          hasPendingPayments={true}
-        />
-
-        {/* User Menu */}
-        <UserMenu
-          isAuthenticated={false}
-          onLogout={handleLogout}
-        />
       </div>
+
+      {/* Search Modal */}
+      <SearchModal 
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </header>
   );
 };
