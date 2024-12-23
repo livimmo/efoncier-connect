@@ -32,8 +32,8 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     setTimeout(() => {
       setIsLoading(false);
       toast({
-        title: "Success",
-        description: "You have successfully logged in.",
+        title: "Succès",
+        description: "Vous êtes maintenant connecté.",
       });
       onOpenChange(false);
       navigate("/dashboard");
@@ -44,19 +44,19 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Welcome back to eFoncier</DialogTitle>
+          <DialogTitle>Bienvenue sur eFoncier</DialogTitle>
           <DialogDescription>
-            Choose your preferred login method below
+            Choisissez votre méthode de connexion préférée
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-6">
           <form onSubmit={onSubmit}>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Adresse email</Label>
                 <Input
                   id="email"
-                  placeholder="name@example.com"
+                  placeholder="nom@exemple.com"
                   type="email"
                   autoCapitalize="none"
                   autoComplete="email"
@@ -65,7 +65,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Mot de passe</Label>
                 <Input
                   id="password"
                   type="password"
@@ -78,7 +78,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                 {isLoading && (
                   <Mail className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Sign In with Email
+                Se connecter avec Email
               </Button>
             </div>
           </form>
@@ -88,7 +88,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
+                Ou continuer avec
               </span>
             </div>
           </div>
@@ -111,7 +111,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
             </Button>
           </div>
           <div className="text-center text-sm">
-            Don't have an account?{" "}
+            Vous n'avez pas de compte ?{" "}
             <Button
               variant="link"
               className="p-0"
@@ -120,7 +120,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                 navigate("/register");
               }}
             >
-              Register here
+              Inscrivez-vous ici
             </Button>
           </div>
         </div>
