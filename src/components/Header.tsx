@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { 
   Bell, 
@@ -11,9 +11,10 @@ import {
   Search,
   MessageSquare,
   CreditCard,
-  Map,
-  HelpCircle,
-  ChevronDown
+  X,
+  ChevronDown,
+  MapPin,
+  Filter
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
@@ -28,6 +29,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "./ui/input";
+import { mockParcels } from "@/utils/mockData";
+
+const searchPlaceholders = [
+  "Recherchez par titre foncier...",
+  "Trouvez un terrain par ville...",
+  "Recherchez un propriétaire...",
+];
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -35,6 +43,49 @@ export const Header = () => {
   const { theme, setTheme } = useTheme();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(searchPlaceholders[0]);
+  const [searchResults, setSearchResults] = useState<typeof mockParcels>([]);
+
+  // Rotate placeholders
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPlaceholder(prev => {
+        const currentIndex = searchPlaceholders.indexOf(prev);
+        return searchPlaceholders[(currentIndex + 1) % searchPlaceholders.length];
+      });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.length > 2) {
+      const results = mockParcels.filter(parcel => 
+        parcel.titleDeedNumber.toLowerCase().includes(query.toLowerCase()) ||
+        parcel.ownerName.toLowerCase().includes(query.toLowerCase()) ||
+        parcel.title.toLowerCase().includes(query.toLowerCase()) ||
+        parcel.city.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(results);
+      setShowSearchResults(true);
+    } else {
+      setShowSearchResults(false);
+    }
+  };
+
+  // Handle click outside search results
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const searchContainer = document.getElementById("search-container");
+      if (searchContainer && !searchContainer.contains(event.target as Node)) {
+        setShowSearchResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -53,29 +104,84 @@ export const Header = () => {
         </Sheet>
         
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <Link to="/" className="flex items-center space-x-2">
-            <img src="/logo.svg" alt="eFoncier" className="h-8 w-auto" />
-            <span className="hidden font-bold sm:inline-block">
-              eFoncier
-            </span>
-          </Link>
-        </div>
+        <Link 
+          to="/" 
+          className="flex items-center space-x-2 transition-transform hover:scale-105"
+        >
+          <img src="/logo.svg" alt="eFoncier" className="h-8 w-auto" />
+          <span className="hidden font-bold sm:inline-block">
+            eFoncier
+          </span>
+        </Link>
 
-        {/* Main Navigation */}
-        <MainNav className="mx-6 hidden md:flex" />
-        
         {/* Search Bar */}
-        <div className="hidden md:flex flex-1 max-w-md mx-4">
+        <div 
+          id="search-container"
+          className="relative hidden md:flex flex-1 max-w-2xl mx-4"
+        >
           <div className="relative w-full">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Rechercher une parcelle, ville, quartier..."
+              placeholder={currentPlaceholder}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 w-full"
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-9 pr-12 w-full transition-all focus:ring-2 focus:ring-primary"
             />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-2 h-6 w-6"
+                onClick={() => {
+                  setSearchQuery("");
+                  setShowSearchResults(false);
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
           </div>
+
+          {/* Search Results Dropdown */}
+          {showSearchResults && (
+            <div className="absolute top-full left-0 w-full mt-1 bg-background border rounded-lg shadow-lg overflow-hidden">
+              {searchResults.length > 0 ? (
+                <div className="max-h-[400px] overflow-y-auto">
+                  {searchResults.map((result) => (
+                    <div
+                      key={result.id}
+                      className="p-3 hover:bg-accent cursor-pointer border-b last:border-0 flex items-center justify-between"
+                      onClick={() => {
+                        navigate(`/parcels/${result.id}`);
+                        setShowSearchResults(false);
+                      }}
+                    >
+                      <div>
+                        <h4 className="font-medium">{result.title}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {result.titleDeedNumber} - {result.city}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          Voir
+                        </Button>
+                        <Button size="sm" variant="outline">
+                          <CreditCard className="h-4 w-4 mr-1" />
+                          Payer
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-4 text-center text-muted-foreground">
+                  Aucun résultat trouvé
+                </div>
+              )}
+            </div>
+          )}
         </div>
         
         {/* Right Side Actions */}
