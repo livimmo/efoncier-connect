@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Map, CreditCard, MessageSquare, HelpCircle, History, Users } from "lucide-react";
+import { Map, CreditCard, MessageSquare, HelpCircle, History } from "lucide-react";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
