@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Home, Map, CreditCard, MessageSquare, HelpCircle } from "lucide-react";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -8,44 +9,57 @@ interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
 export function MainNav({ className, ...props }: MainNavProps) {
   const location = useLocation();
 
+  const navItems = [
+    {
+      href: "/",
+      label: "Accueil",
+      icon: Home
+    },
+    {
+      href: "/search",
+      label: "Carte",
+      icon: Map
+    },
+    {
+      href: "/payment",
+      label: "Paiements",
+      icon: CreditCard
+    },
+    {
+      href: "/messages",
+      label: "Messages",
+      icon: MessageSquare
+    },
+    {
+      href: "/support",
+      label: "Support",
+      icon: HelpCircle
+    }
+  ];
+
   return (
-    <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)} {...props}>
-      <Link
-        to="/"
-        className={cn(
-          "text-sm font-medium transition-colors hover:text-primary",
-          location.pathname === "/" && "text-primary"
-        )}
-      >
-        Accueil
-      </Link>
-      <Link
-        to="/search"
-        className={cn(
-          "text-sm font-medium transition-colors hover:text-primary",
-          location.pathname === "/search" && "text-primary"
-        )}
-      >
-        Recherche
-      </Link>
-      <Link
-        to="/about"
-        className={cn(
-          "text-sm font-medium transition-colors hover:text-primary",
-          location.pathname === "/about" && "text-primary"
-        )}
-      >
-        À propos
-      </Link>
-      <Link
-        to="/contact"
-        className={cn(
-          "text-sm font-medium transition-colors hover:text-primary",
-          location.pathname === "/contact" && "text-primary"
-        )}
-      >
-        Contact
-      </Link>
+    <nav 
+      className={cn(
+        "flex items-center space-x-4 lg:space-x-6", 
+        className
+      )} 
+      {...props}
+    >
+      {navItems.map(({ href, label, icon: Icon }) => (
+        <Link
+          key={href}
+          to={href}
+          className={cn(
+            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary",
+            location.pathname === href 
+              ? "text-primary" 
+              : "text-muted-foreground"
+          )}
+        >
+          <Icon className="h-4 w-4" />
+          <span>{label}</span>
+        </Link>
+      ))}
     </nav>
   );
 }
