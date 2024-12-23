@@ -8,12 +8,12 @@ import {
 } from "../ui/select";
 import { Slider } from "../ui/slider";
 import { Input } from "../ui/input";
-import { Filter } from "lucide-react";
-import { MapFilters as MapFiltersType } from "./types";
+import { MapFilters as MapFiltersType } from "@/utils/mockData/types";
+import { Dispatch, SetStateAction } from "react";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
-  setFilters: (filters: MapFiltersType) => void;
+  setFilters: Dispatch<SetStateAction<MapFiltersType>>;
   onApplyFilters: () => void;
 }
 
@@ -27,11 +27,15 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           size="sm" 
           onClick={() => setFilters({
             city: '',
-            owner: '',
+            district: '',
             propertyType: '',
             zoneType: '',
             size: [0, 15000],
             status: '',
+            taxStatus: '',
+            priceRange: [0, 5000000],
+            titleDeedNumber: '',
+            owner: ''
           })}
         >
           Réinitialiser

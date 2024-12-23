@@ -6,6 +6,7 @@ export const mockParcels: Parcel[] = [
     title: 'Terrain Industriel Ain Sebaa',
     titleDeedNumber: 'TF123456/C',
     ownerName: 'Ahmed El Fassi',
+    owner: 'user_1', // Added owner ID
     address: '123 Rue de l\'Industrie',
     city: 'casablanca',
     district: 'Ain Sebaa',
@@ -23,6 +24,7 @@ export const mockParcels: Parcel[] = [
     title: 'Lot Résidentiel Anfa',
     titleDeedNumber: 'TF789012/C',
     ownerName: 'Mohammed Alami',
+    owner: 'user_2', // Added owner ID
     address: '45 Boulevard d\'Anfa',
     city: 'casablanca',
     district: 'Anfa',
@@ -39,6 +41,7 @@ export const mockParcels: Parcel[] = [
     title: 'Zone Commerciale Maarif',
     titleDeedNumber: 'TF345678/C',
     ownerName: 'Société XYZ',
+    owner: 'user_3', // Added owner ID
     address: '78 Rue du Commerce',
     city: 'casablanca',
     district: 'Maarif',

@@ -25,7 +25,8 @@ const Map = () => {
     status: '',
     taxStatus: '',
     priceRange: [0, 5000000],
-    titleDeedNumber: ''
+    titleDeedNumber: '',
+    owner: '' // Added missing owner property
   });
 
   const getMarkerColor = (parcel: Parcel) => {
@@ -116,6 +117,7 @@ const Map = () => {
       if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
       if (parcel.price && (parcel.price < filters.priceRange[0] || parcel.price > filters.priceRange[1])) return false;
       if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
+      if (filters.owner && parcel.owner !== filters.owner) return false;
       return true;
     });
 
