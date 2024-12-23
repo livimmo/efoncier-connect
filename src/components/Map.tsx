@@ -3,6 +3,8 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { MapFilters } from './map/MapFilters';
 import { ParcelInfo } from './map/ParcelInfo';
 import { MapControls } from './map/MapControls';
+import { WelcomeDialog } from './map/WelcomeDialog';
+import { PartnersCarousel } from './map/PartnersCarousel';
 import { MapFilters as MapFiltersType, MapControls as MapControlsType, MapSettings } from './map/types';
 import { mockParcels } from '@/utils/mockData/parcels';
 import type { Parcel } from '@/utils/mockData/types';
@@ -233,37 +235,43 @@ const Map = () => {
   };
 
   return (
-    <div className="h-full flex">
-      <MapFilters 
-        filters={filters}
-        setFilters={setFilters}
-        onApplyFilters={filterParcels}
-      />
-
+    <div className="h-full flex flex-col">
+      <WelcomeDialog />
+      
       <div className="flex-1 relative">
-        <div 
-          ref={mapRef} 
-          className="absolute inset-0"
+        <MapFilters 
+          filters={filters}
+          setFilters={setFilters}
+          onApplyFilters={filterParcels}
         />
 
-        <MapControls
-          controls={controls}
-          settings={settings}
-          onControlChange={handleControlChange}
-          onSettingChange={handleSettingChange}
-          onZoomIn={handleZoomIn}
-          onZoomOut={handleZoomOut}
-          onReset={handleReset}
-          onLocateMe={handleLocateMe}
-        />
-
-        {selectedParcel && (
-          <ParcelInfo 
-            parcel={selectedParcel}
-            onClose={() => setSelectedParcel(null)}
+        <div className="flex-1 relative">
+          <div 
+            ref={mapRef} 
+            className="absolute inset-0"
           />
-        )}
+
+          <MapControls
+            controls={controls}
+            settings={settings}
+            onControlChange={handleControlChange}
+            onSettingChange={handleSettingChange}
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+            onReset={handleReset}
+            onLocateMe={handleLocateMe}
+          />
+
+          {selectedParcel && (
+            <ParcelInfo 
+              parcel={selectedParcel}
+              onClose={() => setSelectedParcel(null)}
+            />
+          )}
+        </div>
       </div>
+
+      <PartnersCarousel />
     </div>
   );
 };
