@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Slider } from "./ui/slider";
+import { mockParcels, Parcel } from '@/utils/mockData';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 
@@ -26,13 +27,35 @@ interface MapFilters {
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const [filters, setFilters] = useState<MapFilters>({
     city: '',
     owner: '',
     propertyType: '',
     zoneType: '',
-    size: [0, 10000],
+    size: [0, 15000],
   });
+
+  const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
+    // Clear existing markers
+    markers.forEach(marker => marker.setMap(null));
+    
+    const newMarkers = parcels.map(parcel => {
+      const marker = new google.maps.Marker({
+        position: parcel.location,
+        map: map,
+        title: parcel.title,
+      });
+
+      marker.addListener("click", () => {
+        console.log("Parcelle sélectionnée:", parcel);
+      });
+
+      return marker;
+    });
+
+    setMarkers(newMarkers);
+  };
 
   useEffect(() => {
     const initMap = async () => {
@@ -56,17 +79,8 @@ export const Map = () => {
             ],
           });
 
-          const marker = new google.maps.Marker({
-            position: { lat: 33.5731, lng: -7.5898 },
-            map: mapInstance,
-            title: "Parcelle TF#123456",
-          });
-
-          marker.addListener("click", () => {
-            console.log("Parcelle sélectionnée");
-          });
-
           setMap(mapInstance);
+          createMarkers(mockParcels, mapInstance);
         }
       } catch (error) {
         console.error("Erreur lors du chargement de la carte:", error);
@@ -75,6 +89,20 @@ export const Map = () => {
 
     initMap();
   }, []);
+
+  const filterParcels = () => {
+    if (!map) return;
+
+    const filteredParcels = mockParcels.filter(parcel => {
+      if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
+      if (filters.propertyType && parcel.type !== filters.propertyType) return false;
+      if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
+      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+      return true;
+    });
+
+    createMarkers(filteredParcels, map);
+  };
 
   return (
     <div className="h-full flex">
@@ -93,8 +121,8 @@ export const Map = () => {
             <SelectContent>
               <SelectItem value="casablanca">Casablanca</SelectItem>
               <SelectItem value="rabat">Rabat</SelectItem>
-              <SelectItem value="marrakech">Marrakech</SelectItem>
               <SelectItem value="tanger">Tanger</SelectItem>
+              <SelectItem value="benslimane">Benslimane</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -142,8 +170,8 @@ export const Map = () => {
         <div className="space-y-2">
           <label className="text-sm font-medium">Superficie (m²)</label>
           <Slider
-            defaultValue={[0, 10000]}
-            max={10000}
+            defaultValue={[0, 15000]}
+            max={15000}
             step={100}
             onValueChange={(value) => setFilters({ ...filters, size: value as [number, number] })}
           />
@@ -155,9 +183,7 @@ export const Map = () => {
 
         <Button 
           className="w-full"
-          onClick={() => {
-            console.log("Filtres appliqués:", filters);
-          }}
+          onClick={filterParcels}
         >
           Appliquer les filtres
         </Button>
