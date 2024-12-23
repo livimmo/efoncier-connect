@@ -136,44 +136,57 @@ export const MapContainer = () => {
   }, [filters]);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <WelcomeDialog />
       
-      <div className="flex-1 relative">
-        <MapFilters 
-          filters={filters}
-          setFilters={setFilters}
-          onApplyFilters={filterParcels}
-        />
+      <div className="flex-1 flex flex-col lg:flex-row relative">
+        <div className="w-full lg:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
+          <MapFilters 
+            filters={filters}
+            setFilters={setFilters}
+            onApplyFilters={filterParcels}
+            className="sticky top-4"
+          />
+        </div>
 
         <div className="flex-1 relative">
-          <GoogleMap 
-            onMarkerClick={handleParcelSelect}
-            parcels={filteredParcels}
-            theme={settings.theme}
-          />
+          <div className="absolute inset-0">
+            <GoogleMap 
+              onMarkerClick={handleParcelSelect}
+              parcels={filteredParcels}
+              theme={settings.theme}
+            />
+          </div>
 
-          <MapControls
-            controls={controls}
-            settings={settings}
-            onControlChange={handleControlChange}
-            onSettingChange={handleSettingChange}
-            onZoomIn={handleZoomIn}
-            onZoomOut={handleZoomOut}
-            onReset={handleReset}
-            onLocateMe={handleLocateMe}
-          />
+          <div className="absolute top-4 right-4 z-10">
+            <MapControls
+              controls={controls}
+              settings={settings}
+              onControlChange={handleControlChange}
+              onSettingChange={handleSettingChange}
+              onZoomIn={handleZoomIn}
+              onZoomOut={handleZoomOut}
+              onReset={handleReset}
+              onLocateMe={handleLocateMe}
+              className="bg-background/80 backdrop-blur-sm rounded-lg shadow-lg p-2"
+            />
+          </div>
 
           {selectedParcel && (
-            <ParcelInfo 
-              parcel={selectedParcel}
-              onClose={() => setSelectedParcel(null)}
-            />
+            <div className="absolute bottom-4 left-4 right-4 lg:left-auto lg:right-4 lg:w-96 z-20">
+              <ParcelInfo 
+                parcel={selectedParcel}
+                onClose={() => setSelectedParcel(null)}
+                className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg"
+              />
+            </div>
           )}
         </div>
       </div>
 
-      <PartnersCarousel />
+      <div className="bg-background/95 backdrop-blur-sm border-t">
+        <PartnersCarousel />
+      </div>
     </div>
   );
 };
