@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { Eye, Pin, Archive, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MessagesListProps {
@@ -78,13 +78,24 @@ export const MessagesList = ({ onSelectConversation, selectedConversationId }: M
                 <span>{conversation.lastMessage}</span>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onSelectConversation(conversation.id)}
-            >
-              <Eye className="h-4 w-4" />
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onSelectConversation(conversation.id)}
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Pin className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Archive className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Flag className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       ))}
