@@ -17,3 +17,23 @@ export interface Parcel {
     lng: number;
   };
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'TAXPAYER' | 'DEVELOPER' | 'ADMIN';
+  phone: string;
+  parcels?: string[];
+}
+
+export interface Transaction {
+  id: string;
+  parcelId: string;
+  amount: number;
+  date: string;
+  type: 'TAX_PAYMENT' | 'SALE' | 'PURCHASE';
+  status: 'COMPLETED' | 'PENDING' | 'FAILED';
+  buyerId?: string;
+  sellerId?: string;
+}
