@@ -1,18 +1,16 @@
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { Parcel } from "@/utils/mockData/types";
+import { Parcel } from "@/utils/mockData";
 import { FileText, MessageSquare, Receipt } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
-  className?: string;
 }
 
-export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
+export const ParcelInfo = ({ parcel, onClose }: ParcelInfoProps) => {
   return (
-    <Card className={cn("p-4 space-y-4", className)}>
+    <Card className="absolute top-4 right-4 w-80 p-4 space-y-4">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-semibold">{parcel.title}</h3>

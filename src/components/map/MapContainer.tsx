@@ -97,6 +97,33 @@ export const MapContainer = () => {
     }
   };
 
+  const filterParcels = () => {
+    const filteredParcels = mockParcels.filter(parcel => {
+      if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
+      if (filters.propertyType && parcel.type !== filters.propertyType) return false;
+      if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
+      if (filters.status && parcel.taxStatus !== filters.status) return false;
+      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+      return true;
+    });
+    
+    toast({
+      title: "Filtres appliqués",
+      description: `${filteredParcels.length} parcelles trouvées`,
+    });
+
+    return filteredParcels;
+  };
+
+  const handleParcelSelect = (parcel: Parcel) => {
+    setSelectedParcel(parcel);
+    toast({
+      title: "Parcelle sélectionnée",
+      description: `${parcel.title} - ${parcel.surface}m²`,
+    });
+  };
+
+  // Utilisation de useMemo pour éviter les calculs inutiles
   const filteredParcels = useMemo(() => {
     return mockParcels.filter(parcel => {
       if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
@@ -108,32 +135,21 @@ export const MapContainer = () => {
     });
   }, [filters]);
 
-  const handleParcelSelect = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-  };
-
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <WelcomeDialog />
       
       <div className="flex-1 flex flex-col lg:flex-row relative">
-        {controls.showFilters && (
-          <div className="w-full lg:w-1/3 xl:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
-            <MapFilters 
-              filters={filters}
-              setFilters={setFilters}
-              onApplyFilters={() => {
-                toast({
-                  title: "Filtres appliqués",
-                  description: `${filteredParcels.length} parcelles trouvées`,
-                });
-              }}
-              className="sticky top-4"
-            />
-          </div>
-        )}
+        <div className="w-full lg:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
+          <MapFilters 
+            filters={filters}
+            setFilters={setFilters}
+            onApplyFilters={filterParcels}
+            className="sticky top-4"
+          />
+        </div>
 
-        <div className="flex-1 relative h-[600px] lg:h-auto">
+        <div className="flex-1 relative">
           <div className="absolute inset-0">
             <GoogleMap 
               onMarkerClick={handleParcelSelect}
