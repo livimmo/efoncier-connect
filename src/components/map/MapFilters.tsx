@@ -132,6 +132,15 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           </div>
         </div>
 
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Propriétaire</label>
+          <Input
+            value={filters.owner}
+            onChange={(e) => setFilters({ ...filters, owner: e.target.value })}
+            placeholder="Nom du propriétaire"
+          />
+        </div>
+
         <Button 
           className="w-full"
           onClick={onApplyFilters}

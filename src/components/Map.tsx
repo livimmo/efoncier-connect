@@ -26,7 +26,7 @@ const Map = () => {
     taxStatus: '',
     priceRange: [0, 5000000],
     titleDeedNumber: '',
-    owner: '' // Added missing owner property
+    owner: ''
   });
 
   const getMarkerColor = (parcel: Parcel) => {
