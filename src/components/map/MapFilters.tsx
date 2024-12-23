@@ -8,12 +8,12 @@ import {
 } from "../ui/select";
 import { Slider } from "../ui/slider";
 import { Input } from "../ui/input";
-import { MapFilters as MapFiltersType } from "@/utils/mockData/types";
-import { Dispatch, SetStateAction } from "react";
+import { Filter } from "lucide-react";
+import { MapFilters as MapFiltersType } from "./types";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
-  setFilters: Dispatch<SetStateAction<MapFiltersType>>;
+  setFilters: (filters: MapFiltersType) => void;
   onApplyFilters: () => void;
 }
 
@@ -27,15 +27,11 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           size="sm" 
           onClick={() => setFilters({
             city: '',
-            district: '',
+            owner: '',
             propertyType: '',
             zoneType: '',
             size: [0, 15000],
             status: '',
-            taxStatus: '',
-            priceRange: [0, 5000000],
-            titleDeedNumber: '',
-            owner: ''
           })}
         >
           Réinitialiser
@@ -130,15 +126,6 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
             <span>{filters.size[0]} m²</span>
             <span>{filters.size[1]} m²</span>
           </div>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Propriétaire</label>
-          <Input
-            value={filters.owner}
-            onChange={(e) => setFilters({ ...filters, owner: e.target.value })}
-            placeholder="Nom du propriétaire"
-          />
         </div>
 
         <Button 
