@@ -10,6 +10,7 @@ import Search from "./pages/Search";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
+import Notifications from "./pages/Notifications";
 
 // Authenticated Pages
 import Dashboard from "./pages/Dashboard";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/notifications" element={<Notifications />} />
           
           {/* Authenticated Routes */}
           <Route path="/dashboard" element={<Dashboard />} />

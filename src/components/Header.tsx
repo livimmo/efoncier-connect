@@ -22,6 +22,13 @@ export const Header = () => {
           <Button 
             variant="ghost" 
             size="icon"
+            onClick={() => navigate("/notifications")}
+          >
+            <Bell className="h-5 w-5" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon"
             onClick={() => navigate("/dashboard")}
           >
             <User className="h-5 w-5" />
