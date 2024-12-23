@@ -6,10 +6,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <Sidebar />
-      <main className="pt-16 pl-64 transition-all duration-300">
-        <Map />
-      </main>
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 pt-16">
+          <Map />
+        </main>
+      </div>
     </div>
   );
 };
