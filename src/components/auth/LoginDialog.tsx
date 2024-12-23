@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Facebook, WhatsApp, Mail, QrCode } from "lucide-react";
+import { Facebook, MessageCircle, Mail, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -94,7 +94,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                 render={({ slots }) => (
                   <InputOTPGroup className="gap-2">
                     {slots.map((slot, index) => (
-                      <InputOTPSlot key={index} {...slot} />
+                      <InputOTPSlot key={index} {...slot} index={index} />
                     ))}
                   </InputOTPGroup>
                 )}
@@ -164,7 +164,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                     "dark:hover:bg-[#25D366]/70"
                   )}
                 >
-                  <WhatsApp className="mr-2 h-4 w-4" />
+                  <MessageCircle className="mr-2 h-4 w-4" />
                   WhatsApp
                 </Button>
                 <Button
