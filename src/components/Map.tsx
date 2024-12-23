@@ -28,7 +28,7 @@ interface MapFilters {
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
 }
 
-export const Map = () => {
+const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
@@ -311,3 +311,5 @@ export const Map = () => {
     </div>
   );
 };
+
+export default Map;

@@ -2,8 +2,9 @@ import { Suspense, lazy } from "react";
 import { Header } from "@/components/Header";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Chargement paresseux des composants lourds
-const Map = lazy(() => import("@/components/Map"));
+const Map = lazy(() => import("@/components/Map").then(module => ({ 
+  default: module.default 
+})));
 
 const Home = () => {
   return (
