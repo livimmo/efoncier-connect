@@ -1,35 +1,9 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
-import { Sidebar } from "@/components/Sidebar";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, Search, Settings, Archive, MessageCircle, CreditCard, Building2, AlertTriangle, Calendar, RefreshCw } from "lucide-react";
-
-// Types for our notifications
-type NotificationType = "message" | "payment" | "property" | "warning" | "reminder" | "transaction" | "system";
-type NotificationPriority = "high" | "medium" | "low";
-
-interface Notification {
-  id: string;
-  type: NotificationType;
-  priority: NotificationPriority;
-  title: string;
-  message: string;
-  date: string;
-  read: boolean;
-  actions?: {
-    primary?: {
-      label: string;
-      action: () => void;
-    };
-    secondary?: {
-      label: string;
-      action: () => void;
-    };
-  };
-}
+import { NotificationList } from "@/components/notifications/NotificationList";
+import type { Notification } from "@/components/notifications/types";
 
 const Notifications = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,151 +52,61 @@ const Notifications = () => {
     },
   ];
 
-  const getNotificationIcon = (type: NotificationType) => {
-    switch (type) {
-      case "message":
-        return <MessageCircle className="h-5 w-5" />;
-      case "payment":
-        return <CreditCard className="h-5 w-5" />;
-      case "property":
-        return <Building2 className="h-5 w-5" />;
-      case "warning":
-        return <AlertTriangle className="h-5 w-5" />;
-      case "reminder":
-        return <Calendar className="h-5 w-5" />;
-      case "transaction":
-        return <RefreshCw className="h-5 w-5" />;
-      default:
-        return <Bell className="h-5 w-5" />;
-    }
-  };
+  const filteredNotifications = notifications.filter((notification) => {
+    const matchesSearch = notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      notification.message.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const getPriorityColor = (priority: NotificationPriority) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-800";
-      case "medium":
-        return "bg-orange-100 text-orange-800";
-      case "low":
-        return "bg-green-100 text-green-800";
+    switch (activeFilter) {
+      case "unread":
+        return !notification.read && matchesSearch;
+      case "important":
+        return notification.priority === "high" && matchesSearch;
+      default:
+        return matchesSearch;
     }
-  };
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Header />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 ml-64 p-6 mt-16">
-          <div className="max-w-6xl mx-auto">
-            {/* Header Section */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
-                <h1 className="text-2xl font-bold">Notifications</h1>
-                <Badge variant="secondary" className="text-sm">
-                  {notifications.filter(n => !n.read).length} nouvelles
-                </Badge>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon">
-                  <Settings className="h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="icon">
-                  <Archive className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Search and Filters */}
-            <div className="mb-6 space-y-4">
-              <div className="flex gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Rechercher dans les notifications..."
-                    className="pl-9"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <Tabs defaultValue="all" className="w-full">
-                <TabsList>
-                  <TabsTrigger value="all">Toutes</TabsTrigger>
-                  <TabsTrigger value="unread">Non lues</TabsTrigger>
-                  <TabsTrigger value="important">Importantes</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="all" className="space-y-4 mt-4">
-                  {notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`p-4 rounded-lg border ${
-                        notification.read ? "bg-white" : "bg-blue-50"
-                      }`}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className={`p-2 rounded-full ${getPriorityColor(notification.priority)}`}>
-                          {getNotificationIcon(notification.type)}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-semibold">{notification.title}</h3>
-                            <span className="text-sm text-gray-500">
-                              {new Date(notification.date).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <p className="text-gray-600 mt-1">{notification.message}</p>
-                          {notification.actions && (
-                            <div className="flex gap-2 mt-3">
-                              {notification.actions.primary && (
-                                <Button
-                                  size="sm"
-                                  onClick={notification.actions.primary.action}
-                                >
-                                  {notification.actions.primary.label}
-                                </Button>
-                              )}
-                              {notification.actions.secondary && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={notification.actions.secondary.action}
-                                >
-                                  {notification.actions.secondary.label}
-                                </Button>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </TabsContent>
-
-                <TabsContent value="unread" className="space-y-4 mt-4">
-                  {notifications
-                    .filter((n) => !n.read)
-                    .map((notification) => (
-                      // ... Same notification card structure as above
-                      <div key={notification.id}>...</div>
-                    ))}
-                </TabsContent>
-
-                <TabsContent value="important" className="space-y-4 mt-4">
-                  {notifications
-                    .filter((n) => n.priority === "high")
-                    .map((notification) => (
-                      // ... Same notification card structure as above
-                      <div key={notification.id}>...</div>
-                    ))}
-                </TabsContent>
-              </Tabs>
-            </div>
+      <main className="container mx-auto px-4 py-6 mt-16 md:mt-20">
+        <div className="max-w-3xl mx-auto">
+          {/* Search Input */}
+          <div className="mb-6">
+            <Input
+              placeholder="Rechercher dans les notifications..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full"
+            />
           </div>
-        </main>
-      </div>
+
+          {/* Tabs */}
+          <Tabs defaultValue="all" className="w-full" onValueChange={(value) => setActiveFilter(value as typeof activeFilter)}>
+            <TabsList className="w-full justify-start mb-6 overflow-x-auto">
+              <TabsTrigger value="all">Toutes</TabsTrigger>
+              <TabsTrigger value="unread">Non lues</TabsTrigger>
+              <TabsTrigger value="important">Importantes</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="all">
+              <NotificationList notifications={filteredNotifications} />
+            </TabsContent>
+
+            <TabsContent value="unread">
+              <NotificationList 
+                notifications={filteredNotifications.filter(n => !n.read)} 
+              />
+            </TabsContent>
+
+            <TabsContent value="important">
+              <NotificationList 
+                notifications={filteredNotifications.filter(n => n.priority === "high")} 
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
     </div>
   );
 };
