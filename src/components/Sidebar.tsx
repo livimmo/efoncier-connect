@@ -21,7 +21,7 @@ export const Sidebar = () => {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 transition-all duration-300",
+        "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-secondary border-r border-secondary/20 transition-all duration-300 dark:bg-secondary/95",
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -32,7 +32,7 @@ export const Sidebar = () => {
               key={item.href}
               variant="ghost"
               className={cn(
-                "w-full justify-start",
+                "w-full justify-start text-secondary-foreground hover:bg-secondary-foreground/10",
                 collapsed ? "px-2" : "px-4"
               )}
               onClick={() => navigate(item.href)}
@@ -47,7 +47,7 @@ export const Sidebar = () => {
       <Button
         variant="ghost"
         size="sm"
-        className="absolute -right-3 top-1/2 transform -translate-y-1/2"
+        className="absolute -right-3 top-1/2 transform -translate-y-1/2 bg-secondary text-secondary-foreground hover:bg-secondary-foreground/10"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? "→" : "←"}
