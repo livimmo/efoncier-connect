@@ -13,9 +13,7 @@ export const mockParcels: Parcel[] = [
     owner: 'Société ABC',
     location: { lat: 33.5731, lng: -7.5898 },
     titleDeedNumber: 'TF123456/C',
-    ownerName: 'Ahmed El Fassi',
-    price: 3000000,
-    availability: 'AVAILABLE'
+    ownerName: 'Ahmed El Fassi'
   },
   {
     id: '2',
@@ -29,9 +27,7 @@ export const mockParcels: Parcel[] = [
     owner: 'Mohammed Alami',
     location: { lat: 33.5933, lng: -7.6339 },
     titleDeedNumber: 'TF789012/C',
-    ownerName: 'Mohammed Alami',
-    price: 1500000,
-    availability: 'PENDING'
+    ownerName: 'Mohammed Alami'
   },
   {
     id: '3',
@@ -45,8 +41,6 @@ export const mockParcels: Parcel[] = [
     owner: 'Société XYZ',
     location: { lat: 33.5850, lng: -7.6328 },
     titleDeedNumber: 'TF345678/C',
-    ownerName: 'Société XYZ',
-    price: 2500000,
-    availability: 'SOLD'
+    ownerName: 'Société XYZ'
   }
 ];

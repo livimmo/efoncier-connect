@@ -16,21 +16,8 @@ export interface Parcel {
     lat: number;
     lng: number;
   };
-  titleDeedNumber: string;
-  ownerName: string;
-  price?: number;
-  availability?: 'AVAILABLE' | 'PENDING' | 'SOLD';
-}
-
-export interface MapFilters {
-  city: string;
-  owner: string;
-  propertyType: PropertyType | '';
-  zoneType: ZoneType | '';
-  size: [number, number];
-  status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
-  price?: [number, number];
-  availability?: 'AVAILABLE' | 'PENDING' | 'SOLD' | '';
+  titleDeedNumber: string;  // Ajout du numéro de titre foncier
+  ownerName: string;       // Ajout du nom du propriétaire
 }
 
 export interface User {
