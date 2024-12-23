@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import React, { useState } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import {
@@ -11,45 +10,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from './ui/input';
-import { Search, MapPin, User, Ruler, Building2, Map as MapIcon } from 'lucide-react';
-
-// Temporary token - should be moved to environment variables
-mapboxgl.accessToken = 'pk.eyJ1IjoibG92YWJsZSIsImEiOiJjbHNqOXh4NW0wMWZrMmpxcjRxc3RwOHl4In0.qRwJqzDNxV1z9ipz2pT11g';
+import { Search, MapPin, User, Building2, Map as MapIcon } from 'lucide-react';
 
 const cities = ['Casablanca', 'Rabat', 'Marrakech', 'Tanger', 'Fès'];
 const propertyTypes = ['Résidentiel', 'Commercial', 'Industriel', 'Agricole', 'Mixte'];
 const zoningTypes = ['E4', 'E3', 'BT2', 'I2S12', 'Zone protégée'];
 
+const mapContainerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+const center = {
+  lat: 33.5731,
+  lng: -7.5898 // Casablanca coordinates
+};
+
 export const Map = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
   const [selectedParcel, setSelectedParcel] = useState<any>(null);
 
-  useEffect(() => {
-    if (!mapContainer.current) return;
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v11',
-      center: [-7.5898, 33.5731], // Casablanca coordinates
-      zoom: 12,
-      pitch: 45,
-    });
-
-    map.current.addControl(
-      new mapboxgl.NavigationControl({
-        visualizePitch: true,
-      }),
-      'top-right'
-    );
-
-    return () => {
-      map.current?.remove();
-    };
-  }, []);
-
   const handleParcelClick = () => {
-    // Example parcel data
     setSelectedParcel({
       id: 'TF#123456',
       owner: 'Ahmed El Fassi',
@@ -146,7 +126,17 @@ export const Map = () => {
 
       {/* Map Container */}
       <Card className="flex-1 relative overflow-hidden">
-        <div ref={mapContainer} className="absolute inset-0" />
+        <LoadScript googleMapsApiKey="AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8">
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={12}
+            onClick={handleParcelClick}
+          >
+            {/* Add markers or other map components here */}
+            <Marker position={center} onClick={handleParcelClick} />
+          </GoogleMap>
+        </LoadScript>
       </Card>
 
       {/* Parcel Details Panel */}
