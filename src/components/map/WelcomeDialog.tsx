@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
-import { MapSearch, MapPin, Bell } from "lucide-react";
+import { Search, MapPin, Bell } from "lucide-react";
 
 export const WelcomeDialog = () => {
   const [showDialog, setShowDialog] = useState(false);
@@ -45,7 +45,7 @@ export const WelcomeDialog = () => {
         <div className="space-y-6 py-6">
           <div className="space-y-4">
             <div className="flex items-start space-x-4">
-              <MapSearch className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+              <Search className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
               <div>
                 <h4 className="font-semibold">Filtres Dynamiques</h4>
                 <p className="text-sm text-muted-foreground">
