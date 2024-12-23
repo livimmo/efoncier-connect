@@ -110,10 +110,6 @@ export const MapContainer = () => {
 
   const handleParcelSelect = (parcel: Parcel) => {
     setSelectedParcel(parcel);
-    toast({
-      title: "Parcelle sélectionnée",
-      description: `${parcel.title} - ${parcel.surface}m²`,
-    });
   };
 
   return (
