@@ -2,6 +2,7 @@ import { Home, MapPin, FileText, Users, Bell, Settings, HelpCircle } from "lucid
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const menuItems = [
   { icon: Home, label: "Tableau de Bord", href: "/" },
@@ -15,6 +16,14 @@ const menuItems = [
 
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { toast } = useToast();
+
+  const handleMenuClick = (label: string) => {
+    toast({
+      title: "Navigation",
+      description: `Navigation vers ${label}`,
+    });
+  };
 
   return (
     <aside
@@ -33,6 +42,7 @@ export const Sidebar = () => {
                 "w-full justify-start",
                 collapsed ? "px-2" : "px-4"
               )}
+              onClick={() => handleMenuClick(item.label)}
             >
               <item.icon className="h-5 w-5 mr-2" />
               {!collapsed && <span>{item.label}</span>}
