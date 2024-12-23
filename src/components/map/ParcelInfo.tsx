@@ -6,11 +6,12 @@ import { FileText, MessageSquare, Receipt } from "lucide-react";
 interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
+  className?: string;
 }
 
-export const ParcelInfo = ({ parcel, onClose }: ParcelInfoProps) => {
+export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
   return (
-    <Card className="absolute top-4 right-4 w-80 p-4 space-y-4">
+    <Card className={`absolute top-4 right-4 w-80 p-4 space-y-4 ${className}`}>
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-semibold">{parcel.title}</h3>

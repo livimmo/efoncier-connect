@@ -40,8 +40,17 @@ export interface MapControlsProps {
   className?: string;
 }
 
+export interface ParcelInfoProps {
+  parcel: Parcel;
+  onClose: () => void;
+  className?: string;
+}
+
 export interface Cluster {
   count: number;
   center: google.maps.LatLng;
   parcels: Parcel[];
 }
+
+// Re-export Parcel type from mockData types to avoid circular dependencies
+export type { Parcel } from '@/utils/mockData/types';
