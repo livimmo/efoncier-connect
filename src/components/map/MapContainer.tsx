@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { GoogleMap } from './GoogleMap';
 import { MapFilters } from './MapFilters';
 import { MapControls } from './MapControls';
@@ -123,7 +123,17 @@ export const MapContainer = () => {
     });
   };
 
-  const filteredParcels = filterParcels();
+  // Utilisation de useMemo pour éviter les calculs inutiles
+  const filteredParcels = useMemo(() => {
+    return mockParcels.filter(parcel => {
+      if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
+      if (filters.propertyType && parcel.type !== filters.propertyType) return false;
+      if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
+      if (filters.status && parcel.taxStatus !== filters.status) return false;
+      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+      return true;
+    });
+  }, [filters]);
 
   return (
     <div className="h-screen flex flex-col">
