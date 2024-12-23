@@ -9,7 +9,7 @@ export interface Parcel {
   title: string;
   titleDeedNumber: string;
   ownerName: string;
-  owner: string; // Ajout de la propriété owner
+  owner: string;
   address: string;
   city: string;
   district: string;
@@ -36,6 +36,7 @@ export interface MapFilters {
   taxStatus: TaxStatus | '';
   priceRange: [number, number];
   titleDeedNumber: string;
+  owner: string;
 }
 
 export interface Transaction {
