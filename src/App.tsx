@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ChatBubble } from "@/components/chat/ChatBubble";
+import { MobileFooter } from "@/components/mobile/MobileFooter";
 
 // Public Pages
 import Home from "./pages/Home";
@@ -46,6 +47,7 @@ const App = () => {
               <Route path="/admin/*" element={<AdminDashboard />} />
             </Routes>
             <ChatBubble />
+            <MobileFooter />
           </BrowserRouter>
           <Toaster />
           <Sonner />
