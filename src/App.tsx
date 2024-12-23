@@ -21,6 +21,7 @@ import Messages from "./pages/Messages";
 import Support from "./pages/Support";
 import Map from "./components/Map";
 import Login from "./pages/Login";
+import History from "./pages/History";
 
 // Authenticated Pages
 import Dashboard from "./pages/Dashboard";
@@ -51,6 +52,7 @@ const App = () => {
               <Route path="/messages" element={<Messages />} />
               <Route path="/support" element={<Support />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/history" element={<History />} />
               
               {/* Authenticated Routes */}
               <Route path="/dashboard" element={<Dashboard />} />

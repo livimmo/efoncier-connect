@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { HistoryHeader } from "@/components/history/HistoryHeader";
 import { HistoryFilters } from "@/components/history/HistoryFilters";
 import { HistoryTable } from "@/components/history/HistoryTable";
 import { HistoryStats } from "@/components/history/HistoryStats";
 import { HistoryCharts } from "@/components/history/HistoryCharts";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function History() {
   const { toast } = useToast();

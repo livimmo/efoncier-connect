@@ -12,17 +12,16 @@ import { Button } from "@/components/ui/button";
 interface UserMenuProps {
   isAuthenticated: boolean;
   onLogout: () => void;
+  onLoginClick: () => void;
   userName?: string;
 }
 
-export function UserMenu({ isAuthenticated, onLogout, userName }: UserMenuProps) {
+export function UserMenu({ isAuthenticated, onLogout, onLoginClick, userName }: UserMenuProps) {
   if (!isAuthenticated) {
     return (
-      <Button variant="default" asChild>
-        <Link to="/login">
-          <User className="mr-2 h-4 w-4" />
-          Connexion
-        </Link>
+      <Button variant="default" onClick={onLoginClick}>
+        <User className="mr-2 h-4 w-4" />
+        Connexion
       </Button>
     );
   }

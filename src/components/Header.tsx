@@ -8,11 +8,13 @@ import { QuickActions } from "./navigation/QuickActions";
 import { UserMenu } from "./navigation/UserMenu";
 import { useTheme } from "./theme/theme-provider";
 import { SearchModal } from "./search/SearchModal";
+import { LoginDialog } from "./auth/LoginDialog";
 import { useState } from "react";
 
 export const Header = () => {
   const { theme, setTheme } = useTheme();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   
   const handleLogout = () => {
     // Implement logout logic
@@ -87,6 +89,7 @@ export const Header = () => {
           <UserMenu
             isAuthenticated={false}
             onLogout={handleLogout}
+            onLoginClick={() => setIsLoginOpen(true)}
           />
         </div>
       </div>
@@ -95,6 +98,12 @@ export const Header = () => {
       <SearchModal 
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
+      />
+
+      {/* Login Dialog */}
+      <LoginDialog
+        open={isLoginOpen}
+        onOpenChange={setIsLoginOpen}
       />
     </header>
   );
