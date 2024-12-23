@@ -18,7 +18,8 @@ const zoningTypes = ['E4', 'E3', 'BT2', 'I2S12', 'Zone protégée'];
 
 const mapContainerStyle = {
   width: '100%',
-  height: '100%'
+  height: '100%',
+  minHeight: '500px'
 };
 
 const center = {
@@ -46,8 +47,8 @@ export const Map = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] gap-4 p-4">
-      {/* Filters Panel */}
+    <div className="flex h-screen gap-4 p-4 overflow-hidden">
+      {/* Filtres Panel */}
       <Card className="w-80 p-4 space-y-4 overflow-y-auto">
         <h3 className="text-lg font-semibold mb-4">Filtres</h3>
         
@@ -125,7 +126,7 @@ export const Map = () => {
       </Card>
 
       {/* Map Container */}
-      <Card className="flex-1 relative overflow-hidden">
+      <Card className="flex-1 relative">
         <LoadScript googleMapsApiKey="AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8">
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
@@ -133,7 +134,6 @@ export const Map = () => {
             zoom={12}
             onClick={handleParcelClick}
           >
-            {/* Add markers or other map components here */}
             <Marker position={center} onClick={handleParcelClick} />
           </GoogleMap>
         </LoadScript>

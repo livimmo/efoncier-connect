@@ -28,7 +28,7 @@ export const Sidebar = () => {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 transition-all duration-300",
+        "h-[calc(100vh-4rem)] bg-white border-r border-gray-200 transition-all duration-300 mt-16",
         collapsed ? "w-16" : "w-64"
       )}
     >
