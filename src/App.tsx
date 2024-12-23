@@ -20,6 +20,7 @@ import Directory from "./pages/Directory";
 import Messages from "./pages/Messages";
 import Support from "./pages/Support";
 import Map from "./components/Map";
+import Login from "./pages/Login";
 
 // Authenticated Pages
 import Dashboard from "./pages/Dashboard";
@@ -49,6 +50,7 @@ const App = () => {
               <Route path="/directory" element={<Directory />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/support" element={<Support />} />
+              <Route path="/login" element={<Login />} />
               
               {/* Authenticated Routes */}
               <Route path="/dashboard" element={<Dashboard />} />
