@@ -1,3 +1,6 @@
+export type PropertyType = 'INDUSTRIAL' | 'RESIDENTIAL' | 'SEASIDE' | 'AGRICULTURAL' | 'COMMERCIAL' | 'MIXED';
+export type ZoneType = 'E4' | 'E3' | 'BT2' | 'I2S12' | 'PROTECTED' | 'CONSTRUCTIBLE';
+
 export interface Parcel {
   id: string;
   title: string;
@@ -6,8 +9,8 @@ export interface Parcel {
     lng: number;
   };
   surface: number;
-  type: 'INDUSTRIAL' | 'RESIDENTIAL' | 'SEASIDE' | 'AGRICULTURAL' | 'COMMERCIAL' | 'MIXED';
-  zone: 'E4' | 'E3' | 'BT2' | 'I2S12' | 'PROTECTED' | 'CONSTRUCTIBLE';
+  type: PropertyType;
+  zone: ZoneType;
   owner: string;
   status: 'FOR_SALE' | 'OCCUPIED' | 'AVAILABLE';
   price?: number;

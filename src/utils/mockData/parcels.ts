@@ -72,35 +72,5 @@ export const mockParcels: Parcel[] = [
     address: "Zone Malabata, Avenue Mohammed VI",
     taxStatus: "PAID",
     lastPaymentDate: "2024-01-30"
-  },
-  // Nouvelles parcelles ajoutées
-  {
-    id: "TF654321",
-    title: "Résidence Jardin d'Anfa",
-    location: { lat: 33.5892, lng: -7.6339 },
-    surface: 2500,
-    type: "RESIDENTIAL",
-    zone: "E3",
-    owner: "USER005",
-    status: "FOR_SALE",
-    price: 5500000,
-    city: "Casablanca",
-    address: "Quartier Anfa, Rue des Jardins",
-    taxStatus: "PENDING"
-  },
-  {
-    id: "TF987654",
-    title: "Zone Industrielle Marrakech",
-    location: { lat: 31.6295, lng: -8.0101 },
-    surface: 8000,
-    type: "INDUSTRIAL",
-    zone: "I2S12",
-    owner: "USER006",
-    status: "AVAILABLE",
-    price: 4200000,
-    city: "Marrakech",
-    address: "Zone Industrielle Sidi Ghanem",
-    taxStatus: "PAID",
-    lastPaymentDate: "2024-02-15"
   }
 ];

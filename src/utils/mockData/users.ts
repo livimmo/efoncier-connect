@@ -34,22 +34,6 @@ export const mockUsers: User[] = [
     parcels: ["TF567890"]
   },
   {
-    id: "USER005",
-    name: "Karim Benjelloun",
-    email: "karim.benjelloun@email.com",
-    role: "TAXPAYER",
-    phone: "+212 663-456789",
-    parcels: ["TF654321"]
-  },
-  {
-    id: "USER006",
-    name: "Société Immobilière Marrakech",
-    email: "contact@sim-marrakech.ma",
-    role: "DEVELOPER",
-    phone: "+212 524-123456",
-    parcels: ["TF987654"]
-  },
-  {
     id: "ADMIN001",
     name: "Mohammed Tazi",
     email: "m.tazi@efoncier.gov.ma",

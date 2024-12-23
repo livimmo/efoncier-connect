@@ -42,24 +42,5 @@ export const mockTransactions: Transaction[] = [
     date: "2024-01-30",
     type: "TAX_PAYMENT",
     status: "COMPLETED"
-  },
-  // Nouvelles transactions ajoutées
-  {
-    id: "TR006",
-    parcelId: "TF654321",
-    amount: 22000,
-    date: "2024-02-15",
-    type: "TAX_PAYMENT",
-    status: "PENDING"
-  },
-  {
-    id: "TR007",
-    parcelId: "TF987654",
-    amount: 4200000,
-    date: "2024-02-10",
-    type: "SALE",
-    status: "COMPLETED",
-    buyerId: "USER006",
-    sellerId: "USER004"
   }
 ];
