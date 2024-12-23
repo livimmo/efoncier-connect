@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, MapPin, CreditCard, Bell, User, Plus } from "lucide-react";
+import { Home, MapPin, CreditCard, Bell, User, Plus, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MobileFooterMenu } from "./MobileFooterMenu";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -25,6 +25,11 @@ export const MobileFooter = () => {
       path: "/search",
     },
     {
+      icon: Users,
+      label: "Annuaire",
+      path: "/directory",
+    },
+    {
       icon: CreditCard,
       label: "Paiements",
       path: "/dashboard?tab=payments",
@@ -34,11 +39,6 @@ export const MobileFooter = () => {
       label: "Notifications",
       path: "/notifications",
       badge: true,
-    },
-    {
-      icon: User,
-      label: "Profil",
-      path: "/dashboard",
     },
   ];
 

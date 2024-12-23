@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Home, Map, CreditCard, MessageSquare, HelpCircle } from "lucide-react";
+import { Home, Map, CreditCard, MessageSquare, HelpCircle, Users } from "lucide-react";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -24,6 +24,11 @@ export function MainNav({ className, ...props }: MainNavProps) {
       href: "/payment",
       label: "Paiements",
       icon: CreditCard
+    },
+    {
+      href: "/directory",
+      label: "Annuaire",
+      icon: Users
     },
     {
       href: "/messages",
