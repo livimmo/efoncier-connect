@@ -1,7 +1,7 @@
-import { Bell, Search, User } from "lucide-react";
+import { Bell, User } from "lucide-react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Link, useNavigate } from "react-router-dom";
+import { MainNav } from "./MainNav";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -16,29 +16,9 @@ export const Header = () => {
           <span className="text-xl font-semibold text-primary">eFoncier</span>
         </div>
         
-        <nav className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-gray-600 hover:text-primary">
-            Accueil
-          </Link>
-          <Link to="/search" className="text-gray-600 hover:text-primary">
-            Carte
-          </Link>
-          <Link to="/about" className="text-gray-600 hover:text-primary">
-            À Propos
-          </Link>
-          <Link to="/contact" className="text-gray-600 hover:text-primary">
-            Contact
-          </Link>
-        </nav>
+        <MainNav />
         
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary text-white text-xs rounded-full flex items-center justify-center">
-              3
-            </span>
-          </Button>
-          
           <Button 
             variant="ghost" 
             size="icon"
