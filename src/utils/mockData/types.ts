@@ -16,6 +16,8 @@ export interface Parcel {
     lat: number;
     lng: number;
   };
+  titleDeedNumber: string;  // Ajout du numéro de titre foncier
+  ownerName: string;       // Ajout du nom du propriétaire
 }
 
 export interface User {

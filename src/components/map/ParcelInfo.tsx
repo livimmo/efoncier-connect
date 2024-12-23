@@ -1,6 +1,7 @@
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Parcel } from "@/utils/mockData";
+import { FileText, MessageSquare } from "lucide-react";
 
 interface ParcelInfoProps {
   parcel: Parcel;
@@ -25,6 +26,14 @@ export const ParcelInfo = ({ parcel, onClose }: ParcelInfoProps) => {
       </div>
 
       <div className="space-y-2">
+        <div className="flex justify-between">
+          <span className="text-sm text-muted-foreground">N° Titre Foncier</span>
+          <span className="text-sm font-medium">{parcel.titleDeedNumber}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-sm text-muted-foreground">Propriétaire</span>
+          <span className="text-sm font-medium">{parcel.ownerName}</span>
+        </div>
         <div className="flex justify-between">
           <span className="text-sm text-muted-foreground">Surface</span>
           <span className="text-sm font-medium">{parcel.surface} m²</span>
@@ -60,6 +69,7 @@ export const ParcelInfo = ({ parcel, onClose }: ParcelInfoProps) => {
           className="flex-1"
           onClick={() => window.location.href = `/payment/${parcel.id}`}
         >
+          <FileText className="w-4 h-4 mr-2" />
           Payer
         </Button>
         <Button 
@@ -67,6 +77,7 @@ export const ParcelInfo = ({ parcel, onClose }: ParcelInfoProps) => {
           className="flex-1"
           onClick={() => window.location.href = `/contact/${parcel.owner}`}
         >
+          <MessageSquare className="w-4 h-4 mr-2" />
           Contacter
         </Button>
       </div>

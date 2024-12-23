@@ -11,7 +11,9 @@ export const mockParcels: Parcel[] = [
     zone: 'E4',
     taxStatus: 'PAID',
     owner: 'Société ABC',
-    location: { lat: 33.5731, lng: -7.5898 }
+    location: { lat: 33.5731, lng: -7.5898 },
+    titleDeedNumber: 'TF123456/C',
+    ownerName: 'Ahmed El Fassi'
   },
   {
     id: '2',
@@ -23,7 +25,9 @@ export const mockParcels: Parcel[] = [
     zone: 'E3',
     taxStatus: 'PENDING',
     owner: 'Mohammed Alami',
-    location: { lat: 33.5933, lng: -7.6339 }
+    location: { lat: 33.5933, lng: -7.6339 },
+    titleDeedNumber: 'TF789012/C',
+    ownerName: 'Mohammed Alami'
   },
   {
     id: '3',
@@ -35,6 +39,8 @@ export const mockParcels: Parcel[] = [
     zone: 'BT2',
     taxStatus: 'OVERDUE',
     owner: 'Société XYZ',
-    location: { lat: 33.5850, lng: -7.6328 }
+    location: { lat: 33.5850, lng: -7.6328 },
+    titleDeedNumber: 'TF345678/C',
+    ownerName: 'Société XYZ'
   }
 ];
