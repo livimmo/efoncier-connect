@@ -2,44 +2,48 @@ import { User } from './types';
 
 export const mockUsers: User[] = [
   {
-    id: "USER001",
-    name: "Hassan Alami",
-    email: "hassan.alami@email.com",
-    role: "TAXPAYER",
-    status: "ACTIVE",
-    phone: "+212 661-234567",
-    parcels: ["TF123456", "TF901234"]
+    id: '1',
+    name: 'John Doe',
+    email: 'john@example.com',
+    role: 'ADMIN',
+    status: 'ACTIVE',
+    phone: '+212 6 12 34 56 78',
+    parcels: ['1', '2', '3']
   },
   {
-    id: "USER002",
-    name: "Fatima Benani",
-    email: "fatima.benani@email.com",
-    role: "TAXPAYER",
-    status: "ACTIVE",
-    phone: "+212 662-345678",
-    parcels: ["TF789012"]
+    id: '2',
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    role: 'USER',
+    status: 'ACTIVE',
+    phone: '+212 6 87 65 43 21',
+    parcels: ['4', '5']
   },
   {
-    id: "USER003",
-    name: "Groupe Immobilier Atlas",
-    email: "contact@atlas-immo.ma",
-    role: "DEVELOPER",
-    phone: "+212 522-987654",
-    parcels: ["TF345678"]
+    id: '3',
+    name: 'Alice Johnson',
+    email: 'alice@example.com',
+    role: 'USER',
+    status: 'INACTIVE',
+    phone: '+212 6 11 22 33 44',
+    parcels: []
   },
   {
-    id: "USER004",
-    name: "Société Al Omrane",
-    email: "info@alomrane.gov.ma",
-    role: "DEVELOPER",
-    phone: "+212 539-876543",
-    parcels: ["TF567890"]
+    id: '4',
+    name: 'Bob Brown',
+    email: 'bob@example.com',
+    role: 'USER',
+    status: 'ACTIVE',
+    phone: '+212 6 55 66 77 88',
+    parcels: ['6']
   },
   {
-    id: "ADMIN001",
-    name: "Mohammed Tazi",
-    email: "m.tazi@efoncier.gov.ma",
-    role: "ADMIN",
-    phone: "+212 537-123456"
+    id: '5',
+    name: 'Charlie Davis',
+    email: 'charlie@example.com',
+    role: 'USER',
+    status: 'ACTIVE',
+    phone: '+212 6 99 88 77 66',
+    parcels: ['7', '8']
   }
 ];

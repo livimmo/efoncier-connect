@@ -1,12 +1,13 @@
 export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICULTURAL' | 'MIXED' | 'SEASIDE';
 export type ZoneType = 'URBAN' | 'SUBURBAN' | 'RURAL' | 'E3' | 'E4' | 'I2S12' | 'BT2' | 'PROTECTED' | 'CONSTRUCTIBLE';
 export type TaxStatus = 'PAID' | 'PENDING' | 'OVERDUE';
+export type TNBStatus = 'LOW' | 'AVERAGE' | 'HIGH';
 
 export interface TNBInfo {
   pricePerMeter: number;
   totalAmount: number;
   lastUpdate: string;
-  status: 'LOW' | 'AVERAGE' | 'HIGH';
+  status: TNBStatus;
 }
 
 export interface Location {

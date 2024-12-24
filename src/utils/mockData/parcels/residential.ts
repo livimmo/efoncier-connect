@@ -1,26 +1,26 @@
 import { Parcel } from '../types';
+import { generateTNBInfo } from '../generators';
+
+const createResidentialParcel = (data: Omit<Parcel, 'tnbInfo'>): Parcel => ({
+  ...data,
+  tnbInfo: generateTNBInfo(data.surface, data.type)
+});
 
 export const residentialParcels: Parcel[] = [
-  {
+  createResidentialParcel({
     id: '1',
     title: 'Villa de Luxe - Californie',
     address: '15 Boulevard de l\'Océan, Californie',
     city: 'casablanca',
     surface: 450,
     type: 'RESIDENTIAL',
-    zone: 'URBAN',
+    zone: 'E3',
     taxStatus: 'PAID',
     owner: 'Groupe Immobilier Atlas',
     location: { lat: 33.5731, lng: -7.5898 },
     titleDeedNumber: 'TF123456/C',
-    ownerName: 'Ahmed El Fassi',
-    tnbInfo: {
-      pricePerMeter: 12,
-      totalAmount: 5400,
-      lastUpdate: '2024-03-15',
-      status: 'AVERAGE'
-    }
-  },
+    ownerName: 'Ahmed El Fassi'
+  }),
   {
     id: '3',
     title: 'Appartement Haut Standing - Gauthier',
