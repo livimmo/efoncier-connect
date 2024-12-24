@@ -4,6 +4,7 @@ import { StatsWidget } from "@/components/dashboard/StatsWidget";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { ParcelList } from "@/components/taxpayer/ParcelList";
+import { PaymentHistory } from "@/components/taxpayer/PaymentHistory";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -46,21 +47,11 @@ const TaxpayerDashboard = () => {
               </TabsContent>
 
               <TabsContent value="payments">
-                <div className="rounded-lg border bg-card p-8 text-card-foreground">
-                  <h3 className="font-semibold mb-4">Paiements</h3>
-                  <p className="text-muted-foreground">
-                    Section des paiements en cours de développement...
-                  </p>
-                </div>
+                <PaymentHistory />
               </TabsContent>
 
               <TabsContent value="history">
-                <div className="rounded-lg border bg-card p-8 text-card-foreground">
-                  <h3 className="font-semibold mb-4">Historique</h3>
-                  <p className="text-muted-foreground">
-                    Section de l'historique en cours de développement...
-                  </p>
-                </div>
+                <PaymentHistory />
               </TabsContent>
             </Tabs>
           </div>

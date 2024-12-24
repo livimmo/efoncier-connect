@@ -1,28 +1,51 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 export const ParcelList = () => {
-  const parcels = [
-    {
-      id: "TF#12345",
-      location: "Maarif, Casa",
-      surface: "500 m²",
-      type: "Résidentiel",
-      status: "Impayé",
-      amount: "25 000 MAD",
-      deadline: "30/06/2024",
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const { data: parcels, isLoading, error } = useQuery({
+    queryKey: ['properties'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*');
+      
+      if (error) {
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les parcelles",
+          variant: "destructive",
+        });
+        throw error;
+      }
+      
+      return data;
     },
-    {
-      id: "TF#67890",
-      location: "Agdal, Rabat",
-      surface: "1 200 m²",
-      type: "Commercial",
-      status: "Payé",
-      amount: "0 MAD",
-      deadline: "-",
-    },
-  ];
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center p-8 text-muted-foreground">
+        Une erreur est survenue lors du chargement des parcelles
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-md border">
@@ -34,32 +57,37 @@ export const ParcelList = () => {
             <TableHead>Superficie</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Statut Fiscal</TableHead>
-            <TableHead>Montant Dû</TableHead>
-            <TableHead>Échéance</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {parcels.map((parcel) => (
+          {parcels?.map((parcel) => (
             <TableRow key={parcel.id}>
               <TableCell>{parcel.id}</TableCell>
-              <TableCell>{parcel.location}</TableCell>
-              <TableCell>{parcel.surface}</TableCell>
-              <TableCell>{parcel.type}</TableCell>
+              <TableCell>{JSON.parse(parcel.location).address}</TableCell>
+              <TableCell>{parcel.surface_area} m²</TableCell>
+              <TableCell>{parcel.property_type}</TableCell>
               <TableCell>
-                <Badge variant={parcel.status === "Payé" ? "success" : "destructive"}>
-                  {parcel.status}
+                <Badge 
+                  variant={parcel.fiscal_status === 'paid' ? "success" : "destructive"}
+                >
+                  {parcel.fiscal_status === 'paid' ? 'Payé' : 'Impayé'}
                 </Badge>
               </TableCell>
-              <TableCell>{parcel.amount}</TableCell>
-              <TableCell>{parcel.deadline}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    Détails
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => navigate(`/map?parcel=${parcel.id}`)}
+                  >
+                    Voir sur la carte
                   </Button>
-                  {parcel.status === "Impayé" && (
-                    <Button size="sm">
+                  {parcel.fiscal_status !== 'paid' && (
+                    <Button 
+                      size="sm"
+                      onClick={() => navigate(`/payment/${parcel.id}`)}
+                    >
                       Payer
                     </Button>
                   )}
@@ -67,6 +95,13 @@ export const ParcelList = () => {
               </TableCell>
             </TableRow>
           ))}
+          {parcels?.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center">
+                Aucune parcelle trouvée
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>
