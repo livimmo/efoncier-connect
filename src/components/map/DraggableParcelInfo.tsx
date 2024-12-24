@@ -33,11 +33,13 @@ export const DraggableParcelInfo = ({
   });
 
   const handleClose = () => {
-    toast({
-      title: "Fenêtre fermée",
-      description: "Vous pouvez toujours cliquer sur le marqueur pour la réouvrir",
-    });
-    onClose();
+    if (onClose) {
+      onClose();
+      toast({
+        title: "Fenêtre fermée",
+        description: "Vous pouvez toujours cliquer sur le marqueur pour la réouvrir",
+      });
+    }
   };
 
   return (
