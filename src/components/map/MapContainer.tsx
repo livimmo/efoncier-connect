@@ -22,7 +22,8 @@ export const MapContainer = () => {
   const { toast } = useToast();
   
   const [filters, setFilters] = useState<MapFiltersType>({
-    city: '',
+    region: '',
+    commune: '',
     propertyType: '',
     zoneType: '',
     size: [0, 15000],
@@ -36,7 +37,7 @@ export const MapContainer = () => {
 
   const filteredParcels = useMemo(() => {
     return mockParcels.filter(parcel => {
-      if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
+      if (filters.commune && parcel.city.toLowerCase() !== filters.commune.toLowerCase()) return false;
       if (filters.propertyType && parcel.type !== filters.propertyType) return false;
       if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
       if (filters.status && parcel.taxStatus !== filters.status) return false;
