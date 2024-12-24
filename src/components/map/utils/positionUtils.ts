@@ -4,14 +4,24 @@ export const calculateInfoPosition = (
   windowWidth: number = window.innerWidth,
   windowHeight: number = window.innerHeight,
   infoWidth: number = 320,
-  infoHeight: number = 400,
+  infoHeight: number = 500,
   padding: number = 20
 ) => {
-  // Ajustement horizontal
-  let posX = Math.min(Math.max(padding, x), windowWidth - infoWidth - padding);
+  // Ajustement horizontal - préférer le côté droit si possible
+  let posX = x + padding;
+  if (posX + infoWidth > windowWidth - padding) {
+    posX = x - infoWidth - padding; // Placer à gauche si pas assez d'espace à droite
+  }
   
-  // Ajustement vertical
-  let posY = Math.min(Math.max(padding, y), windowHeight - infoHeight - padding);
+  // Ajustement vertical - centrer verticalement si possible
+  let posY = y - infoHeight / 2;
+  
+  // Vérifier les limites verticales
+  if (posY < padding) {
+    posY = padding;
+  } else if (posY + infoHeight > windowHeight - padding) {
+    posY = windowHeight - infoHeight - padding;
+  }
   
   return { x: posX, y: posY };
 };

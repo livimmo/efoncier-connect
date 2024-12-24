@@ -163,12 +163,12 @@ export const MapContainer = () => {
 
           {selectedParcel && markerPosition && (
             <div 
-              className="absolute z-20"
+              className="absolute z-20 transition-all duration-200 ease-in-out"
               style={{
                 left: `${markerPosition.x}px`,
                 top: `${markerPosition.y}px`,
-                maxWidth: 'calc(100vw - 40px)',
-                maxHeight: 'calc(100vh - 40px)',
+                maxWidth: 'min(400px, calc(100vw - 40px))',
+                maxHeight: 'calc(100vh - 80px)',
                 overflow: 'auto'
               }}
             >
@@ -178,7 +178,7 @@ export const MapContainer = () => {
                   setSelectedParcel(null);
                   setMarkerPosition(null);
                 }}
-                className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg"
+                className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
               />
             </div>
           )}
