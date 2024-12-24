@@ -20,6 +20,7 @@ import Register from "./pages/Register";
 // Pages (temporarily unprotected)
 import Dashboard from "./pages/Dashboard";
 import TaxpayerDashboard from "./pages/taxpayer/Dashboard";
+import Properties from "./pages/taxpayer/Properties";
 import DeveloperDashboard from "./pages/developer/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 import Notifications from "./pages/Notifications";
@@ -59,6 +60,7 @@ const App = () => {
                 <Route path="/history" element={<History />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/taxpayer/*" element={<TaxpayerDashboard />} />
+                <Route path="/taxpayer/properties" element={<Properties />} />
                 <Route path="/developer/*" element={<DeveloperDashboard />} />
                 <Route path="/admin/*" element={<AdminDashboard />} />
 
