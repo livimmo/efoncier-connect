@@ -16,11 +16,11 @@ interface MapFiltersProps {
 
 export const MapFilters = ({ filters, setFilters, onApplyFilters, className }: MapFiltersProps) => {
   const propertyStatusOptions = [
-    { value: '', label: 'Tous les statuts' },
+    { value: 'ALL', label: 'Tous les statuts' },
     { value: 'AVAILABLE', label: '🟢 À Vendre' },
     { value: 'SOLD', label: '🔴 Vendu' },
     { value: 'UNAVAILABLE', label: '🟡 Indisponible' },
-  ] as const;
+  ];
 
   const handleReset = () => {
     setFilters({
@@ -49,8 +49,8 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters, className }: M
 
         <FilterSection title="Statut du Bien">
           <SelectFilter
-            value={filters.propertyStatus}
-            onChange={(value) => setFilters({ ...filters, propertyStatus: value as PropertyStatus | '' })}
+            value={filters.propertyStatus || 'ALL'}
+            onChange={(value) => setFilters({ ...filters, propertyStatus: value === 'ALL' ? '' : value as PropertyStatus })}
             options={propertyStatusOptions}
             placeholder="Sélectionner un statut"
           />
