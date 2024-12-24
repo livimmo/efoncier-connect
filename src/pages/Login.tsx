@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { Header } from "@/components/Header";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
+import { AuthChangeEvent } from "@supabase/supabase-js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Login = () => {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (event: AuthChangeEvent, session) => {
         console.log("Auth event:", event);
         if (event === 'SIGNED_IN' && session) {
           toast({
@@ -32,7 +33,7 @@ const Login = () => {
             description: "Bienvenue sur eFoncier !",
           });
           navigate("/dashboard");
-        } else if (event === 'USER_DELETED' || event === 'SIGNED_OUT') {
+        } else if (event === 'SIGNED_OUT') {
           navigate("/");
         } else if (event === 'PASSWORD_RECOVERY') {
           toast({
