@@ -11,26 +11,27 @@ interface ClusterMarkerProps {
 }
 
 export const createClusterMarker = ({ position, count, available, sold, unavailable, parcels, map }: ClusterMarkerProps) => {
-  const marker = new google.maps.marker.AdvancedMarkerElement({
+  // Create a regular marker first
+  const marker = new google.maps.Marker({
     position,
     map,
     title: parcels[0]?.city,
   });
 
+  // Create custom HTML element for the marker
   const element = document.createElement('div');
   element.className = 'cluster-marker';
   element.innerHTML = `
-    <div class="bg-white rounded-full p-3 shadow-lg" style="min-width: ${Math.max(40, Math.min(count * 5, 60))}px; min-height: ${Math.max(40, Math.min(count * 5, 60))}px;">
+    <div class="bg-white rounded-full p-3 shadow-lg flex items-center justify-center" style="min-width: ${Math.max(40, Math.min(count * 5, 60))}px; min-height: ${Math.max(40, Math.min(count * 5, 60))}px;">
       <span class="text-primary font-bold">${count}</span>
     </div>
   `;
-  marker.content = element;
 
-  // Créer le contenu de l'info-bulle
+  // Create the info window content
   const infoWindow = new google.maps.InfoWindow({
     content: `
       <div class="p-3 bg-white rounded-lg shadow-lg">
-        <h3 class="font-semibold mb-2">${parcels[0].city}</h3>
+        <h3 class="font-semibold mb-2">${parcels[0]?.city || 'Zone'}</h3>
         <div class="space-y-1">
           <p>🏢 Total: ${count}</p>
           <p>🟢 Disponibles: ${available}</p>
@@ -45,17 +46,17 @@ export const createClusterMarker = ({ position, count, available, sold, unavaila
   let isInfoWindowOpen = false;
   let timeout: NodeJS.Timeout;
 
-  // Ajouter les événements de survol avec délai
-  marker.addListener('mouseenter', () => {
+  // Add hover events with delay
+  marker.addListener('mouseover', () => {
     timeout = setTimeout(() => {
       if (!isInfoWindowOpen) {
         infoWindow.open(map, marker);
         isInfoWindowOpen = true;
       }
-    }, 200); // Délai de 200ms avant d'afficher l'info-bulle
+    }, 200);
   });
 
-  marker.addListener('mouseleave', () => {
+  marker.addListener('mouseout', () => {
     clearTimeout(timeout);
     if (isInfoWindowOpen) {
       infoWindow.close();
@@ -63,14 +64,11 @@ export const createClusterMarker = ({ position, count, available, sold, unavaila
     }
   });
 
-  // Zoom au clic avec animation
+  // Add click event for zooming
   marker.addListener('click', () => {
     const newZoom = map.getZoom()! + 2;
-    map.animateCamera({
-      center: position,
-      zoom: newZoom,
-      duration: 500, // Animation de 500ms
-    });
+    map.setZoom(newZoom);
+    map.panTo(position);
   });
 
   return marker;

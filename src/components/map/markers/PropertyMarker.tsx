@@ -18,18 +18,20 @@ const getMarkerColor = (parcel: Parcel) => {
 };
 
 export const createPropertyMarker = ({ parcel, map, onClick }: PropertyMarkerProps) => {
-  const marker = new google.maps.marker.AdvancedMarkerElement({
+  // Create a regular marker
+  const marker = new google.maps.Marker({
     position: parcel.location,
     map,
     title: parcel.title,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      fillColor: getMarkerColor(parcel),
+      fillOpacity: 1,
+      strokeWeight: 1,
+      strokeColor: '#FFFFFF',
+      scale: 8,
+    }
   });
-
-  const element = document.createElement('div');
-  element.className = 'property-marker';
-  element.innerHTML = `
-    <div class="rounded-full w-4 h-4" style="background-color: ${getMarkerColor(parcel)}; border: 1px solid white;"></div>
-  `;
-  marker.content = element;
 
   marker.addListener("click", () => {
     const position = getMarkerPixelPosition(marker, map);
@@ -39,14 +41,16 @@ export const createPropertyMarker = ({ parcel, map, onClick }: PropertyMarkerPro
   return marker;
 };
 
-const getMarkerPixelPosition = (marker: google.maps.marker.AdvancedMarkerElement, map: google.maps.Map) => {
+const getMarkerPixelPosition = (marker: google.maps.Marker, map: google.maps.Map) => {
   const scale = Math.pow(2, map.getZoom() || 0);
   const projection = map.getProjection();
   const bounds = map.getBounds();
   
   if (!projection || !bounds) return { x: 0, y: 0 };
 
-  const position = marker.position as google.maps.LatLng;
+  const position = marker.getPosition();
+  if (!position) return { x: 0, y: 0 };
+
   const worldPoint = projection.fromLatLngToPoint(position);
   const topRight = projection.fromLatLngToPoint(bounds.getNorthEast());
   const bottomLeft = projection.fromLatLngToPoint(bounds.getSouthWest());
