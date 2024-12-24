@@ -1,13 +1,8 @@
 import { Parcel } from '../types';
-import { generateTNBInfo } from '../generators';
-
-const createResidentialParcel = (data: Omit<Parcel, 'tnbInfo'>): Parcel => ({
-  ...data,
-  tnbInfo: generateTNBInfo(data.surface, data.type)
-});
+import { createParcelWithTNB } from '../generators/parcelGenerator';
 
 export const residentialParcels: Parcel[] = [
-  createResidentialParcel({
+  createParcelWithTNB({
     id: '1',
     title: 'Villa de Luxe - Californie',
     address: '15 Boulevard de l\'Océan, Californie',
@@ -21,7 +16,7 @@ export const residentialParcels: Parcel[] = [
     titleDeedNumber: 'TF123456/C',
     ownerName: 'Ahmed El Fassi'
   }),
-  {
+  createParcelWithTNB({
     id: '3',
     title: 'Appartement Haut Standing - Gauthier',
     address: '45 Rue Jean Jaurès, Gauthier',
@@ -33,15 +28,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Karim Benjelloun',
     location: { lat: 33.5850, lng: -7.6328 },
     titleDeedNumber: 'TF345678/C',
-    ownerName: 'Karim Benjelloun',
-    tnbInfo: {
-      pricePerMeter: 10,
-      totalAmount: 1800,
-      lastUpdate: '2024-03-15',
-      status: 'LOW'
-    }
-  },
-  {
+    ownerName: 'Karim Benjelloun'
+  }),
+  createParcelWithTNB({
     id: '6',
     title: 'Villa Modern - Anfa',
     address: '23 Boulevard d\'Anfa',
@@ -53,15 +42,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Sofia Alaoui',
     location: { lat: 33.5932, lng: -7.6353 },
     titleDeedNumber: 'TF234567/C',
-    ownerName: 'Sofia Alaoui',
-    tnbInfo: {
-      pricePerMeter: 15,
-      totalAmount: 9000,
-      lastUpdate: '2024-03-15',
-      status: 'HIGH'
-    }
-  },
-  {
+    ownerName: 'Sofia Alaoui'
+  }),
+  createParcelWithTNB({
     id: '8',
     title: 'Riad Traditionnel - Habous',
     address: '12 Quartier des Habous',
@@ -73,15 +56,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Hassan El Mansouri',
     location: { lat: 33.5892, lng: -7.6194 },
     titleDeedNumber: 'TF345678/C',
-    ownerName: 'Hassan El Mansouri',
-    tnbInfo: {
-      pricePerMeter: 8,
-      totalAmount: 2400,
-      lastUpdate: '2024-03-15',
-      status: 'LOW'
-    }
-  },
-  {
+    ownerName: 'Hassan El Mansouri'
+  }),
+  createParcelWithTNB({
     id: '10',
     title: 'Terrain Constructible - Dar Bouazza',
     address: 'Route Côtière, Dar Bouazza',
@@ -93,15 +70,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Immobilière Côtière SA',
     location: { lat: 33.5315, lng: -7.7481 },
     titleDeedNumber: 'TF123789/C',
-    ownerName: 'Immobilière Côtière SA',
-    tnbInfo: {
-      pricePerMeter: 20,
-      totalAmount: 30000,
-      lastUpdate: '2024-03-15',
-      status: 'HIGH'
-    }
-  },
-  {
+    ownerName: 'Immobilière Côtière SA'
+  }),
+  createParcelWithTNB({
     id: '12',
     title: 'Ferme Agricole - Bouskoura',
     address: 'Route de l\'Aéroport, Bouskoura',
@@ -113,15 +84,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Coopérative Al Baraka',
     location: { lat: 33.4989, lng: -7.6417 },
     titleDeedNumber: 'TF567123/C',
-    ownerName: 'Coopérative Al Baraka',
-    tnbInfo: {
-      pricePerMeter: 5,
-      totalAmount: 125000,
-      lastUpdate: '2024-03-15',
-      status: 'LOW'
-    }
-  },
-  {
+    ownerName: 'Coopérative Al Baraka'
+  }),
+  createParcelWithTNB({
     id: '14',
     title: 'Villa avec Piscine - Ain Diab',
     address: '34 Corniche, Ain Diab',
@@ -133,15 +98,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Youssef El Alami',
     location: { lat: 33.5954, lng: -7.6697 },
     titleDeedNumber: 'TF234890/C',
-    ownerName: 'Youssef El Alami',
-    tnbInfo: {
-      pricePerMeter: 18,
-      totalAmount: 14400,
-      lastUpdate: '2024-03-15',
-      status: 'HIGH'
-    }
-  },
-  {
+    ownerName: 'Youssef El Alami'
+  }),
+  createParcelWithTNB({
     id: '16',
     title: 'Appartement Vue Mer - Anfa Place',
     address: 'Boulevard de la Corniche, Anfa Place',
@@ -153,15 +112,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Nadia Benjelloun',
     location: { lat: 33.5954, lng: -7.6697 },
     titleDeedNumber: 'TF901456/C',
-    ownerName: 'Nadia Benjelloun',
-    tnbInfo: {
-      pricePerMeter: 14,
-      totalAmount: 3500,
-      lastUpdate: '2024-03-15',
-      status: 'AVERAGE'
-    }
-  },
-  {
+    ownerName: 'Nadia Benjelloun'
+  }),
+  createParcelWithTNB({
     id: '19',
     title: 'Résidence Sécurisée - Oasis',
     address: '90 Quartier Oasis',
@@ -173,15 +126,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Immobilière Prestige',
     location: { lat: 33.5534, lng: -7.6584 },
     titleDeedNumber: 'TF123567/C',
-    ownerName: 'Immobilière Prestige',
-    tnbInfo: {
-      pricePerMeter: 11,
-      totalAmount: 49500,
-      lastUpdate: '2024-03-15',
-      status: 'AVERAGE'
-    }
-  },
-  {
+    ownerName: 'Immobilière Prestige'
+  }),
+  createParcelWithTNB({
     id: '21',
     title: 'Duplex de Luxe - Racine',
     address: '67 Rue Jean Jaurès, Racine',
@@ -193,15 +140,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Sarah El Fassi',
     location: { lat: 33.5892, lng: -7.6353 },
     titleDeedNumber: 'TF234678/C',
-    ownerName: 'Sarah El Fassi',
-    tnbInfo: {
-      pricePerMeter: 13,
-      totalAmount: 2860,
-      lastUpdate: '2024-03-15',
-      status: 'AVERAGE'
-    }
-  },
-  {
+    ownerName: 'Sarah El Fassi'
+  }),
+  createParcelWithTNB({
     id: '23',
     title: 'Terrain Constructible - Bouskoura Golf City',
     address: 'Bouskoura Golf City',
@@ -213,15 +154,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Golf Resort Development',
     location: { lat: 33.4989, lng: -7.6417 },
     titleDeedNumber: 'TF789123/C',
-    ownerName: 'Golf Resort Development',
-    tnbInfo: {
-      pricePerMeter: 9,
-      totalAmount: 9000,
-      lastUpdate: '2024-03-15',
-      status: 'LOW'
-    }
-  },
-  {
+    ownerName: 'Golf Resort Development'
+  }),
+  createParcelWithTNB({
     id: '25',
     title: 'Penthouse - Twin Center',
     address: 'Boulevard Zerktouni, Twin Center',
@@ -233,15 +168,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Mohammed El Kettani',
     location: { lat: 33.5876, lng: -7.6331 },
     titleDeedNumber: 'TF345789/C',
-    ownerName: 'Mohammed El Kettani',
-    tnbInfo: {
-      pricePerMeter: 17,
-      totalAmount: 5100,
-      lastUpdate: '2024-03-15',
-      status: 'HIGH'
-    }
-  },
-  {
+    ownerName: 'Mohammed El Kettani'
+  }),
+  createParcelWithTNB({
     id: '27',
     title: 'Villa Contemporaine - CIL',
     address: '23 Rue des Orangers, CIL',
@@ -253,15 +182,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Amina Benjelloun',
     location: { lat: 33.5731, lng: -7.6353 },
     titleDeedNumber: 'TF123890/C',
-    ownerName: 'Amina Benjelloun',
-    tnbInfo: {
-      pricePerMeter: 16,
-      totalAmount: 6400,
-      lastUpdate: '2024-03-15',
-      status: 'HIGH'
-    }
-  },
-  {
+    ownerName: 'Amina Benjelloun'
+  }),
+  createParcelWithTNB({
     id: '28',
     title: 'Complexe Sportif - Californie',
     address: '456 Boulevard de l\'Atlas, Californie',
@@ -273,15 +196,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Sport & Loisirs SA',
     location: { lat: 33.5731, lng: -7.5898 },
     titleDeedNumber: 'TF567123/C',
-    ownerName: 'Sport & Loisirs SA',
-    tnbInfo: {
-      pricePerMeter: 7,
-      totalAmount: 42000,
-      lastUpdate: '2024-03-15',
-      status: 'LOW'
-    }
-  },
-  {
+    ownerName: 'Sport & Loisirs SA'
+  }),
+  createParcelWithTNB({
     id: '29',
     title: 'Entrepôt Frigorifique - Lissasfa',
     address: '789 Zone Industrielle, Lissasfa',
@@ -293,15 +210,9 @@ export const residentialParcels: Parcel[] = [
     owner: 'Froid Logistique SARL',
     location: { lat: 33.5315, lng: -7.6584 },
     titleDeedNumber: 'TF890345/C',
-    ownerName: 'Froid Logistique SARL',
-    tnbInfo: {
-      pricePerMeter: 6,
-      totalAmount: 24000,
-      lastUpdate: '2024-03-15',
-      status: 'LOW'
-    }
-  },
-  {
+    ownerName: 'Froid Logistique SARL'
+  }),
+  createParcelWithTNB({
     id: '30',
     title: 'Résidence Balnéaire - Dar Bouazza',
     address: 'Route Côtière, Dar Bouazza',
@@ -313,12 +224,6 @@ export const residentialParcels: Parcel[] = [
     owner: 'Groupe Immobilier Littoral',
     location: { lat: 33.5315, lng: -7.7481 },
     titleDeedNumber: 'TF234567/C',
-    ownerName: 'Groupe Immobilier Littoral',
-    tnbInfo: {
-      pricePerMeter: 11,
-      totalAmount: 38500,
-      lastUpdate: '2024-03-15',
-      status: 'AVERAGE'
-    }
-  }
+    ownerName: 'Groupe Immobilier Littoral'
+  })
 ];
