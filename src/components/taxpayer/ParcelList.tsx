@@ -64,14 +64,14 @@ export const ParcelList = () => {
           {parcels?.map((parcel) => (
             <TableRow key={parcel.id}>
               <TableCell>{parcel.id}</TableCell>
-              <TableCell>{JSON.parse(parcel.location).address}</TableCell>
+              <TableCell>{(parcel.location as { address: string }).address}</TableCell>
               <TableCell>{parcel.surface_area} m²</TableCell>
               <TableCell>{parcel.property_type}</TableCell>
               <TableCell>
                 <Badge 
-                  variant={parcel.fiscal_status === 'paid' ? "success" : "destructive"}
+                  variant={parcel.fiscal_status === 'compliant' ? "success" : "destructive"}
                 >
-                  {parcel.fiscal_status === 'paid' ? 'Payé' : 'Impayé'}
+                  {parcel.fiscal_status === 'compliant' ? 'Payé' : 'Impayé'}
                 </Badge>
               </TableCell>
               <TableCell>
@@ -83,7 +83,7 @@ export const ParcelList = () => {
                   >
                     Voir sur la carte
                   </Button>
-                  {parcel.fiscal_status !== 'paid' && (
+                  {parcel.fiscal_status !== 'compliant' && (
                     <Button 
                       size="sm"
                       onClick={() => navigate(`/payment/${parcel.id}`)}
