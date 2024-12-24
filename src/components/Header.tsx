@@ -3,7 +3,7 @@ import { Logo } from "./Logo";
 import { MainNav } from "./MainNav";
 import { ModeToggle } from "./theme/mode-toggle";
 import { Button } from "./ui/button";
-import { Search, Bell, Menu } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 import { SearchModal } from "./search/SearchModal";
 import { LoginDialog } from "./auth/LoginDialog";
 import { RegisterDialog } from "./auth/RegisterDialog";
@@ -49,19 +49,6 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {isMobile ? (
-            <MobileSearchSheet />
-          ) : (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative"
-              onClick={() => setIsSearchOpen(true)}
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-          )}
-
           {profile && (
             <>
               <Button
