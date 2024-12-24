@@ -22,9 +22,9 @@ export const MobileSearchSheet = () => {
     district: "",
     propertyType: "",
     fiscalStatus: "",
-    propertyStatus: "", // Added missing property
-    year: "", // Added missing property
-    titleDeedNumber: "", // Added missing property
+    propertyStatus: "",
+    year: "",
+    titleDeedNumber: "",
   });
 
   const handleSearch = () => {
@@ -45,9 +45,9 @@ export const MobileSearchSheet = () => {
       district: "",
       propertyType: "",
       fiscalStatus: "",
-      propertyStatus: "", // Added missing property
-      year: "", // Added missing property
-      titleDeedNumber: "", // Added missing property
+      propertyStatus: "",
+      year: "",
+      titleDeedNumber: "",
     });
   };
 
@@ -59,10 +59,15 @@ export const MobileSearchSheet = () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="top" className="h-[100dvh] w-full">
-        <SheetHeader className="space-y-4">
+        <SheetHeader className="space-y-4 relative">
           <div className="flex items-center justify-between">
             <SheetTitle>Recherche</SheetTitle>
-            <Button variant="ghost" size="icon" onClick={clearSearch}>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={clearSearch}
+              className="absolute right-0 top-0"
+            >
               <X className="h-5 w-5" />
             </Button>
           </div>
