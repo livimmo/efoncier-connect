@@ -7,6 +7,8 @@ import { useState } from "react";
 import { ContactDialog } from "./contact/ContactDialog";
 import { TNBCalculator } from "./tnb/TNBCalculator";
 import { formatCurrency } from "@/utils/format";
+import { Dialog, DialogContent } from "../ui/dialog";
+import { ReceiptPreview } from "../receipt/ReceiptPreview";
 
 interface ParcelInfoProps {
   parcel: Parcel;
@@ -17,6 +19,8 @@ interface ParcelInfoProps {
 export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
   const [contactOpen, setContactOpen] = useState(false);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [receiptOpen, setReceiptOpen] = useState(false);
 
   const getTNBStatusColor = (status: 'LOW' | 'AVERAGE' | 'HIGH') => {
     switch (status) {
@@ -29,6 +33,23 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
       default:
         return 'text-gray-600';
     }
+  };
+
+  // Mock receipt data based on parcel info
+  const receiptData = {
+    referenceNumber: `TNB-${parcel.id}`,
+    date: new Date().toISOString(),
+    taxpayer: {
+      name: parcel.ownerName,
+      fiscalId: parcel.titleDeedNumber,
+    },
+    parcel: {
+      id: parcel.id,
+      location: parcel.address,
+      area: parcel.surface,
+      amount: parcel.tnbInfo.totalAmount,
+      transactionRef: `TX-${parcel.id}`,
+    },
   };
 
   return (
@@ -102,9 +123,9 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
         <div className="flex gap-2">
           <Button 
             className="flex-1"
-            onClick={() => window.location.href = parcel.taxStatus === 'PAID' 
-              ? `/receipt/${parcel.id}`
-              : `/payment/${parcel.id}`
+            onClick={() => parcel.taxStatus === 'PAID' 
+              ? setReceiptOpen(true)
+              : setPaymentOpen(true)
             }
           >
             {parcel.taxStatus === 'PAID' ? (
@@ -150,6 +171,23 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
         open={calculatorOpen}
         onOpenChange={setCalculatorOpen}
       />
+
+      {/* Payment Dialog */}
+      <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
+        <DialogContent className="max-w-4xl">
+          <iframe 
+            src={`/payment/${parcel.id}`} 
+            className="w-full h-[80vh] border-none"
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Receipt Dialog */}
+      <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
+        <DialogContent className="max-w-2xl">
+          <ReceiptPreview data={receiptData} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
