@@ -21,6 +21,9 @@ interface LoginDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+// Define the allowed role types to match the database enum
+type UserRole = 'taxpayer' | 'developer' | 'commune' | 'admin';
+
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -28,7 +31,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOTP] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("taxpayer");
 
   const handleSuccessfulLogin = () => {
     setIsLoading(false);
@@ -137,7 +140,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                 isLoading={isLoading} 
                 onSubmit={onSubmit}
                 selectedRole={selectedRole}
-                onRoleChange={setSelectedRole}
+                onRoleChange={(role) => setSelectedRole(role as UserRole)}
               />
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
