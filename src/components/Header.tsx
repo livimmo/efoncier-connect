@@ -3,7 +3,7 @@ import { Logo } from "./Logo";
 import { MainNav } from "./MainNav";
 import { ModeToggle } from "./theme/mode-toggle";
 import { Button } from "./ui/button";
-import { Search, Bell, Key, Home, Settings, CreditCard, Database, LogOut } from "lucide-react";
+import { Search, Bell, Key, Home, Settings, CreditCard, Database, LogOut, Menu } from "lucide-react";
 import { useTheme } from "./theme/theme-provider";
 import { SearchModal } from "./search/SearchModal";
 import { LoginDialog } from "./auth/LoginDialog";
@@ -11,6 +11,11 @@ import { RegisterDialog } from "./auth/RegisterDialog";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Badge } from "./ui/badge";
 import { useAuth } from "./auth/AuthProvider";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +32,7 @@ export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -127,10 +133,10 @@ export const Header = () => {
           className="gap-2"
         >
           <Key className="h-4 w-4" />
-          Se Connecter
+          {!isMobile && "Se Connecter"}
         </Button>
         <Button onClick={() => setIsRegisterOpen(true)}>
-          S'inscrire
+          {isMobile ? "Inscription" : "S'inscrire"}
         </Button>
       </div>
     );
@@ -140,6 +146,18 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-4">
+          {isMobile && (
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[80vw] sm:w-[350px]">
+                <MainNav className="flex-col items-start space-y-4 pt-4" />
+              </SheetContent>
+            </Sheet>
+          )}
           <Logo />
           {!isMobile && <MainNav className="mx-6" />}
         </div>
@@ -159,12 +177,12 @@ export const Header = () => {
               variant="ghost"
               size="icon"
               className="relative"
-              onClick={() => {/* Handle notifications */}}
+              onClick={() => navigate("/notifications")}
             >
               <Bell className="h-5 w-5" />
               <Badge 
                 variant="default"
-                className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-secondary"
+                className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
               >
                 3
               </Badge>

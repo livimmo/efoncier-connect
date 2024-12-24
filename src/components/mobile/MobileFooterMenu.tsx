@@ -1,6 +1,6 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { HelpCircle, Phone, MessageSquare, Globe } from "lucide-react";
+import { HelpCircle, Phone, MessageSquare, Globe, Settings, FileText, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface MobileFooterMenuProps {
@@ -12,6 +12,30 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
   const navigate = useNavigate();
 
   const menuItems = [
+    {
+      icon: Settings,
+      label: "Paramètres",
+      onClick: () => {
+        navigate("/settings");
+        onClose();
+      },
+    },
+    {
+      icon: FileText,
+      label: "Documents",
+      onClick: () => {
+        navigate("/documents");
+        onClose();
+      },
+    },
+    {
+      icon: History,
+      label: "Historique",
+      onClick: () => {
+        navigate("/history");
+        onClose();
+      },
+    },
     {
       icon: HelpCircle,
       label: "FAQ",
@@ -48,8 +72,8 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="h-[40vh]">
-        <div className="grid grid-cols-2 gap-4 p-4">
+      <SheetContent side="bottom" className="h-[70vh] px-0">
+        <div className="grid grid-cols-3 gap-4 p-4">
           {menuItems.map((item) => (
             <Button
               key={item.label}
@@ -58,7 +82,7 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
               onClick={item.onClick}
             >
               <item.icon className="h-6 w-6" />
-              <span>{item.label}</span>
+              <span className="text-xs">{item.label}</span>
             </Button>
           ))}
         </div>

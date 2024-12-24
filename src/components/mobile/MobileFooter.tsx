@@ -4,6 +4,7 @@ import { Home, MapPin, CreditCard, Bell, User, Plus, Users } from "lucide-react"
 import { cn } from "@/lib/utils";
 import { MobileFooterMenu } from "./MobileFooterMenu";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { Badge } from "@/components/ui/badge";
 
 export const MobileFooter = () => {
   const [showMore, setShowMore] = useState(false);
@@ -22,7 +23,7 @@ export const MobileFooter = () => {
     {
       icon: MapPin,
       label: "Carte",
-      path: "/search",
+      path: "/map",
     },
     {
       icon: Users,
@@ -32,7 +33,7 @@ export const MobileFooter = () => {
     {
       icon: CreditCard,
       label: "Paiements",
-      path: "/dashboard?tab=payments",
+      path: "/payment",
     },
     {
       icon: Bell,
@@ -59,7 +60,10 @@ export const MobileFooter = () => {
               <div className="relative">
                 <item.icon className="h-5 w-5" />
                 {item.badge && (
-                  <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary" />
+                  <Badge 
+                    variant="default"
+                    className="absolute -right-1 -top-1 h-2 w-2 p-0 bg-primary"
+                  />
                 )}
               </div>
               <span className="text-[10px]">{item.label}</span>
