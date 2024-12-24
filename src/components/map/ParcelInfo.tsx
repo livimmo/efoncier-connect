@@ -39,13 +39,6 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
             <h3 className="font-semibold">{parcel.title}</h3>
             <p className="text-sm text-muted-foreground">{parcel.address}</p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-          >
-            ×
-          </Button>
         </div>
 
         <div className="space-y-2">
