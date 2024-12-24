@@ -60,6 +60,9 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 >
                   {getStatusText(parcel.taxStatus)}
                 </Badge>
+                <div className="text-xs text-muted-foreground mt-1">
+                  TF: {parcel.titleDeedNumber}
+                </div>
               </div>
             </div>
             <div className="text-right shrink-0">
