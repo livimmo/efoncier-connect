@@ -72,22 +72,26 @@ export const EmailLoginForm = ({
           <Label htmlFor="email">Adresse email</Label>
           <Input
             id="email"
+            name="email"
             placeholder="nom@exemple.com"
             type="email"
             autoCapitalize="none"
             autoComplete="email"
             autoCorrect="off"
             disabled={isLoading}
+            required
           />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Mot de passe</Label>
           <Input
             id="password"
+            name="password"
             type="password"
             autoCapitalize="none"
             autoComplete="current-password"
             disabled={isLoading}
+            required
           />
         </div>
         <Button disabled={isLoading || !selectedRole}>

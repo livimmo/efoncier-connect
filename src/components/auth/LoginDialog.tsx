@@ -36,7 +36,18 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
+    if (!email || !password) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     try {
+      console.log("Attempting login with:", { email, selectedRole });
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
