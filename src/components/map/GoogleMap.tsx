@@ -2,9 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
 import type { Parcel } from '@/utils/mockData/types';
-import { createClusterMarker } from './markers/ClusterMarker';
-import { createPropertyMarker } from './markers/PropertyMarker';
-import { createClusters } from './utils/clustering';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
@@ -20,39 +17,78 @@ interface GoogleMapProps {
 export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const markersRef = useRef<(google.maps.marker.AdvancedMarkerElement)[]>([]);
+  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
 
-  const clearMarkers = () => {
-    markersRef.current.forEach(marker => marker.map = null);
-    markersRef.current = [];
+  const getMarkerPixelPosition = (marker: google.maps.Marker, map: google.maps.Map) => {
+    const scale = Math.pow(2, map.getZoom() || 0);
+    const nw = new google.maps.LatLng(
+      map.getBounds()?.getNorthEast().lat() || 0,
+      map.getBounds()?.getSouthWest().lng() || 0
+    );
+    const worldCoordinateNW = map.getProjection()?.fromLatLngToPoint(nw);
+    const worldCoordinate = map.getProjection()?.fromLatLngToPoint(marker.getPosition() as google.maps.LatLng);
+    
+    if (worldCoordinateNW && worldCoordinate) {
+      const pixelOffset = new google.maps.Point(
+        Math.floor((worldCoordinate.x - worldCoordinateNW.x) * scale),
+        Math.floor((worldCoordinate.y - worldCoordinateNW.y) * scale)
+      );
+
+      const mapContainer = map.getDiv();
+      const containerOffset = {
+        x: mapContainer.offsetLeft,
+        y: mapContainer.offsetTop
+      };
+
+      return {
+        x: pixelOffset.x + containerOffset.x,
+        y: pixelOffset.y + containerOffset.y
+      };
+    }
+    
+    return { x: 0, y: 0 };
   };
 
-  const updateMarkers = (map: google.maps.Map) => {
-    const zoom = map.getZoom() || 0;
-    clearMarkers();
-    
-    if (zoom >= 14) {
-      // Afficher les marqueurs individuels
-      const newMarkers = parcels.map(parcel => 
-        createPropertyMarker({
-          parcel,
-          map,
-          onClick: onMarkerClick
-        })
-      );
-      markersRef.current = newMarkers;
-    } else {
-      // Créer des clusters
-      const clusters = createClusters(parcels, zoom);
-      const newMarkers = clusters.map(cluster => 
-        createClusterMarker({
-          ...cluster,
-          map
-        })
-      );
-      markersRef.current = newMarkers;
+  const getMarkerColor = (parcel: Parcel) => {
+    switch (parcel.taxStatus) {
+      case 'PAID':
+        return '#006233'; // Vert
+      case 'OVERDUE':
+        return '#C1272D'; // Rouge
+      default:
+        return '#FFA500'; // Orange pour "en attente"
     }
+  };
+
+  const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
+    markers.forEach(marker => marker.setMap(null));
+    
+    const newMarkers = parcels.map(parcel => {
+      const marker = new google.maps.Marker({
+        position: parcel.location,
+        map: map,
+        title: parcel.title,
+        animation: google.maps.Animation.DROP,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: getMarkerColor(parcel),
+          fillOpacity: 1,
+          strokeWeight: 1,
+          strokeColor: '#FFFFFF',
+          scale: 8,
+        },
+      });
+
+      marker.addListener("click", () => {
+        const position = getMarkerPixelPosition(marker, map);
+        onMarkerClick(parcel, position);
+      });
+
+      return marker;
+    });
+
+    setMarkers(newMarkers);
   };
 
   useEffect(() => {
@@ -83,22 +119,9 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: Goo
             gestureHandling: "greedy",
           });
 
-          // Optimiser les événements de zoom et déplacement
-          let updateTimeout: NodeJS.Timeout;
-          
-          const debouncedUpdate = () => {
-            clearTimeout(updateTimeout);
-            updateTimeout = setTimeout(() => {
-              updateMarkers(mapInstance);
-            }, 100);
-          };
-
-          mapInstance.addListener('zoom_changed', debouncedUpdate);
-          mapInstance.addListener('dragend', debouncedUpdate);
-
           setMap(mapInstance);
           setMapInstance(mapInstance);
-          updateMarkers(mapInstance);
+          createMarkers(parcels, mapInstance);
         }
       } catch (error) {
         console.error("Erreur lors du chargement de la carte:", error);
@@ -111,15 +134,11 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: Goo
     };
 
     initMap();
-
-    return () => {
-      clearMarkers();
-    };
   }, []);
 
   useEffect(() => {
     if (map) {
-      updateMarkers(map);
+      createMarkers(parcels, map);
     }
   }, [parcels, map]);
 
