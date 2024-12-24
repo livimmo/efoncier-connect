@@ -8,16 +8,47 @@ const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
 const DEFAULT_ZOOM = 12;
 
 interface GoogleMapProps {
-  onMarkerClick: (parcel: Parcel, event: { clientX: number; clientY: number }) => void;
+  onMarkerClick: (parcel: Parcel, position: { x: number, y: number }) => void;
   parcels: Parcel[];
   theme: 'light' | 'dark';
+  setMapInstance: (map: google.maps.Map) => void;
 }
 
-export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => {
+export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
+
+  const getMarkerPixelPosition = (marker: google.maps.Marker, map: google.maps.Map) => {
+    const scale = Math.pow(2, map.getZoom() || 0);
+    const nw = new google.maps.LatLng(
+      map.getBounds()?.getNorthEast().lat() || 0,
+      map.getBounds()?.getSouthWest().lng() || 0
+    );
+    const worldCoordinateNW = map.getProjection()?.fromLatLngToPoint(nw);
+    const worldCoordinate = map.getProjection()?.fromLatLngToPoint(marker.getPosition() as google.maps.LatLng);
+    
+    if (worldCoordinateNW && worldCoordinate) {
+      const pixelOffset = new google.maps.Point(
+        Math.floor((worldCoordinate.x - worldCoordinateNW.x) * scale),
+        Math.floor((worldCoordinate.y - worldCoordinateNW.y) * scale)
+      );
+
+      const mapContainer = map.getDiv();
+      const containerOffset = {
+        x: mapContainer.offsetLeft,
+        y: mapContainer.offsetTop
+      };
+
+      return {
+        x: pixelOffset.x + containerOffset.x,
+        y: pixelOffset.y + containerOffset.y
+      };
+    }
+    
+    return { x: 0, y: 0 };
+  };
 
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
     markers.forEach(marker => marker.setMap(null));
@@ -38,13 +69,9 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => 
         },
       });
 
-      marker.addListener("click", (e: google.maps.MapMouseEvent) => {
-        if (e.domEvent && 'clientX' in e.domEvent && 'clientY' in e.domEvent) {
-          onMarkerClick(parcel, {
-            clientX: e.domEvent.clientX,
-            clientY: e.domEvent.clientY
-          });
-        }
+      marker.addListener("click", () => {
+        const position = getMarkerPixelPosition(marker, map);
+        onMarkerClick(parcel, position);
       });
 
       return marker;
@@ -82,6 +109,7 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => 
           });
 
           setMap(mapInstance);
+          setMapInstance(mapInstance);
           createMarkers(parcels, mapInstance);
         }
       } catch (error) {
