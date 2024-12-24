@@ -147,7 +147,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
         <FilterSection title="Statut Fiscal">
           <SelectFilter
             value={filters.status}
-            onChange={(value) => setFilters({ ...filters, status: value })}
+            onChange={(value) => setFilters({ ...filters, status: value as "" | "PAID" | "PENDING" | "OVERDUE" })}
             options={statusOptions}
             placeholder="Statut fiscal"
           />
