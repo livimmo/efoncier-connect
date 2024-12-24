@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { PropertyPopup } from "../property-popup/PropertyPopup";
+import { Check, X, AlertTriangle } from "lucide-react";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -12,27 +13,53 @@ interface MinimizedParcelInfoProps {
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const getStatusColor = (status: string) => {
+  const getStatusInfo = (status: string) => {
     switch (status) {
-      case 'PAID':
+      case 'AVAILABLE':
+        return {
+          color: 'bg-green-500/10 text-green-500 hover:bg-green-500/20',
+          text: 'Disponible',
+          icon: Check
+        };
+      case 'SOLD':
+        return {
+          color: 'bg-red-500/10 text-red-500 hover:bg-red-500/20',
+          text: 'Vendu',
+          icon: X
+        };
+      default:
+        return {
+          color: 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20',
+          text: 'Indisponible',
+          icon: AlertTriangle
+        };
+    }
+  };
+
+  const getFiscalStatusColor = (status: string) => {
+    switch (status) {
+      case 'COMPLIANT':
         return 'bg-green-500/10 text-green-500 hover:bg-green-500/20';
-      case 'OVERDUE':
+      case 'NON_COMPLIANT':
         return 'bg-red-500/10 text-red-500 hover:bg-red-500/20';
       default:
         return 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20';
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getFiscalStatusText = (status: string) => {
     switch (status) {
-      case 'PAID':
-        return 'Payé';
-      case 'OVERDUE':
-        return 'En retard';
+      case 'COMPLIANT':
+        return 'Conforme';
+      case 'NON_COMPLIANT':
+        return 'Non conforme';
       default:
-        return 'En attente';
+        return 'En révision';
     }
   };
+
+  const statusInfo = getStatusInfo(parcel.status);
+  const StatusIcon = statusInfo.icon;
 
   return (
     <>
@@ -46,6 +73,14 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-start gap-4">
             <div className="flex-1 min-w-0">
+              <Badge 
+                variant="secondary"
+                className={`mb-2 ${statusInfo.color}`}
+                aria-label={`Statut du bien : ${statusInfo.text}`}
+              >
+                <StatusIcon className="w-3 h-3 mr-1" />
+                {statusInfo.text}
+              </Badge>
               <div className="flex flex-col">
                 <div className="text-xs text-muted-foreground flex items-center gap-1">
                   <span>{parcel.surface} m² •</span>
@@ -56,9 +91,9 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 </div>
                 <Badge 
                   variant="secondary" 
-                  className={`mt-1 w-fit ${getStatusColor(parcel.taxStatus)}`}
+                  className={`mt-1 w-fit ${getFiscalStatusColor(parcel.fiscalStatus)}`}
                 >
-                  {getStatusText(parcel.taxStatus)}
+                  {getFiscalStatusText(parcel.fiscalStatus)}
                 </Badge>
                 <div className="text-xs text-muted-foreground mt-1">
                   TF: {parcel.titleDeedNumber}
