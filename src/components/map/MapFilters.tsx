@@ -55,10 +55,18 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
   }));
 
   const statusOptions = [
+    { value: "ALL", label: "Tous les statuts" },
     { value: "PAID", label: "Payé" },
     { value: "PENDING", label: "En attente" },
     { value: "OVERDUE", label: "En retard" }
   ];
+
+  const handleStatusChange = (value: string) => {
+    setFilters({ 
+      ...filters, 
+      status: value === "ALL" ? "" : value 
+    });
+  };
 
   return (
     <div className="w-80 bg-white p-6 shadow-lg space-y-6 overflow-y-auto">
@@ -106,10 +114,13 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <SelectFilter
             value={filters.region}
             onChange={(value) => setFilters({ ...filters, region: value, commune: '' })}
-            options={REGIONS.map((region) => ({
-              value: region.id,
-              label: region.name
-            }))}
+            options={[
+              { value: "ALL", label: "Toutes les régions" },
+              ...REGIONS.map((region) => ({
+                value: region.id,
+                label: region.name
+              }))
+            ]}
             placeholder="Sélectionner une région"
           />
         </FilterSection>
@@ -118,10 +129,13 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <SelectFilter
             value={filters.commune}
             onChange={(value) => setFilters({ ...filters, commune: value })}
-            options={availableCommunes.map((commune) => ({
-              value: commune.toLowerCase(),
-              label: commune
-            }))}
+            options={[
+              { value: "ALL", label: "Toutes les communes" },
+              ...availableCommunes.map((commune) => ({
+                value: commune.toLowerCase(),
+                label: commune
+              }))
+            ]}
             placeholder="Sélectionner une commune"
           />
         </FilterSection>
@@ -130,7 +144,10 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <SelectFilter
             value={filters.propertyType}
             onChange={(value) => setFilters({ ...filters, propertyType: value as PropertyType })}
-            options={propertyTypeOptions}
+            options={[
+              { value: "ALL", label: "Tous les types" },
+              ...propertyTypeOptions
+            ]}
             placeholder="Type de terrain"
           />
         </FilterSection>
@@ -139,15 +156,18 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <SelectFilter
             value={filters.zoneType}
             onChange={(value) => setFilters({ ...filters, zoneType: value as ZoneType })}
-            options={zoneTypeOptions}
+            options={[
+              { value: "ALL", label: "Tous les zonings" },
+              ...zoneTypeOptions
+            ]}
             placeholder="Zoning"
           />
         </FilterSection>
 
         <FilterSection title="Statut Fiscal">
           <SelectFilter
-            value={filters.status}
-            onChange={(value) => setFilters({ ...filters, status: value as "" | "PAID" | "PENDING" | "OVERDUE" })}
+            value={filters.status || "ALL"}
+            onChange={handleStatusChange}
             options={statusOptions}
             placeholder="Statut fiscal"
           />
