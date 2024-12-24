@@ -22,6 +22,9 @@ export const MobileSearchSheet = () => {
     district: "",
     propertyType: "",
     fiscalStatus: "",
+    propertyStatus: "", // Added missing property
+    year: "", // Added missing property
+    titleDeedNumber: "", // Added missing property
   });
 
   const handleSearch = () => {
@@ -42,6 +45,9 @@ export const MobileSearchSheet = () => {
       district: "",
       propertyType: "",
       fiscalStatus: "",
+      propertyStatus: "", // Added missing property
+      year: "", // Added missing property
+      titleDeedNumber: "", // Added missing property
     });
   };
 
