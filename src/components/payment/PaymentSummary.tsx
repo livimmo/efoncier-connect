@@ -1,5 +1,6 @@
-import { Building2, Receipt, AlertCircle, Calendar } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { formatCurrency } from "@/utils/format";
 import type { PaymentDetails } from "./types";
 
 interface PaymentSummaryProps {
@@ -8,41 +9,55 @@ interface PaymentSummaryProps {
 
 export const PaymentSummary = ({ payment }: PaymentSummaryProps) => {
   return (
-    <Card className="mb-8">
-      <CardHeader>
-        <CardTitle>Résumé du Paiement</CardTitle>
-        <CardDescription>Détails de la propriété et montant dû</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">ID Terrain: {payment.id}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Receipt className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Localisation: {payment.location}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Superficie: {payment.area} m²</span>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Type: {payment.type}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Échéance: {new Date(payment.dueDate).toLocaleDateString()}</span>
-          </div>
-          <div className="flex items-center gap-2 font-bold text-primary">
-            <Receipt className="h-4 w-4" />
-            <span>Montant: {payment.amount.toLocaleString()} MAD</span>
+    <Card className="p-6">
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Détails du Bien</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">N° Titre Foncier</span>
+                <span className="font-medium">{payment.id}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Localisation</span>
+                <span className="font-medium">{payment.location}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Superficie</span>
+                <span className="font-medium">{payment.area} m²</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Type</span>
+                <span className="font-medium">{payment.type}</span>
+              </div>
+            </div>
           </div>
         </div>
-      </CardContent>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Paiement</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Montant à payer</span>
+                <span className="text-xl font-bold">
+                  {formatCurrency(payment.amount)} MAD
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Date limite</span>
+                <span className="font-medium">{new Date(payment.dueDate).toLocaleDateString()}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Statut</span>
+                <Badge variant={payment.status === "paid" ? "success" : "destructive"}>
+                  {payment.status === "paid" ? "Payé" : "Impayé"}
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 };
