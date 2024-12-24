@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useState } from "react";
 import { ParcelDetails } from "./ParcelDetails";
 import { ParcelActions } from "./ParcelActions";
+import { Badge } from "@/components/ui/badge";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -17,6 +18,28 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
 
   const handleTitleClick = () => {
     navigate(`/taxpayer/properties/${parcel.id}`);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return 'bg-green-500/10 text-green-500 hover:bg-green-500/20';
+      case 'OVERDUE':
+        return 'bg-red-500/10 text-red-500 hover:bg-red-500/20';
+      default:
+        return 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return 'Payé';
+      case 'OVERDUE':
+        return 'En retard';
+      default:
+        return 'En attente';
+    }
   };
 
   return (
@@ -57,19 +80,19 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 <div className="text-xs font-medium text-red-600 dark:text-red-500">
                   {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
                 </div>
+                <Badge 
+                  variant="secondary" 
+                  className={`mt-1 w-fit ${getStatusColor(parcel.taxStatus)}`}
+                >
+                  {getStatusText(parcel.taxStatus)}
+                </Badge>
               </div>
             </div>
             <div className="text-right shrink-0">
               <div className="text-sm font-semibold whitespace-nowrap">
                 {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
               </div>
-              <div className={`text-xs font-medium whitespace-nowrap ${
-                parcel.taxStatus === 'PAID' 
-                  ? 'text-green-600 dark:text-green-500' 
-                  : parcel.taxStatus === 'OVERDUE' 
-                  ? 'text-red-600 dark:text-red-500' 
-                  : 'text-orange-600 dark:text-orange-500'
-              }`}>
+              <div className="text-xs font-medium whitespace-nowrap text-muted-foreground">
                 {parcel.ownerName}
               </div>
               <Button 
