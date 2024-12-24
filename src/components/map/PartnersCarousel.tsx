@@ -8,6 +8,11 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface PartnersCarouselProps {
+  compact?: boolean;
+}
 
 const partners = [
   {
@@ -40,7 +45,35 @@ const partners = [
   },
 ];
 
-export const PartnersCarousel = () => {
+export const PartnersCarousel = ({ compact = false }: PartnersCarouselProps) => {
+  if (compact) {
+    return (
+      <div className="py-2">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent>
+            {partners.map((partner) => (
+              <CarouselItem key={partner.id} className="basis-1/3">
+                <div className="h-12 relative p-1">
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="object-contain w-full h-full"
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </div>
+    );
+  }
+
   return (
     <div className="py-10 space-y-6">
       <div className="text-center space-y-2">

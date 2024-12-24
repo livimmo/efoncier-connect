@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { GoogleMap } from './GoogleMap';
 import { DraggableParcelInfo } from './DraggableParcelInfo';
 import { MapControls } from './MapControls';
+import { PartnersCarousel } from './PartnersCarousel';
 import { useToast } from "@/hooks/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapFilters, MapSettings, MapControls as MapControlsType } from './types';
 import { mockParcels } from '@/utils/mockData/parcels';
+import { cn } from "@/lib/utils";
 
 interface MapViewProps {
   filters: MapFilters;
@@ -24,6 +26,7 @@ export const MapView = ({
   markerPosition
 }: MapViewProps) => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [controls, setControls] = useState<MapControlsType>({
@@ -89,12 +92,23 @@ export const MapView = ({
   };
 
   const handleSettingChange = (setting: keyof MapSettings, value: any) => {
-    // This would typically update the settings via a prop or context
     console.log('Setting changed:', setting, value);
   };
 
+  const handleMapClick = () => {
+    if (isMobile) {
+      setIsFullscreen(true);
+    }
+  };
+
   return (
-    <div className="relative h-full">
+    <div 
+      className={cn(
+        "relative h-full transition-all duration-300",
+        isFullscreen && isMobile && "fixed inset-0 z-50 bg-background"
+      )}
+      onClick={handleMapClick}
+    >
       <div className="absolute inset-0">
         <GoogleMap 
           onMarkerClick={onParcelSelect}
@@ -120,11 +134,24 @@ export const MapView = ({
       {selectedParcel && markerPosition && (
         <DraggableParcelInfo
           parcel={selectedParcel}
-          onClose={() => onParcelSelect(null, null)}
+          onClose={() => {
+            onParcelSelect(null, null);
+            setIsFullscreen(false);
+          }}
           markerPosition={markerPosition}
-          className={`bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow
-            ${isMobile ? 'fixed bottom-0 left-0 right-0 rounded-t-xl rounded-b-none' : ''}`}
+          className={cn(
+            "bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow",
+            isMobile && "fixed bottom-0 left-0 right-0 rounded-t-xl rounded-b-none"
+          )}
         />
+      )}
+
+      {isMobile && isFullscreen && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm">
+          <div className="h-16">
+            <PartnersCarousel compact />
+          </div>
+        </div>
       )}
     </div>
   );
