@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ChatBubble } from "@/components/chat/ChatBubble";
 import { MobileFooter } from "@/components/mobile/MobileFooter";
 import { AuthProvider } from "@/components/auth/AuthProvider";
-import { useAuth } from "@/components/auth/AuthProvider";
 
 // Public Pages
 import Home from "./pages/Home";
@@ -18,7 +17,7 @@ import Privacy from "./pages/Privacy";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-// Authenticated Pages
+// Pages (temporarily unprotected)
 import Dashboard from "./pages/Dashboard";
 import TaxpayerDashboard from "./pages/taxpayer/Dashboard";
 import DeveloperDashboard from "./pages/developer/Dashboard";
@@ -32,21 +31,6 @@ import History from "./pages/History";
 import Map from "./components/Map";
 
 const queryClient = new QueryClient();
-
-// Protected Route component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { session, loading } = useAuth();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!session) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-};
 
 const App = () => {
   return (
@@ -66,37 +50,17 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 
-                {/* Protected Routes */}
-                <Route path="/notifications" element={
-                  <ProtectedRoute><Notifications /></ProtectedRoute>
-                } />
-                <Route path="/payment" element={
-                  <ProtectedRoute><Payment /></ProtectedRoute>
-                } />
-                <Route path="/directory" element={
-                  <ProtectedRoute><Directory /></ProtectedRoute>
-                } />
-                <Route path="/messages" element={
-                  <ProtectedRoute><Messages /></ProtectedRoute>
-                } />
-                <Route path="/support" element={
-                  <ProtectedRoute><Support /></ProtectedRoute>
-                } />
-                <Route path="/history" element={
-                  <ProtectedRoute><History /></ProtectedRoute>
-                } />
-                <Route path="/dashboard" element={
-                  <ProtectedRoute><Dashboard /></ProtectedRoute>
-                } />
-                <Route path="/taxpayer/*" element={
-                  <ProtectedRoute><TaxpayerDashboard /></ProtectedRoute>
-                } />
-                <Route path="/developer/*" element={
-                  <ProtectedRoute><DeveloperDashboard /></ProtectedRoute>
-                } />
-                <Route path="/admin/*" element={
-                  <ProtectedRoute><AdminDashboard /></ProtectedRoute>
-                } />
+                {/* Temporarily Unprotected Routes */}
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/directory" element={<Directory />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/history" element={<History />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/taxpayer/*" element={<TaxpayerDashboard />} />
+                <Route path="/developer/*" element={<DeveloperDashboard />} />
+                <Route path="/admin/*" element={<AdminDashboard />} />
 
                 {/* Catch all route - redirect to home */}
                 <Route path="*" element={<Navigate to="/" replace />} />
