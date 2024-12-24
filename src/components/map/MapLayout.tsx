@@ -61,15 +61,13 @@ export const MapLayout = () => {
             filters={filters}
             setFilters={setFilters}
             onApplyFilters={() => {}}
-            className="w-80"
           />
         </div>
       ) : (
         <MobileFiltersSheet
-          open={showFilters}
-          onOpenChange={setShowFilters}
           filters={filters}
           setFilters={setFilters}
+          filteredParcelsCount={0}
         />
       )}
 
@@ -84,11 +82,12 @@ export const MapLayout = () => {
             onZoomOut={handleZoomOut}
             onReset={handleReset}
             onLocateMe={handleLocateMe}
-            className="w-80"
           />
         </div>
       ) : (
         <MapMobileControls
+          settings={{ theme: 'light', unit: 'metric' }}
+          onSettingChange={handleSettingChange}
           onFilterClick={() => setShowFilters(true)}
           onZoomIn={handleZoomIn}
           onZoomOut={handleZoomOut}

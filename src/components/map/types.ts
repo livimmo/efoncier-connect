@@ -43,10 +43,21 @@ export interface MapControlsProps {
   className?: string;
 }
 
-export interface ParcelInfoProps {
-  parcel: Parcel;
-  onClose: () => void;
-  className?: string;
+export interface MapMobileControlsProps {
+  settings: MapSettings;
+  onSettingChange: (key: keyof MapSettings, value: any) => void;
+  onFilterClick?: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onLocateMe?: () => void;
+}
+
+export interface MobileFiltersSheetProps {
+  filters: MapFilters;
+  setFilters: (filters: MapFilters) => void;
+  filteredParcelsCount: number;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export type { Parcel };
