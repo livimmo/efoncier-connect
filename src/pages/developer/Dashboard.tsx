@@ -2,13 +2,18 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 const DeveloperDashboard = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const currentTab = searchParams.get("tab") || "overview";
   const { profile } = useAuth();
+
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -22,7 +27,7 @@ const DeveloperDashboard = () => {
               Bienvenue, {profile?.first_name} {profile?.last_name}
             </p>
             
-            <Tabs value={currentTab} className="space-y-6">
+            <Tabs value={currentTab} onValueChange={handleTabChange} className="space-y-6">
               <TabsList>
                 <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
                 <TabsTrigger value="projects">Projets</TabsTrigger>
