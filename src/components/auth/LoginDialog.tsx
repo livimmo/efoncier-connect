@@ -51,16 +51,19 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          metadata: {
-            role: selectedRole,
-          },
-        },
       });
 
       if (error) throw error;
 
       if (data.user) {
+        // Update the user's role in their profile after successful login
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ role: selectedRole })
+          .eq('id', data.user.id);
+
+        if (updateError) throw updateError;
+        
         handleSuccessfulLogin();
       }
     } catch (error: any) {
