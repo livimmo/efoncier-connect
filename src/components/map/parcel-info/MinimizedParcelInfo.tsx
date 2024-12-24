@@ -1,4 +1,5 @@
 import { Parcel } from "@/utils/mockData/types";
+import { formatCurrency } from "@/utils/format";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -22,6 +23,12 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
               : parcel.taxStatus === 'OVERDUE' 
               ? 'En retard' 
               : 'En attente'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-xs text-muted-foreground">TNB Annuel</span>
+          <span className="text-xs font-medium">
+            {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
           </span>
         </div>
         <div className="flex justify-between">
