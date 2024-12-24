@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 interface MapViewProps {
   selectedParcel: Parcel | null;
   markerPosition: { x: number; y: number } | null;
-  onParcelSelect: (parcel: Parcel, position?: { x: number; y: number }) => void;
+  onParcelSelect: (parcel: Parcel | null, position?: { x: number; y: number }) => void;
   filteredParcels: Parcel[];
   settings: MapSettings;
   mapInstance: google.maps.Map | null;
@@ -108,7 +108,7 @@ export const MapView = ({
       {selectedParcel && markerPosition && (
         <DraggableParcelInfo
           parcel={selectedParcel}
-          onClose={() => onParcelSelect(selectedParcel)}
+          onClose={() => onParcelSelect(null)}
           markerPosition={markerPosition}
           className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
         />
