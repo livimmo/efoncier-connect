@@ -24,7 +24,7 @@ const Search = () => {
             )}
             {profile?.role === "taxpayer" && (
               <p className="text-muted-foreground">
-                Recherchez vos parcelles ou consultez les informations cadastrales.
+                Gérez vos biens et consultez les informations cadastrales.
               </p>
             )}
             {!profile && (

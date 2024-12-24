@@ -21,7 +21,7 @@ const TaxpayerDashboard = () => {
         <Sidebar />
         <main className="flex-1 ml-64 p-6 mt-16">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-2xl font-bold mb-2">Tableau de Bord Contribuable</h1>
+            <h1 className="text-2xl font-bold mb-2">Tableau de Bord Propriétaire</h1>
             <p className="text-muted-foreground mb-6">
               Bienvenue, {profile?.first_name} {profile?.last_name}
             </p>
