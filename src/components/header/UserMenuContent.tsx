@@ -38,7 +38,7 @@ export const UserMenuContent = () => {
             {profile?.first_name} {profile?.last_name}
           </p>
           <p className="text-sm text-muted-foreground">
-            {profile?.role === "taxpayer" ? "Contribuable" : 
+            {profile?.role === "owner" ? "Propriétaire" : 
              profile?.role === "developer" ? "Promoteur" : "Administrateur"}
           </p>
         </div>

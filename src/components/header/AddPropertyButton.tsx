@@ -7,7 +7,7 @@ export const AddPropertyButton = () => {
   const navigate = useNavigate();
   const { profile } = useAuth();
 
-  if (profile?.role !== "taxpayer") {
+  if (profile?.role !== "owner") {
     return null;
   }
 
