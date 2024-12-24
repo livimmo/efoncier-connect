@@ -8,6 +8,7 @@ import { RangeFilter } from "./filters/RangeFilter";
 import { DateFilter } from "./filters/DateFilter";
 import { useFilterOptions } from "./filters/useFilterOptions";
 import { REGIONS } from "@/utils/mockData/locations";
+import { Badge } from "@/components/ui/badge";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
@@ -20,7 +21,8 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
     propertyTypeOptions, 
     zoneTypeOptions, 
     availableCommunes, 
-    statusOptions 
+    statusOptions,
+    statusCounts 
   } = useFilterOptions(filters.region);
 
   const handleStatusChange = (value: string) => {
@@ -130,7 +132,18 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           />
         </FilterSection>
 
-        <FilterSection title="Statut Fiscal">
+        <FilterSection 
+          title={
+            <div className="flex items-center gap-2">
+              Statut Fiscal
+              <div className="flex gap-1">
+                <Badge variant="success">{statusCounts.PAID}</Badge>
+                <Badge variant="warning">{statusCounts.PENDING}</Badge>
+                <Badge variant="destructive">{statusCounts.OVERDUE}</Badge>
+              </div>
+            </div>
+          }
+        >
           <SelectFilter
             value={filters.status || "ALL"}
             onChange={handleStatusChange}

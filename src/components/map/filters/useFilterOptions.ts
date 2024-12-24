@@ -32,9 +32,9 @@ export const useFilterOptions = (selectedRegion: string) => {
     };
     
     mockParcels.forEach(parcel => {
-      if (parcel.fiscal_status === 'compliant') counts.PAID++;
-      else if (parcel.fiscal_status === 'under_review') counts.PENDING++;
-      else if (parcel.fiscal_status === 'non_compliant') counts.OVERDUE++;
+      if (parcel.taxStatus === 'PAID') counts.PAID++;
+      else if (parcel.taxStatus === 'PENDING') counts.PENDING++;
+      else if (parcel.taxStatus === 'OVERDUE') counts.OVERDUE++;
     });
     
     return counts;
@@ -51,6 +51,7 @@ export const useFilterOptions = (selectedRegion: string) => {
     propertyTypeOptions,
     zoneTypeOptions,
     availableCommunes,
-    statusOptions
+    statusOptions,
+    statusCounts
   };
 };
