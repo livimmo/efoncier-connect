@@ -11,7 +11,7 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium truncate mb-0.5">{parcel.title}</div>
+            <div className="text-sm font-medium truncate mb-1">{parcel.title}</div>
             <div className="text-xs text-muted-foreground flex items-center gap-1">
               <span>{parcel.surface} m² •</span>
               <span>Zone {parcel.zone}</span>
@@ -28,11 +28,7 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 ? 'text-red-600 dark:text-red-500' 
                 : 'text-orange-600 dark:text-orange-500'
             }`}>
-              {parcel.taxStatus === 'PAID' 
-                ? 'Payé' 
-                : parcel.taxStatus === 'OVERDUE' 
-                ? 'En retard' 
-                : 'En attente'}
+              {parcel.ownerName}
             </div>
           </div>
         </div>
