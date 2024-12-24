@@ -86,7 +86,7 @@ export const MapContainer = () => {
       </div>
 
       <div className="bg-background/95 backdrop-blur-sm border-t">
-        <PartnersCarousel />
+        <PartnersCarousel compact={isMobile} />
       </div>
     </div>
   );
