@@ -3,144 +3,27 @@ import { Logo } from "./Logo";
 import { MainNav } from "./MainNav";
 import { ModeToggle } from "./theme/mode-toggle";
 import { Button } from "./ui/button";
-import { Search, Bell, Key, Home, Settings, CreditCard, Database, LogOut, Menu } from "lucide-react";
-import { useTheme } from "./theme/theme-provider";
+import { Search, Bell, Menu } from "lucide-react";
 import { SearchModal } from "./search/SearchModal";
 import { LoginDialog } from "./auth/LoginDialog";
 import { RegisterDialog } from "./auth/RegisterDialog";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Badge } from "./ui/badge";
 import { useAuth } from "./auth/AuthProvider";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "./ui/use-toast";
+import { UserMenu } from "./header/UserMenu";
+import { AuthButtons } from "./header/AuthButtons";
+import { AddPropertyButton } from "./header/AddPropertyButton";
 
 export const Header = () => {
-  const { theme } = useTheme();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const { profile, signOut } = useAuth();
+  const { profile } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      navigate("/");
-      toast({
-        title: "Déconnexion réussie",
-        description: "À bientôt !",
-      });
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la déconnexion",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const getInitials = (firstName?: string, lastName?: string) => {
-    if (!firstName && !lastName) return "U";
-    return `${(firstName?.[0] || "").toUpperCase()}${(lastName?.[0] || "").toUpperCase()}`;
-  };
-
-  const getFullName = (firstName?: string, lastName?: string) => {
-    if (!firstName && !lastName) return "Utilisateur";
-    return `${firstName || ""} ${lastName || ""}`.trim();
-  };
-
-  const renderAuthButtons = () => {
-    if (profile) {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="ghost" 
-              className="relative h-8 w-8 rounded-full"
-              aria-label="Menu utilisateur"
-            >
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary/10">
-                  {getInitials(profile.first_name, profile.last_name)}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            className="w-56" 
-            align="end"
-            sideOffset={5}
-          >
-            <div className="flex items-center justify-start gap-2 p-2">
-              <div className="flex flex-col space-y-1 leading-none">
-                <p className="font-medium">
-                  {getFullName(profile.first_name, profile.last_name)}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {profile.role === "taxpayer" ? "Contribuable" : 
-                   profile.role === "developer" ? "Promoteur" : "Administrateur"}
-                </p>
-              </div>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/dashboard")}>
-              <Home className="mr-2 h-4 w-4" />
-              <span>Tableau de Bord</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/profile?tab=settings")}>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Paramètres</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/history")}>
-              <CreditCard className="mr-2 h-4 w-4" />
-              <span>Historique des Paiements</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/profile?tab=properties")}>
-              <Database className="mr-2 h-4 w-4" />
-              <span>Mes Biens</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Se Déconnecter</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    }
-
-    return (
-      <div className="flex items-center gap-2">
-        <Button 
-          variant="ghost" 
-          onClick={() => setIsLoginOpen(true)}
-          className="gap-2"
-        >
-          <Key className="h-4 w-4" />
-          {!isMobile && "Se Connecter"}
-        </Button>
-        <Button onClick={() => setIsRegisterOpen(true)}>
-          {isMobile ? "Inscription" : "S'inscrire"}
-        </Button>
-      </div>
-    );
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -173,24 +56,34 @@ export const Header = () => {
           </Button>
 
           {profile && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative"
-              onClick={() => navigate("/notifications")}
-            >
-              <Bell className="h-5 w-5" />
-              <Badge 
-                variant="default"
-                className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative"
+                onClick={() => navigate("/notifications")}
               >
-                3
-              </Badge>
-            </Button>
+                <Bell className="h-5 w-5" />
+                <Badge 
+                  variant="default"
+                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
+                >
+                  3
+                </Badge>
+              </Button>
+              <AddPropertyButton />
+            </>
           )}
           
           <ModeToggle />
-          {renderAuthButtons()}
+          {profile ? (
+            <UserMenu />
+          ) : (
+            <AuthButtons 
+              onLoginClick={() => setIsLoginOpen(true)}
+              onRegisterClick={() => setIsRegisterOpen(true)}
+            />
+          )}
         </div>
       </div>
 
