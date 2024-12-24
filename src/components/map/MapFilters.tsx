@@ -9,7 +9,6 @@ import { DateFilter } from "./filters/DateFilter";
 import { useFilterOptions } from "./filters/useFilterOptions";
 import { REGIONS } from "@/utils/mockData/locations";
 import { Badge } from "@/components/ui/badge";
-import { PropertyType, ZoneType } from "@/utils/mockData/types";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
@@ -182,4 +181,3 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
     </div>
   );
 };
-
