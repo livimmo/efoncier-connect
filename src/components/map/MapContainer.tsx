@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const MapContainer = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
+  const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const { toast } = useToast();
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   
@@ -115,15 +116,15 @@ export const MapContainer = () => {
     return filteredParcels;
   };
 
-  const handleParcelSelect = (parcel: Parcel) => {
+  const handleParcelSelect = (parcel: Parcel, event: MouseEvent) => {
     setSelectedParcel(parcel);
+    setMarkerPosition({ x: event.clientX, y: event.clientY });
     toast({
       title: "Parcelle sélectionnée",
       description: `${parcel.title} - ${parcel.surface}m²`,
     });
   };
 
-  // Utilisation de useMemo pour éviter les calculs inutiles
   const filteredParcels = useMemo(() => {
     return mockParcels.filter(parcel => {
       if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
@@ -172,11 +173,22 @@ export const MapContainer = () => {
             />
           </div>
 
-          {selectedParcel && (
-            <div className="absolute bottom-4 left-4 right-4 lg:left-auto lg:right-4 lg:w-96 z-20">
+          {selectedParcel && markerPosition && (
+            <div 
+              className="absolute z-20"
+              style={{
+                left: `${markerPosition.x}px`,
+                top: `${markerPosition.y - 10}px`,
+                transform: 'translate(-50%, -100%)'
+              }}
+            >
               <ParcelInfo 
                 parcel={selectedParcel}
-                onClose={() => setSelectedParcel(null)}
+                position={markerPosition}
+                onClose={() => {
+                  setSelectedParcel(null);
+                  setMarkerPosition(null);
+                }}
                 className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg"
               />
             </div>

@@ -2,14 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
 import type { Parcel } from '@/utils/mockData/types';
-import type { Cluster } from './types';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
 const DEFAULT_ZOOM = 12;
 
 interface GoogleMapProps {
-  onMarkerClick: (parcel: Parcel) => void;
+  onMarkerClick: (parcel: Parcel, event: MouseEvent) => void;
   parcels: Parcel[];
   theme: 'light' | 'dark';
 }
@@ -39,8 +38,10 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => 
         },
       });
 
-      marker.addListener("click", () => {
-        onMarkerClick(parcel);
+      marker.addListener("click", (e: google.maps.MapMouseEvent) => {
+        if (e.domEvent) {
+          onMarkerClick(parcel, e.domEvent);
+        }
       });
 
       return marker;

@@ -44,6 +44,7 @@ export interface MapControlsProps {
 export interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
+  position?: { x: number; y: number };
   className?: string;
 }
 
