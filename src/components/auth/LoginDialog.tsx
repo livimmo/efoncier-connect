@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { OTPInput } from "./OTPInput";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { useAuth } from "./AuthProvider";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LoginDialogProps {
   open: boolean;
@@ -36,33 +37,41 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       description: "Vous êtes maintenant connecté.",
     });
     onOpenChange(false);
-
-    // Redirection basée sur le rôle
-    if (profile) {
-      switch (profile.role) {
-        case "taxpayer":
-          navigate("/taxpayer/profile");
-          break;
-        case "developer":
-          navigate("/developer/profile");
-          break;
-        case "commune":
-          navigate("/admin/profile");
-          break;
-        default:
-          navigate("/profile");
-      }
-    }
   };
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
-    
-    // Simuler un délai de connexion
-    setTimeout(() => {
-      handleSuccessfulLogin();
-    }, 1000);
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+        options: {
+          data: {
+            role: selectedRole,
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      if (data.user) {
+        handleSuccessfulLogin();
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Une erreur est survenue lors de la connexion",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleWhatsAppLogin = () => {
@@ -73,12 +82,21 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     });
   };
 
-  const verifyOTP = () => {
+  const verifyOTP = async () => {
     if (otp.length === 6) {
       setIsLoading(true);
-      setTimeout(() => {
+      try {
+        // Implement OTP verification logic here
         handleSuccessfulLogin();
-      }, 1000);
+      } catch (error: any) {
+        toast({
+          title: "Erreur",
+          description: "Code de vérification invalide",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
