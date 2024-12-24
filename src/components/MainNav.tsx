@@ -55,11 +55,17 @@ export function MainNav({ className, ...props }: MainNavProps) {
             "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group",
             location.pathname === href 
               ? "text-primary after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-0.5 after:bg-primary" 
-              : "text-muted-foreground"
+              : "text-muted-foreground",
+            // Ajout de classes pour améliorer la lisibilité sur mobile
+            isMobile && "flex-col items-center justify-center space-y-1 space-x-0 text-xs p-2"
           )}
         >
           <Icon className="h-5 w-5" />
-          {!isMobile && <span>{label}</span>}
+          {!isMobile ? (
+            <span>{label}</span>
+          ) : (
+            <span className="text-center whitespace-nowrap">{label}</span>
+          )}
         </Link>
       ))}
     </nav>
