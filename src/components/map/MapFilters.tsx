@@ -10,12 +10,36 @@ import { Slider } from "../ui/slider";
 import { Input } from "../ui/input";
 import { Filter } from "lucide-react";
 import { MapFilters as MapFiltersType } from "./types";
+import { PropertyType, ZoneType } from "@/utils/mockData/types";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
   setFilters: (filters: MapFiltersType) => void;
   onApplyFilters: () => void;
 }
+
+const CITIES = ["Tanger", "Agadir", "Marrakech", "Beni Mellal", "Meknes"];
+
+const PROPERTY_TYPES: { [key in PropertyType]: string } = {
+  RESIDENTIAL: "Résidentiel",
+  COMMERCIAL: "Commercial",
+  INDUSTRIAL: "Industriel",
+  AGRICULTURAL: "Agricole",
+  MIXED: "Mixte",
+  SEASIDE: "Balnéaire"
+};
+
+const ZONE_TYPES: { [key in ZoneType]: string } = {
+  URBAN: "Urbaine",
+  SUBURBAN: "Périurbaine",
+  RURAL: "Rurale",
+  E3: "Zone E3",
+  E4: "Zone E4",
+  I2S12: "Zone I2S12",
+  BT2: "Zone BT2",
+  PROTECTED: "Zone protégée",
+  CONSTRUCTIBLE: "Zone constructible"
+};
 
 export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersProps) => {
   return (
@@ -48,10 +72,11 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
               <SelectValue placeholder="Sélectionner une ville" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="casablanca">Casablanca</SelectItem>
-              <SelectItem value="rabat">Rabat</SelectItem>
-              <SelectItem value="tanger">Tanger</SelectItem>
-              <SelectItem value="benslimane">Benslimane</SelectItem>
+              {CITIES.map((city) => (
+                <SelectItem key={city.toLowerCase()} value={city.toLowerCase()}>
+                  {city}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -60,18 +85,17 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <label className="text-sm font-medium">Type de Terrain</label>
           <Select
             value={filters.propertyType}
-            onValueChange={(value) => setFilters({ ...filters, propertyType: value as any })}
+            onValueChange={(value) => setFilters({ ...filters, propertyType: value as PropertyType })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Type de terrain" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="INDUSTRIAL">Industriel</SelectItem>
-              <SelectItem value="RESIDENTIAL">Résidentiel</SelectItem>
-              <SelectItem value="SEASIDE">Balnéaire</SelectItem>
-              <SelectItem value="AGRICULTURAL">Agricole</SelectItem>
-              <SelectItem value="COMMERCIAL">Commercial</SelectItem>
-              <SelectItem value="MIXED">Mixte</SelectItem>
+              {Object.entries(PROPERTY_TYPES).map(([key, label]) => (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -80,18 +104,17 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <label className="text-sm font-medium">Zoning</label>
           <Select
             value={filters.zoneType}
-            onValueChange={(value) => setFilters({ ...filters, zoneType: value as any })}
+            onValueChange={(value) => setFilters({ ...filters, zoneType: value as ZoneType })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Zoning" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="E4">E4</SelectItem>
-              <SelectItem value="E3">E3</SelectItem>
-              <SelectItem value="BT2">BT2</SelectItem>
-              <SelectItem value="I2S12">I2S12</SelectItem>
-              <SelectItem value="PROTECTED">Zone protégée</SelectItem>
-              <SelectItem value="CONSTRUCTIBLE">Zone constructible</SelectItem>
+              {Object.entries(ZONE_TYPES).map(([key, label]) => (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -100,7 +123,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <label className="text-sm font-medium">Statut Fiscal</label>
           <Select
             value={filters.status}
-            onValueChange={(value) => setFilters({ ...filters, status: value as any })}
+            onValueChange={(value) => setFilters({ ...filters, status: value })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Statut fiscal" />
