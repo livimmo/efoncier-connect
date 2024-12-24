@@ -1,121 +1,18 @@
-import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { Message, MessageAction } from "@/types/chat";
+import { INITIAL_GREETING, handlePropertySearch, handlePaymentInfo } from "@/utils/chatUtils";
+import { useChatNavigation } from "./useChatNavigation";
 
-export type MessageAction = {
-  label: string;
-  action: string;
-  data?: any;
-};
-
-export type Message = {
-  id?: string;
-  content: string;
-  type: "user" | "bot";
-  actions?: MessageAction[];
-};
-
-const INITIAL_GREETING = (firstName?: string) => `
-Bonjour${firstName ? ` ${firstName}` : ''} ! 👋
-Comment puis-je vous aider aujourd'hui ?
-`;
+export type { Message, MessageAction };
 
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { profile } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
-
-  const handlePropertySearch = async (query: string) => {
-    try {
-      const { data: properties, error } = await supabase
-        .from("properties")
-        .select("*")
-        .textSearch("title", query)
-        .limit(5);
-
-      if (error) throw error;
-
-      if (!properties?.length) {
-        return "Je n'ai trouvé aucun bien correspondant à votre recherche.";
-      }
-
-      const propertiesList = properties
-        .map(
-          (p) =>
-            `- ${p.title} (${p.surface_area}m²) - ${
-              p.is_for_sale ? "En vente" : "Non disponible"
-            }`
-        )
-        .join("\n");
-
-      return `Voici les biens trouvés :\n${propertiesList}`;
-    } catch (error) {
-      console.error("Error searching properties:", error);
-      return "Désolé, une erreur est survenue lors de la recherche.";
-    }
-  };
-
-  const handlePaymentInfo = async () => {
-    if (!profile) return "Veuillez vous connecter pour voir vos paiements.";
-
-    try {
-      const { data: payments, error } = await supabase
-        .from("payments")
-        .select("*")
-        .eq("user_id", profile.id)
-        .order("payment_date", { ascending: false })
-        .limit(5);
-
-      if (error) throw error;
-
-      if (!payments?.length) {
-        return "Vous n'avez aucun paiement en attente.";
-      }
-
-      const paymentsList = payments
-        .map(
-          (p) =>
-            `- ${p.amount} MAD (${
-              p.status === "pending" ? "En attente" : "Payé"
-            })`
-        )
-        .join("\n");
-
-      return `Voici vos derniers paiements :\n${paymentsList}`;
-    } catch (error) {
-      console.error("Error fetching payments:", error);
-      return "Désolé, une erreur est survenue lors de la récupération des paiements.";
-    }
-  };
-
-  const handleUserAction = (action: string, data?: any) => {
-    switch (action) {
-      case "search_properties":
-        navigate("/search");
-        break;
-      case "manage_properties":
-        navigate("/dashboard?tab=properties");
-        break;
-      case "make_payment":
-        navigate("/payment");
-        break;
-      case "view_messages":
-        navigate("/messages");
-        break;
-      case "view_settings":
-        navigate("/profile/settings");
-        break;
-      case "get_help":
-        navigate("/support");
-        break;
-      default:
-        console.log("Unknown action:", action);
-    }
-  };
+  const { handleUserAction } = useChatNavigation();
 
   const processMessage = async (content: string) => {
     const lowerContent = content.toLowerCase();
@@ -142,7 +39,7 @@ export const useChat = () => {
       lowerContent.includes("payer") ||
       lowerContent.includes("montant")
     ) {
-      const response = await handlePaymentInfo();
+      const response = await handlePaymentInfo(profile?.id);
       return {
         content: response,
         actions: [
@@ -207,7 +104,7 @@ export const useChat = () => {
   };
 
   // Initialize chat with greeting on mount
-  useState(() => {
+  useEffect(() => {
     if (messages.length === 0) {
       setMessages([
         {
@@ -224,7 +121,7 @@ export const useChat = () => {
         },
       ]);
     }
-  }, [profile]);
+  }, [profile, messages.length]);
 
   return {
     messages,
