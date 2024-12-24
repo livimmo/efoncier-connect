@@ -9,6 +9,7 @@ import { MapFilters as MapFiltersType, MapControls as MapControlsType, MapSettin
 import { mockParcels } from '@/utils/mockData/parcels';
 import type { Parcel } from '@/utils/mockData/types';
 import { useToast } from "@/hooks/use-toast";
+import { calculateInfoPosition } from './utils/positionUtils';
 
 export const MapContainer = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
@@ -36,30 +37,13 @@ export const MapContainer = () => {
     unit: 'metric',
   });
 
-  const calculateInfoPosition = (x: number, y: number) => {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const infoWidth = 320; // Largeur approximative de la fenêtre d'info
-    const infoHeight = 400; // Hauteur approximative de la fenêtre d'info
-    
-    let posX = x;
-    let posY = y;
-    
-    // Ajustement horizontal
-    if (x + infoWidth > windowWidth) {
-      posX = x - infoWidth;
-    }
-    
-    // Ajustement vertical
-    if (y + infoHeight > windowHeight) {
-      posY = windowHeight - infoHeight - 20; // 20px de marge
-    }
-    
-    return { x: posX, y: posY };
-  };
-
   const handleParcelSelect = (parcel: Parcel, event: { clientX: number; clientY: number }) => {
-    const adjustedPosition = calculateInfoPosition(event.clientX, event.clientY);
+    const adjustedPosition = calculateInfoPosition(
+      event.clientX,
+      event.clientY,
+      window.innerWidth,
+      window.innerHeight
+    );
     setSelectedParcel(parcel);
     setMarkerPosition(adjustedPosition);
   };
@@ -126,24 +110,6 @@ export const MapContainer = () => {
     }
   };
 
-  const filterParcels = () => {
-    const filteredParcels = mockParcels.filter(parcel => {
-      if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
-      if (filters.propertyType && parcel.type !== filters.propertyType) return false;
-      if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
-      if (filters.status && parcel.taxStatus !== filters.status) return false;
-      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
-      return true;
-    });
-    
-    toast({
-      title: "Filtres appliqués",
-      description: `${filteredParcels.length} parcelles trouvées`,
-    });
-
-    return filteredParcels;
-  };
-
   const filteredParcels = useMemo(() => {
     return mockParcels.filter(parcel => {
       if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
@@ -164,7 +130,12 @@ export const MapContainer = () => {
           <MapFilters 
             filters={filters}
             setFilters={setFilters}
-            onApplyFilters={filterParcels}
+            onApplyFilters={() => {
+              toast({
+                title: "Filtres appliqués",
+                description: `${filteredParcels.length} parcelles trouvées`,
+              });
+            }}
           />
         </div>
 
@@ -196,7 +167,9 @@ export const MapContainer = () => {
               style={{
                 left: `${markerPosition.x}px`,
                 top: `${markerPosition.y}px`,
-                transform: 'translate(20px, -50%)'
+                maxWidth: 'calc(100vw - 40px)',
+                maxHeight: 'calc(100vh - 40px)',
+                overflow: 'auto'
               }}
             >
               <ParcelInfo 
