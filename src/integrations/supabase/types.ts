@@ -186,43 +186,52 @@ export type Database = {
         Row: {
           city: string | null
           created_at: string
+          dominant_type: string | null
           first_name: string | null
           id: string
           is_active: boolean | null
           last_name: string | null
           phone: string | null
+          properties_count: number | null
           role: Database["public"]["Enums"]["user_role"]
           subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          total_tnb: number | null
           updated_at: string
         }
         Insert: {
           city?: string | null
           created_at?: string
+          dominant_type?: string | null
           first_name?: string | null
           id: string
           is_active?: boolean | null
           last_name?: string | null
           phone?: string | null
+          properties_count?: number | null
           role?: Database["public"]["Enums"]["user_role"]
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          total_tnb?: number | null
           updated_at?: string
         }
         Update: {
           city?: string | null
           created_at?: string
+          dominant_type?: string | null
           first_name?: string | null
           id?: string
           is_active?: boolean | null
           last_name?: string | null
           phone?: string | null
+          properties_count?: number | null
           role?: Database["public"]["Enums"]["user_role"]
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          total_tnb?: number | null
           updated_at?: string
         }
         Relationships: []
