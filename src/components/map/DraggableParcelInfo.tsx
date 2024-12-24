@@ -24,27 +24,37 @@ export const DraggableParcelInfo = ({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const adjustPosition = (pos: { x: number, y: number }) => {
+  const adjustPosition = (pos: { x: number, y: number }, forceUpdate = false) => {
     if (!containerRef.current) return pos;
 
     const rect = containerRef.current.getBoundingClientRect();
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
+    const totalHeight = isMinimized ? 120 : rect.height;
     
     let newX = pos.x;
     let newY = pos.y;
 
+    // Ajustement horizontal
     if (newX < rect.width/2) {
       newX = rect.width/2;
     } else if (newX + rect.width/2 > windowWidth) {
       newX = windowWidth - rect.width/2;
     }
 
-    const totalHeight = isMinimized ? 120 : rect.height;
+    // Ajustement vertical avec prise en compte de l'état minimisé/développé
     if (newY - totalHeight < 0) {
       newY = totalHeight;
     } else if (newY > windowHeight - 20) {
       newY = windowHeight - 20;
+    }
+
+    // Si la fenêtre est développée, assurons-nous qu'elle reste visible
+    if (!isMinimized || forceUpdate) {
+      const minY = totalHeight + 20; // Marge supplémentaire en haut
+      if (newY < minY) {
+        newY = minY;
+      }
     }
 
     return { x: newX, y: newY };
@@ -59,6 +69,12 @@ export const DraggableParcelInfo = ({
       setPosition(adjustedPosition);
     }
   }, [markerPosition, isDragging]);
+
+  // Ajuster la position lors du changement d'état minimisé/développé
+  useEffect(() => {
+    const newPosition = adjustPosition(position, true);
+    setPosition(newPosition);
+  }, [isMinimized]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (containerRef.current) {
