@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { PropertyPopup } from "../property-popup/PropertyPopup";
 import { Check, X, AlertTriangle } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import Payment from "@/pages/Payment";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -12,6 +14,7 @@ interface MinimizedParcelInfoProps {
 
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -79,6 +82,15 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
         onOpenChange={setDialogOpen}
       />
 
+      <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
+        <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
+          <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
+          <div className="flex-1 overflow-y-auto pr-2">
+            <Payment parcelId={parcel.id} />
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border border-t-0 border-border/50 min-w-[300px]">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-start gap-4">
@@ -117,14 +129,23 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
               <div className="text-xs font-medium whitespace-nowrap text-muted-foreground">
                 {parcel.ownerName}
               </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="mt-2"
-                onClick={() => setDialogOpen(true)}
-              >
-                Voir détails
-              </Button>
+              <div className="flex flex-col gap-2 mt-2">
+                <Button 
+                  variant="default"
+                  size="sm"
+                  onClick={() => setPaymentOpen(true)}
+                  className="w-full"
+                >
+                  Payer la TNB
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setDialogOpen(true)}
+                >
+                  Voir détails
+                </Button>
+              </div>
             </div>
           </div>
         </div>
