@@ -55,17 +55,23 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
       case 'PAID':
         return {
           color: 'text-green-600 dark:text-green-500',
-          text: 'Payé'
+          text: 'Payé',
+          buttonVariant: 'default' as const,
+          buttonText: 'Voir Reçu'
         };
       case 'OVERDUE':
         return {
           color: 'text-red-600 dark:text-red-500',
-          text: 'En retard'
+          text: 'En retard',
+          buttonVariant: 'destructive' as const,
+          buttonText: 'Payer la TNB'
         };
       default:
         return {
           color: 'text-orange-600 dark:text-orange-500',
-          text: 'En attente'
+          text: 'En attente',
+          buttonVariant: 'destructive' as const,
+          buttonText: 'Payer la TNB'
         };
     }
   };
@@ -131,12 +137,12 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
               </div>
               <div className="flex flex-col gap-2 mt-2">
                 <Button 
-                  variant="default"
+                  variant={paymentStatus.buttonVariant}
                   size="sm"
                   onClick={() => setPaymentOpen(true)}
                   className="w-full"
                 >
-                  Payer la TNB
+                  {paymentStatus.buttonText}
                 </Button>
                 <Button 
                   variant="ghost" 
