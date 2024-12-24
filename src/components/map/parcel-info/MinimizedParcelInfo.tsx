@@ -47,19 +47,29 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
     }
   };
 
-  const getFiscalStatusText = (status: string) => {
+  const getPaymentStatusInfo = (status: string) => {
     switch (status) {
-      case 'COMPLIANT':
-        return 'Conforme';
-      case 'NON_COMPLIANT':
-        return 'Non conforme';
+      case 'PAID':
+        return {
+          color: 'text-green-600 dark:text-green-500',
+          text: 'Payé'
+        };
+      case 'OVERDUE':
+        return {
+          color: 'text-red-600 dark:text-red-500',
+          text: 'En retard'
+        };
       default:
-        return 'En révision';
+        return {
+          color: 'text-orange-600 dark:text-orange-500',
+          text: 'En attente'
+        };
     }
   };
 
   const statusInfo = getStatusInfo(parcel.status);
   const StatusIcon = statusInfo.icon;
+  const paymentStatus = getPaymentStatusInfo(parcel.taxStatus);
 
   return (
     <>
@@ -93,7 +103,7 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                   variant="secondary" 
                   className={`mt-1 w-fit ${getFiscalStatusColor(parcel.fiscalStatus)}`}
                 >
-                  {getFiscalStatusText(parcel.fiscalStatus)}
+                  <span className={paymentStatus.color}>{paymentStatus.text}</span>
                 </Badge>
                 <div className="text-xs text-muted-foreground mt-1">
                   TF: {parcel.titleDeedNumber}
