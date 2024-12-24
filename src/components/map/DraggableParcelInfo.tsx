@@ -4,6 +4,7 @@ import { Parcel } from '@/utils/mockData/types';
 import { cn } from "@/lib/utils";
 import { ParcelInfoHeader } from './parcel-info/ParcelInfoHeader';
 import { MinimizedParcelInfo } from './parcel-info/MinimizedParcelInfo';
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface DraggableParcelInfoProps {
   parcel: Parcel;
@@ -23,6 +24,7 @@ export const DraggableParcelInfo = ({
   const [isMinimized, setIsMinimized] = useState(true);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const adjustPosition = (pos: { x: number, y: number }, forceUpdate = false) => {
     if (!containerRef.current) return pos;
@@ -35,25 +37,30 @@ export const DraggableParcelInfo = ({
     let newX = pos.x;
     let newY = pos.y;
 
-    // Ajustement horizontal
-    if (newX < rect.width/2) {
-      newX = rect.width/2;
-    } else if (newX + rect.width/2 > windowWidth) {
-      newX = windowWidth - rect.width/2;
-    }
+    if (isMobile) {
+      // Sur mobile, on centre horizontalement et on place en bas
+      newX = windowWidth / 2;
+      newY = windowHeight - (isMinimized ? 80 : 20);
+    } else {
+      // Ajustement horizontal pour desktop
+      if (newX < rect.width/2) {
+        newX = rect.width/2;
+      } else if (newX + rect.width/2 > windowWidth) {
+        newX = windowWidth - rect.width/2;
+      }
 
-    // Ajustement vertical avec prise en compte de l'état minimisé/développé
-    if (newY - totalHeight < 0) {
-      newY = totalHeight;
-    } else if (newY > windowHeight - 20) {
-      newY = windowHeight - 20;
-    }
+      // Ajustement vertical pour desktop
+      if (newY - totalHeight < 0) {
+        newY = totalHeight;
+      } else if (newY > windowHeight - 20) {
+        newY = windowHeight - 20;
+      }
 
-    // Si la fenêtre est développée, assurons-nous qu'elle reste visible
-    if (!isMinimized || forceUpdate) {
-      const minY = totalHeight + 20; // Marge supplémentaire en haut
-      if (newY < minY) {
-        newY = minY;
+      if (!isMinimized || forceUpdate) {
+        const minY = totalHeight + 20;
+        if (newY < minY) {
+          newY = minY;
+        }
       }
     }
 
@@ -70,13 +77,14 @@ export const DraggableParcelInfo = ({
     }
   }, [markerPosition, isDragging]);
 
-  // Ajuster la position lors du changement d'état minimisé/développé
   useEffect(() => {
     const newPosition = adjustPosition(position, true);
     setPosition(newPosition);
   }, [isMinimized]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (isMobile) return; // Désactiver le drag sur mobile
+    
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       setDragOffset({
@@ -116,16 +124,18 @@ export const DraggableParcelInfo = ({
     <div
       ref={containerRef}
       className={cn(
-        "absolute z-50 transition-all duration-200 ease-out",
-        isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : "cursor-grab",
-        "hover:shadow-lg w-[260px]",
+        "fixed z-50 transition-all duration-200 ease-out",
+        isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
+        "hover:shadow-lg",
+        isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-0" : "w-[260px]",
+        !isMobile && "absolute",
         className
       )}
-      style={{
+      style={!isMobile ? {
         left: `${position.x}px`,
         top: `${position.y}px`,
         transform: 'translate(-50%, -100%)',
-      }}
+      } : undefined}
     >
       <ParcelInfoHeader
         title={parcel.title}
@@ -136,10 +146,12 @@ export const DraggableParcelInfo = ({
         onMouseDown={handleMouseDown}
       />
 
-      <div 
-        className="absolute left-1/2 bottom-0 w-px h-4 bg-primary/50 
-                   transform translate-x-[-50%] translate-y-[100%]"
-      />
+      {!isMobile && (
+        <div 
+          className="absolute left-1/2 bottom-0 w-px h-4 bg-primary/50 
+                     transform translate-x-[-50%] translate-y-[100%]"
+        />
+      )}
 
       <div className={cn(
         "transform-gpu transition-all duration-300 ease-in-out origin-top",

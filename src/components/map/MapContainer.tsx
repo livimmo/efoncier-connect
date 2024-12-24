@@ -10,6 +10,9 @@ import { mockParcels } from '@/utils/mockData/parcels';
 import type { Parcel } from '@/utils/mockData/types';
 import { useToast } from "@/hooks/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Filter } from "lucide-react";
 
 export const MapContainer = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
@@ -121,6 +124,33 @@ export const MapContainer = () => {
       <WelcomeDialog />
       
       <div className="flex-1 flex flex-col lg:flex-row relative">
+        {/* Mobile Filters Sheet */}
+        {isMobile && (
+          <div className="absolute top-4 left-4 z-10">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="secondary" size="sm" className="shadow-lg">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filtres
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[85vw] sm:w-[385px] p-4">
+                <MapFilters 
+                  filters={filters}
+                  setFilters={setFilters}
+                  onApplyFilters={() => {
+                    toast({
+                      title: "Filtres appliqués",
+                      description: `${filteredParcels.length} parcelles trouvées`,
+                    });
+                  }}
+                />
+              </SheetContent>
+            </Sheet>
+          </div>
+        )}
+
+        {/* Desktop Filters */}
         {!isMobile && (
           <div className="w-full lg:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
             <MapFilters 
