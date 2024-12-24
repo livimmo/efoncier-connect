@@ -5,8 +5,7 @@ import {
   Locate, 
   RotateCcw, 
   Box, 
-  History, 
-  Bell,
+  History,
   Sun,
   Moon
 } from "lucide-react";
