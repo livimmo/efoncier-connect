@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Header } from "@/components/Header";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,13 +24,21 @@ const Login = () => {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (session) {
+      (event, session) => {
+        console.log("Auth event:", event);
+        if (event === 'SIGNED_IN' && session) {
           toast({
             title: "Connexion réussie",
             description: "Bienvenue sur eFoncier !",
           });
           navigate("/dashboard");
+        } else if (event === 'USER_DELETED' || event === 'SIGNED_OUT') {
+          navigate("/");
+        } else if (event === 'PASSWORD_RECOVERY') {
+          toast({
+            title: "Réinitialisation du mot de passe",
+            description: "Veuillez vérifier votre boîte mail pour réinitialiser votre mot de passe.",
+          });
         }
       }
     );
@@ -45,7 +54,7 @@ const Login = () => {
           <h1 className="text-2xl font-bold mb-8 text-center">
             Bienvenue sur eFoncier
           </h1>
-          <div className="bg-card rounded-lg shadow-lg p-6">
+          <Card className="p-6">
             <Auth
               supabaseClient={supabase}
               appearance={{
@@ -57,6 +66,11 @@ const Login = () => {
                       brandAccent: '#006233',
                     },
                   },
+                },
+                className: {
+                  container: 'flex flex-col gap-4',
+                  button: 'w-full',
+                  input: 'rounded-md',
                 },
               }}
               providers={["google"]}
@@ -70,6 +84,8 @@ const Login = () => {
                     loading_button_label: "Connexion en cours...",
                     social_provider_text: "Continuer avec {{provider}}",
                     link_text: "Vous avez déjà un compte ? Connectez-vous",
+                    email_input_placeholder: "Votre adresse email",
+                    password_input_placeholder: "Votre mot de passe",
                   },
                   sign_up: {
                     email_label: "Adresse email",
@@ -78,11 +94,28 @@ const Login = () => {
                     loading_button_label: "Inscription en cours...",
                     social_provider_text: "Continuer avec {{provider}}",
                     link_text: "Vous n'avez pas de compte ? Inscrivez-vous",
+                    email_input_placeholder: "Votre adresse email",
+                    password_input_placeholder: "Choisissez un mot de passe",
+                  },
+                  forgotten_password: {
+                    button_label: "Réinitialiser le mot de passe",
+                    link_text: "Mot de passe oublié ?",
+                    confirmation_text: "Vérifiez vos emails pour réinitialiser votre mot de passe",
                   },
                 },
               }}
             />
-          </div>
+          </Card>
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            En vous connectant, vous acceptez nos{" "}
+            <a href="/terms" className="text-primary hover:underline">
+              Conditions d'utilisation
+            </a>{" "}
+            et notre{" "}
+            <a href="/privacy" className="text-primary hover:underline">
+              Politique de confidentialité
+            </a>
+          </p>
         </div>
       </div>
     </div>
