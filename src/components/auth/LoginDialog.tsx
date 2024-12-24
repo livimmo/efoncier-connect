@@ -25,6 +25,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOTP] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,7 +38,20 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         description: "Vous êtes maintenant connecté.",
       });
       onOpenChange(false);
-      navigate("/dashboard");
+      // Rediriger vers le tableau de bord correspondant au rôle
+      switch (selectedRole) {
+        case "taxpayer":
+          navigate("/taxpayer");
+          break;
+        case "developer":
+          navigate("/developer");
+          break;
+        case "commune":
+          navigate("/admin");
+          break;
+        default:
+          navigate("/dashboard");
+      }
     }, 1000);
   }
 
@@ -59,7 +73,20 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
           description: "Connexion réussie via WhatsApp !",
         });
         onOpenChange(false);
-        navigate("/dashboard");
+        // Rediriger vers le tableau de bord correspondant au rôle
+        switch (selectedRole) {
+          case "taxpayer":
+            navigate("/taxpayer");
+            break;
+          case "developer":
+            navigate("/developer");
+            break;
+          case "commune":
+            navigate("/admin");
+            break;
+          default:
+            navigate("/dashboard");
+        }
       }, 1000);
     }
   };
@@ -94,7 +121,12 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
             </div>
           ) : (
             <>
-              <EmailLoginForm isLoading={isLoading} onSubmit={onSubmit} />
+              <EmailLoginForm 
+                isLoading={isLoading} 
+                onSubmit={onSubmit}
+                selectedRole={selectedRole}
+                onRoleChange={setSelectedRole}
+              />
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
