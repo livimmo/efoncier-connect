@@ -114,7 +114,7 @@ const Register = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Home className="h-5 w-5" />
-                  Contribuable
+                  Propriétaire
                 </CardTitle>
                 <CardDescription>
                   Gérez vos biens fonciers et vos paiements
