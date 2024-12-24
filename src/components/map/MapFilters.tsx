@@ -20,7 +20,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters, className }: M
     { value: 'AVAILABLE', label: '🟢 À Vendre' },
     { value: 'SOLD', label: '🔴 Vendu' },
     { value: 'UNAVAILABLE', label: '🟡 Indisponible' },
-  ];
+  ] as const;
 
   const handleReset = () => {
     setFilters({
@@ -50,7 +50,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters, className }: M
         <FilterSection title="Statut du Bien">
           <SelectFilter
             value={filters.propertyStatus}
-            onChange={(value) => setFilters({ ...filters, propertyStatus: value })}
+            onChange={(value) => setFilters({ ...filters, propertyStatus: value as PropertyStatus | '' })}
             options={propertyStatusOptions}
             placeholder="Sélectionner un statut"
           />
@@ -60,7 +60,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters, className }: M
                 key={option.value}
                 variant={filters.propertyStatus === option.value ? "default" : "outline"}
                 className="cursor-pointer"
-                onClick={() => setFilters({ ...filters, propertyStatus: option.value })}
+                onClick={() => setFilters({ ...filters, propertyStatus: option.value as PropertyStatus | '' })}
               >
                 {option.label}
               </Badge>
@@ -73,6 +73,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters, className }: M
             value={filters.ownerName}
             onChange={(value) => setFilters({ ...filters, ownerName: value })}
             placeholder="Rechercher par nom de propriétaire"
+            type="owner"
           />
         </FilterSection>
 
