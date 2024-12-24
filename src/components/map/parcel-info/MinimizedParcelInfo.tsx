@@ -11,9 +11,14 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-muted-foreground flex items-center gap-1">
-              <span>{parcel.surface} m² •</span>
-              <span>Zone {parcel.zone}</span>
+            <div className="flex flex-col">
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                <span>{parcel.surface} m² •</span>
+                <span>Zone {parcel.zone}</span>
+              </div>
+              <div className="text-xs font-medium text-red-600 dark:text-red-500">
+                {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
+              </div>
             </div>
           </div>
           <div className="text-right shrink-0">
