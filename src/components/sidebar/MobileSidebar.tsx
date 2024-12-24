@@ -30,13 +30,15 @@ export const MobileSidebar = ({
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[240px] p-0">
-        <SidebarContent
-          menuItems={menuItems}
-          collapsed={false}
-          currentPath={currentPath}
-          onSignOut={onSignOut}
-        />
+      <SheetContent side="left" className="w-[280px] p-0">
+        <div className="pt-16">
+          <SidebarContent
+            menuItems={menuItems}
+            collapsed={false}
+            currentPath={currentPath}
+            onSignOut={onSignOut}
+          />
+        </div>
       </SheetContent>
     </Sheet>
   );

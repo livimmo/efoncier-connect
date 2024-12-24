@@ -29,8 +29,8 @@ export const SidebarMenuButton = ({
       )}
       onClick={onClick}
     >
-      <Icon className="h-5 w-5 mr-2" />
-      {!collapsed && <span>{label}</span>}
+      <Icon className={cn("h-5 w-5", !collapsed && "mr-2")} />
+      {!collapsed && <span className="flex-1 text-left">{label}</span>}
     </Button>
   );
 };
