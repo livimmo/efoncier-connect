@@ -1,4 +1,4 @@
-import { Home, Settings, CreditCard, Database, LogOut } from "lucide-react";
+import { Home, Settings, FileText, LogOut, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -30,6 +30,21 @@ export const UserMenuContent = () => {
     }
   };
 
+  const getRoleLabel = (role?: string) => {
+    switch (role) {
+      case "admin":
+        return "Administrateur";
+      case "commune":
+        return "Commune";
+      case "taxpayer":
+        return "Contribuable";
+      case "developer":
+        return "Promoteur";
+      default:
+        return "Utilisateur";
+    }
+  };
+
   return (
     <DropdownMenuContent className="w-56" align="end" sideOffset={5}>
       <div className="flex items-center justify-start gap-2 p-2">
@@ -38,8 +53,7 @@ export const UserMenuContent = () => {
             {profile?.first_name} {profile?.last_name}
           </p>
           <p className="text-sm text-muted-foreground">
-            {profile?.role === "taxpayer" ? "Contribuable" : 
-             profile?.role === "developer" ? "Promoteur" : "Administrateur"}
+            {getRoleLabel(profile?.role)}
           </p>
         </div>
       </div>
@@ -48,17 +62,17 @@ export const UserMenuContent = () => {
         <Home className="mr-2 h-4 w-4" />
         <span>Tableau de Bord</span>
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/profile?tab=settings")}>
+      <DropdownMenuItem onClick={() => navigate("/settings")}>
         <Settings className="mr-2 h-4 w-4" />
-        <span>Paramètres</span>
+        <span>Paramètres du Compte</span>
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => navigate("/history")}>
-        <CreditCard className="mr-2 h-4 w-4" />
-        <span>Historique des Paiements</span>
+        <History className="mr-2 h-4 w-4" />
+        <span>Historique des Activités</span>
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/profile?tab=properties")}>
-        <Database className="mr-2 h-4 w-4" />
-        <span>Mes Biens</span>
+      <DropdownMenuItem onClick={() => navigate("/documents")}>
+        <FileText className="mr-2 h-4 w-4" />
+        <span>Mes Documents</span>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem onClick={handleLogout}>

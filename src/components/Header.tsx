@@ -3,7 +3,7 @@ import { Logo } from "./Logo";
 import { MainNav } from "./MainNav";
 import { ModeToggle } from "./theme/mode-toggle";
 import { Button } from "./ui/button";
-import { Search, Bell, Menu } from "lucide-react";
+import { Search, Bell, Menu, Home, Plus } from "lucide-react";
 import { SearchModal } from "./search/SearchModal";
 import { LoginDialog } from "./auth/LoginDialog";
 import { RegisterDialog } from "./auth/RegisterDialog";
@@ -14,7 +14,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useNavigate } from "react-router-dom";
 import { UserMenu } from "./header/UserMenu";
 import { AuthButtons } from "./header/AuthButtons";
-import { AddPropertyButton } from "./header/AddPropertyButton";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -24,6 +23,9 @@ export const Header = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
   const navigate = useNavigate();
+
+  const showAddPropertyButton = profile?.role === 'taxpayer';
+  const unreadNotifications = 3; // This should come from your notifications system
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -61,17 +63,37 @@ export const Header = () => {
                 variant="ghost"
                 size="icon"
                 className="relative"
+                onClick={() => navigate("/dashboard")}
+              >
+                <Home className="h-5 w-5" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative"
                 onClick={() => navigate("/notifications")}
               >
                 <Bell className="h-5 w-5" />
-                <Badge 
-                  variant="default"
-                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
-                >
-                  3
-                </Badge>
+                {unreadNotifications > 0 && (
+                  <Badge 
+                    variant="default"
+                    className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
+                  >
+                    {unreadNotifications}
+                  </Badge>
+                )}
               </Button>
-              <AddPropertyButton />
+
+              {showAddPropertyButton && (
+                <Button 
+                  onClick={() => navigate("/property/add")}
+                  className="hidden sm:flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Ajouter un Terrain</span>
+                </Button>
+              )}
             </>
           )}
           
