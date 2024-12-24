@@ -9,14 +9,15 @@ import { MobilePayment } from "@/components/payment/MobilePayment";
 import { Header } from "@/components/Header";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
 import { Home } from "lucide-react";
+import type { PaymentDetails, PaymentProps } from "@/components/payment/types";
 
-const Payment = () => {
+const Payment = ({ parcelId }: PaymentProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
   // Mock payment data - à remplacer par les vraies données
-  const paymentData = {
+  const paymentData: PaymentDetails = {
     id: "TF#123456",
     location: "Casablanca, Maarif",
     area: 500,
