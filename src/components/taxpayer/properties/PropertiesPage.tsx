@@ -8,6 +8,9 @@ import { MapSettings } from '@/components/map/types';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { Property } from "@/utils/mockData/types";
 
 const PropertiesPage = () => {
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
@@ -15,6 +18,31 @@ const PropertiesPage = () => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
+
+  const { data: properties, isLoading } = useQuery({
+    queryKey: ['properties'],
+    queryFn: async () => {
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) {
+        throw new Error('User not authenticated');
+      }
+
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('owner_id', user.data.user.id);
+
+      if (error) {
+        toast({
+          title: "Error fetching properties",
+          description: error.message,
+          variant: "destructive",
+        });
+        throw error;
+      }
+      return data as Property[];
+    },
+  });
 
   const [settings] = useState<MapSettings>({
     theme: 'light',
@@ -37,22 +65,13 @@ const PropertiesPage = () => {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <PropertiesHeader />
-        <PropertiesStats />
+        <PropertiesStats data={properties || []} />
         
         <div className="grid lg:grid-cols-2 gap-8 mt-8">
           <div className="space-y-4">
             <PropertiesTable 
-              onParcelSelect={(parcelId) => {
-                const parcel = mockParcels.find(p => p.id === parcelId);
-                if (parcel) {
-                  handleParcelSelect(parcelId);
-                  toast({
-                    title: "Parcelle sélectionnée",
-                    description: `${parcel.title} a été sélectionné`,
-                  });
-                }
-              }}
-              selectedParcelId={selectedParcelId}
+              data={properties || []}
+              isLoading={isLoading}
             />
           </div>
 
