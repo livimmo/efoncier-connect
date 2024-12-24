@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { MapFilters } from './MapFilters';
 import { MapView } from './MapView';
 import { MobileFiltersSheet } from './MobileFiltersSheet';
