@@ -2,7 +2,7 @@ import { Property } from "@/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
 
-interface PropertiesTableProps {
+export interface PropertiesTableProps {
   data: Property[];
   isLoading: boolean;
 }

@@ -1,6 +1,6 @@
 import { Property } from "@/types";
 
-interface PropertiesStatsProps {
+export interface PropertiesStatsProps {
   data: Property[];
 }
 

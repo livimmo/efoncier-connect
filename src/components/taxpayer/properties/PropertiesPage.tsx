@@ -15,6 +15,7 @@ const PropertiesPage = () => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [settings] = useState<MapSettings>({
     theme: 'light',
@@ -37,22 +38,13 @@ const PropertiesPage = () => {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <PropertiesHeader />
-        <PropertiesStats />
+        <PropertiesStats data={mockParcels} />
         
         <div className="grid lg:grid-cols-2 gap-8 mt-8">
           <div className="space-y-4">
             <PropertiesTable 
-              onParcelSelect={(parcelId) => {
-                const parcel = mockParcels.find(p => p.id === parcelId);
-                if (parcel) {
-                  handleParcelSelect(parcelId);
-                  toast({
-                    title: "Parcelle sélectionnée",
-                    description: `${parcel.title} a été sélectionné`,
-                  });
-                }
-              }}
-              selectedParcelId={selectedParcelId}
+              data={mockParcels}
+              isLoading={isLoading}
             />
           </div>
 
