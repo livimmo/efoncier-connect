@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export type MessageAction = {
   label: string;
@@ -16,15 +17,17 @@ export type Message = {
   actions?: MessageAction[];
 };
 
-const INITIAL_GREETING = "Bonjour ! Comment puis-je vous aider aujourd'hui ?";
+const INITIAL_GREETING = (firstName?: string) => `
+Bonjour${firstName ? ` ${firstName}` : ''} ! 👋
+Comment puis-je vous aider aujourd'hui ?
+`;
 
 export const useChat = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    { content: INITIAL_GREETING, type: "bot" },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { profile } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handlePropertySearch = async (query: string) => {
     try {
@@ -36,7 +39,7 @@ export const useChat = () => {
 
       if (error) throw error;
 
-      if (properties.length === 0) {
+      if (!properties?.length) {
         return "Je n'ai trouvé aucun bien correspondant à votre recherche.";
       }
 
@@ -64,12 +67,12 @@ export const useChat = () => {
         .from("payments")
         .select("*")
         .eq("user_id", profile.id)
-        .order("payment_date", { ascending: true })
+        .order("payment_date", { ascending: false })
         .limit(5);
 
       if (error) throw error;
 
-      if (payments.length === 0) {
+      if (!payments?.length) {
         return "Vous n'avez aucun paiement en attente.";
       }
 
@@ -89,12 +92,48 @@ export const useChat = () => {
     }
   };
 
+  const handleUserAction = (action: string, data?: any) => {
+    switch (action) {
+      case "search_properties":
+        navigate("/search");
+        break;
+      case "manage_properties":
+        navigate("/dashboard?tab=properties");
+        break;
+      case "make_payment":
+        navigate("/payment");
+        break;
+      case "view_messages":
+        navigate("/messages");
+        break;
+      case "view_settings":
+        navigate("/profile/settings");
+        break;
+      case "get_help":
+        navigate("/support");
+        break;
+      default:
+        console.log("Unknown action:", action);
+    }
+  };
+
   const processMessage = async (content: string) => {
     const lowerContent = content.toLowerCase();
 
     // Property search
-    if (lowerContent.includes("bien") || lowerContent.includes("terrain")) {
-      return await handlePropertySearch(content);
+    if (
+      lowerContent.includes("bien") ||
+      lowerContent.includes("terrain") ||
+      lowerContent.includes("recherche")
+    ) {
+      const response = await handlePropertySearch(content);
+      return {
+        content: response,
+        actions: [
+          { label: "Voir sur la carte", action: "view_map" },
+          { label: "Filtrer les résultats", action: "filter_results" },
+        ],
+      };
     }
 
     // Payment info
@@ -103,7 +142,14 @@ export const useChat = () => {
       lowerContent.includes("payer") ||
       lowerContent.includes("montant")
     ) {
-      return await handlePaymentInfo();
+      const response = await handlePaymentInfo();
+      return {
+        content: response,
+        actions: [
+          { label: "Payer maintenant", action: "make_payment" },
+          { label: "Voir l'historique", action: "payment_history" },
+        ],
+      };
     }
 
     // Support contact
@@ -112,15 +158,28 @@ export const useChat = () => {
       lowerContent.includes("aide") ||
       lowerContent.includes("contact")
     ) {
-      return "Pour contacter le support, vous pouvez :\n- Appeler le +212 5XX-XXXXXX\n- Envoyer un email à support@efoncier.ma\n- Utiliser le formulaire de contact sur notre site";
+      return {
+        content: "Comment puis-je vous aider ?\n\n- Contacter le support\n- Consulter la FAQ\n- Créer un ticket",
+        actions: [
+          { label: "Contacter le support", action: "contact_support" },
+          { label: "Voir la FAQ", action: "view_faq" },
+          { label: "Créer un ticket", action: "create_ticket" },
+        ],
+      };
     }
 
-    // Default response
-    return "Je ne suis pas sûr de comprendre votre demande. Pouvez-vous reformuler ou choisir une des options suivantes :\n- Rechercher un bien\n- Voir mes paiements\n- Contacter le support";
+    // Default response with suggestions
+    return {
+      content: "Je ne suis pas sûr de comprendre votre demande. Voici ce que je peux faire pour vous :",
+      actions: [
+        { label: "Rechercher un bien", action: "search_properties" },
+        { label: "Voir mes paiements", action: "make_payment" },
+        { label: "Contacter le support", action: "contact_support" },
+      ],
+    };
   };
 
   const sendMessage = async (content: string) => {
-    // Add user message
     setMessages((prev) => [...prev, { content, type: "user" }]);
     setIsLoading(true);
 
@@ -130,12 +189,9 @@ export const useChat = () => {
       setMessages((prev) => [
         ...prev,
         {
-          content: response,
+          content: response.content,
           type: "bot",
-          actions: [
-            { label: "Voir plus de détails", action: "view_details" },
-            { label: "Contacter le support", action: "contact_support" },
-          ],
+          actions: response.actions,
         },
       ]);
     } catch (error) {
@@ -150,9 +206,30 @@ export const useChat = () => {
     }
   };
 
+  // Initialize chat with greeting on mount
+  useState(() => {
+    if (messages.length === 0) {
+      setMessages([
+        {
+          content: INITIAL_GREETING(profile?.first_name),
+          type: "bot",
+          actions: [
+            { label: "Rechercher un bien", action: "search_properties" },
+            { label: "Gérer mes biens", action: "manage_properties" },
+            { label: "Effectuer un paiement", action: "make_payment" },
+            { label: "Voir mes messages", action: "view_messages" },
+            { label: "Paramètres", action: "view_settings" },
+            { label: "Aide", action: "get_help" },
+          ],
+        },
+      ]);
+    }
+  }, [profile]);
+
   return {
     messages,
     sendMessage,
     isLoading,
+    handleUserAction,
   };
 };

@@ -8,7 +8,7 @@ import { useChat } from "@/hooks/useChat";
 
 export const ChatWindow = () => {
   const [message, setMessage] = useState("");
-  const { messages, sendMessage, isLoading } = useChat();
+  const { messages, sendMessage, isLoading, handleUserAction } = useChat();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +21,10 @@ export const ChatWindow = () => {
   return (
     <div className="flex flex-col h-[calc(600px-64px)]">
       <div className="flex-1 overflow-y-auto p-4">
-        <MessageList messages={messages} />
+        <MessageList 
+          messages={messages} 
+          onActionClick={handleUserAction}
+        />
         {messages.length === 0 && <QuickSuggestions onSelect={sendMessage} />}
       </div>
 
