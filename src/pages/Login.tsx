@@ -53,14 +53,12 @@ const Login = () => {
                 variables: {
                   default: {
                     colors: {
-                      brand: 'rgb(var(--color-primary))',
-                      brandAccent: 'rgb(var(--color-primary))',
+                      brand: '#C1272D',
+                      brandAccent: '#006233',
                     },
                   },
                 },
               }}
-              providers={["google"]}
-              redirectTo={`${window.location.origin}/dashboard`}
               localization={{
                 variables: {
                   sign_in: {
