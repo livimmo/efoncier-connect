@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        console.log("Auth state changed:", _event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
@@ -55,20 +56,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
+      console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching profile:", error);
+        throw error;
+      }
+      
+      console.log("Profile data:", data);
       setProfile(data);
+      setLoading(false);
     } catch (error: any) {
+      console.error("Profile fetch error:", error);
       toast({
         title: "Erreur",
         description: "Impossible de charger le profil utilisateur",
         variant: "destructive",
       });
+      setLoading(false);
     }
   };
 
@@ -80,6 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         description: "À bientôt !",
       });
     } catch (error: any) {
+      console.error("Sign out error:", error);
       toast({
         title: "Erreur",
         description: "Impossible de se déconnecter",

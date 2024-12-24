@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { OTPInput } from "./OTPInput";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LoginDialogProps {
   open: boolean;
@@ -27,33 +28,34 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [otp, setOTP] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const handleEmailLogin = async (email: string, password: string) => {
     setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Succès",
-        description: "Vous êtes maintenant connecté.",
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
+
+      if (error) throw error;
+
+      toast({
+        title: "Connexion réussie",
+        description: "Bienvenue sur eFoncier !",
+      });
+      
       onOpenChange(false);
-      // Rediriger vers le tableau de bord correspondant au rôle
-      switch (selectedRole) {
-        case "taxpayer":
-          navigate("/taxpayer");
-          break;
-        case "developer":
-          navigate("/developer");
-          break;
-        case "commune":
-          navigate("/admin");
-          break;
-        default:
-          navigate("/dashboard");
-      }
-    }, 1000);
-  }
+      navigate("/profile");
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast({
+        title: "Erreur de connexion",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleWhatsAppLogin = () => {
     setShowOTP(true);
@@ -66,6 +68,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const verifyOTP = () => {
     if (otp.length === 6) {
       setIsLoading(true);
+      // Simulate OTP verification
       setTimeout(() => {
         setIsLoading(false);
         toast({
@@ -73,20 +76,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
           description: "Connexion réussie via WhatsApp !",
         });
         onOpenChange(false);
-        // Rediriger vers le tableau de bord correspondant au rôle
-        switch (selectedRole) {
-          case "taxpayer":
-            navigate("/taxpayer");
-            break;
-          case "developer":
-            navigate("/developer");
-            break;
-          case "commune":
-            navigate("/admin");
-            break;
-          default:
-            navigate("/dashboard");
-        }
+        navigate("/profile");
       }, 1000);
     }
   };
@@ -123,7 +113,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
             <>
               <EmailLoginForm 
                 isLoading={isLoading} 
-                onSubmit={onSubmit}
+                onSubmit={handleEmailLogin}
                 selectedRole={selectedRole}
                 onRoleChange={setSelectedRole}
               />
