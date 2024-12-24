@@ -175,17 +175,21 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
 
       {/* Payment Dialog */}
       <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
-        <DialogContent className="max-w-4xl bg-background/95 backdrop-blur-sm">
+        <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
           <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
-          <Payment parcelId={parcel.id} />
+          <div className="flex-1 overflow-y-auto pr-2">
+            <Payment parcelId={parcel.id} />
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Receipt Dialog */}
       <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
-        <DialogContent className="max-w-2xl bg-background/95 backdrop-blur-sm">
+        <DialogContent className="max-w-2xl h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
           <DialogTitle>Reçu de Paiement</DialogTitle>
-          <ReceiptPreview data={receiptData} />
+          <div className="flex-1 overflow-y-auto pr-2">
+            <ReceiptPreview data={receiptData} />
+          </div>
         </DialogContent>
       </Dialog>
     </>
