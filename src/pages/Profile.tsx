@@ -1,16 +1,28 @@
+import { useEffect } from "react";
 import { Header } from "@/components/Header";
-import { Sidebar } from "@/components/Sidebar";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileStats } from "@/components/profile/ProfileStats";
 import { ProfileNavigation } from "@/components/profile/ProfileNavigation";
+import { DashboardTab } from "@/components/profile/tabs/DashboardTab";
+import { PropertiesTab } from "@/components/profile/tabs/PropertiesTab";
+import { StatsTab } from "@/components/profile/tabs/StatsTab";
+import { SettingsTab } from "@/components/profile/tabs/SettingsTab";
+import { NotificationList } from "@/components/notifications/NotificationList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const currentTab = searchParams.get("tab") || "overview";
   const { profile } = useAuth();
+
+  useEffect(() => {
+    if (!searchParams.get("tab")) {
+      setSearchParams({ tab: "overview" });
+    }
+  }, [searchParams, setSearchParams]);
 
   if (!profile) {
     return null;
@@ -19,53 +31,71 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 ml-64 p-6 pt-24">
-          <div className="max-w-7xl mx-auto space-y-8">
-            <ProfileHeader profile={profile} />
-            <ProfileStats profile={profile} />
-            <ProfileNavigation />
+      <main className="container mx-auto p-6 pt-24 space-y-8">
+        <ProfileHeader profile={profile} />
+        <ProfileStats profile={profile} />
+        <ProfileNavigation />
 
-            <Tabs value={currentTab} className="space-y-6">
-              <TabsList>
-                <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-                <TabsTrigger value="properties">Mes Biens</TabsTrigger>
-                <TabsTrigger value="stats">Statistiques</TabsTrigger>
-                <TabsTrigger value="settings">Paramètres</TabsTrigger>
-              </TabsList>
+        <Tabs value={currentTab} className="space-y-6">
+          <TabsList className="w-full justify-start border-b rounded-none p-0 h-auto">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+              onClick={() => navigate("?tab=overview")}
+            >
+              Vue d'ensemble
+            </TabsTrigger>
+            <TabsTrigger
+              value="properties"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+              onClick={() => navigate("?tab=properties")}
+            >
+              Mes Biens
+            </TabsTrigger>
+            <TabsTrigger
+              value="stats"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+              onClick={() => navigate("?tab=stats")}
+            >
+              Statistiques
+            </TabsTrigger>
+            <TabsTrigger
+              value="notifications"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+              onClick={() => navigate("?tab=notifications")}
+            >
+              Notifications
+            </TabsTrigger>
+            <TabsTrigger
+              value="settings"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+              onClick={() => navigate("?tab=settings")}
+            >
+              Paramètres
+            </TabsTrigger>
+          </TabsList>
 
-              <TabsContent value="overview">
-                {/* Will be implemented in next iteration */}
-                <div className="text-muted-foreground">
-                  Vue d'ensemble à venir...
-                </div>
-              </TabsContent>
+          <TabsContent value="overview" className="animate-fade-in">
+            <DashboardTab />
+          </TabsContent>
 
-              <TabsContent value="properties">
-                {/* Will be implemented in next iteration */}
-                <div className="text-muted-foreground">
-                  Gestion des biens à venir...
-                </div>
-              </TabsContent>
+          <TabsContent value="properties" className="animate-fade-in">
+            <PropertiesTab />
+          </TabsContent>
 
-              <TabsContent value="stats">
-                {/* Will be implemented in next iteration */}
-                <div className="text-muted-foreground">
-                  Statistiques à venir...
-                </div>
-              </TabsContent>
+          <TabsContent value="stats" className="animate-fade-in">
+            <StatsTab />
+          </TabsContent>
 
-              <TabsContent value="settings">
-                {/* Will be implemented in next iteration */}
-                <div className="text-muted-foreground">
-                  Paramètres à venir...
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </main>
-      </div>
+          <TabsContent value="notifications" className="animate-fade-in">
+            <NotificationList />
+          </TabsContent>
+
+          <TabsContent value="settings" className="animate-fade-in">
+            <SettingsTab />
+          </TabsContent>
+        </Tabs>
+      </main>
     </div>
   );
 }
