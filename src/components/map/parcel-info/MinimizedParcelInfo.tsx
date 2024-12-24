@@ -7,6 +7,7 @@ import { PropertyPopup } from "../property-popup/PropertyPopup";
 import { Check, X, AlertTriangle } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import Payment from "@/pages/Payment";
+import { ReceiptPreview } from "@/components/receipt/ReceiptPreview";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -15,6 +16,7 @@ interface MinimizedParcelInfoProps {
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [receiptOpen, setReceiptOpen] = useState(false);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -57,21 +59,24 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
           color: 'text-green-600 dark:text-green-500',
           text: 'Payé',
           buttonVariant: 'default' as const,
-          buttonText: 'Voir Reçu'
+          buttonText: 'Reçu',
+          buttonClass: 'bg-green-600 hover:bg-green-700'
         };
       case 'OVERDUE':
         return {
           color: 'text-red-600 dark:text-red-500',
           text: 'En retard',
           buttonVariant: 'destructive' as const,
-          buttonText: 'Payer la TNB'
+          buttonText: 'Payer la TNB',
+          buttonClass: ''
         };
       default:
         return {
           color: 'text-orange-600 dark:text-orange-500',
           text: 'En attente',
           buttonVariant: 'destructive' as const,
-          buttonText: 'Payer la TNB'
+          buttonText: 'Payer la TNB',
+          buttonClass: ''
         };
     }
   };
@@ -79,6 +84,23 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const statusInfo = getStatusInfo(parcel.status);
   const StatusIcon = statusInfo.icon;
   const paymentStatus = getPaymentStatusInfo(parcel.taxStatus);
+
+  // Mock receipt data based on parcel info
+  const receiptData = {
+    referenceNumber: `TNB-${parcel.id}`,
+    date: new Date().toISOString(),
+    taxpayer: {
+      name: parcel.ownerName,
+      fiscalId: parcel.titleDeedNumber,
+    },
+    parcel: {
+      id: parcel.id,
+      location: parcel.address,
+      area: parcel.surface,
+      amount: parcel.tnbInfo.totalAmount,
+      transactionRef: `TX-${parcel.id}`,
+    },
+  };
 
   return (
     <>
@@ -94,6 +116,13 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
           <div className="flex-1 overflow-y-auto pr-2">
             <Payment parcelId={parcel.id} />
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogTitle>Reçu de Paiement TNB</DialogTitle>
+          <ReceiptPreview data={receiptData} />
         </DialogContent>
       </Dialog>
 
@@ -139,8 +168,8 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 <Button 
                   variant={paymentStatus.buttonVariant}
                   size="sm"
-                  onClick={() => setPaymentOpen(true)}
-                  className="w-full"
+                  onClick={() => parcel.taxStatus === 'PAID' ? setReceiptOpen(true) : setPaymentOpen(true)}
+                  className={`w-full ${paymentStatus.buttonClass}`}
                 >
                   {paymentStatus.buttonText}
                 </Button>
