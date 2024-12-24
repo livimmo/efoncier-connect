@@ -27,7 +27,10 @@ export const DraggableParcelInfo = ({
   // Reset position when marker position changes
   useEffect(() => {
     if (!isDragging) {
-      setPosition(markerPosition);
+      setPosition({
+        x: markerPosition.x,
+        y: markerPosition.y - 20 // Décalage vers le haut pour éviter de couvrir le marqueur
+      });
     }
   }, [markerPosition, isDragging]);
 
@@ -52,7 +55,7 @@ export const DraggableParcelInfo = ({
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    // Check if window should snap back to marker
+    // Vérifier si la fenêtre doit revenir près du marqueur
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const distance = Math.sqrt(
@@ -60,9 +63,12 @@ export const DraggableParcelInfo = ({
         Math.pow(rect.top - markerPosition.y, 2)
       );
       
-      // If window is within 100px of marker, snap back
+      // Si la fenêtre est à moins de 100px du marqueur, la ramener à sa position initiale
       if (distance < 100) {
-        setPosition(markerPosition);
+        setPosition({
+          x: markerPosition.x,
+          y: markerPosition.y - 20
+        });
       }
     }
   };
@@ -82,8 +88,9 @@ export const DraggableParcelInfo = ({
     <div
       ref={containerRef}
       className={cn(
-        "absolute z-50 transition-all duration-200",
-        isDragging ? "cursor-grabbing" : "",
+        "absolute z-50 transition-transform duration-200 ease-out",
+        isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : "cursor-grab",
+        "hover:shadow-lg",
         className
       )}
       style={{
@@ -95,19 +102,22 @@ export const DraggableParcelInfo = ({
       {/* Draggable header */}
       <div 
         className={cn(
-          "bg-primary/10 p-2 rounded-t-lg cursor-grab flex justify-between items-center",
-          isDragging ? "cursor-grabbing" : ""
+          "bg-background/95 backdrop-blur-sm p-2 rounded-t-lg",
+          "border border-border/50",
+          "flex justify-between items-center",
+          "shadow-sm",
+          isDragging ? "cursor-grabbing" : "cursor-grab"
         )}
         onMouseDown={handleMouseDown}
       >
-        <span className="text-sm font-medium">
+        <span className="text-sm font-medium text-foreground/90">
           {parcel.title}
         </span>
         <div className="flex gap-1">
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6"
+            className="h-6 w-6 hover:bg-background/80"
             onClick={() => setIsMinimized(!isMinimized)}
           >
             {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
@@ -115,7 +125,7 @@ export const DraggableParcelInfo = ({
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6"
+            className="h-6 w-6 hover:bg-background/80"
             onClick={onClose}
           >
             ×
@@ -132,18 +142,21 @@ export const DraggableParcelInfo = ({
       {/* Parcel info content */}
       <div className={cn(
         "transform-gpu transition-all duration-300 ease-in-out origin-top",
+        "bg-background/95 backdrop-blur-sm",
+        "border border-border/50 border-t-0",
+        "rounded-b-lg shadow-lg",
         isMinimized ? "scale-y-0 h-0" : "scale-y-100"
       )}>
         <ParcelInfo 
           parcel={parcel}
           onClose={onClose}
-          className="rounded-t-none"
+          className="rounded-t-none border-t-0"
         />
       </div>
 
       {/* Minimized view */}
       {isMinimized && (
-        <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border-t border-primary/10">
+        <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border-t border-primary/10 shadow-lg">
           <div className="flex flex-col gap-1">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Status</span>
