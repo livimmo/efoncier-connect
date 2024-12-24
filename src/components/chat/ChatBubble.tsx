@@ -3,10 +3,48 @@ import { MessageCircle, X, MinusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatWindow } from "./ChatWindow";
 import { cn } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const ChatBubble = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  if (isMobile) {
+    return (
+      <div className="w-full">
+        <Button
+          className="w-full flex items-center justify-center gap-2"
+          onClick={() => setIsOpen(true)}
+        >
+          <MessageCircle className="h-5 w-5" />
+          <span>Chat avec le support</span>
+        </Button>
+        {isOpen && (
+          <div className="fixed inset-0 z-50 bg-background">
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between p-4 border-b">
+                <div className="flex items-center gap-2">
+                  <MessageCircle className="h-5 w-5 text-primary" />
+                  <span className="font-semibold">Support eFoncier</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <ChatWindow />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="fixed bottom-4 right-4 z-50">

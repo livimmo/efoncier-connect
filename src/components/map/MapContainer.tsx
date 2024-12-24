@@ -85,9 +85,11 @@ export const MapContainer = () => {
         />
       </div>
 
-      <div className="bg-background/95 backdrop-blur-sm border-t">
-        <PartnersCarousel compact={isMobile} />
-      </div>
+      {isMobile && (
+        <div className="fixed bottom-16 left-0 right-0 bg-background/95 backdrop-blur-sm border-t">
+          <PartnersCarousel compact={true} />
+        </div>
+      )}
     </div>
   );
 };

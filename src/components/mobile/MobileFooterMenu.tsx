@@ -2,6 +2,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { HelpCircle, Phone, MessageSquare, Globe, Settings, FileText, History, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ChatBubble } from "../chat/ChatBubble";
 
 interface MobileFooterMenuProps {
   open: boolean;
@@ -72,7 +73,6 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
       icon: Globe,
       label: "Langue",
       onClick: () => {
-        // TODO: Implement language switcher
         onClose();
       },
     },
@@ -93,6 +93,9 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
               <span className="text-xs">{item.label}</span>
             </Button>
           ))}
+        </div>
+        <div className="p-4 border-t">
+          <ChatBubble />
         </div>
       </SheetContent>
     </Sheet>
