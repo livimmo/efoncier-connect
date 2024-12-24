@@ -28,8 +28,14 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [otp, setOTP] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
 
-  const handleEmailLogin = async (email: string, password: string) => {
+  const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
