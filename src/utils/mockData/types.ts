@@ -13,8 +13,9 @@ export interface Parcel {
   zone: ZoneType;
   taxStatus: TaxStatus;
   ownerName: string;
-  phone: string;
-  email: string;
+  owner: string; // Added this field
+  phone?: string;
+  email?: string;
   location: {
     lat: number;
     lng: number;
@@ -28,6 +29,8 @@ export interface Transaction {
   status: string;
   type: string;
   parcelId: string;
+  buyerId?: string; // Added optional buyerId
+  sellerId?: string; // Added optional sellerId
 }
 
 export interface User {
@@ -36,4 +39,6 @@ export interface User {
   email: string;
   role: string;
   status: string;
+  phone?: string; // Added optional phone
+  parcels?: string[]; // Added optional parcels array
 }

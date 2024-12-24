@@ -6,6 +6,7 @@ export const mockUsers: User[] = [
     name: "Hassan Alami",
     email: "hassan.alami@email.com",
     role: "TAXPAYER",
+    status: "ACTIVE",
     phone: "+212 661-234567",
     parcels: ["TF123456", "TF901234"]
   },
@@ -14,6 +15,7 @@ export const mockUsers: User[] = [
     name: "Fatima Benani",
     email: "fatima.benani@email.com",
     role: "TAXPAYER",
+    status: "ACTIVE",
     phone: "+212 662-345678",
     parcels: ["TF789012"]
   },
