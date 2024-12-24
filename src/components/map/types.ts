@@ -53,5 +53,4 @@ export interface Cluster {
   parcels: Parcel[];
 }
 
-// Re-export Parcel type to avoid circular dependencies
 export type { Parcel };
