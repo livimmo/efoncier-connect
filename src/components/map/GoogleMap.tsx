@@ -50,6 +50,17 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: Goo
     return { x: 0, y: 0 };
   };
 
+  const getMarkerColor = (parcel: Parcel) => {
+    switch (parcel.taxStatus) {
+      case 'PAID':
+        return '#006233'; // Vert
+      case 'OVERDUE':
+        return '#C1272D'; // Rouge
+      default:
+        return '#FFA500'; // Orange pour "en attente"
+    }
+  };
+
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
     markers.forEach(marker => marker.setMap(null));
     
@@ -61,7 +72,7 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: Goo
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: parcel.taxStatus === 'PAID' ? '#006233' : '#C1272D',
+          fillColor: getMarkerColor(parcel),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
