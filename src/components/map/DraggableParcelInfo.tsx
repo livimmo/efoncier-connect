@@ -43,9 +43,9 @@ export const DraggableParcelInfo = ({
         "fixed transition-all duration-200 ease-out",
         isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
         "hover:shadow-lg",
-        isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-0" : "w-[260px]",
+        isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-0" : "w-[300px]",
         !isMobile && "absolute",
-        "z-[100]", // Lower z-index than dialogs
+        "z-20", // Reduced z-index to be below dialogs and other UI elements
         className
       )}
       style={!isMobile ? {
@@ -56,6 +56,7 @@ export const DraggableParcelInfo = ({
     >
       <ParcelInfoHeader
         title={parcel.title}
+        ownerName={parcel.ownerName}
         isMinimized={isMinimized}
         isDragging={isDragging}
         onToggleMinimize={() => setIsMinimized(!isMinimized)}

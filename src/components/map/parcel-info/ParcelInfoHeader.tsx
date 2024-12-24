@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 interface ParcelInfoHeaderProps {
   title: string;
+  ownerName: string;
   isMinimized: boolean;
   isDragging: boolean;
   onToggleMinimize: () => void;
@@ -13,6 +14,7 @@ interface ParcelInfoHeaderProps {
 
 export const ParcelInfoHeader = ({
   title,
+  ownerName,
   isMinimized,
   isDragging,
   onToggleMinimize,
@@ -30,10 +32,15 @@ export const ParcelInfoHeader = ({
       )}
       onMouseDown={onMouseDown}
     >
-      <span className="text-sm font-medium text-foreground/90 truncate max-w-[180px]">
-        {title}
-      </span>
-      <div className="flex gap-1">
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium text-foreground/90 truncate">
+          {title}
+        </div>
+        <div className="text-xs text-muted-foreground truncate">
+          {ownerName}
+        </div>
+      </div>
+      <div className="flex gap-1 ml-2">
         <Button
           variant="ghost"
           size="icon"
