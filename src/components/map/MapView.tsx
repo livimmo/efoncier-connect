@@ -1,34 +1,30 @@
-import { useState } from 'react';
 import { GoogleMap } from './GoogleMap';
-import { DraggableParcelInfo } from './DraggableParcelInfo';
 import { MapControls } from './MapControls';
-import { PartnersCarousel } from './PartnersCarousel';
-import { useToast } from "@/hooks/use-toast";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { DraggableParcelInfo } from './DraggableParcelInfo';
 import type { Parcel } from '@/utils/mockData/types';
-import type { MapFilters, MapSettings, MapControls as MapControlsType } from './types';
-import { mockParcels } from '@/utils/mockData/parcels';
-import { cn } from "@/lib/utils";
+import type { MapControls as MapControlsType, MapSettings } from './types';
+import { useToast } from "@/hooks/use-toast";
 
 interface MapViewProps {
-  filters: MapFilters;
-  settings: MapSettings;
-  onParcelSelect: (parcel: Parcel, position: { x: number; y: number }) => void;
   selectedParcel: Parcel | null;
   markerPosition: { x: number; y: number } | null;
+  onParcelSelect: (parcel: Parcel | null) => void;
+  filteredParcels: Parcel[];
+  settings: MapSettings;
+  mapInstance: google.maps.Map | null;
+  setMapInstance: (map: google.maps.Map) => void;
 }
 
 export const MapView = ({
-  filters,
-  settings,
-  onParcelSelect,
   selectedParcel,
-  markerPosition
+  markerPosition,
+  onParcelSelect,
+  filteredParcels,
+  settings,
+  mapInstance,
+  setMapInstance,
 }: MapViewProps) => {
-  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const { toast } = useToast();
-  const isMobile = useMediaQuery("(max-width: 768px)");
   const [controls, setControls] = useState<MapControlsType>({
     showFilters: false,
     show3DView: false,
@@ -84,35 +80,12 @@ export const MapView = ({
     }
   };
 
-  const handleControlChange = (control: keyof MapControlsType) => {
-    setControls(prev => ({
-      ...prev,
-      [control]: !prev[control]
-    }));
-  };
-
-  const handleSettingChange = (setting: keyof MapSettings, value: any) => {
-    console.log('Setting changed:', setting, value);
-  };
-
-  const handleMapClick = () => {
-    if (isMobile) {
-      setIsFullscreen(true);
-    }
-  };
-
   return (
-    <div 
-      className={cn(
-        "relative h-full transition-all duration-300",
-        isFullscreen && isMobile && "fixed inset-0 z-50 bg-background"
-      )}
-      onClick={handleMapClick}
-    >
+    <div className="relative flex-1 h-full">
       <div className="absolute inset-0">
         <GoogleMap 
-          onMarkerClick={onParcelSelect}
-          parcels={mockParcels}
+          onMarkerClick={(parcel, position) => onParcelSelect(parcel)}
+          parcels={filteredParcels}
           theme={settings.theme}
           setMapInstance={setMapInstance}
         />
@@ -122,8 +95,8 @@ export const MapView = ({
         <MapControls
           controls={controls}
           settings={settings}
-          onControlChange={handleControlChange}
-          onSettingChange={handleSettingChange}
+          onControlChange={(control) => setControls(prev => ({ ...prev, [control]: !prev[control] }))}
+          onSettingChange={() => {}}
           onZoomIn={handleZoomIn}
           onZoomOut={handleZoomOut}
           onReset={handleReset}
@@ -134,24 +107,10 @@ export const MapView = ({
       {selectedParcel && markerPosition && (
         <DraggableParcelInfo
           parcel={selectedParcel}
-          onClose={() => {
-            onParcelSelect(null, null);
-            setIsFullscreen(false);
-          }}
+          onClose={() => onParcelSelect(null)}
           markerPosition={markerPosition}
-          className={cn(
-            "bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow",
-            isMobile && "fixed bottom-0 left-0 right-0 rounded-t-xl rounded-b-none"
-          )}
+          className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
         />
-      )}
-
-      {isMobile && isFullscreen && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm">
-          <div className="h-16">
-            <PartnersCarousel compact />
-          </div>
-        </div>
       )}
     </div>
   );
