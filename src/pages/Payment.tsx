@@ -8,6 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { CreditCard, Building2, Calendar, Lock, Receipt, AlertCircle } from "lucide-react";
 
+interface PaymentProps {
+  parcelId?: string;
+}
+
 interface PaymentDetails {
   id: string;
   location: string;
@@ -28,7 +32,7 @@ const mockPayment: PaymentDetails = {
   status: "pending"
 };
 
-const Payment = () => {
+const Payment = ({ parcelId }: PaymentProps) => {
   const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "bank" | "mobile">("card");
   const [loading, setLoading] = useState(false);
