@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown, User, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface SearchFieldProps {
   value: string;
@@ -17,6 +18,7 @@ interface SearchFieldProps {
 export const SearchField = ({ value, onChange, type, placeholder }: SearchFieldProps) => {
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<{ value: string; label: string }[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -26,13 +28,14 @@ export const SearchField = ({ value, onChange, type, placeholder }: SearchFieldP
       }
 
       try {
-        let query;
         if (type === "owner") {
-          const { data: profiles } = await supabase
+          const { data: profiles, error } = await supabase
             .from('profiles')
             .select('id, first_name, last_name')
             .or(`first_name.ilike.%${value}%,last_name.ilike.%${value}%`)
             .limit(5);
+
+          if (error) throw error;
 
           if (profiles) {
             setSuggestions(
@@ -43,11 +46,13 @@ export const SearchField = ({ value, onChange, type, placeholder }: SearchFieldP
             );
           }
         } else {
-          const { data: properties } = await supabase
+          const { data: properties, error } = await supabase
             .from('properties')
             .select('id, title')
             .ilike('title', `%${value}%`)
             .limit(5);
+
+          if (error) throw error;
 
           if (properties) {
             setSuggestions(
@@ -60,11 +65,18 @@ export const SearchField = ({ value, onChange, type, placeholder }: SearchFieldP
         }
       } catch (error) {
         console.error('Error fetching suggestions:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les suggestions",
+          variant: "destructive",
+        });
       }
     };
 
-    fetchSuggestions();
-  }, [value, type]);
+    // Debounce the fetch call to avoid too many requests
+    const timeoutId = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timeoutId);
+  }, [value, type, toast]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
