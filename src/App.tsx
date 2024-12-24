@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ChatBubble } from "@/components/chat/ChatBubble";
 import { MobileFooter } from "@/components/mobile/MobileFooter";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 // Public Pages
 import Home from "./pages/Home";
@@ -31,44 +33,81 @@ import AdminDashboard from "./pages/admin/Dashboard";
 
 const queryClient = new QueryClient();
 
+// Protected Route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { session, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
+
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="efoncier-theme">
-        <TooltipProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/map" element={<Map />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/payment" element={<Payment />} />
-              <Route path="/directory" element={<Directory />} />
-              <Route path="/messages" element={<Messages />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/history" element={<History />} />
-              
-              {/* Authenticated Routes */}
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/taxpayer/*" element={<TaxpayerDashboard />} />
-              <Route path="/developer/*" element={<DeveloperDashboard />} />
-              <Route path="/admin/*" element={<AdminDashboard />} />
+        <AuthProvider>
+          <TooltipProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/map" element={<Map />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                
+                {/* Protected Routes */}
+                <Route path="/notifications" element={
+                  <ProtectedRoute><Notifications /></ProtectedRoute>
+                } />
+                <Route path="/payment" element={
+                  <ProtectedRoute><Payment /></ProtectedRoute>
+                } />
+                <Route path="/directory" element={
+                  <ProtectedRoute><Directory /></ProtectedRoute>
+                } />
+                <Route path="/messages" element={
+                  <ProtectedRoute><Messages /></ProtectedRoute>
+                } />
+                <Route path="/support" element={
+                  <ProtectedRoute><Support /></ProtectedRoute>
+                } />
+                <Route path="/history" element={
+                  <ProtectedRoute><History /></ProtectedRoute>
+                } />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute><Dashboard /></ProtectedRoute>
+                } />
+                <Route path="/taxpayer/*" element={
+                  <ProtectedRoute><TaxpayerDashboard /></ProtectedRoute>
+                } />
+                <Route path="/developer/*" element={
+                  <ProtectedRoute><DeveloperDashboard /></ProtectedRoute>
+                } />
+                <Route path="/admin/*" element={
+                  <ProtectedRoute><AdminDashboard /></ProtectedRoute>
+                } />
 
-              {/* Catch all route - redirect to home */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            <ChatBubble />
-            <MobileFooter />
-          </BrowserRouter>
-          <Toaster />
-          <Sonner />
-        </TooltipProvider>
+                {/* Catch all route - redirect to home */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+              <ChatBubble />
+              <MobileFooter />
+            </BrowserRouter>
+            <Toaster />
+            <Sonner />
+          </TooltipProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
