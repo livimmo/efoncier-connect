@@ -8,7 +8,7 @@ const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
 const DEFAULT_ZOOM = 12;
 
 interface GoogleMapProps {
-  onMarkerClick: (parcel: Parcel, event: MouseEvent) => void;
+  onMarkerClick: (parcel: Parcel, event: { clientX: number; clientY: number }) => void;
   parcels: Parcel[];
   theme: 'light' | 'dark';
 }
@@ -40,7 +40,10 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => 
 
       marker.addListener("click", (e: google.maps.MapMouseEvent) => {
         if (e.domEvent) {
-          onMarkerClick(parcel, e.domEvent);
+          onMarkerClick(parcel, {
+            clientX: e.domEvent.clientX,
+            clientY: e.domEvent.clientY
+          });
         }
       });
 
