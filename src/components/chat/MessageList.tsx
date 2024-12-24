@@ -25,7 +25,7 @@ export const MessageList = ({ messages, onActionClick }: MessageListProps) => {
                 "max-w-[80%] rounded-lg px-4 py-2 space-y-2",
                 message.type === "user"
                   ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground"
+                  : "bg-muted text-foreground dark:bg-secondary dark:text-secondary-foreground"
               )}
             >
               <div className="whitespace-pre-wrap">{message.content}</div>
@@ -34,10 +34,10 @@ export const MessageList = ({ messages, onActionClick }: MessageListProps) => {
                   {message.actions.map((action, actionIndex) => (
                     <Button
                       key={actionIndex}
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => onActionClick?.(action.action, action.data)}
-                      className="text-xs"
+                      className="text-xs bg-white dark:bg-gray-800"
                     >
                       {action.label}
                     </Button>

@@ -41,7 +41,7 @@ export const QuickSuggestions = ({ onSelect }: QuickSuggestionsProps) => {
 
   return (
     <div className="space-y-2">
-      <p className="text-sm text-muted-foreground mb-4">
+      <p className="text-sm font-medium text-foreground mb-4">
         Comment puis-je vous aider aujourd'hui ?
       </p>
       <div className="grid grid-cols-2 gap-2">
@@ -51,11 +51,11 @@ export const QuickSuggestions = ({ onSelect }: QuickSuggestionsProps) => {
             <Button
               key={index}
               variant="outline"
-              className="w-full justify-start text-left"
+              className="w-full justify-start text-left hover:bg-muted"
               onClick={() => onSelect(suggestion.message)}
             >
               <Icon className="w-4 h-4 mr-2" />
-              {suggestion.text}
+              <span className="text-foreground">{suggestion.text}</span>
             </Button>
           );
         })}
