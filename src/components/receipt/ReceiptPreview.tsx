@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { QrCode } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { QrCode, Printer, Share2, Mail, MessageSquare } from "lucide-react";
 
 interface ReceiptPreviewProps {
   data: {
@@ -20,6 +21,22 @@ interface ReceiptPreviewProps {
 }
 
 export const ReceiptPreview = ({ data }: ReceiptPreviewProps) => {
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleWhatsAppShare = () => {
+    const text = `Reçu Fiscal - Ref: ${data.referenceNumber}\nMontant: ${data.parcel.amount} MAD\nParcelle: ${data.parcel.id}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleEmailShare = () => {
+    const subject = `Reçu Fiscal - Ref: ${data.referenceNumber}`;
+    const body = `Reçu Fiscal\n\nRéférence: ${data.referenceNumber}\nDate: ${new Date(data.date).toLocaleString()}\n\nMontant: ${data.parcel.amount} MAD\nParcelle: ${data.parcel.id}\nLocalisation: ${data.parcel.location}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <Card className="max-w-md mx-auto bg-white print:shadow-none">
       <CardHeader className="text-center border-b relative pb-8">
@@ -78,6 +95,22 @@ export const ReceiptPreview = ({ data }: ReceiptPreviewProps) => {
               Scannez pour vérifier l'authenticité
             </p>
           </div>
+        </div>
+
+        {/* Actions buttons - hidden when printing */}
+        <div className="flex gap-2 justify-center print:hidden border-t border-dashed pt-4">
+          <Button variant="outline" size="sm" onClick={handlePrint}>
+            <Printer className="mr-2 h-4 w-4" />
+            Imprimer
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleWhatsAppShare}>
+            <MessageSquare className="mr-2 h-4 w-4" />
+            WhatsApp
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleEmailShare}>
+            <Mail className="mr-2 h-4 w-4" />
+            Email
+          </Button>
         </div>
       </CardContent>
     </Card>
