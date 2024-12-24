@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface SearchFiltersProps {
   filters: {
@@ -30,6 +31,7 @@ interface SearchFiltersProps {
 }
 
 export const SearchFilters = ({ filters, setFilters }: SearchFiltersProps) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const cities = ["Casablanca", "Rabat", "Tanger", "Marrakech", "Fès"];
   const districts = {
     Casablanca: ["Maarif", "Anfa", "Ain Diab", "Sidi Maarouf"],
@@ -39,7 +41,7 @@ export const SearchFilters = ({ filters, setFilters }: SearchFiltersProps) => {
 
   return (
     <div className="bg-card p-4 rounded-lg border shadow-sm space-y-6 animate-fade-in">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
         <div className="space-y-4">
           <Label>Superficie (m²)</Label>
           <Slider
@@ -69,8 +71,8 @@ export const SearchFilters = ({ filters, setFilters }: SearchFiltersProps) => {
             }
           />
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{filters.minPrice} MAD</span>
-            <span>{filters.maxPrice} MAD</span>
+            <span>{filters.minPrice.toLocaleString()} MAD</span>
+            <span>{filters.maxPrice.toLocaleString()} MAD</span>
           </div>
         </div>
 
