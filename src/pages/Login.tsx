@@ -1,123 +1,190 @@
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { Header } from "@/components/Header";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
-import { AuthChangeEvent } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errorCount, setErrorCount] = useState(0);
 
-  useEffect(() => {
-    // Check if user is already logged in
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (errorCount >= 3) {
+      toast({
+        title: "Trop de tentatives",
+        description: "Veuillez réessayer dans quelques minutes",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErrorCount(prev => prev + 1);
+        throw error;
+      }
+
+      if (data.user) {
+        toast({
+          title: "Connexion réussie",
+          description: "Bienvenue sur eFoncier !",
+        });
         navigate("/dashboard");
       }
-    };
-
-    checkUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event: AuthChangeEvent, session) => {
-        console.log("Auth event:", event);
-        if (event === 'SIGNED_IN' && session) {
-          toast({
-            title: "Connexion réussie",
-            description: "Bienvenue sur eFoncier !",
-          });
-          navigate("/dashboard");
-        } else if (event === 'SIGNED_OUT') {
-          navigate("/");
-        } else if (event === 'PASSWORD_RECOVERY') {
-          toast({
-            title: "Réinitialisation du mot de passe",
-            description: "Veuillez vérifier votre boîte mail pour réinitialiser votre mot de passe.",
-          });
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, [navigate, toast]);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast({
+        title: "Erreur de connexion",
+        description: "Identifiants incorrects. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-2xl font-bold mb-8 text-center">
-            Bienvenue sur eFoncier
-          </h1>
-          <Card className="p-6">
-            <Auth
-              supabaseClient={supabase}
-              appearance={{
-                theme: ThemeSupa,
-                variables: {
-                  default: {
-                    colors: {
-                      brand: '#C1272D',
-                      brandAccent: '#006233',
-                    },
-                  },
-                },
-                className: {
-                  container: 'flex flex-col gap-4',
-                  button: 'w-full',
-                  input: 'rounded-md',
-                },
-              }}
-              providers={["google"]}
-              redirectTo={`${window.location.origin}/dashboard`}
-              localization={{
-                variables: {
-                  sign_in: {
-                    email_label: "Adresse email",
-                    password_label: "Mot de passe",
-                    button_label: "Se connecter",
-                    loading_button_label: "Connexion en cours...",
-                    social_provider_text: "Continuer avec {{provider}}",
-                    link_text: "Vous avez déjà un compte ? Connectez-vous",
-                    email_input_placeholder: "Votre adresse email",
-                    password_input_placeholder: "Votre mot de passe",
-                  },
-                  sign_up: {
-                    email_label: "Adresse email",
-                    password_label: "Mot de passe",
-                    button_label: "S'inscrire",
-                    loading_button_label: "Inscription en cours...",
-                    social_provider_text: "Continuer avec {{provider}}",
-                    link_text: "Vous n'avez pas de compte ? Inscrivez-vous",
-                    email_input_placeholder: "Votre adresse email",
-                    password_input_placeholder: "Choisissez un mot de passe",
-                  },
-                  forgotten_password: {
-                    button_label: "Réinitialiser le mot de passe",
-                    link_text: "Mot de passe oublié ?",
-                    confirmation_text: "Vérifiez vos emails pour réinitialiser votre mot de passe",
-                  },
-                },
-              }}
+    <div className="min-h-screen bg-geometric-pattern bg-cover bg-center">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/50" />
+      
+      <div className="container relative flex flex-col items-center justify-center min-h-screen py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md space-y-6"
+        >
+          {/* Logo et Titre */}
+          <div className="text-center space-y-2">
+            <img 
+              src="/logo.svg" 
+              alt="eFoncier" 
+              className="h-12 mx-auto mb-4"
             />
+            <h1 className="text-2xl font-bold text-white">
+              Accès sécurisé à la plateforme eFoncier
+            </h1>
+            <p className="text-gray-200">
+              Connectez-vous pour explorer la cartographie foncière du Maroc
+            </p>
+          </div>
+
+          {/* Formulaire de connexion */}
+          <Card className="p-6 backdrop-blur-sm bg-white/95">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Adresse email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="nom@exemple.com"
+                  required
+                  className="bg-white"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Mot de passe</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="bg-white pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => 
+                      setRememberMe(checked as boolean)
+                    }
+                  />
+                  <Label 
+                    htmlFor="remember" 
+                    className="text-sm cursor-pointer"
+                  >
+                    Se souvenir de moi
+                  </Label>
+                </div>
+                <Button
+                  variant="link"
+                  className="px-0 text-primary"
+                  onClick={() => navigate("/reset-password")}
+                >
+                  Mot de passe oublié ?
+                </Button>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-secondary hover:bg-secondary/90"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
+                Se connecter
+              </Button>
+            </form>
           </Card>
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            En vous connectant, vous acceptez nos{" "}
-            <a href="/terms" className="text-primary hover:underline">
-              Conditions d'utilisation
-            </a>{" "}
-            et notre{" "}
-            <a href="/privacy" className="text-primary hover:underline">
-              Politique de confidentialité
-            </a>
-          </p>
-        </div>
+
+          {/* Lien d'inscription */}
+          <div className="text-center">
+            <p className="text-white">
+              Pas encore de compte ?{" "}
+              <Button
+                variant="link"
+                className="text-primary-foreground hover:text-primary-foreground/90 p-0"
+                onClick={() => navigate("/register")}
+              >
+                Créer un compte
+              </Button>
+            </p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
