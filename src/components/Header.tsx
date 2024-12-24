@@ -59,6 +59,83 @@ export const Header = () => {
     return `${firstName || ""} ${lastName || ""}`.trim();
   };
 
+  const renderAuthButtons = () => {
+    if (profile) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="ghost" 
+              className="relative h-8 w-8 rounded-full"
+              aria-label="Menu utilisateur"
+            >
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary/10">
+                  {getInitials(profile.first_name, profile.last_name)}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent 
+            className="w-56" 
+            align="end"
+            sideOffset={5}
+          >
+            <div className="flex items-center justify-start gap-2 p-2">
+              <div className="flex flex-col space-y-1 leading-none">
+                <p className="font-medium">
+                  {getFullName(profile.first_name, profile.last_name)}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {profile.role === "taxpayer" ? "Contribuable" : 
+                   profile.role === "developer" ? "Promoteur" : "Administrateur"}
+                </p>
+              </div>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+              <Home className="mr-2 h-4 w-4" />
+              <span>Tableau de Bord</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/profile?tab=settings")}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Paramètres</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/history")}>
+              <CreditCard className="mr-2 h-4 w-4" />
+              <span>Historique des Paiements</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/profile?tab=properties")}>
+              <Database className="mr-2 h-4 w-4" />
+              <span>Mes Biens</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Se Déconnecter</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    return (
+      <div className="flex items-center gap-2">
+        <Button 
+          variant="ghost" 
+          onClick={() => setIsLoginOpen(true)}
+          className="gap-2"
+        >
+          <Key className="h-4 w-4" />
+          Se Connecter
+        </Button>
+        <Button onClick={() => setIsRegisterOpen(true)}>
+          S'inscrire
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between px-4">
@@ -95,77 +172,7 @@ export const Header = () => {
           )}
           
           <ModeToggle />
-          
-          {profile ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="relative h-8 w-8 rounded-full"
-                  aria-label="Menu utilisateur"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary/10">
-                      {getInitials(profile.first_name, profile.last_name)}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                className="w-56" 
-                align="end"
-                sideOffset={5}
-              >
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">
-                      {getFullName(profile.first_name, profile.last_name)}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {profile.role === "taxpayer" ? "Contribuable" : 
-                       profile.role === "developer" ? "Promoteur" : "Administrateur"}
-                    </p>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
-                  <Home className="mr-2 h-4 w-4" />
-                  <span>Tableau de Bord</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/profile?tab=settings")}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Paramètres</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/history")}>
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  <span>Historique des Paiements</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/profile?tab=properties")}>
-                  <Database className="mr-2 h-4 w-4" />
-                  <span>Mes Biens</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Se Déconnecter</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                onClick={() => setIsLoginOpen(true)}
-                className="gap-2"
-              >
-                <Key className="h-4 w-4" />
-                Se Connecter
-              </Button>
-              <Button onClick={() => setIsRegisterOpen(true)}>
-                S'inscrire
-              </Button>
-            </div>
-          )}
+          {renderAuthButtons()}
         </div>
       </div>
 
