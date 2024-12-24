@@ -1,18 +1,19 @@
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Slider } from "../ui/slider";
-import { Input } from "../ui/input";
-import { Filter, MapPin, User, FileText } from "lucide-react";
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Filter } from "lucide-react";
 import { MapFilters as MapFiltersType } from "./types";
 import { PropertyType, ZoneType } from "@/utils/mockData/types";
 import { REGIONS } from "@/utils/mockData/locations";
 import { useMemo } from "react";
+import { SearchField } from "./filters/SearchField";
+import { FilterSection } from "./filters/FilterSection";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
@@ -71,36 +72,25 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
       </div>
       
       <div className="space-y-4">
-        {/* Propriétaire */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Propriétaire</label>
-          <div className="relative">
-            <Input
-              value={filters.ownerName}
-              onChange={(e) => setFilters({ ...filters, ownerName: e.target.value })}
-              placeholder="Nom du propriétaire"
-              className="pl-8"
-            />
-            <User className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-500" />
-          </div>
-        </div>
+        <FilterSection title="Propriétaire">
+          <SearchField
+            value={filters.ownerName}
+            onChange={(value) => setFilters({ ...filters, ownerName: value })}
+            type="owner"
+            placeholder="Nom du propriétaire"
+          />
+        </FilterSection>
 
-        {/* Titre Foncier */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Titre Foncier</label>
-          <div className="relative">
-            <Input
-              value={filters.titleDeedNumber}
-              onChange={(e) => setFilters({ ...filters, titleDeedNumber: e.target.value })}
-              placeholder="Numéro du titre foncier"
-              className="pl-8"
-            />
-            <FileText className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-500" />
-          </div>
-        </div>
+        <FilterSection title="Titre Foncier">
+          <SearchField
+            value={filters.titleDeedNumber}
+            onChange={(value) => setFilters({ ...filters, titleDeedNumber: value })}
+            type="title"
+            placeholder="Numéro du titre foncier"
+          />
+        </FilterSection>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Région</label>
+        <FilterSection title="Région">
           <Select
             value={filters.region}
             onValueChange={(value) => setFilters({ ...filters, region: value, commune: '' })}
@@ -116,10 +106,9 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </FilterSection>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Commune</label>
+        <FilterSection title="Commune">
           <Select
             value={filters.commune}
             onValueChange={(value) => setFilters({ ...filters, commune: value })}
@@ -136,10 +125,9 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </FilterSection>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Type de Terrain</label>
+        <FilterSection title="Type de Terrain">
           <Select
             value={filters.propertyType}
             onValueChange={(value) => setFilters({ ...filters, propertyType: value as PropertyType })}
@@ -155,10 +143,9 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </FilterSection>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Zoning</label>
+        <FilterSection title="Zoning">
           <Select
             value={filters.zoneType}
             onValueChange={(value) => setFilters({ ...filters, zoneType: value as ZoneType })}
@@ -174,10 +161,9 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </FilterSection>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Statut Fiscal</label>
+        <FilterSection title="Statut Fiscal">
           <Select
             value={filters.status}
             onValueChange={(value) => setFilters({ ...filters, status: value as 'PAID' | 'PENDING' | 'OVERDUE' | '' })}
@@ -191,10 +177,9 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
               <SelectItem value="OVERDUE">En retard</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </FilterSection>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Superficie (m²)</label>
+        <FilterSection title="Superficie (m²)">
           <Slider
             defaultValue={[0, 15000]}
             max={15000}
@@ -205,7 +190,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
             <span>{filters.size[0]} m²</span>
             <span>{filters.size[1]} m²</span>
           </div>
-        </div>
+        </FilterSection>
 
         <Button 
           className="w-full"
