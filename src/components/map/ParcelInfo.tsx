@@ -1,10 +1,12 @@
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Parcel } from "@/utils/mockData/types";
-import { FileText, MessageSquare, Receipt } from "lucide-react";
+import { FileText, MessageSquare, Receipt, Calculator } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { ContactDialog } from "./contact/ContactDialog";
+import { TNBCalculator } from "./tnb/TNBCalculator";
+import { formatCurrency } from "@/utils/format";
 
 interface ParcelInfoProps {
   parcel: Parcel;
@@ -14,6 +16,20 @@ interface ParcelInfoProps {
 
 export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
   const [contactOpen, setContactOpen] = useState(false);
+  const [calculatorOpen, setCalculatorOpen] = useState(false);
+
+  const getTNBStatusColor = (status: 'LOW' | 'AVERAGE' | 'HIGH') => {
+    switch (status) {
+      case 'LOW':
+        return 'text-green-600';
+      case 'AVERAGE':
+        return 'text-yellow-600';
+      case 'HIGH':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
+    }
+  };
 
   return (
     <>
@@ -69,6 +85,25 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
                 : 'En attente'}
             </span>
           </div>
+
+          {/* TNB Information */}
+          <div className="pt-2 border-t">
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">Prix TNB</span>
+              <span className={`text-sm font-medium ${getTNBStatusColor(parcel.tnbInfo.status)}`}>
+                {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">Total TNB Annuel</span>
+              <span className="text-sm font-medium">
+                {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
+              </span>
+            </div>
+            <div className="text-xs text-muted-foreground text-right mt-1">
+              Dernière mise à jour : {new Date(parcel.tnbInfo.lastUpdate).toLocaleDateString()}
+            </div>
+          </div>
         </div>
 
         <div className="flex gap-2">
@@ -100,12 +135,27 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
             Contacter
           </Button>
         </div>
+
+        <Button 
+          variant="secondary"
+          className="w-full"
+          onClick={() => setCalculatorOpen(true)}
+        >
+          <Calculator className="w-4 h-4 mr-2" />
+          Calculateur TNB
+        </Button>
       </Card>
 
       <ContactDialog
         parcel={parcel}
         open={contactOpen}
         onOpenChange={setContactOpen}
+      />
+
+      <TNBCalculator
+        parcel={parcel}
+        open={calculatorOpen}
+        onOpenChange={setCalculatorOpen}
       />
     </>
   );

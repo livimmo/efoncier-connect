@@ -2,6 +2,18 @@ export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICU
 export type ZoneType = 'URBAN' | 'SUBURBAN' | 'RURAL' | 'E3' | 'E4' | 'I2S12' | 'BT2' | 'PROTECTED' | 'CONSTRUCTIBLE';
 export type TaxStatus = 'PAID' | 'PENDING' | 'OVERDUE';
 
+export interface TNBInfo {
+  pricePerMeter: number;
+  totalAmount: number;
+  lastUpdate: string;
+  status: 'LOW' | 'AVERAGE' | 'HIGH';
+}
+
+export interface Location {
+  lat: number;
+  lng: number;
+}
+
 export interface Parcel {
   id: string;
   title: string;
@@ -13,13 +25,11 @@ export interface Parcel {
   zone: ZoneType;
   taxStatus: TaxStatus;
   ownerName: string;
-  owner: string; // Added this field
+  owner: string;
   phone?: string;
   email?: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
+  location: Location;
+  tnbInfo: TNBInfo;
 }
 
 export interface Transaction {
@@ -29,8 +39,8 @@ export interface Transaction {
   status: string;
   type: string;
   parcelId: string;
-  buyerId?: string; // Added optional buyerId
-  sellerId?: string; // Added optional sellerId
+  buyerId?: string;
+  sellerId?: string;
 }
 
 export interface User {
@@ -39,6 +49,6 @@ export interface User {
   email: string;
   role: string;
   status: string;
-  phone?: string; // Added optional phone
-  parcels?: string[]; // Added optional parcels array
+  phone?: string;
+  parcels?: string[];
 }

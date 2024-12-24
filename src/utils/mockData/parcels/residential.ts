@@ -8,12 +8,18 @@ export const residentialParcels: Parcel[] = [
     city: 'casablanca',
     surface: 450,
     type: 'RESIDENTIAL',
-    zone: 'E3',
+    zone: 'URBAN',
     taxStatus: 'PAID',
     owner: 'Groupe Immobilier Atlas',
     location: { lat: 33.5731, lng: -7.5898 },
     titleDeedNumber: 'TF123456/C',
-    ownerName: 'Ahmed El Fassi'
+    ownerName: 'Ahmed El Fassi',
+    tnbInfo: {
+      pricePerMeter: 12,
+      totalAmount: 5400,
+      lastUpdate: '2024-03-15',
+      status: 'AVERAGE'
+    }
   },
   {
     id: '3',
@@ -27,7 +33,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Karim Benjelloun',
     location: { lat: 33.5850, lng: -7.6328 },
     titleDeedNumber: 'TF345678/C',
-    ownerName: 'Karim Benjelloun'
+    ownerName: 'Karim Benjelloun',
+    tnbInfo: {
+      pricePerMeter: 10,
+      totalAmount: 1800,
+      lastUpdate: '2024-03-15',
+      status: 'LOW'
+    }
   },
   {
     id: '6',
@@ -41,7 +53,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Sofia Alaoui',
     location: { lat: 33.5932, lng: -7.6353 },
     titleDeedNumber: 'TF234567/C',
-    ownerName: 'Sofia Alaoui'
+    ownerName: 'Sofia Alaoui',
+    tnbInfo: {
+      pricePerMeter: 15,
+      totalAmount: 9000,
+      lastUpdate: '2024-03-15',
+      status: 'HIGH'
+    }
   },
   {
     id: '8',
@@ -55,7 +73,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Hassan El Mansouri',
     location: { lat: 33.5892, lng: -7.6194 },
     titleDeedNumber: 'TF345678/C',
-    ownerName: 'Hassan El Mansouri'
+    ownerName: 'Hassan El Mansouri',
+    tnbInfo: {
+      pricePerMeter: 8,
+      totalAmount: 2400,
+      lastUpdate: '2024-03-15',
+      status: 'LOW'
+    }
   },
   {
     id: '10',
@@ -69,7 +93,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Immobilière Côtière SA',
     location: { lat: 33.5315, lng: -7.7481 },
     titleDeedNumber: 'TF123789/C',
-    ownerName: 'Immobilière Côtière SA'
+    ownerName: 'Immobilière Côtière SA',
+    tnbInfo: {
+      pricePerMeter: 20,
+      totalAmount: 30000,
+      lastUpdate: '2024-03-15',
+      status: 'HIGH'
+    }
   },
   {
     id: '12',
@@ -83,7 +113,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Coopérative Al Baraka',
     location: { lat: 33.4989, lng: -7.6417 },
     titleDeedNumber: 'TF567123/C',
-    ownerName: 'Coopérative Al Baraka'
+    ownerName: 'Coopérative Al Baraka',
+    tnbInfo: {
+      pricePerMeter: 5,
+      totalAmount: 125000,
+      lastUpdate: '2024-03-15',
+      status: 'LOW'
+    }
   },
   {
     id: '14',
@@ -97,7 +133,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Youssef El Alami',
     location: { lat: 33.5954, lng: -7.6697 },
     titleDeedNumber: 'TF234890/C',
-    ownerName: 'Youssef El Alami'
+    ownerName: 'Youssef El Alami',
+    tnbInfo: {
+      pricePerMeter: 18,
+      totalAmount: 14400,
+      lastUpdate: '2024-03-15',
+      status: 'HIGH'
+    }
   },
   {
     id: '16',
@@ -111,7 +153,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Nadia Benjelloun',
     location: { lat: 33.5954, lng: -7.6697 },
     titleDeedNumber: 'TF901456/C',
-    ownerName: 'Nadia Benjelloun'
+    ownerName: 'Nadia Benjelloun',
+    tnbInfo: {
+      pricePerMeter: 14,
+      totalAmount: 3500,
+      lastUpdate: '2024-03-15',
+      status: 'AVERAGE'
+    }
   },
   {
     id: '19',
@@ -125,7 +173,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Immobilière Prestige',
     location: { lat: 33.5534, lng: -7.6584 },
     titleDeedNumber: 'TF123567/C',
-    ownerName: 'Immobilière Prestige'
+    ownerName: 'Immobilière Prestige',
+    tnbInfo: {
+      pricePerMeter: 11,
+      totalAmount: 49500,
+      lastUpdate: '2024-03-15',
+      status: 'AVERAGE'
+    }
   },
   {
     id: '21',
@@ -139,7 +193,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Sarah El Fassi',
     location: { lat: 33.5892, lng: -7.6353 },
     titleDeedNumber: 'TF234678/C',
-    ownerName: 'Sarah El Fassi'
+    ownerName: 'Sarah El Fassi',
+    tnbInfo: {
+      pricePerMeter: 13,
+      totalAmount: 2860,
+      lastUpdate: '2024-03-15',
+      status: 'AVERAGE'
+    }
   },
   {
     id: '23',
@@ -153,7 +213,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Golf Resort Development',
     location: { lat: 33.4989, lng: -7.6417 },
     titleDeedNumber: 'TF789123/C',
-    ownerName: 'Golf Resort Development'
+    ownerName: 'Golf Resort Development',
+    tnbInfo: {
+      pricePerMeter: 9,
+      totalAmount: 9000,
+      lastUpdate: '2024-03-15',
+      status: 'LOW'
+    }
   },
   {
     id: '25',
@@ -167,7 +233,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Mohammed El Kettani',
     location: { lat: 33.5876, lng: -7.6331 },
     titleDeedNumber: 'TF345789/C',
-    ownerName: 'Mohammed El Kettani'
+    ownerName: 'Mohammed El Kettani',
+    tnbInfo: {
+      pricePerMeter: 17,
+      totalAmount: 5100,
+      lastUpdate: '2024-03-15',
+      status: 'HIGH'
+    }
   },
   {
     id: '27',
@@ -181,7 +253,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Amina Benjelloun',
     location: { lat: 33.5731, lng: -7.6353 },
     titleDeedNumber: 'TF123890/C',
-    ownerName: 'Amina Benjelloun'
+    ownerName: 'Amina Benjelloun',
+    tnbInfo: {
+      pricePerMeter: 16,
+      totalAmount: 6400,
+      lastUpdate: '2024-03-15',
+      status: 'HIGH'
+    }
   },
   {
     id: '28',
@@ -195,7 +273,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Sport & Loisirs SA',
     location: { lat: 33.5731, lng: -7.5898 },
     titleDeedNumber: 'TF567123/C',
-    ownerName: 'Sport & Loisirs SA'
+    ownerName: 'Sport & Loisirs SA',
+    tnbInfo: {
+      pricePerMeter: 7,
+      totalAmount: 42000,
+      lastUpdate: '2024-03-15',
+      status: 'LOW'
+    }
   },
   {
     id: '29',
@@ -209,7 +293,13 @@ export const residentialParcels: Parcel[] = [
     owner: 'Froid Logistique SARL',
     location: { lat: 33.5315, lng: -7.6584 },
     titleDeedNumber: 'TF890345/C',
-    ownerName: 'Froid Logistique SARL'
+    ownerName: 'Froid Logistique SARL',
+    tnbInfo: {
+      pricePerMeter: 6,
+      totalAmount: 24000,
+      lastUpdate: '2024-03-15',
+      status: 'LOW'
+    }
   },
   {
     id: '30',
@@ -223,6 +313,12 @@ export const residentialParcels: Parcel[] = [
     owner: 'Groupe Immobilier Littoral',
     location: { lat: 33.5315, lng: -7.7481 },
     titleDeedNumber: 'TF234567/C',
-    ownerName: 'Groupe Immobilier Littoral'
+    ownerName: 'Groupe Immobilier Littoral',
+    tnbInfo: {
+      pricePerMeter: 11,
+      totalAmount: 38500,
+      lastUpdate: '2024-03-15',
+      status: 'AVERAGE'
+    }
   }
 ];
