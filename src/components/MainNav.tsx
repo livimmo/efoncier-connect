@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Map, CreditCard, MessageSquare, HelpCircle, History } from "lucide-react";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -8,6 +9,7 @@ interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export function MainNav({ className, ...props }: MainNavProps) {
   const location = useLocation();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const navItems = [
     {
@@ -40,7 +42,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
   return (
     <nav 
       className={cn(
-        "flex md:items-center md:space-x-6 lg:space-x-8", 
+        "flex items-center space-x-4 lg:space-x-6", 
         className
       )} 
       {...props}
@@ -50,14 +52,14 @@ export function MainNav({ className, ...props }: MainNavProps) {
           key={href}
           to={href}
           className={cn(
-            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group w-full md:w-auto",
+            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group",
             location.pathname === href 
               ? "text-primary after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-0.5 after:bg-primary" 
               : "text-muted-foreground"
           )}
         >
           <Icon className="h-5 w-5" />
-          <span>{label}</span>
+          {!isMobile && <span>{label}</span>}
         </Link>
       ))}
     </nav>
