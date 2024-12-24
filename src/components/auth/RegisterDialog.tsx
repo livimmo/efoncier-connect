@@ -15,7 +15,7 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Building, Home, Shield } from "lucide-react";
+import { Building, Home, Building2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -28,7 +28,16 @@ const formSchema = z.object({
     ),
   confirmPassword: z.string(),
   phone: z.string().min(10, "Numéro de téléphone invalide"),
-  role: z.enum(["taxpayer", "developer", "admin"]),
+  role: z.enum(["taxpayer", "developer", "commune"]),
+  // Champs spécifiques au contribuable
+  fullName: z.string().optional(),
+  cin: z.string().optional(),
+  // Champs spécifiques au promoteur
+  companyName: z.string().optional(),
+  taxNumber: z.string().optional(),
+  // Champs spécifiques à la commune
+  communeName: z.string().optional(),
+  regionCode: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"],
@@ -43,6 +52,7 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("taxpayer");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,6 +91,11 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
     }
   };
 
+  const handleRoleChange = (role: string) => {
+    setSelectedRole(role);
+    form.setValue("role", role as "taxpayer" | "developer" | "commune");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
@@ -101,7 +116,7 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
                   <FormLabel>Type de compte</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => handleRoleChange(value)}
                       defaultValue={field.value}
                       className="grid grid-cols-3 gap-4"
                     >
@@ -120,10 +135,10 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
                         </label>
                       </div>
                       <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:border-primary">
-                        <RadioGroupItem value="admin" id="admin" />
-                        <label htmlFor="admin" className="flex items-center cursor-pointer">
-                          <Shield className="w-4 h-4 mr-2" />
-                          Admin
+                        <RadioGroupItem value="commune" id="commune" />
+                        <label htmlFor="commune" className="flex items-center cursor-pointer">
+                          <Building2 className="w-4 h-4 mr-2" />
+                          Commune
                         </label>
                       </div>
                     </RadioGroup>
@@ -190,6 +205,102 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
                 </FormItem>
               )}
             />
+
+            {/* Champs spécifiques au contribuable */}
+            {selectedRole === "taxpayer" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom complet</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Prénom et nom" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cin"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numéro CIN</FormLabel>
+                      <FormControl>
+                        <Input placeholder="XX000000" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+
+            {/* Champs spécifiques au promoteur */}
+            {selectedRole === "developer" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="companyName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom de l'entreprise</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nom de votre société" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="taxNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numéro d'identification fiscale</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Numéro IF" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+
+            {/* Champs spécifiques à la commune */}
+            {selectedRole === "commune" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="communeName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom de la commune</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nom de la commune" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="regionCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Code de la région</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Code région" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
 
             <div className="flex flex-col gap-4 pt-4">
               <Button type="submit" disabled={isLoading}>
