@@ -47,14 +47,25 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     }
 
     try {
-      console.log("Attempting login with:", { email, selectedRole });
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        console.error("Login error:", error);
+        if (error.message === "Invalid login credentials") {
+          toast({
+            title: "Erreur de connexion",
+            description: "Email ou mot de passe incorrect",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erreur de connexion",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
         throw error;
       }
 
@@ -64,17 +75,10 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
           description: "Bienvenue sur eFoncier !",
         });
         onOpenChange(false);
-        navigate("/profile");
+        navigate("/dashboard");
       }
     } catch (error: any) {
       console.error("Login error:", error);
-      toast({
-        title: "Erreur de connexion",
-        description: error.message === "Invalid login credentials" 
-          ? "Email ou mot de passe incorrect"
-          : error.message,
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +103,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
           description: "Connexion réussie via WhatsApp !",
         });
         onOpenChange(false);
-        navigate("/profile");
+        navigate("/dashboard");
       }, 1000);
     }
   };

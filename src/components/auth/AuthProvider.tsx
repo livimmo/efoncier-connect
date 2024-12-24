@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   session: Session | null;
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get initial session
@@ -34,25 +36,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (session?.user) {
         fetchProfile(session.user.id);
       }
+      setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        console.log("Auth state changed:", _event, session?.user?.id);
+      async (event, session) => {
+        console.log("Auth state changed:", event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
+        
         if (session?.user) {
           await fetchProfile(session.user.id);
+          // Redirect to dashboard on successful login
+          if (event === 'SIGNED_IN') {
+            navigate('/dashboard');
+          }
         } else {
           setProfile(null);
+          // Redirect to home on logout
+          if (event === 'SIGNED_OUT') {
+            navigate('/');
+          }
         }
         setLoading(false);
       }
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -70,7 +82,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       console.log("Profile data:", data);
       setProfile(data);
-      setLoading(false);
     } catch (error: any) {
       console.error("Profile fetch error:", error);
       toast({
@@ -78,7 +89,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         description: "Impossible de charger le profil utilisateur",
         variant: "destructive",
       });
-      setLoading(false);
     }
   };
 
@@ -89,6 +99,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         title: "Déconnexion réussie",
         description: "À bientôt !",
       });
+      navigate('/');
     } catch (error: any) {
       console.error("Sign out error:", error);
       toast({

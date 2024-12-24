@@ -6,6 +6,12 @@ interface OTPInputProps {
   onComplete?: () => void;
 }
 
+interface OTPSlot {
+  char: string;
+  hasFakeCaret: boolean;
+  isActive: boolean;
+}
+
 export const OTPInput = ({ value, onChange, onComplete }: OTPInputProps) => {
   return (
     <div className="grid gap-4">
@@ -20,7 +26,7 @@ export const OTPInput = ({ value, onChange, onComplete }: OTPInputProps) => {
         maxLength={6}
         render={({ slots }) => (
           <InputOTPGroup className="gap-2">
-            {slots?.map((slot, index) => (
+            {slots?.map((slot: OTPSlot, index: number) => (
               <InputOTPSlot key={index} {...slot} index={index} />
             )) || null}
           </InputOTPGroup>
