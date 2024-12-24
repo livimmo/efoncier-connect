@@ -1,50 +1,62 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { mockParcels } from "@/utils/mockData/parcels";
 import { formatCurrency } from "@/utils/format";
 
-interface PropertiesStatsProps {
-  properties: any[];
-}
-
-export function PropertiesStats({ properties }: PropertiesStatsProps) {
-  const totalProperties = properties.length;
-  const totalArea = properties.reduce((acc, prop) => acc + prop.surface_area, 0);
-  const unpaidProperties = properties.filter(p => p.fiscal_status !== 'compliant').length;
+export const PropertiesStats = () => {
+  const totalProperties = mockParcels.length;
+  const totalSurface = mockParcels.reduce((acc, parcel) => acc + parcel.surface, 0);
+  const totalTNB = mockParcels.reduce((acc, parcel) => acc + parcel.tnbInfo.totalAmount, 0);
+  const unpaidTNB = mockParcels
+    .filter(parcel => parcel.taxStatus !== 'PAID')
+    .reduce((acc, parcel) => acc + parcel.tnbInfo.totalAmount, 0);
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total des Biens</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Total des Biens
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{totalProperties}</div>
-          <p className="text-xs text-muted-foreground">
-            terrains enregistrés
-          </p>
         </CardContent>
       </Card>
+
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Superficie Totale</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Surface Totale
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalArea.toLocaleString()} m²</div>
-          <p className="text-xs text-muted-foreground">
-            sur l'ensemble des terrains
-          </p>
+          <div className="text-2xl font-bold">{totalSurface.toLocaleString()} m²</div>
         </CardContent>
       </Card>
+
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Taxes Impayées</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            TNB Total
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{unpaidProperties}</div>
-          <p className="text-xs text-muted-foreground">
-            terrains avec taxes en attente
-          </p>
+          <div className="text-2xl font-bold">{formatCurrency(totalTNB)} DHS</div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            TNB Impayé
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-destructive">
+            {formatCurrency(unpaidTNB)} DHS
+          </div>
         </CardContent>
       </Card>
     </div>
   );
-}
+};
