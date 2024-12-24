@@ -12,23 +12,30 @@ import { ExternalLink } from "lucide-react";
 const partners = [
   {
     id: 1,
+    name: "Direction Générale des Impôts",
+    logo: "/lovable-uploads/a97b9ec9-33bc-4f61-b8f8-0056bffd075d.png",
+    description: "Administration fiscale du Royaume du Maroc",
+    link: "https://portail.tax.gov.ma",
+  },
+  {
+    id: 2,
+    name: "ANCFCC",
+    logo: "/lovable-uploads/08aeeb64-02d8-4d13-83dc-f4a3f650387f.png",
+    description: "Agence Nationale de la Conservation Foncière",
+    link: "https://www.ancfcc.gov.ma",
+  },
+  {
+    id: 3,
     name: "Attijariwafa Bank",
     logo: "/partners/attijariwafa.png",
     description: "Taux préférentiels pour terrains",
     link: "#",
   },
   {
-    id: 2,
+    id: 4,
     name: "Al Omrane",
     logo: "/partners/alomrane.png",
     description: "Investissez dès maintenant",
-    link: "#",
-  },
-  {
-    id: 3,
-    name: "Annonce Spéciale",
-    logo: "/partners/special.png",
-    description: "Consultez les dernières parcelles ajoutées",
     link: "#",
   },
 ];
@@ -37,9 +44,9 @@ export const PartnersCarousel = () => {
   return (
     <div className="py-10 space-y-6">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold">Nos Partenaires & Annonces 📢</h2>
+        <h2 className="text-2xl font-bold">Nos Partenaires Institutionnels 🏛️</h2>
         <p className="text-muted-foreground">
-          Découvrez nos partenaires privilégiés et leurs offres spéciales
+          Les institutions officielles et partenaires privilégiés du service eFoncier
         </p>
       </div>
 
@@ -79,7 +86,7 @@ export const PartnersCarousel = () => {
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
                       >
-                        Voir l'offre
+                        Visiter le site
                         <ExternalLink className="h-4 w-4" />
                       </a>
                     </Button>
