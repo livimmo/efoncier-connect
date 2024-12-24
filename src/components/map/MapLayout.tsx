@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Filter, MapPin } from "lucide-react";
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapFilters as MapFiltersType, MapSettings } from './types';
+import { useToast } from "@/hooks/use-toast";
 
 export const MapLayout = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { toast } = useToast();
   
   const [filters, setFilters] = useState<MapFiltersType>({
     city: '',
@@ -27,6 +29,13 @@ export const MapLayout = () => {
     theme: 'light',
     unit: 'metric',
   });
+
+  const handleApplyFilters = () => {
+    toast({
+      title: "Filtres appliqués",
+      description: "Les résultats ont été mis à jour selon vos critères",
+    });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -44,6 +53,7 @@ export const MapLayout = () => {
                 <MapFilters 
                   filters={filters}
                   setFilters={setFilters}
+                  onApplyFilters={handleApplyFilters}
                 />
               </SheetContent>
             </Sheet>
@@ -53,6 +63,7 @@ export const MapLayout = () => {
             <MapFilters 
               filters={filters}
               setFilters={setFilters}
+              onApplyFilters={handleApplyFilters}
             />
           </div>
         )}
@@ -67,13 +78,6 @@ export const MapLayout = () => {
             }}
             selectedParcel={selectedParcel}
             markerPosition={markerPosition}
-          />
-          
-          <MapMobileControls 
-            settings={settings}
-            onSettingChange={(key, value) => {
-              setSettings(prev => ({ ...prev, [key]: value }));
-            }}
           />
         </div>
       </div>

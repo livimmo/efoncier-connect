@@ -5,7 +5,7 @@ import { MapControls } from './MapControls';
 import { useToast } from "@/hooks/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import type { Parcel } from '@/utils/mockData/types';
-import type { MapFilters, MapSettings } from './types';
+import type { MapFilters, MapSettings, MapControls as MapControlsType } from './types';
 import { mockParcels } from '@/utils/mockData/parcels';
 
 interface MapViewProps {
@@ -26,6 +26,12 @@ export const MapView = ({
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const [controls, setControls] = useState<MapControlsType>({
+    showFilters: false,
+    show3DView: false,
+    showComparison: false,
+    showHistory: false,
+  });
 
   const handleZoomIn = () => {
     if (mapInstance) {
@@ -75,21 +81,24 @@ export const MapView = ({
     }
   };
 
-  const filteredParcels = mockParcels.filter(parcel => {
-    if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
-    if (filters.propertyType && parcel.type !== filters.propertyType) return false;
-    if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
-    if (filters.status && parcel.taxStatus !== filters.status) return false;
-    if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
-    return true;
-  });
+  const handleControlChange = (control: keyof MapControlsType) => {
+    setControls(prev => ({
+      ...prev,
+      [control]: !prev[control]
+    }));
+  };
+
+  const handleSettingChange = (setting: keyof MapSettings, value: any) => {
+    // This would typically update the settings via a prop or context
+    console.log('Setting changed:', setting, value);
+  };
 
   return (
     <div className="relative h-full">
       <div className="absolute inset-0">
         <GoogleMap 
           onMarkerClick={onParcelSelect}
-          parcels={filteredParcels}
+          parcels={mockParcels}
           theme={settings.theme}
           setMapInstance={setMapInstance}
         />
@@ -97,6 +106,10 @@ export const MapView = ({
 
       <div className="absolute top-4 right-4 z-10">
         <MapControls
+          controls={controls}
+          settings={settings}
+          onControlChange={handleControlChange}
+          onSettingChange={handleSettingChange}
           onZoomIn={handleZoomIn}
           onZoomOut={handleZoomOut}
           onReset={handleReset}
