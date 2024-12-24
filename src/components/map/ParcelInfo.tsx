@@ -12,7 +12,7 @@ interface ParcelInfoProps {
 
 export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
   return (
-    <Card className={cn("absolute top-4 right-4 w-80 p-4 space-y-4", className)}>
+    <Card className={cn("fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 p-4 space-y-4 z-50 bg-background/95 backdrop-blur-sm", className)}>
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-semibold">{parcel.title}</h3>
