@@ -5,11 +5,12 @@ import { PropertiesStats } from "@/components/taxpayer/properties/PropertiesStat
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Property } from "@/utils/mockData/types";
 
 export default function Properties() {
   const { toast } = useToast();
 
-  const { data: properties, isLoading } = useQuery({
+  const { data: properties, isLoading } = useQuery<Property[]>({
     queryKey: ['properties'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -35,9 +36,9 @@ export default function Properties() {
       <main className="container mx-auto px-4 py-8">
         <PropertiesHeader />
         <div className="grid gap-6 mt-8">
-          <PropertiesStats properties={properties || []} />
+          <PropertiesStats data={properties || []} />
           <PropertiesTable 
-            properties={properties || []} 
+            data={properties || []} 
             isLoading={isLoading} 
           />
         </div>
