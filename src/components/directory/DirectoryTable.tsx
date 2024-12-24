@@ -20,7 +20,7 @@ export function DirectoryTable({ searchQuery, filters }: DirectoryTableProps) {
       name: "Ahmed El Fassi",
       location: "Casablanca",
       status: "regular",
-      type: "taxpayer",
+      type: "owner",
       parcels: 3,
       lastPayment: "01/05/2024",
     },
@@ -63,7 +63,7 @@ export function DirectoryTable({ searchQuery, filters }: DirectoryTableProps) {
               </TableCell>
               <TableCell>
                 <Badge variant="secondary">
-                  {entry.type === "taxpayer" ? "Contribuable" : "Promoteur"}
+                  {entry.type === "owner" ? "Propriétaire" : "Promoteur"}
                 </Badge>
               </TableCell>
               <TableCell>{entry.parcels}</TableCell>
