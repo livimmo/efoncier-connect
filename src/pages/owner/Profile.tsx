@@ -8,9 +8,9 @@ import {
   User, Mail, Phone, Download, MessageSquare, MapPin, 
   CreditCard, Bell, FileText, Edit, Shield 
 } from "lucide-react";
-import { ParcelList } from "@/components/taxpayer/ParcelList";
-import { PaymentHistory } from "@/components/taxpayer/PaymentHistory";
-import { NotificationList } from "@/components/taxpayer/NotificationList";
+import { ParcelList } from "@/components/owner/ParcelList";
+import { PaymentHistory } from "@/components/owner/PaymentHistory";
+import { NotificationList } from "@/components/owner/NotificationList";
 
 const TaxpayerProfile = () => {
   return (

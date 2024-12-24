@@ -304,7 +304,7 @@ export type Database = {
       payment_status: "pending" | "completed" | "overdue" | "cancelled"
       property_status: "pending" | "approved" | "rejected" | "archived"
       subscription_tier: "basic" | "premium"
-      user_role: "admin" | "commune" | "taxpayer" | "developer"
+      user_role: "admin" | "commune" | "owner" | "developer"
     }
     CompositeTypes: {
       [_ in never]: never

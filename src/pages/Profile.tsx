@@ -8,7 +8,7 @@ import { DashboardTab } from "@/components/profile/tabs/DashboardTab";
 import { PropertiesTab } from "@/components/profile/tabs/PropertiesTab";
 import { StatsTab } from "@/components/profile/tabs/StatsTab";
 import { SettingsTab } from "@/components/profile/tabs/SettingsTab";
-import { NotificationList as TaxpayerNotificationList } from "@/components/taxpayer/NotificationList";
+import { NotificationList } from "@/components/owner/NotificationList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
@@ -89,7 +89,7 @@ export default function Profile() {
             </TabsContent>
 
             <TabsContent value="notifications" className="animate-fade-in">
-              <TaxpayerNotificationList />
+              <NotificationList />
             </TabsContent>
 
             <TabsContent value="settings" className="animate-fade-in">

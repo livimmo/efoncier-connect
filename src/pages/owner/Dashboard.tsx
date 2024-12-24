@@ -3,13 +3,13 @@ import { Sidebar } from "@/components/Sidebar";
 import { StatsWidget } from "@/components/dashboard/StatsWidget";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { QuickActions } from "@/components/dashboard/QuickActions";
-import { ParcelList } from "@/components/taxpayer/ParcelList";
-import { PaymentHistory } from "@/components/taxpayer/PaymentHistory";
+import { ParcelList } from "@/components/owner/ParcelList";
+import { PaymentHistory } from "@/components/owner/PaymentHistory";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 
-const TaxpayerDashboard = () => {
+const OwnerDashboard = () => {
   const [searchParams] = useSearchParams();
   const currentTab = searchParams.get("tab") || "overview";
   const { profile } = useAuth();
@@ -61,4 +61,4 @@ const TaxpayerDashboard = () => {
   );
 };
 
-export default TaxpayerDashboard;
+export default OwnerDashboard;

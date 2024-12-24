@@ -1,63 +1,90 @@
 import { Header } from "@/components/Header";
-import { PropertiesHeader } from "@/components/taxpayer/properties/PropertiesHeader";
-import { PropertiesTable } from "@/components/taxpayer/properties/PropertiesTable";
-import { PropertiesStats } from "@/components/taxpayer/properties/PropertiesStats";
+import { PropertiesHeader } from '@/components/owner/properties/PropertiesHeader';
+import { PropertiesStats } from '@/components/owner/properties/PropertiesStats';
+import { PropertiesTable } from '@/components/owner/properties/PropertiesTable';
+import { MapView } from '@/components/map/MapView';
+import { MapSettings } from '@/components/map/types';
+import { mockParcels } from '@/utils/mockData/parcels';
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { Property } from "@/types";
+import { useState } from 'react';
 
-interface Property {
-  created_at: string;
-  description: string;
-  fiscal_status: "compliant" | "non_compliant" | "under_review";
-  id: string;
-  is_for_sale: boolean;
-  location: any;
-  owner_id: string;
-  price: number;
-  property_type: string;
-  status: string;
-  surface_area: number;
-  title: string;
-  updated_at: string;
-}
-
-export default function Properties() {
+const PropertiesPage = () => {
+  const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
+  const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { data: properties, isLoading } = useQuery({
-    queryKey: ['properties'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('owner_id', (await supabase.auth.getUser()).data.user?.id);
-
-      if (error) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger vos biens",
-          variant: "destructive",
-        });
-        throw error;
-      }
-      return data as Property[];
-    },
+  const [settings] = useState<MapSettings>({
+    theme: 'light',
+    unit: 'metric',
   });
+
+  // Transform mockParcels to match Property type
+  const properties: Property[] = mockParcels.map(parcel => ({
+    id: parcel.id,
+    title: parcel.title,
+    description: parcel.address,
+    property_type: parcel.type.toLowerCase(),
+    surface_area: parcel.surface,
+    location: parcel.location,
+    fiscal_status: "under_review",
+    status: "pending",
+    is_for_sale: false,
+    price: parcel.price || 0,
+    owner_id: parcel.owner,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }));
+
+  const selectedParcel = selectedParcelId 
+    ? mockParcels.find(p => p.id === selectedParcelId) 
+    : null;
+
+  const handleParcelSelect = (parcelId: string, position?: { x: number; y: number }) => {
+    setSelectedParcelId(parcelId);
+    if (position) {
+      setMarkerPosition(position);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-4 py-8">
         <PropertiesHeader />
-        <div className="grid gap-6 mt-8">
-          <PropertiesStats data={properties || []} />
-          <PropertiesTable 
-            data={properties || []} 
-            isLoading={isLoading} 
-          />
+        <PropertiesStats data={properties} />
+        
+        <div className="grid lg:grid-cols-2 gap-8 mt-8">
+          <div className="space-y-4">
+            <PropertiesTable 
+              data={properties}
+              isLoading={isLoading}
+            />
+          </div>
+
+          <div className="h-[600px] relative rounded-lg border">
+            <MapView 
+              selectedParcel={selectedParcel}
+              markerPosition={markerPosition}
+              onParcelSelect={(parcel, position) => {
+                if (parcel) {
+                  handleParcelSelect(parcel.id, position);
+                }
+              }}
+              filteredParcels={mockParcels}
+              settings={settings}
+              mapInstance={mapInstance}
+              setMapInstance={setMapInstance}
+            />
+          </div>
         </div>
       </main>
     </div>
   );
-}
+};
+
+export default PropertiesPage;
