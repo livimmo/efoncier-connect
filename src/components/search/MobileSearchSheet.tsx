@@ -6,6 +6,7 @@ import { MobileSearchBar } from "./MobileSearchBar";
 import { MobileSearchResults } from "./MobileSearchResults";
 import { MobileSearchFilters } from "./MobileSearchFilters";
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { SearchFilters } from "./types";
 
 export const MobileSearchSheet = () => {
@@ -67,19 +68,21 @@ export const MobileSearchSheet = () => {
           />
         </SheetHeader>
 
-        {showFilters ? (
-          <MobileSearchFilters
-            filters={filters}
-            setFilters={setFilters}
-            onClose={() => setShowFilters(false)}
-            onApply={() => {
-              setShowFilters(false);
-              handleSearch();
-            }}
-          />
-        ) : (
-          <MobileSearchResults query={query} filters={filters} />
-        )}
+        <ScrollArea className="h-[calc(100vh-150px)] w-full">
+          {showFilters ? (
+            <MobileSearchFilters
+              filters={filters}
+              setFilters={setFilters}
+              onClose={() => setShowFilters(false)}
+              onApply={() => {
+                setShowFilters(false);
+                handleSearch();
+              }}
+            />
+          ) : (
+            <MobileSearchResults query={query} filters={filters} />
+          )}
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
