@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { OTPInput } from "./OTPInput";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
+import { useAuth } from "./AuthProvider";
 
 interface LoginDialogProps {
   open: boolean;
@@ -22,36 +23,45 @@ interface LoginDialogProps {
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { profile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOTP] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
 
+  const handleSuccessfulLogin = () => {
+    setIsLoading(false);
+    toast({
+      title: "Succès",
+      description: "Vous êtes maintenant connecté.",
+    });
+    onOpenChange(false);
+
+    // Redirection basée sur le rôle
+    if (profile) {
+      switch (profile.role) {
+        case "taxpayer":
+          navigate("/taxpayer/profile");
+          break;
+        case "developer":
+          navigate("/developer/profile");
+          break;
+        case "commune":
+          navigate("/admin/profile");
+          break;
+        default:
+          navigate("/profile");
+      }
+    }
+  };
+
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
-
+    
+    // Simuler un délai de connexion
     setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Succès",
-        description: "Vous êtes maintenant connecté.",
-      });
-      onOpenChange(false);
-      // Rediriger vers le tableau de bord correspondant au rôle
-      switch (selectedRole) {
-        case "taxpayer":
-          navigate("/taxpayer");
-          break;
-        case "developer":
-          navigate("/developer");
-          break;
-        case "commune":
-          navigate("/admin");
-          break;
-        default:
-          navigate("/dashboard");
-      }
+      handleSuccessfulLogin();
     }, 1000);
   }
 
@@ -67,26 +77,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     if (otp.length === 6) {
       setIsLoading(true);
       setTimeout(() => {
-        setIsLoading(false);
-        toast({
-          title: "Succès",
-          description: "Connexion réussie via WhatsApp !",
-        });
-        onOpenChange(false);
-        // Rediriger vers le tableau de bord correspondant au rôle
-        switch (selectedRole) {
-          case "taxpayer":
-            navigate("/taxpayer");
-            break;
-          case "developer":
-            navigate("/developer");
-            break;
-          case "commune":
-            navigate("/admin");
-            break;
-          default:
-            navigate("/dashboard");
-        }
+        handleSuccessfulLogin();
       }, 1000);
     }
   };

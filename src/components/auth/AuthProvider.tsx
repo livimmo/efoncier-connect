@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   session: Session | null;
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get initial session
@@ -45,13 +47,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await fetchProfile(session.user.id);
         } else {
           setProfile(null);
+          navigate('/');
         }
         setLoading(false);
       }
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -63,6 +66,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (error) throw error;
       setProfile(data);
+      
+      // Redirection après chargement du profil si on est sur la page d'accueil
+      if (window.location.pathname === '/') {
+        switch (data.role) {
+          case "taxpayer":
+            navigate("/taxpayer/profile");
+            break;
+          case "developer":
+            navigate("/developer/profile");
+            break;
+          case "commune":
+            navigate("/admin/profile");
+            break;
+          default:
+            navigate("/profile");
+        }
+      }
     } catch (error: any) {
       toast({
         title: "Erreur",
@@ -79,6 +99,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         title: "Déconnexion réussie",
         description: "À bientôt !",
       });
+      navigate('/');
     } catch (error: any) {
       toast({
         title: "Erreur",
