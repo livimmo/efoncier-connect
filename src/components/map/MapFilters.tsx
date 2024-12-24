@@ -111,7 +111,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
         <FilterSection title="Type de Terrain">
           <SelectFilter
             value={filters.propertyType}
-            onChange={(value) => setFilters({ ...filters, propertyType: value })}
+            onChange={(value) => setFilters({ ...filters, propertyType: value === "ALL" ? "" : value as PropertyType })}
             options={[
               { value: "ALL", label: "Tous les types" },
               ...propertyTypeOptions
@@ -123,7 +123,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
         <FilterSection title="Zoning">
           <SelectFilter
             value={filters.zoneType}
-            onChange={(value) => setFilters({ ...filters, zoneType: value })}
+            onChange={(value) => setFilters({ ...filters, zoneType: value === "ALL" ? "" : value as ZoneType })}
             options={[
               { value: "ALL", label: "Tous les zonings" },
               ...zoneTypeOptions
