@@ -15,21 +15,21 @@ import Search from "./pages/Search";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
-import Notifications from "./pages/Notifications";
-import Register from "./pages/Register";
-import Payment from "./pages/Payment";
-import Directory from "./pages/Directory";
-import Messages from "./pages/Messages";
-import Support from "./pages/Support";
-import Map from "./components/Map";
 import Login from "./pages/Login";
-import History from "./pages/History";
+import Register from "./pages/Register";
 
 // Authenticated Pages
 import Dashboard from "./pages/Dashboard";
 import TaxpayerDashboard from "./pages/taxpayer/Dashboard";
 import DeveloperDashboard from "./pages/developer/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
+import Notifications from "./pages/Notifications";
+import Payment from "./pages/Payment";
+import Directory from "./pages/Directory";
+import Messages from "./pages/Messages";
+import Support from "./pages/Support";
+import History from "./pages/History";
+import Map from "./components/Map";
 
 const queryClient = new QueryClient();
 

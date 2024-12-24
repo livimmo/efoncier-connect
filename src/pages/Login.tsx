@@ -4,9 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Header } from "@/components/Header";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -23,13 +25,17 @@ const Login = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (session) {
+          toast({
+            title: "Connexion réussie",
+            description: "Bienvenue sur eFoncier !",
+          });
           navigate("/dashboard");
         }
       }
     );
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, toast]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -55,7 +61,6 @@ const Login = () => {
               }}
               providers={["google"]}
               redirectTo={`${window.location.origin}/dashboard`}
-              onlyThirdPartyProviders={false}
               localization={{
                 variables: {
                   sign_in: {
