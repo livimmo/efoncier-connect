@@ -243,6 +243,7 @@ export type Database = {
           fiscal_status: Database["public"]["Enums"]["fiscal_status"] | null
           id: string
           is_for_sale: boolean | null
+          last_payment_date: string | null
           location: Json
           owner_id: string | null
           price: number | null
@@ -258,6 +259,7 @@ export type Database = {
           fiscal_status?: Database["public"]["Enums"]["fiscal_status"] | null
           id?: string
           is_for_sale?: boolean | null
+          last_payment_date?: string | null
           location: Json
           owner_id?: string | null
           price?: number | null
@@ -273,6 +275,7 @@ export type Database = {
           fiscal_status?: Database["public"]["Enums"]["fiscal_status"] | null
           id?: string
           is_for_sale?: boolean | null
+          last_payment_date?: string | null
           location?: Json
           owner_id?: string | null
           price?: number | null

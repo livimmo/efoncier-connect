@@ -10,6 +10,7 @@ export interface MapFilters {
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
   ownerName: string;
   titleDeedNumber: string;
+  lastPaymentDate: string | null;
 }
 
 export interface MapControls {
