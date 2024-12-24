@@ -5,7 +5,6 @@ import { PropertiesStats } from "@/components/taxpayer/properties/PropertiesStat
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Property } from "@/utils/mockData/types";
 
 export default function Properties() {
   const { toast } = useToast();
@@ -13,15 +12,10 @@ export default function Properties() {
   const { data: properties, isLoading } = useQuery({
     queryKey: ['properties'],
     queryFn: async () => {
-      const user = await supabase.auth.getUser();
-      if (!user.data.user) {
-        throw new Error('User not authenticated');
-      }
-
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .eq('owner_id', user.data.user.id);
+        .eq('owner_id', (await supabase.auth.getUser()).data.user?.id);
 
       if (error) {
         toast({
@@ -31,7 +25,7 @@ export default function Properties() {
         });
         throw error;
       }
-      return data as Property[];
+      return data;
     },
   });
 
@@ -41,9 +35,9 @@ export default function Properties() {
       <main className="container mx-auto px-4 py-8">
         <PropertiesHeader />
         <div className="grid gap-6 mt-8">
-          <PropertiesStats data={properties || []} />
+          <PropertiesStats properties={properties || []} />
           <PropertiesTable 
-            data={properties || []} 
+            properties={properties || []} 
             isLoading={isLoading} 
           />
         </div>

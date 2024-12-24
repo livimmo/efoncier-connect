@@ -75,7 +75,7 @@ export const PaymentHistory = () => {
               <TableCell>{payment.amount} MAD</TableCell>
               <TableCell>
                 <Badge 
-                  variant={payment.status === 'completed' ? "success" : "secondary"}
+                  variant={payment.status === 'completed' ? "success" : "warning"}
                 >
                   {payment.status === 'completed' ? 'Payé' : 'En cours'}
                 </Badge>

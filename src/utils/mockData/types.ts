@@ -56,22 +56,3 @@ export interface User {
   phone?: string;
   parcels?: string[];
 }
-
-export interface Property {
-  id: string;
-  owner_id: string;
-  title: string;
-  description: string;
-  property_type: string;
-  surface_area: number;
-  location: {
-    lat: number;
-    lng: number;
-  };
-  fiscal_status: 'compliant' | 'non_compliant' | 'under_review';
-  status: 'pending' | 'approved' | 'rejected';
-  is_for_sale: boolean;
-  price?: number;
-  created_at: string;
-  updated_at: string;
-}

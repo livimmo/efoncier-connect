@@ -9,75 +9,50 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { OTPInput } from "./OTPInput";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
-import { useAuth } from "./AuthProvider";
-import { supabase } from "@/integrations/supabase/client";
 
 interface LoginDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-// Define the allowed role types to match the database enum
-type UserRole = 'taxpayer' | 'developer' | 'commune' | 'admin';
-
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { profile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOTP] = useState("");
-  const [selectedRole, setSelectedRole] = useState<UserRole>("taxpayer");
-
-  const handleSuccessfulLogin = () => {
-    setIsLoading(false);
-    toast({
-      title: "Succès",
-      description: "Vous êtes maintenant connecté.",
-    });
-    onOpenChange(false);
-  };
+  const [selectedRole, setSelectedRole] = useState("");
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-
-      if (data.user) {
-        // Update the user's role in their profile after successful login
-        const { error: updateError } = await supabase
-          .from('profiles')
-          .update({ role: selectedRole })
-          .eq('id', data.user.id);
-
-        if (updateError) throw updateError;
-        
-        handleSuccessfulLogin();
-      }
-    } catch (error: any) {
-      toast({
-        title: "Erreur",
-        description: error.message || "Une erreur est survenue lors de la connexion",
-        variant: "destructive",
-      });
-    } finally {
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      toast({
+        title: "Succès",
+        description: "Vous êtes maintenant connecté.",
+      });
+      onOpenChange(false);
+      // Rediriger vers le tableau de bord correspondant au rôle
+      switch (selectedRole) {
+        case "taxpayer":
+          navigate("/taxpayer");
+          break;
+        case "developer":
+          navigate("/developer");
+          break;
+        case "commune":
+          navigate("/admin");
+          break;
+        default:
+          navigate("/dashboard");
+      }
+    }, 1000);
   }
 
   const handleWhatsAppLogin = () => {
@@ -88,21 +63,31 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     });
   };
 
-  const verifyOTP = async () => {
+  const verifyOTP = () => {
     if (otp.length === 6) {
       setIsLoading(true);
-      try {
-        // Implement OTP verification logic here
-        handleSuccessfulLogin();
-      } catch (error: any) {
-        toast({
-          title: "Erreur",
-          description: "Code de vérification invalide",
-          variant: "destructive",
-        });
-      } finally {
+      setTimeout(() => {
         setIsLoading(false);
-      }
+        toast({
+          title: "Succès",
+          description: "Connexion réussie via WhatsApp !",
+        });
+        onOpenChange(false);
+        // Rediriger vers le tableau de bord correspondant au rôle
+        switch (selectedRole) {
+          case "taxpayer":
+            navigate("/taxpayer");
+            break;
+          case "developer":
+            navigate("/developer");
+            break;
+          case "commune":
+            navigate("/admin");
+            break;
+          default:
+            navigate("/dashboard");
+        }
+      }, 1000);
     }
   };
 
@@ -140,7 +125,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                 isLoading={isLoading} 
                 onSubmit={onSubmit}
                 selectedRole={selectedRole}
-                onRoleChange={(role) => setSelectedRole(role as UserRole)}
+                onRoleChange={setSelectedRole}
               />
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
