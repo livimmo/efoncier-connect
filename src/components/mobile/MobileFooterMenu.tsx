@@ -1,6 +1,6 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { HelpCircle, Phone, MessageSquare, Globe, Settings, FileText, History } from "lucide-react";
+import { HelpCircle, Phone, MessageSquare, Globe, Settings, FileText, History, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface MobileFooterMenuProps {
@@ -12,6 +12,14 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
   const navigate = useNavigate();
 
   const menuItems = [
+    {
+      icon: Users,
+      label: "Annuaire",
+      onClick: () => {
+        navigate("/directory");
+        onClose();
+      },
+    },
     {
       icon: Settings,
       label: "Paramètres",

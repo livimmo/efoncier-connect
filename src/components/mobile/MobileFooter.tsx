@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, MapPin, CreditCard, Bell, User, Plus, Users } from "lucide-react";
+import { Home, MapPin, CreditCard, Bell, Search, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MobileFooterMenu } from "./MobileFooterMenu";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -26,9 +26,9 @@ export const MobileFooter = () => {
       path: "/map",
     },
     {
-      icon: Users,
-      label: "Annuaire",
-      path: "/directory",
+      icon: Search,
+      label: "Recherche",
+      path: "/search",
     },
     {
       icon: CreditCard,
