@@ -123,7 +123,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <label className="text-sm font-medium">Statut Fiscal</label>
           <Select
             value={filters.status}
-            onValueChange={(value) => setFilters({ ...filters, status: value })}
+            onValueChange={(value) => setFilters({ ...filters, status: value as 'PAID' | 'PENDING' | 'OVERDUE' | '' })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Statut fiscal" />
