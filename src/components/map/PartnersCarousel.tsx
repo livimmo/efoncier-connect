@@ -27,9 +27,9 @@ const partners = [
   {
     id: 3,
     name: "Attijariwafa Bank",
-    logo: "/partners/attijariwafa.png",
+    logo: "/lovable-uploads/4c9d35a9-6771-4476-bd7d-b16fb9de1704.png",
     description: "Taux préférentiels pour terrains",
-    link: "#",
+    link: "https://www.attijariwafabank.com",
   },
   {
     id: 4,
