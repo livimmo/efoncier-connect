@@ -7,11 +7,17 @@ interface MinimizedParcelInfoProps {
 
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   return (
-    <div className="bg-background/95 backdrop-blur-sm p-2 rounded-b-lg border-t border-primary/10 shadow-lg">
-      <div className="flex flex-col gap-1">
-        <div className="flex justify-between">
-          <span className="text-xs text-muted-foreground">Status</span>
-          <span className={`text-xs font-medium ${
+    <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border border-t-0 border-border/50">
+      <div className="flex justify-between items-center">
+        <div className="flex-1">
+          <div className="text-sm font-medium truncate">{parcel.title}</div>
+          <div className="text-xs text-muted-foreground truncate">{parcel.address}</div>
+        </div>
+        <div className="text-right ml-4">
+          <div className="text-sm font-medium">
+            {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
+          </div>
+          <div className={`text-xs ${
             parcel.taxStatus === 'PAID' 
               ? 'text-green-600' 
               : parcel.taxStatus === 'OVERDUE' 
@@ -23,21 +29,7 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
               : parcel.taxStatus === 'OVERDUE' 
               ? 'En retard' 
               : 'En attente'}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-xs text-muted-foreground">TNB Annuel</span>
-          <span className="text-xs font-medium">
-            {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-xs text-muted-foreground">Localisation</span>
-          <span className="text-xs font-medium truncate max-w-[140px]">{parcel.address}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-xs text-muted-foreground">N° Titre</span>
-          <span className="text-xs font-medium">{parcel.titleDeedNumber}</span>
+          </div>
         </div>
       </div>
     </div>
