@@ -8,6 +8,7 @@ import { MapSettings } from '@/components/map/types';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useToast } from "@/hooks/use-toast";
+import { Property } from "@/types";
 
 const PropertiesPage = () => {
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
@@ -21,6 +22,23 @@ const PropertiesPage = () => {
     theme: 'light',
     unit: 'metric',
   });
+
+  // Transform mockParcels to match Property type
+  const properties: Property[] = mockParcels.map(parcel => ({
+    id: parcel.id,
+    title: parcel.title,
+    description: parcel.address,
+    property_type: parcel.type.toLowerCase(),
+    surface_area: parcel.surface,
+    location: parcel.location,
+    fiscal_status: "under_review",
+    status: "pending",
+    is_for_sale: false,
+    price: parcel.price || 0,
+    owner_id: parcel.owner,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }));
 
   const selectedParcel = selectedParcelId 
     ? mockParcels.find(p => p.id === selectedParcelId) 
@@ -38,12 +56,12 @@ const PropertiesPage = () => {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <PropertiesHeader />
-        <PropertiesStats data={mockParcels} />
+        <PropertiesStats data={properties} />
         
         <div className="grid lg:grid-cols-2 gap-8 mt-8">
           <div className="space-y-4">
             <PropertiesTable 
-              data={mockParcels}
+              data={properties}
               isLoading={isLoading}
             />
           </div>
