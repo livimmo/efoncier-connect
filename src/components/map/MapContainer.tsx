@@ -49,7 +49,7 @@ export const MapContainer = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="h-[calc(100vh-4rem)] flex flex-col bg-background">
       <WelcomeDialog />
       
       <div className="flex-1 flex flex-col lg:flex-row relative">
