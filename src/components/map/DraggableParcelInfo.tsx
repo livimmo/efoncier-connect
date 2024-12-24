@@ -37,7 +37,6 @@ export const DraggableParcelInfo = ({
     let newX = pos.x;
     let newY = pos.y;
 
-    // Ajustement pour le mode plein écran
     const isFullscreen = document.fullscreenElement !== null;
     const fullscreenElement = document.fullscreenElement as HTMLElement | null;
     const containerWidth = isFullscreen && fullscreenElement ? fullscreenElement.offsetWidth : windowWidth;
@@ -85,7 +84,6 @@ export const DraggableParcelInfo = ({
     setPosition(newPosition);
   }, [isMinimized]);
 
-  // Gérer les changements de mode plein écran
   useEffect(() => {
     const handleFullscreenChange = () => {
       const newPosition = adjustPosition(position, true);
@@ -136,6 +134,10 @@ export const DraggableParcelInfo = ({
     }
   }, [isDragging]);
 
+  const handleClose = () => {
+    onClose();
+  };
+
   return (
     <div
       ref={containerRef}
@@ -158,7 +160,7 @@ export const DraggableParcelInfo = ({
         isMinimized={isMinimized}
         isDragging={isDragging}
         onToggleMinimize={() => setIsMinimized(!isMinimized)}
-        onClose={onClose}
+        onClose={handleClose}
         onMouseDown={handleMouseDown}
       />
 
@@ -178,7 +180,7 @@ export const DraggableParcelInfo = ({
       )}>
         <ParcelInfo 
           parcel={parcel}
-          onClose={onClose}
+          onClose={handleClose}
           className="rounded-t-none border-t-0"
         />
       </div>
