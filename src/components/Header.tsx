@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { UserMenu } from "./header/UserMenu";
 import { AuthButtons } from "./header/AuthButtons";
 import { AddPropertyButton } from "./header/AddPropertyButton";
+import { MobileSearchSheet } from "./search/MobileSearchSheet";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -36,8 +37,10 @@ export const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[80vw] sm:w-[350px]">
-                <MainNav className="flex-col items-start space-y-4 pt-4" />
+              <SheetContent side="left" className="w-[280px] p-0">
+                <div className="pt-16">
+                  <MainNav className="flex-col items-start space-y-4" />
+                </div>
               </SheetContent>
             </Sheet>
           )}
@@ -46,14 +49,18 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative"
-            onClick={() => setIsSearchOpen(true)}
-          >
-            <Search className="h-5 w-5" />
-          </Button>
+          {isMobile ? (
+            <MobileSearchSheet />
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={() => setIsSearchOpen(true)}
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          )}
 
           {profile && (
             <>
