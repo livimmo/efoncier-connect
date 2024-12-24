@@ -1,4 +1,5 @@
 import { PropertyType, ZoneType } from "@/utils/mockData/types";
+import type { Parcel } from "@/utils/mockData/types";
 
 export interface MapFilters {
   city: string;
@@ -52,5 +53,5 @@ export interface Cluster {
   parcels: Parcel[];
 }
 
-// Re-export Parcel type from mockData types to avoid circular dependencies
-export type { Parcel } from '@/utils/mockData/types';
+// Re-export Parcel type to avoid circular dependencies
+export type { Parcel };
