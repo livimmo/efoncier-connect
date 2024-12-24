@@ -32,27 +32,27 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     e.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    if (!email || !password || !selectedRole) {
-      toast({
-        title: "Erreur",
-        description: "Veuillez remplir tous les champs et sélectionner un rôle",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const formData = new FormData(e.currentTarget);
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
+
+      if (!email || !password || !selectedRole) {
+        toast({
+          title: "Erreur",
+          description: "Veuillez remplir tous les champs et sélectionner un rôle",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data: { user }, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
       });
 
       if (error) {
+        console.error("Login error:", error);
         if (error.message === "Invalid login credentials") {
           toast({
             title: "Erreur de connexion",
@@ -62,14 +62,14 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         } else {
           toast({
             title: "Erreur de connexion",
-            description: error.message,
+            description: "Une erreur est survenue lors de la connexion",
             variant: "destructive",
           });
         }
-        throw error;
+        return;
       }
 
-      if (data.user) {
+      if (user) {
         toast({
           title: "Connexion réussie",
           description: "Bienvenue sur eFoncier !",
@@ -79,6 +79,11 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       }
     } catch (error: any) {
       console.error("Login error:", error);
+      toast({
+        title: "Erreur de connexion",
+        description: "Une erreur est survenue lors de la connexion",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
