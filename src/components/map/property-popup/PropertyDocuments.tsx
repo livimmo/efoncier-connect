@@ -1,25 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Upload, Download, Trash2, Loader2 } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-
-interface PropertyDocument {
-  id: string;
-  name: string;
-  file_path: string;
-  document_type: string;
-  created_at: string;
-}
-
-interface PropertyDocumentsProps {
-  parcel: {
-    id: string;
-    owner: string;
-  };
-}
+import { DocumentListItem } from "./DocumentListItem";
+import type { PropertyDocument, PropertyDocumentsProps } from "./types";
 
 export function PropertyDocuments({ parcel }: PropertyDocumentsProps) {
   const { profile } = useAuth();
@@ -120,33 +107,6 @@ export function PropertyDocuments({ parcel }: PropertyDocumentsProps) {
     }
   };
 
-  const handleDownload = async (document: PropertyDocument) => {
-    try {
-      const { data, error } = await supabase.storage
-        .from('property_documents')
-        .download(document.file_path);
-
-      if (error) throw error;
-
-      // Create a download link
-      const url = window.URL.createObjectURL(data);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = document.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Download error:', error);
-      toast({
-        title: "Erreur lors du téléchargement",
-        description: "Impossible de télécharger le document",
-        variant: "destructive"
-      });
-    }
-  };
-
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
@@ -185,22 +145,7 @@ export function PropertyDocuments({ parcel }: PropertyDocumentsProps) {
       ) : documents.length > 0 ? (
         <div className="space-y-4">
           {documents.map((doc) => (
-            <div key={doc.id} className="flex items-center justify-between p-4 bg-muted rounded-lg">
-              <div className="flex items-center gap-3">
-                <FileText className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="font-medium">{doc.name}</p>
-                  <p className="text-sm text-muted-foreground">PDF</p>
-                </div>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => handleDownload(doc)}
-              >
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
+            <DocumentListItem key={doc.id} doc={doc} />
           ))}
         </div>
       ) : (
