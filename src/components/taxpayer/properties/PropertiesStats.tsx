@@ -1,62 +1,33 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockParcels } from "@/utils/mockData/parcels";
-import { formatCurrency } from "@/utils/format";
+import { Property } from "@/types";
 
-export const PropertiesStats = () => {
-  const totalProperties = mockParcels.length;
-  const totalSurface = mockParcels.reduce((acc, parcel) => acc + parcel.surface, 0);
-  const totalTNB = mockParcels.reduce((acc, parcel) => acc + parcel.tnbInfo.totalAmount, 0);
-  const unpaidTNB = mockParcels
-    .filter(parcel => parcel.taxStatus !== 'PAID')
-    .reduce((acc, parcel) => acc + parcel.tnbInfo.totalAmount, 0);
+interface PropertiesStatsProps {
+  data: Property[];
+}
+
+export const PropertiesStats = ({ data }: PropertiesStatsProps) => {
+  const totalProperties = data.length;
+  const compliantProperties = data.filter(property => property.fiscal_status === "compliant").length;
+  const nonCompliantProperties = data.filter(property => property.fiscal_status === "non_compliant").length;
+  const underReviewProperties = data.filter(property => property.fiscal_status === "under_review").length;
 
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Total des Biens
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{totalProperties}</div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Surface Totale
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{totalSurface.toLocaleString()} m²</div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            TNB Total
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{formatCurrency(totalTNB)} DHS</div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            TNB Impayé
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-destructive">
-            {formatCurrency(unpaidTNB)} DHS
-          </div>
-        </CardContent>
-      </Card>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="rounded-md border p-4">
+        <h3 className="text-lg font-semibold">Total Biens</h3>
+        <p className="text-2xl">{totalProperties}</p>
+      </div>
+      <div className="rounded-md border p-4">
+        <h3 className="text-lg font-semibold">Conformes</h3>
+        <p className="text-2xl">{compliantProperties}</p>
+      </div>
+      <div className="rounded-md border p-4">
+        <h3 className="text-lg font-semibold">Non Conformes</h3>
+        <p className="text-2xl">{nonCompliantProperties}</p>
+      </div>
+      <div className="rounded-md border p-4">
+        <h3 className="text-lg font-semibold">En Révision</h3>
+        <p className="text-2xl">{underReviewProperties}</p>
+      </div>
     </div>
   );
 };

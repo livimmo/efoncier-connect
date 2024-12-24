@@ -6,6 +6,22 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+interface Property {
+  created_at: string;
+  description: string;
+  fiscal_status: "compliant" | "non_compliant" | "under_review";
+  id: string;
+  is_for_sale: boolean;
+  location: any;
+  owner_id: string;
+  price: number;
+  property_type: string;
+  status: string;
+  surface_area: number;
+  title: string;
+  updated_at: string;
+}
+
 export default function Properties() {
   const { toast } = useToast();
 
@@ -25,7 +41,7 @@ export default function Properties() {
         });
         throw error;
       }
-      return data;
+      return data as Property[];
     },
   });
 
@@ -35,9 +51,9 @@ export default function Properties() {
       <main className="container mx-auto px-4 py-8">
         <PropertiesHeader />
         <div className="grid gap-6 mt-8">
-          <PropertiesStats properties={properties || []} />
+          <PropertiesStats data={properties || []} />
           <PropertiesTable 
-            properties={properties || []} 
+            data={properties || []} 
             isLoading={isLoading} 
           />
         </div>
