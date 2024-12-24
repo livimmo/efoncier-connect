@@ -119,10 +119,6 @@ export const MapContainer = () => {
   const handleParcelSelect = (parcel: Parcel, event: MouseEvent) => {
     setSelectedParcel(parcel);
     setMarkerPosition({ x: event.clientX, y: event.clientY });
-    toast({
-      title: "Parcelle sélectionnée",
-      description: `${parcel.title} - ${parcel.surface}m²`,
-    });
   };
 
   const filteredParcels = useMemo(() => {
@@ -146,7 +142,6 @@ export const MapContainer = () => {
             filters={filters}
             setFilters={setFilters}
             onApplyFilters={filterParcels}
-            className="sticky top-4"
           />
         </div>
 
@@ -169,7 +164,6 @@ export const MapContainer = () => {
               onZoomOut={handleZoomOut}
               onReset={handleReset}
               onLocateMe={handleLocateMe}
-              className="bg-background/80 backdrop-blur-sm rounded-lg shadow-lg p-2"
             />
           </div>
 
@@ -184,7 +178,6 @@ export const MapContainer = () => {
             >
               <ParcelInfo 
                 parcel={selectedParcel}
-                position={markerPosition}
                 onClose={() => {
                   setSelectedParcel(null);
                   setMarkerPosition(null);

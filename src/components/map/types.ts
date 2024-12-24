@@ -44,14 +44,7 @@ export interface MapControlsProps {
 export interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
-  position?: { x: number; y: number };
   className?: string;
-}
-
-export interface Cluster {
-  count: number;
-  center: google.maps.LatLng;
-  parcels: Parcel[];
 }
 
 export type { Parcel };
