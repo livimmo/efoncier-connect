@@ -39,7 +39,7 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => 
       });
 
       marker.addListener("click", (e: google.maps.MapMouseEvent) => {
-        if (e.domEvent) {
+        if (e.domEvent && 'clientX' in e.domEvent && 'clientY' in e.domEvent) {
           onMarkerClick(parcel, {
             clientX: e.domEvent.clientX,
             clientY: e.domEvent.clientY
