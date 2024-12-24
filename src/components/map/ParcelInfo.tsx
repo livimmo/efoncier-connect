@@ -7,8 +7,9 @@ import { useState } from "react";
 import { ContactDialog } from "./contact/ContactDialog";
 import { TNBCalculator } from "./tnb/TNBCalculator";
 import { formatCurrency } from "@/utils/format";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { ReceiptPreview } from "../receipt/ReceiptPreview";
+import Payment from "@/pages/Payment";
 
 interface ParcelInfoProps {
   parcel: Parcel;
@@ -175,16 +176,15 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
       {/* Payment Dialog */}
       <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
         <DialogContent className="max-w-4xl">
-          <iframe 
-            src={`/payment/${parcel.id}`} 
-            className="w-full h-[80vh] border-none"
-          />
+          <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
+          <Payment parcelId={parcel.id} />
         </DialogContent>
       </Dialog>
 
       {/* Receipt Dialog */}
       <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
         <DialogContent className="max-w-2xl">
+          <DialogTitle>Reçu de Paiement</DialogTitle>
           <ReceiptPreview data={receiptData} />
         </DialogContent>
       </Dialog>
