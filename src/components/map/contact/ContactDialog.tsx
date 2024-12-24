@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Mail, Phone, MessageSquare, WhatsApp } from "lucide-react";
+import { Mail, Phone, MessageSquare, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ContactEmailForm } from "./ContactEmailForm";
 import { ContactDirectForm } from "./ContactDirectForm";
@@ -59,7 +59,7 @@ export const ContactDialog = ({ parcel, open, onOpenChange }: ContactDialogProps
               className="flex items-center gap-2"
               onClick={handleWhatsAppClick}
             >
-              <WhatsApp className="w-4 h-4" />
+              <MessageCircle className="w-4 h-4" />
               Contacter via WhatsApp
             </Button>
 
