@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Eye, MessageSquare, MapPin } from "lucide-react";
+import { Eye, MessageSquare, MapPin, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { mockParcels } from "@/utils/mockData";
+import { Badge } from "@/components/ui/badge";
 import type { SearchFilters } from "./types";
 import { useAuth } from "@/components/auth/AuthProvider";
 
@@ -11,10 +12,37 @@ interface MobileSearchResultsProps {
   filters: SearchFilters;
 }
 
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case "available":
+    case "paid":
+      return <CheckCircle className="h-4 w-4 text-green-500" />;
+    case "sold":
+    case "unpaid":
+      return <XCircle className="h-4 w-4 text-red-500" />;
+    case "unavailable":
+    case "partial":
+      return <AlertCircle className="h-4 w-4 text-yellow-500" />;
+    default:
+      return null;
+  }
+};
+
+const getStatusLabel = (status: string) => {
+  const labels: Record<string, string> = {
+    available: "Disponible",
+    sold: "Vendu",
+    unavailable: "Indisponible",
+    paid: "Payé",
+    unpaid: "Impayé",
+    partial: "Partiellement Payé",
+  };
+  return labels[status] || status;
+};
+
 export const MobileSearchResults = ({ query, filters }: MobileSearchResultsProps) => {
   const { profile } = useAuth();
 
-  // Simuler le filtrage des résultats
   const filteredResults = mockParcels.filter((parcel) => {
     const matchesQuery =
       parcel.titleDeedNumber.toLowerCase().includes(query.toLowerCase()) ||
@@ -23,7 +51,9 @@ export const MobileSearchResults = ({ query, filters }: MobileSearchResultsProps
     const matchesFilters =
       parcel.surface >= filters.minSurface &&
       parcel.surface <= filters.maxSurface &&
-      (!filters.city || parcel.city.toLowerCase() === filters.city.toLowerCase());
+      (!filters.city || parcel.city.toLowerCase() === filters.city.toLowerCase()) &&
+      (!filters.propertyStatus || parcel.status === filters.propertyStatus) &&
+      (!filters.fiscalStatus || parcel.taxStatus === filters.fiscalStatus);
 
     return matchesQuery && matchesFilters;
   });
@@ -47,7 +77,25 @@ export const MobileSearchResults = ({ query, filters }: MobileSearchResultsProps
         {filteredResults.map((parcel) => (
           <Card key={parcel.id} className="p-4">
             <div className="space-y-2">
-              <h3 className="font-semibold">{parcel.title}</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold">{parcel.title}</h3>
+                <div className="flex gap-2">
+                  <Badge 
+                    variant="outline" 
+                    className="flex items-center gap-1"
+                  >
+                    {getStatusIcon(parcel.status)}
+                    {getStatusLabel(parcel.status)}
+                  </Badge>
+                  <Badge 
+                    variant="outline" 
+                    className="flex items-center gap-1"
+                  >
+                    {getStatusIcon(parcel.taxStatus)}
+                    {getStatusLabel(parcel.taxStatus)}
+                  </Badge>
+                </div>
+              </div>
               <div className="text-sm text-muted-foreground space-y-1">
                 <p>Titre Foncier: {parcel.titleDeedNumber}</p>
                 <p>Propriétaire: {parcel.ownerName}</p>

@@ -7,4 +7,17 @@ export interface SearchFilters {
   district: string;
   propertyType: string;
   fiscalStatus: string;
+  propertyStatus: string;
+  year: string;
+  titleDeedNumber: string;
+}
+
+export type PropertyStatus = "available" | "sold" | "unavailable";
+export type FiscalStatus = "paid" | "unpaid" | "partial";
+
+export interface FilterOption {
+  value: string;
+  label: string;
+  icon?: React.ReactNode;
+  color?: string;
 }
