@@ -39,9 +39,9 @@ export const DraggableParcelInfo = ({
 
     // Ajustement pour le mode plein écran
     const isFullscreen = document.fullscreenElement !== null;
-    const container = isFullscreen ? document.fullscreenElement as HTMLElement : window;
-    const containerWidth = isFullscreen ? container.offsetWidth || windowWidth : windowWidth;
-    const containerHeight = isFullscreen ? container.offsetHeight || windowHeight : windowHeight;
+    const fullscreenElement = document.fullscreenElement as HTMLElement | null;
+    const containerWidth = isFullscreen && fullscreenElement ? fullscreenElement.offsetWidth : windowWidth;
+    const containerHeight = isFullscreen && fullscreenElement ? fullscreenElement.offsetHeight : windowHeight;
 
     if (isMobile) {
       newX = containerWidth / 2;
