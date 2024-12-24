@@ -36,6 +36,34 @@ export const MapContainer = () => {
     unit: 'metric',
   });
 
+  const calculateInfoPosition = (x: number, y: number) => {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const infoWidth = 320; // Largeur approximative de la fenêtre d'info
+    const infoHeight = 400; // Hauteur approximative de la fenêtre d'info
+    
+    let posX = x;
+    let posY = y;
+    
+    // Ajustement horizontal
+    if (x + infoWidth > windowWidth) {
+      posX = x - infoWidth;
+    }
+    
+    // Ajustement vertical
+    if (y + infoHeight > windowHeight) {
+      posY = windowHeight - infoHeight - 20; // 20px de marge
+    }
+    
+    return { x: posX, y: posY };
+  };
+
+  const handleParcelSelect = (parcel: Parcel, event: { clientX: number; clientY: number }) => {
+    const adjustedPosition = calculateInfoPosition(event.clientX, event.clientY);
+    setSelectedParcel(parcel);
+    setMarkerPosition(adjustedPosition);
+  };
+
   const handleControlChange = (control: keyof MapControlsType) => {
     setControls(prev => ({
       ...prev,
@@ -116,11 +144,6 @@ export const MapContainer = () => {
     return filteredParcels;
   };
 
-  const handleParcelSelect = (parcel: Parcel, event: MouseEvent) => {
-    setSelectedParcel(parcel);
-    setMarkerPosition({ x: event.clientX, y: event.clientY });
-  };
-
   const filteredParcels = useMemo(() => {
     return mockParcels.filter(parcel => {
       if (filters.city && parcel.city.toLowerCase() !== filters.city.toLowerCase()) return false;
@@ -172,8 +195,8 @@ export const MapContainer = () => {
               className="absolute z-20"
               style={{
                 left: `${markerPosition.x}px`,
-                top: `${markerPosition.y - 10}px`,
-                transform: 'translate(-50%, -100%)'
+                top: `${markerPosition.y}px`,
+                transform: 'translate(20px, -50%)'
               }}
             >
               <ParcelInfo 
