@@ -53,6 +53,33 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
     },
   };
 
+  // Si un dialogue est ouvert, on ne montre pas la carte d'information
+  if (paymentOpen || receiptOpen) {
+    return (
+      <>
+        {/* Payment Dialog */}
+        <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
+          <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
+            <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
+            <div className="flex-1 overflow-y-auto pr-2">
+              <Payment parcelId={parcel.id} />
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Receipt Dialog */}
+        <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
+          <DialogContent className="max-w-2xl h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
+            <DialogTitle>Reçu de Paiement</DialogTitle>
+            <div className="flex-1 overflow-y-auto pr-2">
+              <ReceiptPreview data={receiptData} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
+
   return (
     <>
       <Card className={cn("w-80 p-4 space-y-4 z-50 bg-background/95 backdrop-blur-sm", className)}>
@@ -172,26 +199,6 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
         open={calculatorOpen}
         onOpenChange={setCalculatorOpen}
       />
-
-      {/* Payment Dialog */}
-      <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
-        <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
-          <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
-          <div className="flex-1 overflow-y-auto pr-2">
-            <Payment parcelId={parcel.id} />
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Receipt Dialog */}
-      <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
-        <DialogContent className="max-w-2xl h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
-          <DialogTitle>Reçu de Paiement</DialogTitle>
-          <div className="flex-1 overflow-y-auto pr-2">
-            <ReceiptPreview data={receiptData} />
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
