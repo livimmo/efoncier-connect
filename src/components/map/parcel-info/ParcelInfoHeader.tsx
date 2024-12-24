@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Maximize2, Minimize2 } from "lucide-react";
+import { X, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface ParcelInfoHeaderProps {
   title: string;
@@ -9,7 +10,7 @@ interface ParcelInfoHeaderProps {
   isDragging: boolean;
   onToggleMinimize: () => void;
   onClose: () => void;
-  onMouseDown: (e: React.MouseEvent) => void;
+  onMouseDown?: (e: React.MouseEvent) => void;
 }
 
 export const ParcelInfoHeader = ({
@@ -21,44 +22,42 @@ export const ParcelInfoHeader = ({
   onClose,
   onMouseDown,
 }: ParcelInfoHeaderProps) => {
+  const navigate = useNavigate();
+
+  const handleTitleClick = () => {
+    navigate(`/taxpayer/properties/${title}`);
+  };
+
   return (
-    <div 
+    <div
       className={cn(
-        "bg-background/95 backdrop-blur-sm p-1.5 rounded-t-lg",
-        "border border-border/50",
-        "flex justify-between items-center",
-        "shadow-sm",
-        isDragging ? "cursor-grabbing" : "cursor-grab"
+        "flex items-center justify-between p-2 bg-primary text-primary-foreground",
+        "rounded-t-lg cursor-grab active:cursor-grabbing select-none",
+        isDragging && "cursor-grabbing"
       )}
       onMouseDown={onMouseDown}
     >
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-foreground/90 truncate">
+      <div className="flex-1 min-w-0 mr-2" onClick={handleTitleClick}>
+        <h3 className="text-sm font-medium truncate hover:underline cursor-pointer">
           {title}
-        </div>
-        <div className="text-xs text-muted-foreground truncate">
-          {ownerName}
-        </div>
+        </h3>
       </div>
-      <div className="flex gap-1 ml-2">
+      <div className="flex items-center gap-1">
         <Button
           variant="ghost"
           size="icon"
-          className="h-5 w-5 hover:bg-background/80"
+          className="h-6 w-6 hover:bg-primary-foreground/20"
           onClick={onToggleMinimize}
         >
-          {isMinimized ? 
-            <Maximize2 className="h-3 w-3" /> : 
-            <Minimize2 className="h-3 w-3" />
-          }
+          {isMinimized ? <Plus className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
         </Button>
         <Button
           variant="ghost"
           size="icon"
-          className="h-5 w-5 hover:bg-background/80"
+          className="h-6 w-6 hover:bg-primary-foreground/20"
           onClick={onClose}
         >
-          ×
+          <X className="h-4 w-4" />
         </Button>
       </div>
     </div>
