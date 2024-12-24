@@ -8,6 +8,8 @@ export interface MapFilters {
   zoneType: ZoneType | '';
   size: [number, number];
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
+  ownerName: string;
+  titleDeedNumber: string;
 }
 
 export interface MapControls {

@@ -8,7 +8,7 @@ import {
 } from "../ui/select";
 import { Slider } from "../ui/slider";
 import { Input } from "../ui/input";
-import { Filter, MapPin } from "lucide-react";
+import { Filter, MapPin, User, FileText } from "lucide-react";
 import { MapFilters as MapFiltersType } from "./types";
 import { PropertyType, ZoneType } from "@/utils/mockData/types";
 import { REGIONS } from "@/utils/mockData/locations";
@@ -62,6 +62,8 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
             zoneType: '',
             size: [0, 15000],
             status: '',
+            ownerName: '',
+            titleDeedNumber: '',
           })}
         >
           Réinitialiser
@@ -69,6 +71,34 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
       </div>
       
       <div className="space-y-4">
+        {/* Propriétaire */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Propriétaire</label>
+          <div className="relative">
+            <Input
+              value={filters.ownerName}
+              onChange={(e) => setFilters({ ...filters, ownerName: e.target.value })}
+              placeholder="Nom du propriétaire"
+              className="pl-8"
+            />
+            <User className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-500" />
+          </div>
+        </div>
+
+        {/* Titre Foncier */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Titre Foncier</label>
+          <div className="relative">
+            <Input
+              value={filters.titleDeedNumber}
+              onChange={(e) => setFilters({ ...filters, titleDeedNumber: e.target.value })}
+              placeholder="Numéro du titre foncier"
+              className="pl-8"
+            />
+            <FileText className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-500" />
+          </div>
+        </div>
+
         <div className="space-y-2">
           <label className="text-sm font-medium">Région</label>
           <Select

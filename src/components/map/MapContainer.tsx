@@ -28,11 +28,8 @@ export const MapContainer = () => {
     zoneType: '',
     size: [0, 15000],
     status: '',
-  });
-
-  const [settings, setSettings] = useState<MapSettings>({
-    theme: 'light',
-    unit: 'metric',
+    ownerName: '',
+    titleDeedNumber: '',
   });
 
   const filteredParcels = useMemo(() => {
@@ -42,6 +39,8 @@ export const MapContainer = () => {
       if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
       if (filters.status && parcel.taxStatus !== filters.status) return false;
       if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+      if (filters.ownerName && !parcel.ownerName.toLowerCase().includes(filters.ownerName.toLowerCase())) return false;
+      if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
       return true;
     });
   }, [filters]);
@@ -111,7 +110,7 @@ export const MapContainer = () => {
           markerPosition={markerPosition}
           onParcelSelect={handleParcelSelect}
           filteredParcels={filteredParcels}
-          settings={settings}
+          settings={{ theme: 'light', unit: 'metric' }}
           mapInstance={mapInstance}
           setMapInstance={setMapInstance}
         />
