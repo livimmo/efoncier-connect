@@ -15,10 +15,11 @@ export const PropertiesTable = ({ data, isLoading }: PropertiesTableProps) => {
   }
 
   return (
-    <table>
+    <table className="w-full">
       <thead>
         <tr>
           <th>ID</th>
+          <th>Title</th>
           <th>Description</th>
           <th>Fiscal Status</th>
           <th>Is For Sale</th>
@@ -31,6 +32,7 @@ export const PropertiesTable = ({ data, isLoading }: PropertiesTableProps) => {
         {data.map((property) => (
           <tr key={property.id}>
             <td>{property.id}</td>
+            <td>{property.title}</td>
             <td>{property.description}</td>
             <td>{property.fiscal_status}</td>
             <td>{property.is_for_sale ? 'Yes' : 'No'}</td>

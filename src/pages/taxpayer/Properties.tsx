@@ -10,13 +10,18 @@ import { Property } from "@/utils/mockData/types";
 export default function Properties() {
   const { toast } = useToast();
 
-  const { data: properties, isLoading } = useQuery<Property[]>({
+  const { data: properties, isLoading } = useQuery({
     queryKey: ['properties'],
     queryFn: async () => {
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) {
+        throw new Error('User not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('properties')
         .select('*')
-        .eq('owner_id', (await supabase.auth.getUser()).data.user?.id);
+        .eq('owner_id', user.data.user.id);
 
       if (error) {
         toast({
@@ -26,7 +31,7 @@ export default function Properties() {
         });
         throw error;
       }
-      return data;
+      return data as Property[];
     },
   });
 
