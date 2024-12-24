@@ -48,7 +48,7 @@ export const SearchResults = ({ query, filters }: SearchResultsProps) => {
     <div className="space-y-4 animate-fade-in">
       {filteredResults.map((parcel) => (
         <Card key={parcel.id} className="p-4">
-          <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
+          <div className={`grid gap-4 ${isMobile ? 'grid-cols-Ï' : 'grid-cols-2'}`}>
             <div className="space-y-2">
               <h3 className="font-semibold">{parcel.title}</h3>
               <div className="text-sm text-muted-foreground space-y-1">
@@ -59,7 +59,7 @@ export const SearchResults = ({ query, filters }: SearchResultsProps) => {
                   Localisation: {parcel.city}
                   {parcel.address && `, ${parcel.address}`}
                 </p>
-                {profile?.role === "developer" && parcel.price && (
+                {profile?.role === "developer" && parcel.price !== undefined && (
                   <p className="font-medium text-primary">
                     Prix: {parcel.price.toLocaleString()} MAD
                   </p>

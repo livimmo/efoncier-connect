@@ -33,6 +33,7 @@ export interface Parcel {
   email?: string;
   location: Location;
   tnbInfo: TNBInfo;
+  price?: number; // Added price as an optional property
 }
 
 export interface Transaction {
