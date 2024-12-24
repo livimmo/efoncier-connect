@@ -33,7 +33,8 @@ export interface Parcel {
   email?: string;
   location: Location;
   tnbInfo: TNBInfo;
-  price?: number; // Added price as an optional property
+  price?: number;
+  status: PropertyStatus; // Added this line to fix the error
 }
 
 export interface Transaction {
