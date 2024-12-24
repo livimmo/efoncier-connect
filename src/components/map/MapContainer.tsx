@@ -9,11 +9,15 @@ import { mockParcels } from '@/utils/mockData/parcels';
 import type { Parcel } from '@/utils/mockData/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const MapContainer = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
   
@@ -48,6 +52,10 @@ export const MapContainer = () => {
     }
   };
 
+  const toggleFilters = () => {
+    setIsFiltersCollapsed(!isFiltersCollapsed);
+  };
+
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col bg-background">
       <WelcomeDialog />
@@ -60,18 +68,41 @@ export const MapContainer = () => {
             filteredParcelsCount={filteredParcels.length}
           />
         ) : (
-          <div className="w-96 p-4 bg-background/95 backdrop-blur-sm border-r overflow-y-auto">
-            <MapFilters 
-              filters={filters}
-              setFilters={setFilters}
-              onApplyFilters={() => {
-                toast({
-                  title: "Filtres appliqués",
-                  description: `${filteredParcels.length} parcelles trouvées`,
-                });
+          <>
+            <div 
+              className={cn(
+                "bg-background/95 backdrop-blur-sm border-r overflow-y-auto transition-all duration-300",
+                isFiltersCollapsed ? "w-0 opacity-0" : "w-96 opacity-100"
+              )}
+            >
+              <MapFilters 
+                filters={filters}
+                setFilters={setFilters}
+                onApplyFilters={() => {
+                  toast({
+                    title: "Filtres appliqués",
+                    description: `${filteredParcels.length} parcelles trouvées`,
+                  });
+                }}
+              />
+            </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={toggleFilters}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 shadow-lg"
+              style={{
+                left: isFiltersCollapsed ? '0.5rem' : '23rem',
+                transition: 'left 0.3s ease-in-out'
               }}
-            />
-          </div>
+            >
+              {isFiltersCollapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+          </>
         )}
 
         <MapView 
