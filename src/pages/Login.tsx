@@ -65,10 +65,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-geometric-pattern bg-cover bg-center">
+    <div className="min-h-screen bg-geometric-pattern bg-cover bg-center auth-page">
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/50" />
       
-      <div className="container relative flex flex-col items-center justify-center min-h-screen py-12">
+      <div className="container relative flex flex-col items-center justify-center min-h-screen py-12 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

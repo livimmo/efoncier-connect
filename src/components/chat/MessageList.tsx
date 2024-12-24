@@ -24,8 +24,8 @@ export const MessageList = ({ messages, onActionClick }: MessageListProps) => {
               className={cn(
                 "max-w-[80%] rounded-lg px-4 py-2 space-y-2",
                 message.type === "user"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-foreground dark:bg-secondary dark:text-secondary-foreground"
+                  ? "chat-message-user"
+                  : "chat-message-bot"
               )}
             >
               <div className="whitespace-pre-wrap">{message.content}</div>
@@ -37,7 +37,7 @@ export const MessageList = ({ messages, onActionClick }: MessageListProps) => {
                       variant="secondary"
                       size="sm"
                       onClick={() => onActionClick?.(action.action, action.data)}
-                      className="text-xs bg-white dark:bg-gray-800"
+                      className="text-xs bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm"
                     >
                       {action.label}
                     </Button>
