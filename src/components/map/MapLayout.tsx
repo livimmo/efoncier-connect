@@ -20,6 +20,7 @@ export const MapLayout = () => {
     status: '',
     ownerName: '',
     titleDeedNumber: '',
+    lastPaymentDate: null
   });
 
   const [controls, setControls] = useState<MapControlsType>({
