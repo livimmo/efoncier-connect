@@ -52,8 +52,8 @@ export const Header = () => {
             >
               <Bell className="h-5 w-5" />
               <Badge 
-                variant="primary" 
-                className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
+                variant="default"
+                className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-secondary"
               >
                 3
               </Badge>
