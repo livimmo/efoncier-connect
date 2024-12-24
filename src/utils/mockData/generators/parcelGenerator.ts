@@ -1,4 +1,4 @@
-import { Parcel, PropertyType, FiscalStatus, PropertyStatus } from '../types';
+import { Parcel, PropertyType, FiscalStatus } from '../types';
 import { generateTNBInfo } from './tnbGenerator';
 
 type ParcelInput = Omit<Parcel, 'tnbInfo'>;
@@ -14,20 +14,8 @@ const getFiscalStatus = (taxStatus: string): FiscalStatus => {
   }
 };
 
-const getPropertyStatus = (taxStatus: string): PropertyStatus => {
-  switch (taxStatus) {
-    case 'PAID':
-      return 'AVAILABLE';
-    case 'OVERDUE':
-      return 'DISPUTED';
-    default:
-      return 'PENDING';
-  }
-};
-
-export const createParcelWithTNB = (data: Omit<ParcelInput, 'fiscalStatus' | 'status'> & { taxStatus: string }): Parcel => ({
+export const createParcelWithTNB = (data: Omit<ParcelInput, 'fiscalStatus'> & { taxStatus: string }): Parcel => ({
   ...data,
   fiscalStatus: getFiscalStatus(data.taxStatus),
-  status: getPropertyStatus(data.taxStatus),
   tnbInfo: generateTNBInfo(data.surface, data.type)
 });

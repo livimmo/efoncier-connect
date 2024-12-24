@@ -20,8 +20,7 @@ export const MapLayout = () => {
     status: '',
     ownerName: '',
     titleDeedNumber: '',
-    lastPaymentDate: null,
-    propertyStatus: '' // Added missing propertyStatus
+    lastPaymentDate: null
   });
 
   const [controls, setControls] = useState<MapControlsType>({

@@ -15,6 +15,7 @@ export const agadirParcels: Parcel[] = Array.from({ length: 20 }).map((_, index)
   const propertyTypes = ['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL', 'MIXED', 'SEASIDE'] as const;
   const zones = ['E3', 'E4', 'BT2', 'I2S12', 'CONSTRUCTIBLE', 'PROTECTED'] as const;
   const taxStatus = ['PAID', 'PENDING', 'OVERDUE'] as const;
+  const propertyStatus = ['AVAILABLE', 'DISPUTED', 'UNAVAILABLE', 'IN_TRANSACTION'] as const;
 
   const baseLocation = { lat: 30.4278, lng: -9.5981 }; // Centre d'Agadir
   const location = generateRandomLocation(baseLocation, 0.1);
@@ -28,6 +29,7 @@ export const agadirParcels: Parcel[] = Array.from({ length: 20 }).map((_, index)
     type: propertyTypes[Math.floor(Math.random() * propertyTypes.length)],
     zone: zones[Math.floor(Math.random() * zones.length)],
     taxStatus: taxStatus[Math.floor(Math.random() * taxStatus.length)],
+    status: propertyStatus[Math.floor(Math.random() * propertyStatus.length)],
     owner: `Propriétaire Agadir ${index + 1}`,
     location,
     titleDeedNumber: `TF-AGA-${Math.floor(Math.random() * 999999)}`,

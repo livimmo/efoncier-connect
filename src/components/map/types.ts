@@ -11,7 +11,6 @@ export interface MapFilters {
   ownerName: string;
   titleDeedNumber: string;
   lastPaymentDate: string | null;
-  propertyStatus: 'AVAILABLE' | 'SOLD' | 'UNAVAILABLE' | 'DISPUTED' | 'IN_TRANSACTION' | 'PENDING' | '';
 }
 
 export interface MapControls {
@@ -63,4 +62,3 @@ export interface MobileFiltersSheetProps {
 }
 
 export type { Parcel };
-

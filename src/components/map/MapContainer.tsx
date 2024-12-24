@@ -30,8 +30,7 @@ export const MapContainer = () => {
     status: '',
     ownerName: '',
     titleDeedNumber: '',
-    lastPaymentDate: null,
-    propertyStatus: '' // Added missing propertyStatus
+    lastPaymentDate: null
   });
 
   const filteredParcels = useMemo(() => {

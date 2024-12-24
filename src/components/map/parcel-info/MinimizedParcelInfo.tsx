@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { PropertyPopup } from "../property-popup/PropertyPopup";
-import { Check, X, AlertTriangle, Receipt, FileText } from "lucide-react";
+import { Check, X, AlertTriangle } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import Payment from "@/pages/Payment";
 
@@ -15,7 +15,6 @@ interface MinimizedParcelInfoProps {
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
-  const [receiptOpen, setReceiptOpen] = useState(false);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -40,42 +39,39 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
     }
   };
 
+  const getFiscalStatusColor = (status: string) => {
+    switch (status) {
+      case 'COMPLIANT':
+        return 'bg-green-500/10 text-green-500 hover:bg-green-500/20';
+      case 'NON_COMPLIANT':
+        return 'bg-red-500/10 text-red-500 hover:bg-red-500/20';
+      default:
+        return 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20';
+    }
+  };
+
   const getPaymentStatusInfo = (status: string) => {
     switch (status) {
       case 'PAID':
         return {
           color: 'text-green-600 dark:text-green-500',
-          text: 'Payé',
-          showReceipt: true
+          text: 'Payé'
         };
       case 'OVERDUE':
         return {
           color: 'text-red-600 dark:text-red-500',
-          text: 'En retard',
-          showReceipt: false
+          text: 'En retard'
         };
       default:
         return {
           color: 'text-orange-600 dark:text-orange-500',
-          text: 'En attente',
-          showReceipt: false
+          text: 'En attente'
         };
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'AVAILABLE':
-        return <Badge variant="secondary" className="bg-green-500/10 text-green-500">🟢 À Vendre</Badge>;
-      case 'SOLD':
-        return <Badge variant="secondary" className="bg-red-500/10 text-red-500">🔴 Vendu</Badge>;
-      case 'UNAVAILABLE':
-        return <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500">🟡 Indisponible</Badge>;
-      default:
-        return <Badge variant="secondary" className="bg-gray-500/10 text-gray-500">En attente</Badge>;
-    }
-  };
-
+  const statusInfo = getStatusInfo(parcel.status);
+  const StatusIcon = statusInfo.icon;
   const paymentStatus = getPaymentStatusInfo(parcel.taxStatus);
 
   return (
@@ -99,21 +95,30 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-start gap-4">
             <div className="flex-1 min-w-0">
-              {getStatusBadge(parcel.status)}
-              <div className="flex flex-col mt-2">
-                <div className="text-sm text-muted-foreground">N° Titre Foncier</div>
-                <div className="text-sm font-medium">{parcel.titleDeedNumber}</div>
-                <div className="text-sm text-muted-foreground">Propriétaire</div>
-                <div className="text-sm font-medium">{parcel.ownerName}</div>
-                <div className="text-sm text-muted-foreground">Surface</div>
-                <div className="text-sm font-medium">{parcel.surface} m²</div>
-                <div className="text-sm text-muted-foreground">Type</div>
-                <div className="text-sm font-medium">{parcel.type}</div>
-                <div className="text-sm text-muted-foreground">Zone</div>
-                <div className="text-sm font-medium">{parcel.zone}</div>
-                <div className="text-sm text-muted-foreground">Statut</div>
-                <div className={`text-sm font-medium ${paymentStatus.color}`}>
-                  {paymentStatus.text}
+              <Badge 
+                variant="secondary"
+                className={`mb-2 ${statusInfo.color}`}
+                aria-label={`Statut du bien : ${statusInfo.text}`}
+              >
+                <StatusIcon className="w-3 h-3 mr-1" />
+                {statusInfo.text}
+              </Badge>
+              <div className="flex flex-col">
+                <div className="text-xs text-muted-foreground flex items-center gap-1">
+                  <span>{parcel.surface} m² •</span>
+                  <span>Zone {parcel.zone}</span>
+                </div>
+                <div className="text-xs font-medium text-red-600 dark:text-red-500">
+                  {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
+                </div>
+                <Badge 
+                  variant="secondary" 
+                  className={`mt-1 w-fit ${getFiscalStatusColor(parcel.fiscalStatus)}`}
+                >
+                  <span className={paymentStatus.color}>{paymentStatus.text}</span>
+                </Badge>
+                <div className="text-xs text-muted-foreground mt-1">
+                  TF: {parcel.titleDeedNumber}
                 </div>
               </div>
             </div>
@@ -125,27 +130,14 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 {parcel.ownerName}
               </div>
               <div className="flex flex-col gap-2 mt-2">
-                {paymentStatus.showReceipt ? (
-                  <Button 
-                    variant="default"
-                    size="sm"
-                    onClick={() => setReceiptOpen(true)}
-                    className="w-full"
-                  >
-                    <Receipt className="w-4 h-4 mr-2" />
-                    Reçu
-                  </Button>
-                ) : (
-                  <Button 
-                    variant="default"
-                    size="sm"
-                    onClick={() => setPaymentOpen(true)}
-                    className="w-full"
-                  >
-                    <FileText className="w-4 h-4 mr-2" />
-                    Payer la TNB
-                  </Button>
-                )}
+                <Button 
+                  variant="default"
+                  size="sm"
+                  onClick={() => setPaymentOpen(true)}
+                  className="w-full"
+                >
+                  Payer la TNB
+                </Button>
                 <Button 
                   variant="ghost" 
                   size="sm"

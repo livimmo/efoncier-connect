@@ -2,7 +2,7 @@ export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICU
 export type ZoneType = 'URBAN' | 'SUBURBAN' | 'RURAL' | 'E3' | 'E4' | 'I2S12' | 'BT2' | 'PROTECTED' | 'CONSTRUCTIBLE';
 export type TaxStatus = 'PAID' | 'PENDING' | 'OVERDUE';
 export type TNBStatus = 'LOW' | 'AVERAGE' | 'HIGH';
-export type PropertyStatus = 'AVAILABLE' | 'SOLD' | 'UNAVAILABLE' | 'DISPUTED' | 'IN_TRANSACTION' | 'PENDING';
+export type PropertyStatus = 'AVAILABLE' | 'SOLD' | 'UNAVAILABLE' | 'DISPUTED' | 'IN_TRANSACTION';
 export type FiscalStatus = 'COMPLIANT' | 'NON_COMPLIANT' | 'UNDER_REVIEW';
 
 export interface TNBInfo {
