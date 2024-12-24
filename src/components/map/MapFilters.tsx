@@ -1,35 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { MapFilters as MapFiltersType } from "./types";
-import { PropertyType, ZoneType } from "@/utils/mockData/types";
-import { REGIONS } from "@/utils/mockData/locations";
-import { useMemo } from "react";
 import { SearchField } from "./filters/SearchField";
 import { FilterSection } from "./filters/FilterSection";
 import { SelectFilter } from "./filters/SelectFilter";
 import { RangeFilter } from "./filters/RangeFilter";
 import { DateFilter } from "./filters/DateFilter";
-
-const PROPERTY_TYPES = {
-  RESIDENTIAL: "Résidentiel",
-  COMMERCIAL: "Commercial",
-  INDUSTRIAL: "Industriel",
-  AGRICULTURAL: "Agricole",
-  MIXED: "Mixte",
-  SEASIDE: "Balnéaire"
-};
-
-const ZONE_TYPES = {
-  URBAN: "Urbaine",
-  SUBURBAN: "Périurbaine",
-  RURAL: "Rurale",
-  E3: "Zone E3",
-  E4: "Zone E4",
-  I2S12: "Zone I2S12",
-  BT2: "Zone BT2",
-  PROTECTED: "Zone protégée",
-  CONSTRUCTIBLE: "Zone constructible"
-};
+import { useFilterOptions } from "./filters/useFilterOptions";
+import { REGIONS } from "@/utils/mockData/locations";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
@@ -38,33 +16,31 @@ interface MapFiltersProps {
 }
 
 export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersProps) => {
-  const availableCommunes = useMemo(() => {
-    if (!filters.region) return [];
-    const region = REGIONS.find(r => r.id === filters.region);
-    return region ? region.communes : [];
-  }, [filters.region]);
-
-  const propertyTypeOptions = Object.entries(PROPERTY_TYPES).map(([value, label]) => ({
-    value,
-    label
-  }));
-
-  const zoneTypeOptions = Object.entries(ZONE_TYPES).map(([value, label]) => ({
-    value,
-    label
-  }));
-
-  const statusOptions = [
-    { value: "ALL", label: "Tous les statuts" },
-    { value: "PAID", label: "Payé" },
-    { value: "PENDING", label: "En attente" },
-    { value: "OVERDUE", label: "En retard" }
-  ];
+  const { 
+    propertyTypeOptions, 
+    zoneTypeOptions, 
+    availableCommunes, 
+    statusOptions 
+  } = useFilterOptions(filters.region);
 
   const handleStatusChange = (value: string) => {
     setFilters({ 
       ...filters, 
-      status: value === "ALL" ? "" : value 
+      status: value === "ALL" ? "" : value as "PAID" | "PENDING" | "OVERDUE" | "" 
+    });
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      region: '',
+      commune: '',
+      propertyType: '',
+      zoneType: '',
+      size: [0, 15000],
+      status: '',
+      ownerName: '',
+      titleDeedNumber: '',
+      lastPaymentDate: null
     });
   };
 
@@ -75,17 +51,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={() => setFilters({
-            region: '',
-            commune: '',
-            propertyType: '',
-            zoneType: '',
-            size: [0, 15000],
-            status: '',
-            ownerName: '',
-            titleDeedNumber: '',
-            lastPaymentDate: null
-          })}
+          onClick={resetFilters}
         >
           Réinitialiser
         </Button>
@@ -143,7 +109,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
         <FilterSection title="Type de Terrain">
           <SelectFilter
             value={filters.propertyType}
-            onChange={(value) => setFilters({ ...filters, propertyType: value as PropertyType })}
+            onChange={(value) => setFilters({ ...filters, propertyType: value })}
             options={[
               { value: "ALL", label: "Tous les types" },
               ...propertyTypeOptions
@@ -155,7 +121,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
         <FilterSection title="Zoning">
           <SelectFilter
             value={filters.zoneType}
-            onChange={(value) => setFilters({ ...filters, zoneType: value as ZoneType })}
+            onChange={(value) => setFilters({ ...filters, zoneType: value })}
             options={[
               { value: "ALL", label: "Tous les zonings" },
               ...zoneTypeOptions
