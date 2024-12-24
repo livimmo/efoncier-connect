@@ -20,5 +20,6 @@ export const createBaseParcel = (data: BaseParcelData) => ({
   ...data,
   phone: undefined,
   email: undefined,
-  price: undefined
+  price: undefined,
+  status: data.status || 'AVAILABLE'
 });
