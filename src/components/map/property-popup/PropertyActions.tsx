@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CreditCard, Share2, MessageSquare } from "lucide-react";
+import { CreditCard, Share2, MessageSquare, Receipt } from "lucide-react";
 import { Parcel } from "@/utils/mockData/types";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -17,8 +17,17 @@ export function PropertyActions({ parcel, className }: PropertyActionsProps) {
     <>
       <div className={cn("flex flex-wrap gap-2", className)}>
         <Button className="flex-1">
-          <CreditCard className="mr-2 h-4 w-4" />
-          Payer la TNB
+          {parcel.taxStatus === 'PAID' ? (
+            <>
+              <Receipt className="mr-2 h-4 w-4" />
+              Télécharger le reçu
+            </>
+          ) : (
+            <>
+              <CreditCard className="mr-2 h-4 w-4" />
+              Payer la TNB
+            </>
+          )}
         </Button>
         <Button 
           variant="outline" 
