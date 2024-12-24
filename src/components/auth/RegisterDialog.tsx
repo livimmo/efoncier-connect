@@ -14,8 +14,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Building, Home, Building2 } from "lucide-react";
+import { AccountTypeSelect } from "./AccountTypeSelect";
 
 const formSchema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -108,45 +107,7 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type de compte</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={(value) => handleRoleChange(value)}
-                      defaultValue={field.value}
-                      className="grid grid-cols-3 gap-4"
-                    >
-                      <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:border-primary">
-                        <RadioGroupItem value="taxpayer" id="taxpayer" />
-                        <label htmlFor="taxpayer" className="flex items-center cursor-pointer">
-                          <Home className="w-4 h-4 mr-2" />
-                          Contribuable
-                        </label>
-                      </div>
-                      <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:border-primary">
-                        <RadioGroupItem value="developer" id="developer" />
-                        <label htmlFor="developer" className="flex items-center cursor-pointer">
-                          <Building className="w-4 h-4 mr-2" />
-                          Promoteur
-                        </label>
-                      </div>
-                      <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:border-primary">
-                        <RadioGroupItem value="commune" id="commune" />
-                        <label htmlFor="commune" className="flex items-center cursor-pointer">
-                          <Building2 className="w-4 h-4 mr-2" />
-                          Commune
-                        </label>
-                      </div>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <AccountTypeSelect form={form} onRoleChange={handleRoleChange} />
 
             <FormField
               control={form.control}
