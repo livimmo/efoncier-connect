@@ -61,7 +61,7 @@ export const MapContainer = () => {
     <div className="h-[calc(100vh-4rem)] flex flex-col bg-background">
       <WelcomeDialog />
       
-      <div className="flex-1 flex flex-col lg:flex-row relative">
+      <div className="flex-1 flex relative">
         {isMobile ? (
           <MobileFiltersSheet 
             filters={filters}
@@ -72,8 +72,8 @@ export const MapContainer = () => {
           <>
             <div 
               className={cn(
-                "bg-background/95 backdrop-blur-sm border-r overflow-y-auto transition-all duration-300",
-                isFiltersCollapsed ? "w-0 opacity-0" : "w-96 opacity-100"
+                "bg-background/95 backdrop-blur-sm border-r h-full transition-all duration-300 ease-in-out",
+                isFiltersCollapsed ? "w-0 -translate-x-full" : "w-80"
               )}
             >
               <MapFilters 
@@ -91,11 +91,10 @@ export const MapContainer = () => {
               variant="secondary"
               size="sm"
               onClick={toggleFilters}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 shadow-lg"
-              style={{
-                left: isFiltersCollapsed ? '0.5rem' : '23rem',
-                transition: 'left 0.3s ease-in-out'
-              }}
+              className={cn(
+                "absolute top-1/2 -translate-y-1/2 z-10 shadow-lg transition-all duration-300 ease-in-out",
+                isFiltersCollapsed ? "left-2" : "left-[19.5rem]"
+              )}
             >
               {isFiltersCollapsed ? (
                 <ChevronRight className="h-4 w-4" />
@@ -106,15 +105,17 @@ export const MapContainer = () => {
           </>
         )}
 
-        <MapView 
-          selectedParcel={selectedParcel}
-          markerPosition={markerPosition}
-          onParcelSelect={handleParcelSelect}
-          filteredParcels={filteredParcels}
-          settings={{ theme: 'light', unit: 'metric' }}
-          mapInstance={mapInstance}
-          setMapInstance={setMapInstance}
-        />
+        <div className="flex-1 relative">
+          <MapView 
+            selectedParcel={selectedParcel}
+            markerPosition={markerPosition}
+            onParcelSelect={handleParcelSelect}
+            filteredParcels={filteredParcels}
+            settings={{ theme: 'light', unit: 'metric' }}
+            mapInstance={mapInstance}
+            setMapInstance={setMapInstance}
+          />
+        </div>
       </div>
 
       {isMobile && (
