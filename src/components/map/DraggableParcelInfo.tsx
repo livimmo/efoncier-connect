@@ -6,7 +6,6 @@ import { ParcelInfoHeader } from './parcel-info/ParcelInfoHeader';
 import { MinimizedParcelInfo } from './parcel-info/MinimizedParcelInfo';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useParcelPosition } from './parcel-info/useParcelPosition';
-import { useToast } from "@/hooks/use-toast";
 
 interface DraggableParcelInfoProps {
   parcel: Parcel;
@@ -24,7 +23,6 @@ export const DraggableParcelInfo = ({
   const [isMinimized, setIsMinimized] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const { toast } = useToast();
 
   const { position, isDragging, handleMouseDown } = useParcelPosition({
     markerPosition,
@@ -35,10 +33,6 @@ export const DraggableParcelInfo = ({
   const handleClose = () => {
     if (onClose) {
       onClose();
-      toast({
-        title: "Fenêtre fermée",
-        description: "Vous pouvez toujours cliquer sur le marqueur pour la réouvrir",
-      });
     }
   };
 
