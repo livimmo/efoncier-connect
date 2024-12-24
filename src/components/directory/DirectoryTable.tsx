@@ -8,7 +8,8 @@ interface DirectoryTableProps {
   filters: {
     type: string;
     status: string;
-    location: string;
+    region: string;
+    commune: string;
   };
 }
 
@@ -19,6 +20,8 @@ export function DirectoryTable({ searchQuery, filters }: DirectoryTableProps) {
       id: "#C12345",
       name: "Ahmed El Fassi",
       location: "Casablanca",
+      region: "casablanca-settat",
+      commune: "casablanca",
       status: "regular",
       type: "owner",
       parcels: 3,
@@ -28,12 +31,30 @@ export function DirectoryTable({ searchQuery, filters }: DirectoryTableProps) {
       id: "#P67890",
       name: "Promocasa SARL",
       location: "Rabat",
+      region: "rabat-sale",
+      commune: "rabat",
       status: "late",
       type: "developer",
       parcels: 5,
       lastPayment: "15/04/2024",
     },
   ];
+
+  // Filtrer les entrées en fonction des filtres actifs
+  const filteredEntries = entries.filter(entry => {
+    if (filters.type !== "all" && entry.type !== filters.type) return false;
+    if (filters.status !== "all" && entry.status !== filters.status) return false;
+    if (filters.region !== "all" && entry.region !== filters.region) return false;
+    if (filters.commune !== "all" && entry.commune !== filters.commune) return false;
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        entry.name.toLowerCase().includes(query) ||
+        entry.id.toLowerCase().includes(query)
+      );
+    }
+    return true;
+  });
 
   return (
     <div className="rounded-md border">
@@ -51,7 +72,7 @@ export function DirectoryTable({ searchQuery, filters }: DirectoryTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {entries.map((entry) => (
+          {filteredEntries.map((entry) => (
             <TableRow key={entry.id}>
               <TableCell className="font-medium">{entry.id}</TableCell>
               <TableCell>{entry.name}</TableCell>

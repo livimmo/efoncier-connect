@@ -6,17 +6,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { REGIONS } from "@/utils/mockData/locations";
 
 interface DirectoryFiltersProps {
   filters: {
     type: string;
     status: string;
-    location: string;
+    region: string;
+    commune: string;
   };
   onChange: (filters: any) => void;
 }
 
 export function DirectoryFilters({ filters, onChange }: DirectoryFiltersProps) {
+  const availableCommunes = filters.region 
+    ? REGIONS.find(r => r.id === filters.region)?.communes || []
+    : [];
+
   return (
     <div className="flex flex-wrap gap-4">
       <Select
@@ -48,24 +54,44 @@ export function DirectoryFilters({ filters, onChange }: DirectoryFiltersProps) {
       </Select>
 
       <Select
-        value={filters.location}
-        onValueChange={(value) => onChange({ ...filters, location: value })}
+        value={filters.region}
+        onValueChange={(value) => onChange({ ...filters, region: value, commune: '' })}
       >
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Localisation" />
+          <SelectValue placeholder="Région" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Toutes les villes</SelectItem>
-          <SelectItem value="casablanca">Casablanca</SelectItem>
-          <SelectItem value="rabat">Rabat</SelectItem>
-          <SelectItem value="tanger">Tanger</SelectItem>
+          <SelectItem value="all">Toutes les régions</SelectItem>
+          {REGIONS.map((region) => (
+            <SelectItem key={region.id} value={region.id}>
+              {region.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={filters.commune}
+        onValueChange={(value) => onChange({ ...filters, commune: value })}
+        disabled={!filters.region || filters.region === 'all'}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Commune" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Toutes les communes</SelectItem>
+          {availableCommunes.map((commune) => (
+            <SelectItem key={commune} value={commune.toLowerCase()}>
+              {commune}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
       <Button
         variant="outline"
         onClick={() =>
-          onChange({ type: "all", status: "all", location: "all" })
+          onChange({ type: "all", status: "all", region: "all", commune: "all" })
         }
       >
         Réinitialiser les filtres

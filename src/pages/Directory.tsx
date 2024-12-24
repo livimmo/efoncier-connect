@@ -10,7 +10,8 @@ export default function Directory() {
   const [activeFilters, setActiveFilters] = useState({
     type: "all",
     status: "all",
-    location: "all",
+    region: "all",
+    commune: "all",
   });
 
   return (
