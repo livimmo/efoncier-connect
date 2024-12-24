@@ -52,7 +52,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         email,
         password,
         options: {
-          data: {
+          metadata: {
             role: selectedRole,
           },
         },
