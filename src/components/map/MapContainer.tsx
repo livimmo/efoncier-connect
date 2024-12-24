@@ -9,12 +9,10 @@ import { MapFilters as MapFiltersType, MapControls as MapControlsType, MapSettin
 import { mockParcels } from '@/utils/mockData/parcels';
 import type { Parcel } from '@/utils/mockData/types';
 import { useToast } from "@/hooks/use-toast";
-import { calculateInfoPosition } from './utils/positionUtils';
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const MapContainer = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
-  const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const { toast } = useToast();
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -39,15 +37,8 @@ export const MapContainer = () => {
     unit: 'metric',
   });
 
-  const handleParcelSelect = (parcel: Parcel, event: { clientX: number; clientY: number }) => {
-    const adjustedPosition = calculateInfoPosition(
-      event.clientX,
-      event.clientY,
-      window.innerWidth,
-      window.innerHeight
-    );
+  const handleParcelSelect = (parcel: Parcel) => {
     setSelectedParcel(parcel);
-    setMarkerPosition(adjustedPosition);
   };
 
   const handleControlChange = (control: keyof MapControlsType) => {
@@ -149,6 +140,7 @@ export const MapContainer = () => {
               onMarkerClick={handleParcelSelect}
               parcels={filteredParcels}
               theme={settings.theme}
+              setMapInstance={setMapInstance}
             />
           </div>
 
@@ -165,23 +157,13 @@ export const MapContainer = () => {
             />
           </div>
 
-          {selectedParcel && markerPosition && (
+          {selectedParcel && (
             <div 
-              className="absolute z-20 transition-all duration-200 ease-in-out"
-              style={{
-                left: `${markerPosition.x}px`,
-                top: `${markerPosition.y}px`,
-                maxWidth: 'min(400px, calc(100vw - 40px))',
-                maxHeight: 'calc(100vh - 80px)',
-                overflow: 'auto'
-              }}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
             >
               <ParcelInfo 
                 parcel={selectedParcel}
-                onClose={() => {
-                  setSelectedParcel(null);
-                  setMarkerPosition(null);
-                }}
+                onClose={() => setSelectedParcel(null)}
                 className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
               />
             </div>
