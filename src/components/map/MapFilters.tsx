@@ -8,17 +8,17 @@ import {
 } from "../ui/select";
 import { Slider } from "../ui/slider";
 import { Input } from "../ui/input";
-import { Filter } from "lucide-react";
+import { Filter, MapPin } from "lucide-react";
 import { MapFilters as MapFiltersType } from "./types";
 import { PropertyType, ZoneType } from "@/utils/mockData/types";
+import { REGIONS } from "@/utils/mockData/locations";
+import { useMemo } from "react";
 
 interface MapFiltersProps {
   filters: MapFiltersType;
   setFilters: (filters: MapFiltersType) => void;
   onApplyFilters: () => void;
 }
-
-const CITIES = ["Tanger", "Agadir", "Marrakech", "Beni Mellal", "Meknes"];
 
 const PROPERTY_TYPES: { [key in PropertyType]: string } = {
   RESIDENTIAL: "Résidentiel",
@@ -42,6 +42,12 @@ const ZONE_TYPES: { [key in ZoneType]: string } = {
 };
 
 export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersProps) => {
+  const availableCommunes = useMemo(() => {
+    if (!filters.region) return [];
+    const region = REGIONS.find(r => r.id === filters.region);
+    return region ? region.communes : [];
+  }, [filters.region]);
+
   return (
     <div className="w-80 bg-white p-6 shadow-lg space-y-6 overflow-y-auto">
       <div className="flex items-center justify-between">
@@ -50,7 +56,8 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           variant="ghost" 
           size="sm" 
           onClick={() => setFilters({
-            city: '',
+            region: '',
+            commune: '',
             propertyType: '',
             zoneType: '',
             size: [0, 15000],
@@ -63,18 +70,38 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
       
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Ville</label>
+          <label className="text-sm font-medium">Région</label>
           <Select
-            value={filters.city}
-            onValueChange={(value) => setFilters({ ...filters, city: value })}
+            value={filters.region}
+            onValueChange={(value) => setFilters({ ...filters, region: value, commune: '' })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Sélectionner une ville" />
+              <SelectValue placeholder="Sélectionner une région" />
             </SelectTrigger>
             <SelectContent>
-              {CITIES.map((city) => (
-                <SelectItem key={city.toLowerCase()} value={city.toLowerCase()}>
-                  {city}
+              {REGIONS.map((region) => (
+                <SelectItem key={region.id} value={region.id}>
+                  {region.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Commune</label>
+          <Select
+            value={filters.commune}
+            onValueChange={(value) => setFilters({ ...filters, commune: value })}
+            disabled={!filters.region}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner une commune" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableCommunes.map((commune) => (
+                <SelectItem key={commune.toLowerCase()} value={commune.toLowerCase()}>
+                  {commune}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -154,6 +181,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           className="w-full"
           onClick={onApplyFilters}
         >
+          <Filter className="w-4 h-4 mr-2" />
           Appliquer les filtres
         </Button>
       </div>

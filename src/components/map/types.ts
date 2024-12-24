@@ -2,12 +2,12 @@ import { PropertyType, ZoneType } from "@/utils/mockData/types";
 import type { Parcel } from "@/utils/mockData/types";
 
 export interface MapFilters {
-  city: string;
+  region: string;
+  commune: string;
   propertyType: PropertyType | '';
   zoneType: ZoneType | '';
   size: [number, number];
   status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
-  bank?: string;
 }
 
 export interface MapControls {
