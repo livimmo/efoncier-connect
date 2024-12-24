@@ -46,11 +46,12 @@ export const DraggableParcelInfo = ({
     <div
       ref={containerRef}
       className={cn(
-        "fixed z-[9999] transition-all duration-200 ease-out",
+        "fixed transition-all duration-200 ease-out",
         isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
         "hover:shadow-lg",
         isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-0" : "w-[260px]",
         !isMobile && "absolute",
+        "z-[100]", // Lower z-index than dialogs
         className
       )}
       style={!isMobile ? {
