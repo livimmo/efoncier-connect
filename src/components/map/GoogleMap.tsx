@@ -20,41 +20,6 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => 
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
 
-  const createInfoWindow = (parcel: Parcel) => {
-    return new google.maps.InfoWindow({
-      content: `
-        <div class="p-4 max-w-sm">
-          <h3 class="font-semibold text-lg mb-2">${parcel.title}</h3>
-          <p class="text-sm text-gray-600 mb-2">${parcel.address}</p>
-          <div class="grid grid-cols-2 gap-2 text-sm">
-            <div>Surface:</div>
-            <div class="font-medium">${parcel.surface} m²</div>
-            <div>Type:</div>
-            <div class="font-medium">${parcel.type}</div>
-            <div>Zone:</div>
-            <div class="font-medium">${parcel.zone}</div>
-            <div>Statut:</div>
-            <div class="font-medium ${
-              parcel.taxStatus === 'PAID' 
-                ? 'text-green-600' 
-                : parcel.taxStatus === 'OVERDUE' 
-                ? 'text-red-600' 
-                : 'text-orange-600'
-            }">
-              ${
-                parcel.taxStatus === 'PAID' 
-                  ? 'Payé' 
-                  : parcel.taxStatus === 'OVERDUE' 
-                  ? 'En retard' 
-                  : 'En attente'
-              }
-            </div>
-          </div>
-        </div>
-      `
-    });
-  };
-
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
     markers.forEach(marker => marker.setMap(null));
     
@@ -72,16 +37,6 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme }: GoogleMapProps) => 
           strokeColor: '#FFFFFF',
           scale: 8,
         },
-      });
-
-      const infoWindow = createInfoWindow(parcel);
-
-      marker.addListener('mouseover', () => {
-        infoWindow.open(map, marker);
-      });
-
-      marker.addListener('mouseout', () => {
-        infoWindow.close();
       });
 
       marker.addListener("click", () => {
