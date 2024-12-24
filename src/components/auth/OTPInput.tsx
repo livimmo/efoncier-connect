@@ -20,9 +20,9 @@ export const OTPInput = ({ value, onChange, onComplete }: OTPInputProps) => {
         maxLength={6}
         render={({ slots }) => (
           <InputOTPGroup className="gap-2">
-            {slots.map((slot, index) => (
+            {slots?.map((slot, index) => (
               <InputOTPSlot key={index} {...slot} index={index} />
-            ))}
+            )) || null}
           </InputOTPGroup>
         )}
       />

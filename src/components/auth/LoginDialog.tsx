@@ -36,10 +36,10 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    if (!email || !password) {
+    if (!email || !password || !selectedRole) {
       toast({
         title: "Erreur",
-        description: "Veuillez remplir tous les champs",
+        description: "Veuillez remplir tous les champs et sélectionner un rôle",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -53,20 +53,26 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Login error:", error);
+        throw error;
+      }
 
-      toast({
-        title: "Connexion réussie",
-        description: "Bienvenue sur eFoncier !",
-      });
-      
-      onOpenChange(false);
-      navigate("/profile");
+      if (data.user) {
+        toast({
+          title: "Connexion réussie",
+          description: "Bienvenue sur eFoncier !",
+        });
+        onOpenChange(false);
+        navigate("/profile");
+      }
     } catch (error: any) {
       console.error("Login error:", error);
       toast({
         title: "Erreur de connexion",
-        description: error.message,
+        description: error.message === "Invalid login credentials" 
+          ? "Email ou mot de passe incorrect"
+          : error.message,
         variant: "destructive",
       });
     } finally {
