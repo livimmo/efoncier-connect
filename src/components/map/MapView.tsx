@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { GoogleMap } from './GoogleMap';
 import { MapControls } from './MapControls';
 import { DraggableParcelInfo } from './DraggableParcelInfo';
@@ -8,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 interface MapViewProps {
   selectedParcel: Parcel | null;
   markerPosition: { x: number; y: number } | null;
-  onParcelSelect: (parcel: Parcel | null) => void;
+  onParcelSelect: (parcel: Parcel, position?: { x: number; y: number }) => void;
   filteredParcels: Parcel[];
   settings: MapSettings;
   mapInstance: google.maps.Map | null;
@@ -84,7 +85,7 @@ export const MapView = ({
     <div className="relative flex-1 h-full">
       <div className="absolute inset-0">
         <GoogleMap 
-          onMarkerClick={(parcel, position) => onParcelSelect(parcel)}
+          onMarkerClick={(parcel, position) => onParcelSelect(parcel, position)}
           parcels={filteredParcels}
           theme={settings.theme}
           setMapInstance={setMapInstance}
@@ -107,7 +108,7 @@ export const MapView = ({
       {selectedParcel && markerPosition && (
         <DraggableParcelInfo
           parcel={selectedParcel}
-          onClose={() => onParcelSelect(null)}
+          onClose={() => onParcelSelect(selectedParcel)}
           markerPosition={markerPosition}
           className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
         />
