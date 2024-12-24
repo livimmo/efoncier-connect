@@ -14,7 +14,7 @@ import { BankTransferInfo } from "@/components/payment/BankTransferInfo";
 import { MobilePayment } from "@/components/payment/MobilePayment";
 import type { PaymentDetails, PaymentProps } from "@/components/payment/types";
 
-const Payment = ({ parcelId }: PaymentProps) => {
+const Payment = ({ parcelId, hideHeader }: PaymentProps & { hideHeader?: boolean }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -58,29 +58,34 @@ const Payment = ({ parcelId }: PaymentProps) => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto p-6 max-w-5xl space-y-8">
-        {/* Fil d'Ariane */}
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">
-              <Home className="h-4 w-4" />
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink>Paiement</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
+      {!hideHeader && (
+        <>
+          <Header />
+          <main className="container mx-auto p-6 max-w-5xl space-y-8">
+            {/* Fil d'Ariane */}
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">
+                  <Home className="h-4 w-4" />
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink>Paiement</BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
 
-        {/* En-tête */}
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold">Effectuer un Paiement</h1>
-          <p className="text-muted-foreground">
-            Régularisez vos paiements en toute simplicité et sécurité
-          </p>
-        </div>
+            {/* En-tête */}
+            <div className="text-center space-y-2">
+              <h1 className="text-3xl font-bold">Effectuer un Paiement</h1>
+              <p className="text-muted-foreground">
+                Régularisez vos paiements en toute simplicité et sécurité
+              </p>
+            </div>
+          </main>
+        </>
+      )}
 
+      <div className={hideHeader ? "" : "container mx-auto p-6 max-w-5xl space-y-8"}>
         {/* Récapitulatif du bien */}
         <Card className="p-6">
           <div className="grid gap-6 md:grid-cols-2">
@@ -175,15 +180,17 @@ const Payment = ({ parcelId }: PaymentProps) => {
           >
             Annuler
           </Button>
-          <Button 
-            onClick={() => navigate("/dashboard")}
-            className="gap-2"
-          >
-            Retour au tableau de bord
-            <ArrowRight className="h-4 w-4" />
-          </Button>
+          {!hideHeader && (
+            <Button 
+              onClick={() => navigate("/dashboard")}
+              className="gap-2"
+            >
+              Retour au tableau de bord
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          )}
         </div>
-      </main>
+      </div>
     </div>
   );
 };

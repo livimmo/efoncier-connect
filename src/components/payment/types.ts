@@ -10,4 +10,5 @@ export interface PaymentDetails {
 
 export interface PaymentProps {
   parcelId?: string;
+  hideHeader?: boolean;
 }

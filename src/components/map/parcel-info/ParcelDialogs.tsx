@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ContactDialog } from "../contact/ContactDialog";
 import { TNBCalculator } from "../tnb/TNBCalculator";
 import { ReceiptPreview } from "@/components/receipt/ReceiptPreview";
@@ -34,16 +34,14 @@ export const ParcelDialogs = ({
     <>
       <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
         <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm z-[9999]">
-          <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
           <div className="flex-1 overflow-y-auto pr-2">
-            <Payment parcelId={parcel.id} />
+            <Payment parcelId={parcel.id} hideHeader />
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
         <DialogContent className="max-w-2xl h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-sm z-[9999]">
-          <DialogTitle>Reçu de Paiement</DialogTitle>
           <div className="flex-1 overflow-y-auto pr-2">
             <ReceiptPreview data={receiptData} />
           </div>
