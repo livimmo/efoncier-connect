@@ -37,23 +37,26 @@ export const DraggableParcelInfo = ({
     let newX = pos.x;
     let newY = pos.y;
 
+    // Ajustement pour le mode plein écran
+    const isFullscreen = document.fullscreenElement !== null;
+    const container = isFullscreen ? document.fullscreenElement : window;
+    const containerWidth = isFullscreen ? container?.clientWidth || windowWidth : windowWidth;
+    const containerHeight = isFullscreen ? container?.clientHeight || windowHeight : windowHeight;
+
     if (isMobile) {
-      // Sur mobile, on centre horizontalement et on place en bas
-      newX = windowWidth / 2;
-      newY = windowHeight - (isMinimized ? 80 : 20);
+      newX = containerWidth / 2;
+      newY = containerHeight - (isMinimized ? 80 : 20);
     } else {
-      // Ajustement horizontal pour desktop
       if (newX < rect.width/2) {
         newX = rect.width/2;
-      } else if (newX + rect.width/2 > windowWidth) {
-        newX = windowWidth - rect.width/2;
+      } else if (newX + rect.width/2 > containerWidth) {
+        newX = containerWidth - rect.width/2;
       }
 
-      // Ajustement vertical pour desktop
       if (newY - totalHeight < 0) {
         newY = totalHeight;
-      } else if (newY > windowHeight - 20) {
-        newY = windowHeight - 20;
+      } else if (newY > containerHeight - 20) {
+        newY = containerHeight - 20;
       }
 
       if (!isMinimized || forceUpdate) {
@@ -82,8 +85,21 @@ export const DraggableParcelInfo = ({
     setPosition(newPosition);
   }, [isMinimized]);
 
+  // Gérer les changements de mode plein écran
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const newPosition = adjustPosition(position, true);
+      setPosition(newPosition);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [position]);
+
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (isMobile) return; // Désactiver le drag sur mobile
+    if (isMobile) return;
     
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
@@ -124,7 +140,7 @@ export const DraggableParcelInfo = ({
     <div
       ref={containerRef}
       className={cn(
-        "fixed z-50 transition-all duration-200 ease-out",
+        "fixed z-[9999] transition-all duration-200 ease-out",
         isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
         "hover:shadow-lg",
         isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-0" : "w-[260px]",
