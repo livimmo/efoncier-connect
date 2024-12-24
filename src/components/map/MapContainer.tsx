@@ -10,12 +10,14 @@ import { mockParcels } from '@/utils/mockData/parcels';
 import type { Parcel } from '@/utils/mockData/types';
 import { useToast } from "@/hooks/use-toast";
 import { calculateInfoPosition } from './utils/positionUtils';
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const MapContainer = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const { toast } = useToast();
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   
   const [filters, setFilters] = useState<MapFiltersType>({
     city: '',
@@ -126,18 +128,20 @@ export const MapContainer = () => {
       <WelcomeDialog />
       
       <div className="flex-1 flex flex-col lg:flex-row relative">
-        <div className="w-full lg:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
-          <MapFilters 
-            filters={filters}
-            setFilters={setFilters}
-            onApplyFilters={() => {
-              toast({
-                title: "Filtres appliqués",
-                description: `${filteredParcels.length} parcelles trouvées`,
-              });
-            }}
-          />
-        </div>
+        {!isMobile && (
+          <div className="w-full lg:w-1/4 p-4 bg-background/95 backdrop-blur-sm border-r">
+            <MapFilters 
+              filters={filters}
+              setFilters={setFilters}
+              onApplyFilters={() => {
+                toast({
+                  title: "Filtres appliqués",
+                  description: `${filteredParcels.length} parcelles trouvées`,
+                });
+              }}
+            />
+          </div>
+        )}
 
         <div className="flex-1 relative">
           <div className="absolute inset-0">
