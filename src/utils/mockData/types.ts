@@ -37,3 +37,24 @@ export interface Parcel {
   status: PropertyStatus;
   fiscalStatus: FiscalStatus;
 }
+
+export interface Transaction {
+  id: string;
+  date: string;
+  amount: number;
+  status: string;
+  type: string;
+  parcelId: string;
+  buyerId?: string;
+  sellerId?: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  phone?: string;
+  parcels?: string[];
+}
