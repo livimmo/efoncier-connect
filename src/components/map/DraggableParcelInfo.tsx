@@ -20,17 +20,47 @@ export const DraggableParcelInfo = ({
 }: DraggableParcelInfoProps) => {
   const [position, setPosition] = useState(markerPosition);
   const [isDragging, setIsDragging] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true); // Démarrer en mode réduit
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Ajuster la position pour rester dans les limites de la fenêtre
+  const adjustPosition = (pos: { x: number, y: number }) => {
+    if (!containerRef.current) return pos;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    
+    let newX = pos.x;
+    let newY = pos.y;
+
+    // Ajuster horizontalement
+    if (newX - rect.width/2 < 0) {
+      newX = rect.width/2;
+    } else if (newX + rect.width/2 > windowWidth) {
+      newX = windowWidth - rect.width/2;
+    }
+
+    // Ajuster verticalement
+    const totalHeight = isMinimized ? 150 : rect.height; // Hauteur estimée en mode réduit
+    if (newY - totalHeight < 0) {
+      newY = totalHeight;
+    } else if (newY > windowHeight - 20) {
+      newY = windowHeight - 20;
+    }
+
+    return { x: newX, y: newY };
+  };
 
   // Reset position when marker position changes
   useEffect(() => {
     if (!isDragging) {
-      setPosition({
+      const adjustedPosition = adjustPosition({
         x: markerPosition.x,
-        y: markerPosition.y - 20 // Décalage vers le haut pour éviter de couvrir le marqueur
+        y: markerPosition.y - 20
       });
+      setPosition(adjustedPosition);
     }
   }, [markerPosition, isDragging]);
 
@@ -47,30 +77,16 @@ export const DraggableParcelInfo = ({
 
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging) {
-      const newX = e.clientX - dragOffset.x;
-      const newY = e.clientY - dragOffset.y;
-      setPosition({ x: newX, y: newY });
+      const newPosition = adjustPosition({
+        x: e.clientX - dragOffset.x,
+        y: e.clientY - dragOffset.y
+      });
+      setPosition(newPosition);
     }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    // Vérifier si la fenêtre doit revenir près du marqueur
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const distance = Math.sqrt(
-        Math.pow(rect.left - markerPosition.x, 2) + 
-        Math.pow(rect.top - markerPosition.y, 2)
-      );
-      
-      // Si la fenêtre est à moins de 100px du marqueur, la ramener à sa position initiale
-      if (distance < 100) {
-        setPosition({
-          x: markerPosition.x,
-          y: markerPosition.y - 20
-        });
-      }
-    }
   };
 
   useEffect(() => {
@@ -88,7 +104,7 @@ export const DraggableParcelInfo = ({
     <div
       ref={containerRef}
       className={cn(
-        "absolute z-50 transition-transform duration-200 ease-out",
+        "absolute z-50 transition-all duration-200 ease-out",
         isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : "cursor-grab",
         "hover:shadow-lg",
         className
