@@ -1,24 +1,16 @@
 import { Parcel } from "@/utils/mockData/types";
 import { formatCurrency } from "@/utils/format";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useState } from "react";
-import { ParcelDetails } from "./ParcelDetails";
-import { ParcelActions } from "./ParcelActions";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { PropertyPopup } from "../property-popup/PropertyPopup";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
 }
 
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
-  const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const handleTitleClick = () => {
-    navigate(`/taxpayer/properties/${parcel.id}`);
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -44,23 +36,11 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
 
   return (
     <>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{parcel.title}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-6">
-            <ParcelDetails parcel={parcel} />
-            <ParcelActions 
-              parcel={parcel}
-              onPaymentClick={() => {}}
-              onReceiptClick={() => {}}
-              onContactClick={() => {}}
-              onCalculatorClick={() => {}}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
+      <PropertyPopup 
+        parcel={parcel}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
 
       <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border border-t-0 border-border/50 min-w-[300px]">
         <div className="flex flex-col gap-2">
