@@ -3,14 +3,14 @@ import { Logo } from "./Logo";
 import { MainNav } from "./MainNav";
 import { ModeToggle } from "./theme/mode-toggle";
 import { Button } from "./ui/button";
-import { Bell, Menu } from "lucide-react";
+import { Bell, Menu, X } from "lucide-react";
 import { SearchModal } from "./search/SearchModal";
 import { LoginDialog } from "./auth/LoginDialog";
 import { RegisterDialog } from "./auth/RegisterDialog";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Badge } from "./ui/badge";
 import { useAuth } from "./auth/AuthProvider";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useNavigate } from "react-router-dom";
 import { UserMenu } from "./header/UserMenu";
 import { AuthButtons } from "./header/AuthButtons";
@@ -38,8 +38,19 @@ export const Header = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] p-0">
-                <div className="pt-16">
-                  <MainNav className="flex-col items-start space-y-4" />
+                <SheetHeader className="p-4 border-b">
+                  <SheetTitle>Menu</SheetTitle>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="absolute right-4 top-4"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </SheetHeader>
+                <div className="py-4 overflow-y-auto">
+                  <MainNav className="flex-col items-start space-y-2 px-4" />
                 </div>
               </SheetContent>
             </Sheet>

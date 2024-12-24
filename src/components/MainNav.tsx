@@ -43,6 +43,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
     <nav 
       className={cn(
         "flex items-center space-x-4 lg:space-x-6", 
+        isMobile && "flex-wrap justify-center gap-2",
         className
       )} 
       {...props}
@@ -56,7 +57,6 @@ export function MainNav({ className, ...props }: MainNavProps) {
             location.pathname === href 
               ? "text-primary after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-0.5 after:bg-primary" 
               : "text-muted-foreground",
-            // Ajout de classes pour améliorer la lisibilité sur mobile
             isMobile && "flex-col items-center justify-center space-y-1 space-x-0 text-xs p-2"
           )}
         >
