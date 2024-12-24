@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { QrCode, Printer, Share2, Mail, MessageSquare } from "lucide-react";
+import { QrCode, Printer, Share2, Mail, MessageSquare, X } from "lucide-react";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface ReceiptPreviewProps {
   data: {
@@ -18,9 +19,12 @@ interface ReceiptPreviewProps {
       transactionRef: string;
     };
   };
+  onClose?: () => void;
 }
 
-export const ReceiptPreview = ({ data }: ReceiptPreviewProps) => {
+export const ReceiptPreview = ({ data, onClose }: ReceiptPreviewProps) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
   const handlePrint = () => {
     window.print();
   };
@@ -38,8 +42,18 @@ export const ReceiptPreview = ({ data }: ReceiptPreviewProps) => {
   };
 
   return (
-    <Card className="max-w-md mx-auto bg-white print:shadow-none">
+    <Card className={`bg-white print:shadow-none mx-auto ${isMobile ? 'w-[95vw]' : 'w-[400px]'} max-h-[90vh] overflow-y-auto`}>
       <CardHeader className="text-center border-b relative pb-8">
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-2 print:hidden"
+            onClick={onClose}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
         <div className="mx-auto mb-4">
           <div className="w-20 h-20 bg-muted rounded-lg mx-auto mb-2" />
           <p className="text-sm text-muted-foreground">Administration Fiscale</p>
@@ -98,16 +112,16 @@ export const ReceiptPreview = ({ data }: ReceiptPreviewProps) => {
         </div>
 
         {/* Actions buttons - hidden when printing */}
-        <div className="flex gap-2 justify-center print:hidden border-t border-dashed pt-4">
-          <Button variant="outline" size="sm" onClick={handlePrint}>
+        <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 justify-center print:hidden border-t border-dashed pt-4`}>
+          <Button variant="outline" size="sm" onClick={handlePrint} className={isMobile ? 'w-full' : ''}>
             <Printer className="mr-2 h-4 w-4" />
             Imprimer
           </Button>
-          <Button variant="outline" size="sm" onClick={handleWhatsAppShare}>
+          <Button variant="outline" size="sm" onClick={handleWhatsAppShare} className={isMobile ? 'w-full' : ''}>
             <MessageSquare className="mr-2 h-4 w-4" />
             WhatsApp
           </Button>
-          <Button variant="outline" size="sm" onClick={handleEmailShare}>
+          <Button variant="outline" size="sm" onClick={handleEmailShare} className={isMobile ? 'w-full' : ''}>
             <Mail className="mr-2 h-4 w-4" />
             Email
           </Button>
