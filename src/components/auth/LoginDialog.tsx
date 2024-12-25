@@ -42,7 +42,12 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       });
 
       onOpenChange(false);
-      navigate("/"); // Redirection vers la page d'accueil
+      
+      // Rafraîchir la page après une courte pause pour laisser le toast s'afficher
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
     } catch (error) {
       toast({
         title: "Erreur de connexion",
