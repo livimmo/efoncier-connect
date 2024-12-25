@@ -4,14 +4,26 @@ import { Slider } from "@/components/ui/slider";
 import { MapFilters } from "../types";
 import { ZONING_OPTIONS, PAYMENT_STATUS_OPTIONS } from "./filterConstants";
 import { PropertyFiltersProps } from "./types";
+import { Badge } from "@/components/ui/badge";
 
 const PROPERTY_STATUS_OPTIONS = [
-  { value: "AVAILABLE", label: "Disponible" },
-  { value: "SOLD", label: "Vendu" },
-  { value: "IN_TRANSACTION", label: "En Transaction" },
+  { value: "AVAILABLE", label: "Disponible", variant: "success" as const },
+  { value: "SOLD", label: "Vendu", variant: "destructive" as const },
+  { value: "IN_TRANSACTION", label: "En Transaction", variant: "warning" as const },
 ];
 
 export const PropertyFilters = ({ filters, setFilters, onFilterChange }: PropertyFiltersProps) => {
+  const getStatusBadge = (status: string) => {
+    const option = PROPERTY_STATUS_OPTIONS.find(opt => opt.value === status);
+    if (!option) return null;
+    
+    return (
+      <Badge variant={option.variant} className="ml-2">
+        {option.label}
+      </Badge>
+    );
+  };
+
   return (
     <>
       <div className="space-y-2">
@@ -24,12 +36,15 @@ export const PropertyFilters = ({ filters, setFilters, onFilterChange }: Propert
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Sélectionner un statut" />
+            <SelectValue placeholder="Sélectionner un statut">
+              {filters.propertyStatus && getStatusBadge(filters.propertyStatus)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {PROPERTY_STATUS_OPTIONS.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value} value={option.value} className="flex items-center justify-between">
                 {option.label}
+                {getStatusBadge(option.value)}
               </SelectItem>
             ))}
           </SelectContent>

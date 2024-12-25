@@ -24,7 +24,7 @@ export interface MapFilters {
   zoning: string;
   paymentStatus: string;
   tnbStatus: string;
-  propertyStatus: string; // Added this field
+  propertyStatus: string;
 }
 
 export interface MapFiltersProps {
