@@ -23,6 +23,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
         description: "Veuillez vous connecter pour accéder à cette page",
         variant: "destructive",
       });
+      navigate("/login");
       return;
     }
     navigate(href);

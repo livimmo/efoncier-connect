@@ -9,6 +9,7 @@ import Settings from "@/pages/Settings";
 import Profile from "@/pages/Profile";
 import Support from "@/pages/Support";
 import Map from "@/components/Map";
+import Messages from "@/pages/Messages";
 
 export const AppRoutes = () => {
   return (
@@ -23,6 +24,7 @@ export const AppRoutes = () => {
       <Route path="/profile" element={<Profile />} />
       <Route path="/support" element={<Support />} />
       <Route path="/map" element={<Map />} />
+      <Route path="/messages" element={<Messages />} />
     </Routes>
   );
 };
