@@ -1,4 +1,14 @@
-import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut } from "lucide-react";
+import { 
+  Home, 
+  User, 
+  CreditCard, 
+  Building2, 
+  FileText, 
+  Bell, 
+  Settings, 
+  LogOut,
+  Heart 
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -24,6 +34,7 @@ const getRoleSpecificMenuItems = (role: string) => {
     ],
     developer: [
       { icon: Building2, label: "Mes Projets", href: "/developer/properties" },
+      { icon: Heart, label: "Mes Favoris", href: "/developer/favorites" },
       { icon: FileText, label: "Documents", href: "/developer/documents" },
     ],
     commune: [
