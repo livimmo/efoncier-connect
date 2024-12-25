@@ -1,4 +1,4 @@
-import { GoogleMap } from '@/components/map/GoogleMap';
+import GoogleMap from '@/components/map/GoogleMap';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';

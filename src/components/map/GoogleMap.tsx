@@ -19,13 +19,13 @@ interface GoogleMapProps {
   getMarkerColor?: (status: string) => string;
 }
 
-export const GoogleMap = ({ 
+const GoogleMap = ({ 
   onMarkerClick, 
   parcels, 
   theme, 
   setMapInstance, 
   userRole,
-  center,
+  center = DEFAULT_CENTER,
   zoom = DEFAULT_ZOOM,
   getMarkerColor
 }: GoogleMapProps) => {
@@ -36,12 +36,12 @@ export const GoogleMap = ({
 
   const defaultMarkerColor = (status: string) => {
     switch (status) {
-      case 'PAID':
-        return '#10B981'; // Green for paid
-      case 'PENDING':
-        return '#F59E0B'; // Orange for pending
-      case 'OVERDUE':
-        return '#EF4444'; // Red for overdue
+      case 'AVAILABLE':
+        return '#10B981'; // Green for available
+      case 'IN_TRANSACTION':
+        return '#F59E0B'; // Orange for in transaction
+      case 'SOLD':
+        return '#EF4444'; // Red for sold
       default:
         return '#6B7280'; // Gray default
     }
@@ -58,17 +58,13 @@ export const GoogleMap = ({
         const google = await loader.load();
         if (mapRef.current) {
           const mapInstance = new google.maps.Map(mapRef.current, {
-            center: center || DEFAULT_CENTER,
-            zoom: zoom,
+            center,
+            zoom,
             styles: theme === 'dark' ? [
               { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
               { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
               { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-            ] : [
-              { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#7c93a3" }] },
-              { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#E3F2FD" }] },
-              { featureType: "landscape", elementType: "geometry.fill", stylers: [{ color: "#F5F5F5" }] },
-            ],
+            ] : [],
             mapTypeControl: true,
             streetViewControl: true,
             fullscreenControl: true,
@@ -78,41 +74,33 @@ export const GoogleMap = ({
           setMap(mapInstance);
           setMapInstance(mapInstance);
           
-          if (center) {
-            new google.maps.Marker({
-              position: center,
-              map: mapInstance,
-              animation: google.maps.Animation.DROP,
-            });
-          } else {
-            createMarkers(parcels, mapInstance);
-          }
+          createMarkers(parcels, mapInstance);
         }
       } catch (error) {
-        console.error("Erreur lors du chargement de la carte:", error);
+        console.error("Error loading Google Maps:", error);
         toast({
-          title: "Erreur",
-          description: "Impossible de charger la carte Google Maps",
+          title: "Error",
+          description: "Could not load Google Maps",
           variant: "destructive",
         });
       }
     };
 
     initMap();
-  }, [center, zoom, parcels]);
+  }, [center, zoom, parcels, theme]);
 
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
     markers.forEach(marker => marker.setMap(null));
     
     const newMarkers = parcels.map(parcel => {
       const marker = new google.maps.Marker({
-        position: parcel.location,
+        position: { lat: parcel.location.lat, lng: parcel.location.lng },
         map: map,
         title: parcel.title,
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor ? getMarkerColor(parcel.taxStatus) : defaultMarkerColor(parcel.taxStatus),
+          fillColor: getMarkerColor ? getMarkerColor(parcel.status) : defaultMarkerColor(parcel.status),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
@@ -169,3 +157,5 @@ export const GoogleMap = ({
     />
   );
 };
+
+export default GoogleMap;
