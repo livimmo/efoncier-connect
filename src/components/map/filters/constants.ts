@@ -3,28 +3,25 @@ export const PROPERTY_TYPES = {
   COMMERCIAL: "Commercial",
   INDUSTRIAL: "Industriel",
   AGRICULTURAL: "Agricole",
-  MIXED: "Mixte",
   SEASIDE: "Balnéaire"
 } as const;
 
 export const ZONE_TYPES = {
-  URBAN: "Urbaine",
-  SUBURBAN: "Périurbaine",
-  RURAL: "Rurale",
-  E3: "Zone E3",
-  E4: "Zone E4",
-  I2S12: "Zone I2S12",
-  BT2: "Zone BT2",
-  PROTECTED: "Zone protégée",
-  CONSTRUCTIBLE: "Zone constructible"
+  URBAN: "Urbain",
+  SUBURBAN: "Périurbain",
+  RURAL: "Rural",
+  INDUSTRIAL_ZONE: "Zone Industrielle",
+  TOURIST: "Touristique"
 } as const;
 
-export const ZONING_TYPES = {
-  E3: "E3",
-  E4: "E4",
-  BT2: "BT2",
-  I2S12: "I2S12",
-  UA: "UA",
-  UB: "UB",
-  UC: "UC"
-} as const;
+export const PAYMENT_STATUS_OPTIONS = [
+  { value: "PAID", label: "Payé", variant: "success" as const },
+  { value: "PENDING", label: "En attente", variant: "warning" as const },
+  { value: "OVERDUE", label: "En retard", variant: "destructive" as const }
+];
+
+export const PROPERTY_STATUS_OPTIONS = [
+  { value: "AVAILABLE", label: "Disponible", variant: "success" as const },
+  { value: "IN_TRANSACTION", label: "En Transaction", variant: "warning" as const },
+  { value: "SOLD", label: "Vendu", variant: "destructive" as const }
+];
