@@ -46,3 +46,16 @@ export interface MapFiltersProps {
   onToggleCollapse: () => void;
   mapInstance: google.maps.Map | null;
 }
+
+export interface MapMobileControlsProps {
+  onToggleFilters: () => void;
+  showFilters: boolean;
+}
+
+export interface MapSettings {
+  center: {
+    lat: number;
+    lng: number;
+  };
+  zoom: number;
+}
