@@ -6,7 +6,7 @@ interface ParcelStatusBadgesProps {
   taxStatus: string;
 }
 
-export const ParcelStatusBadges = ({ status, fiscalStatus, taxStatus }: ParcelStatusBadgesProps) => {
+export const ParcelStatusBadges = ({ status, taxStatus }: ParcelStatusBadgesProps) => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "AVAILABLE":
@@ -33,24 +33,10 @@ export const ParcelStatusBadges = ({ status, fiscalStatus, taxStatus }: ParcelSt
     }
   };
 
-  const getFiscalStatusBadge = (status: string) => {
-    switch (status) {
-      case "COMPLIANT":
-        return <Badge variant="success">En règle</Badge>;
-      case "NON_COMPLIANT":
-        return <Badge variant="destructive">Non conforme</Badge>;
-      case "UNDER_REVIEW":
-        return <Badge variant="warning">En révision</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
-
   return (
     <div className="flex gap-2">
       {getStatusBadge(status)}
       {getTaxStatusBadge(taxStatus)}
-      {getFiscalStatusBadge(fiscalStatus)}
     </div>
   );
 };
