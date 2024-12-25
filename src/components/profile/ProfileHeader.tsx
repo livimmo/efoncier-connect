@@ -2,11 +2,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { UserRole } from "@/types/auth";
 
 const roleLabels = {
+  owner: "Propriétaire",
   admin: "Administrateur",
   commune: "Commune",
-  taxpayer: "Contribuable",
   developer: "Promoteur",
 };
 
@@ -14,7 +15,7 @@ interface ProfileHeaderProps {
   profile: {
     first_name?: string;
     last_name?: string;
-    role: keyof typeof roleLabels;
+    role: UserRole;
     email?: string;
     phone?: string;
   };
