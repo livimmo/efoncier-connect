@@ -1,65 +1,78 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { DateFilter } from "@/components/map/filters/DateFilter";
 import { SelectFilter } from "@/components/map/filters/SelectFilter";
+import { FilterSection } from "@/components/map/filters/FilterSection";
+import { Input } from "@/components/ui/input";
+import type { NotificationFilter } from "@/types/notifications";
 
-export const NotificationsFilters = () => {
+interface NotificationsFiltersProps {
+  filters: NotificationFilter;
+  onChange: (filters: NotificationFilter) => void;
+}
+
+export const NotificationsFilters = ({ filters, onChange }: NotificationsFiltersProps) => {
+  const handleFilterChange = (key: keyof NotificationFilter, value: any) => {
+    onChange({ ...filters, [key]: value });
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-4">
-        <div className="space-y-2">
-          <Label>Catégorie</Label>
-          <SelectFilter
-            value=""
-            onChange={() => {}}
-            options={[
-              { value: "payment", label: "Paiements TNB" },
-              { value: "fiscal", label: "Statut Fiscal" },
-              { value: "message", label: "Messages" },
-              { value: "document", label: "Documents" },
-            ]}
-            placeholder="Toutes les catégories"
-          />
-        </div>
+    <div className="space-y-6">
+      <FilterSection title="Recherche">
+        <Input
+          placeholder="Rechercher par TF, ville, promoteur..."
+          value={filters.search}
+          onChange={(e) => handleFilterChange("search", e.target.value)}
+        />
+      </FilterSection>
 
-        <div className="space-y-2">
-          <Label>Localisation</Label>
-          <SelectFilter
-            value=""
-            onChange={() => {}}
-            options={[
-              { value: "casablanca", label: "Casablanca" },
-              { value: "rabat", label: "Rabat" },
-              { value: "tanger", label: "Tanger" },
-            ]}
-            placeholder="Toutes les villes"
-          />
-        </div>
+      <FilterSection title="Catégorie">
+        <SelectFilter
+          value={filters.type}
+          onChange={(value) => handleFilterChange("type", value)}
+          options={[
+            { value: "all", label: "Toutes les catégories" },
+            { value: "payment", label: "💳 Paiements TNB" },
+            { value: "fiscal_status", label: "🛡️ Statut Fiscal" },
+            { value: "message", label: "💬 Messages" },
+            { value: "document", label: "📁 Documents" },
+          ]}
+          placeholder="Sélectionner une catégorie"
+        />
+      </FilterSection>
 
-        <div className="space-y-2">
-          <Label>Statut</Label>
-          <SelectFilter
-            value=""
-            onChange={() => {}}
-            options={[
-              { value: "unread", label: "Non lu" },
-              { value: "read", label: "Lu" },
-              { value: "urgent", label: "Urgent" },
-            ]}
-            placeholder="Tous les statuts"
-          />
-        </div>
+      <FilterSection title="Localisation">
+        <SelectFilter
+          value={filters.location}
+          onChange={(value) => handleFilterChange("location", value)}
+          options={[
+            { value: "all", label: "Toutes les zones" },
+            { value: "casablanca", label: "Casablanca" },
+            { value: "rabat", label: "Rabat" },
+            { value: "tanger", label: "Tanger" },
+            { value: "marrakech", label: "Marrakech" },
+          ]}
+          placeholder="Sélectionner une zone"
+        />
+      </FilterSection>
 
-        <div className="space-y-2">
-          <Label>Recherche</Label>
-          <Input placeholder="Rechercher..." />
-        </div>
-      </div>
+      <FilterSection title="Statut">
+        <SelectFilter
+          value={filters.status}
+          onChange={(value) => handleFilterChange("status", value)}
+          options={[
+            { value: "all", label: "Tous" },
+            { value: "unread", label: "Non lus" },
+            { value: "read", label: "Lus" },
+          ]}
+          placeholder="Sélectionner un statut"
+        />
+      </FilterSection>
 
-      <div className="flex justify-end space-x-2">
-        <Button variant="outline">Réinitialiser</Button>
-        <Button>Appliquer</Button>
-      </div>
+      <FilterSection title="Date">
+        <DateFilter
+          value={filters.date}
+          onChange={(date) => handleFilterChange("date", date)}
+        />
+      </FilterSection>
     </div>
   );
 };
