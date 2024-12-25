@@ -9,6 +9,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface HistoryTableProps {
   filters: {
@@ -21,6 +23,9 @@ interface HistoryTableProps {
 }
 
 export function HistoryTable({ filters }: HistoryTableProps) {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
   // Exemple de données (à remplacer par les vraies données)
   const activities = [
     {
@@ -43,6 +48,32 @@ export function HistoryTable({ filters }: HistoryTableProps) {
     },
   ];
 
+  const handleViewDetails = (id: number) => {
+    toast({
+      title: "Détails de l'activité",
+      description: `Consultation des détails de l'activité ${id}`,
+    });
+    navigate(`/history/${id}`);
+  };
+
+  const filteredActivities = activities.filter(activity => {
+    if (filters.reference && !activity.reference.toLowerCase().includes(filters.reference.toLowerCase())) {
+      return false;
+    }
+    if (filters.activityType && activity.type !== filters.activityType) {
+      return false;
+    }
+    if (filters.status && activity.status !== filters.status) {
+      return false;
+    }
+    if (activity.amount && filters.amount.length === 2) {
+      if (activity.amount < filters.amount[0] || activity.amount > filters.amount[1]) {
+        return false;
+      }
+    }
+    return true;
+  });
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -58,7 +89,7 @@ export function HistoryTable({ filters }: HistoryTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {activities.map((activity) => (
+          {filteredActivities.map((activity) => (
             <TableRow key={activity.id}>
               <TableCell>{activity.date}</TableCell>
               <TableCell className="font-medium">{activity.reference}</TableCell>
@@ -87,13 +118,24 @@ export function HistoryTable({ filters }: HistoryTableProps) {
                 </Badge>
               </TableCell>
               <TableCell>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleViewDetails(activity.id)}
+                >
                   <Eye className="h-4 w-4 mr-2" />
                   Voir Détails
                 </Button>
               </TableCell>
             </TableRow>
           ))}
+          {filteredActivities.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-4">
+                Aucune activité trouvée
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>
