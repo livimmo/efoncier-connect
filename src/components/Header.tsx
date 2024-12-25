@@ -12,6 +12,8 @@ import { AuthButtons } from "./header/AuthButtons";
 import { MobileMenu } from "./header/MobileMenu";
 import { NotificationsArea } from "./header/NotificationsArea";
 import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
+import { Search } from "lucide-react";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -39,6 +41,16 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSearchOpen(true)}
+            className="w-9 px-0"
+          >
+            <Search className="h-4 w-4" />
+            <span className="sr-only">Rechercher</span>
+          </Button>
+          
           {profile && !isMobile && <NotificationsArea />}
           <ModeToggle />
           {profile ? (

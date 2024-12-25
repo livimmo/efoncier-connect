@@ -4,6 +4,9 @@ import { Search as SearchIcon, X } from "lucide-react";
 import { useState } from "react";
 import { SearchResults } from "./SearchResults";
 import { SearchFilters } from "./SearchFilters";
+import { PropertyPopup } from "../map/property-popup/PropertyPopup";
+import { mockParcels } from "@/utils/mockData/parcels";
+import { useToast } from "@/hooks/use-toast";
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -15,6 +18,9 @@ export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
+  const [selectedParcel, setSelectedParcel] = useState<any>(null);
+  const { toast } = useToast();
+  
   const [filters, setFilters] = useState({
     minSurface: 0,
     maxSurface: 10000,
@@ -27,11 +33,29 @@ export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate search
+    
+    // Simulate search with mock data
     setTimeout(() => {
-      setResults([]);
+      const filteredResults = mockParcels.filter(parcel => 
+        parcel.titleDeedNumber.toLowerCase().includes(query.toLowerCase()) ||
+        parcel.address.toLowerCase().includes(query.toLowerCase())
+      );
+      
+      if (filteredResults.length === 0) {
+        toast({
+          title: "Aucun résultat",
+          description: "Aucun bien ne correspond à votre recherche.",
+          variant: "destructive",
+        });
+      }
+      
+      setResults(filteredResults);
       setIsLoading(false);
-    }, 1000);
+    }, 500);
+  };
+
+  const handleParcelSelect = (parcel: any) => {
+    setSelectedParcel(parcel);
   };
 
   const placeholders = [
@@ -84,10 +108,19 @@ export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               filters={filters} 
               results={results}
               isLoading={isLoading}
+              onParcelSelect={handleParcelSelect}
             />
           )}
         </div>
       </DialogContent>
+
+      {selectedParcel && (
+        <PropertyPopup
+          parcel={selectedParcel}
+          open={!!selectedParcel}
+          onOpenChange={() => setSelectedParcel(null)}
+        />
+      )}
     </Dialog>
   );
 };
