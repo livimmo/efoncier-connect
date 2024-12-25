@@ -9,13 +9,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Star, BarChart2, Download } from "lucide-react";
-import { mockParcels } from "@/utils/mockData/parcels";
 import { formatCurrency } from "@/utils/format";
 import { PropertyChat } from "@/components/chat/PropertyChat";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import type { Parcel } from "@/utils/mockData/types";
 
-export const DeveloperPropertiesTable = () => {
+interface DeveloperPropertiesTableProps {
+  data: Parcel[];
+}
+
+export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
   const { toast } = useToast();
   const [favorites, setFavorites] = useState<string[]>([]);
 
@@ -61,11 +65,11 @@ export const DeveloperPropertiesTable = () => {
             <TableHead>Prix (DHS/m²)</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Statut Fiscal</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {mockParcels.map((parcel) => (
+          {data.map((parcel) => (
             <TableRow key={parcel.id}>
               <TableCell className="font-medium">{parcel.titleDeedNumber}</TableCell>
               <TableCell>{parcel.address}</TableCell>
@@ -96,7 +100,7 @@ export const DeveloperPropertiesTable = () => {
                 </Badge>
               </TableCell>
               <TableCell>
-                <div className="flex gap-2">
+                <div className="flex justify-end gap-2">
                   <Button variant="outline" size="icon" onClick={() => showDetails(parcel.id)}>
                     <Eye className="h-4 w-4" />
                   </Button>
