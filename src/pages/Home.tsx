@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/home/HeroSection";
+import { HeroSlider } from "@/components/home/HeroSlider";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
 import { KeyFeaturesSection } from "@/components/home/KeyFeaturesSection";
 import { VideoSection } from "@/components/home/VideoSection";
@@ -12,7 +12,7 @@ const Home = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <HeroSection />
+        <HeroSlider />
         <FeaturesSection />
         <KeyFeaturesSection />
         <VideoSection />
