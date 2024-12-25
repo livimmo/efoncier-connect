@@ -1,5 +1,6 @@
 import { PropertyType, ZoneType } from "@/utils/mockData/types";
 import type { Parcel } from "@/utils/mockData/types";
+import { UserRole } from "@/types/auth";
 
 export interface MapFilters {
   region: string;
@@ -30,6 +31,7 @@ export interface MapFiltersProps {
   setFilters: (filters: MapFilters) => void;
   onApplyFilters: () => void;
   className?: string;
+  userRole?: UserRole;
 }
 
 export interface MapControlsProps {
@@ -59,6 +61,7 @@ export interface MobileFiltersSheetProps {
   filteredParcelsCount: number;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  userRole?: UserRole;
 }
 
 export type { Parcel };

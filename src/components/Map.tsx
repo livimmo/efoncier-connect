@@ -12,7 +12,7 @@ const Map = () => {
       toast({
         title: "Connexion requise",
         description: "Veuillez vous connecter pour accéder à plus de détails.",
-        variant: "warning",
+        variant: "destructive", // Changed from "warning" to "destructive"
       });
       return;
     }

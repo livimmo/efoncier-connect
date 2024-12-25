@@ -6,19 +6,22 @@ import { ParcelInfoHeader } from './parcel-info/ParcelInfoHeader';
 import { MinimizedParcelInfo } from './parcel-info/MinimizedParcelInfo';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useParcelPosition } from './parcel-info/useParcelPosition';
+import { UserRole } from '@/types/auth';
 
 interface DraggableParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
   markerPosition: { x: number; y: number };
   className?: string;
+  userRole?: UserRole;
 }
 
 export const DraggableParcelInfo = ({ 
   parcel, 
   onClose, 
   markerPosition,
-  className 
+  className,
+  userRole
 }: DraggableParcelInfoProps) => {
   const [isMinimized, setIsMinimized] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -86,6 +89,7 @@ export const DraggableParcelInfo = ({
           parcel={parcel}
           onClose={handleClose}
           className="rounded-t-none border-t-0"
+          userRole={userRole}
         />
       </div>
 
