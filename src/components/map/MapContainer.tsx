@@ -5,13 +5,13 @@ import { PartnersCarousel } from './PartnersCarousel';
 import { WelcomeDialog } from './WelcomeDialog';
 import { MapFilters as MapFiltersType } from './types';
 import { mockParcels } from '@/utils/mockData/parcels';
-import type { Parcel } from '@/utils/mockData/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserRole } from '@/types/auth';
+import type { Property } from '@/types';
 
 interface MapContainerProps {
   userRole?: UserRole;
@@ -21,7 +21,7 @@ interface MapContainerProps {
 }
 
 export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInstance }: MapContainerProps) => {
-  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
+  const [selectedParcel, setSelectedParcel] = useState<Property | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -47,7 +47,7 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
   });
 
   const filteredParcels = useMemo(() => {
-    let filtered = mockParcels;
+    let filtered = mockParcels as unknown as Property[];
 
     switch (userRole) {
       case 'owner':
@@ -64,18 +64,18 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     }
 
     return filtered.filter(parcel => {
-      if (filters.commune && parcel.city.toLowerCase() !== filters.commune.toLowerCase()) return false;
-      if (filters.propertyType && parcel.type !== filters.propertyType) return false;
+      if (filters.commune && parcel.city?.toLowerCase() !== filters.commune.toLowerCase()) return false;
+      if (filters.propertyType && parcel.property_type !== filters.propertyType) return false;
       if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
       if (filters.status && parcel.taxStatus !== filters.status) return false;
-      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
-      if (filters.ownerName && !parcel.ownerName.toLowerCase().includes(filters.ownerName.toLowerCase())) return false;
-      if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
+      if (parcel.surface_area < filters.size[0] || parcel.surface_area > filters.size[1]) return false;
+      if (filters.ownerName && !parcel.ownerName?.toLowerCase().includes(filters.ownerName.toLowerCase())) return false;
+      if (filters.titleDeedNumber && !parcel.titleDeedNumber?.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
       return true;
     });
   }, [filters, userRole]);
 
-  const handleParcelSelect = (parcel: Parcel | null, position?: { x: number; y: number }) => {
+  const handleParcelSelect = (parcel: Property | null, position?: { x: number; y: number }) => {
     setSelectedParcel(parcel);
     if (position) {
       setMarkerPosition(position);

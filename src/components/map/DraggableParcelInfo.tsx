@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { Minimize2, Receipt, CreditCard } from "lucide-react";
+import { Minimize2, Receipt, CreditCard, X, Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/format";
 import { ParcelInfoHeader } from "./parcel-info/ParcelInfoHeader";
@@ -25,6 +25,7 @@ export const DraggableParcelInfo = ({
 }: DraggableParcelInfoProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const { profile } = useAuth();
@@ -65,14 +66,21 @@ export const DraggableParcelInfo = ({
     setShowReceipt(true);
   };
 
+  const handleToggleExpand = () => {
+    setIsExpanded(!isExpanded);
+    setIsMinimized(false);
+  };
+
   return (
     <>
       <Card
         ref={cardRef}
         className={cn(
-          "fixed z-50 min-w-[300px] max-w-md bg-background/95 backdrop-blur-sm shadow-lg",
+          "fixed z-50 bg-background/95 backdrop-blur-sm shadow-lg transition-all duration-300 ease-in-out",
           isDragging && "cursor-grabbing",
-          isMinimized && "w-auto"
+          isMinimized ? "w-auto max-w-[300px]" : "min-w-[300px] max-w-md",
+          isExpanded && "!max-w-2xl w-full",
+          "hover:shadow-xl"
         )}
         style={{
           left: position?.x ?? "50%",
@@ -83,15 +91,41 @@ export const DraggableParcelInfo = ({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        <ParcelInfoHeader
-          title={parcel.title}
-          ownerName={parcel.description}
-          isMinimized={isMinimized}
-          isDragging={isDragging}
-          onToggleMinimize={() => setIsMinimized(!isMinimized)}
-          onClose={onClose}
+        <div
+          className={cn(
+            "flex items-center justify-between p-2 bg-primary text-primary-foreground rounded-t-lg",
+            isDragging ? "cursor-grabbing" : "cursor-grab"
+          )}
           onMouseDown={handleMouseDown}
-        />
+        >
+          <h3 className="text-sm font-medium truncate flex-1">{parcel.title}</h3>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 hover:bg-primary-foreground/20"
+              onClick={() => setIsMinimized(!isMinimized)}
+            >
+              <Minimize2 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 hover:bg-primary-foreground/20"
+              onClick={handleToggleExpand}
+            >
+              <Maximize2 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 hover:bg-primary-foreground/20"
+              onClick={onClose}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
 
         {!isMinimized ? (
           <div className="p-4 space-y-4">

@@ -1,21 +1,28 @@
+export interface Location {
+  lat: number;
+  lng: number;
+}
+
 export interface Property {
-  created_at: string;
-  description: string;
-  fiscal_status: "compliant" | "non_compliant" | "under_review";
   id: string;
-  is_for_sale: boolean;
-  location: any;
-  owner_id: string;
-  price: number;
-  property_type: string;
-  status: "AVAILABLE" | "IN_TRANSACTION" | "SOLD";
-  surface_area: number;
   title: string;
+  description: string;
+  property_type: string;
+  surface_area: number;
+  location: Location;
+  fiscal_status: "PAID" | "UNPAID" | "under_review";
+  status: "AVAILABLE" | "IN_TRANSACTION" | "SOLD";
+  is_for_sale: boolean;
+  price: number;
+  owner_id: string;
+  created_at: string;
   updated_at: string;
-  taxStatus?: 'PAID' | 'UNPAID';
-  tnbInfo?: {
-    totalAmount: number;
-    pricePerMeter: number;
-    lastUpdate: string;
-  };
+  taxStatus?: "PAID" | "UNPAID";
+  ownerName?: string;
+  zone?: string;
+  type?: string;
+  surface?: number;
+  city?: string;
+  address?: string;
+  titleDeedNumber?: string;
 }
