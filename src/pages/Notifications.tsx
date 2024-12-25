@@ -152,6 +152,23 @@ const Notifications = () => {
     });
   };
 
+  const filteredNotifications = notifications.filter(notification => {
+    if (activeFilters.type !== "all" && notification.type !== activeFilters.type) return false;
+    if (activeFilters.status === "unread" && notification.read) return false;
+    if (activeFilters.status === "read" && !notification.read) return false;
+    if (activeFilters.location !== "all" && notification.location?.city?.toLowerCase() !== activeFilters.location) return false;
+    if (activeFilters.search) {
+      const searchLower = activeFilters.search.toLowerCase();
+      return (
+        notification.title.toLowerCase().includes(searchLower) ||
+        notification.message.toLowerCase().includes(searchLower) ||
+        notification.metadata?.titleDeedNumber?.toLowerCase().includes(searchLower) ||
+        notification.location?.city?.toLowerCase().includes(searchLower)
+      );
+    }
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -176,30 +193,13 @@ const Notifications = () => {
             
             <ScrollArea className="h-[calc(100vh-300px)]">
               <div className="space-y-4">
-                {notifications
-                  .filter(notification => {
-                    if (activeFilters.type !== "all" && notification.type !== activeFilters.type) return false;
-                    if (activeFilters.status === "unread" && notification.read) return false;
-                    if (activeFilters.status === "read" && !notification.read) return false;
-                    if (activeFilters.location !== "all" && notification.location?.city?.toLowerCase() !== activeFilters.location) return false;
-                    if (activeFilters.search) {
-                      const searchLower = activeFilters.search.toLowerCase();
-                      return (
-                        notification.title.toLowerCase().includes(searchLower) ||
-                        notification.message.toLowerCase().includes(searchLower) ||
-                        notification.metadata?.titleDeedNumber?.toLowerCase().includes(searchLower) ||
-                        notification.location?.city?.toLowerCase().includes(searchLower)
-                      );
-                    }
-                    return true;
-                  })
-                  .map((notification) => (
-                    <NotificationCard 
-                      key={notification.id}
-                      {...notification}
-                    />
-                  ))}
-                {notifications.length === 0 && (
+                {filteredNotifications.map((notification) => (
+                  <NotificationCard 
+                    key={notification.id}
+                    {...notification}
+                  />
+                ))}
+                {filteredNotifications.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     Aucune notification ne correspond à vos critères.
                   </div>

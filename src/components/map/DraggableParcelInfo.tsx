@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ParcelInfo } from './ParcelInfo';
 import { Parcel } from '@/utils/mockData/types';
 import { cn } from "@/lib/utils";
@@ -23,12 +23,13 @@ export const DraggableParcelInfo = ({
   className,
   userRole
 }: DraggableParcelInfoProps) => {
+  const [isMinimized, setIsMinimized] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { position, isDragging, handleMouseDown } = useParcelPosition({
     markerPosition,
-    isMinimized: false,
+    isMinimized,
     containerRef,
   });
 
@@ -53,23 +54,40 @@ export const DraggableParcelInfo = ({
       style={!isMobile ? {
         left: `${position.x}px`,
         top: `${position.y}px`,
-        transform: 'translate(-50%, -50%)',
-        maxHeight: '80vh',
-        overflow: 'auto'
+        transform: isMinimized 
+          ? 'translate(-50%, -50%)'
+          : 'translate(-50%, -50%)',
+        maxHeight: isMinimized ? 'auto' : '80vh',
+        overflow: isMinimized ? 'visible' : 'auto'
       } : undefined}
     >
       <ParcelInfoHeader
         title={parcel.title}
         ownerName={parcel.ownerName}
+        isMinimized={isMinimized}
+        isDragging={isDragging}
+        onToggleMinimize={() => setIsMinimized(!isMinimized)}
         onClose={handleClose}
         onMouseDown={handleMouseDown}
       />
 
+      {!isMobile && (
+        <div 
+          className={cn(
+            "absolute left-1/2 bottom-0 w-px h-4 bg-primary/50",
+            "transform translate-x-[-50%] translate-y-[100%]",
+            "transition-opacity duration-300",
+            isMinimized ? "opacity-0" : "opacity-100"
+          )}
+        />
+      )}
+
       <div className={cn(
-        "transform-gpu",
+        "transform-gpu transition-all duration-300 ease-in-out origin-top",
         "bg-background/95 backdrop-blur-sm",
         "border border-border/50 border-t-0",
         "rounded-b-lg shadow-lg",
+        isMinimized ? "scale-y-0 h-0" : "scale-y-100"
       )}>
         <ParcelInfo 
           parcel={parcel}
@@ -78,6 +96,8 @@ export const DraggableParcelInfo = ({
           userRole={userRole}
         />
       </div>
+
+      {isMinimized && <MinimizedParcelInfo parcel={parcel} />}
     </div>
   );
 };
