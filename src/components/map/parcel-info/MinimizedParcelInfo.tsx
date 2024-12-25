@@ -35,7 +35,6 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
 
   const paymentStatus = getPaymentStatusInfo(parcel.taxStatus);
 
-  // Mock receipt data based on parcel info
   const receiptData = {
     referenceNumber: `TNB-${parcel.id}`,
     date: new Date().toISOString(),
@@ -76,11 +75,6 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-start gap-4">
             <div className="flex-1 min-w-0">
-              <ParcelStatusInfo 
-                status={parcel.status}
-                fiscalStatus={parcel.fiscalStatus}
-                taxStatus={parcel.taxStatus}
-              />
               <div className="flex flex-col">
                 <div className="text-xs text-muted-foreground flex items-center gap-1">
                   <span>{parcel.surface} m² •</span>
@@ -91,6 +85,13 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   TF: {parcel.titleDeedNumber}
+                </div>
+                <div className="mt-1">
+                  <ParcelStatusInfo 
+                    status={parcel.status}
+                    fiscalStatus={parcel.fiscalStatus}
+                    taxStatus={parcel.taxStatus}
+                  />
                 </div>
               </div>
             </div>
