@@ -1,22 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Message } from "@/types/chat";
 
-interface Message {
-  id: string;
-  subject: string;
-  participant: string;
-  type: string;
-  location: string;
-  status: "read" | "unread";
-  lastMessage: string;
-}
-
-interface MessagesListProps {
+export interface MessagesListProps {
   messages: Message[];
   onMessageSelect: (id: string) => void;
 }
 
-export const MessageList = ({ messages, onMessageSelect }: MessagesListProps) => {
+export const MessagesList = ({ messages, onMessageSelect }: MessagesListProps) => {
   return (
     <div className="space-y-4">
       {messages.map((message) => (
