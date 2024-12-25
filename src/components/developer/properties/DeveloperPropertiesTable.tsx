@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, MapPin, Download, MessageSquare, Search } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { GoogleMap } from "@/components/map/GoogleMap";
+import GoogleMap from "@/components/map/GoogleMap";
 import type { Parcel } from "@/utils/mockData/types";
 import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
 import { PropertyChat } from "@/components/chat/PropertyChat";

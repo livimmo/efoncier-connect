@@ -9,6 +9,7 @@ import { FilterHeader } from "./filters/FilterHeader";
 import { FiscalYearFilter } from "./filters/FiscalYearFilter";
 import { StatusFilter } from "./filters/StatusFilter";
 import { FilterActions } from "./filters/FilterActions";
+import { REGIONS } from "@/utils/mockData/locations";
 
 export const MapFilters = ({ 
   onRegionChange, 
