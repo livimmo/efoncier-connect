@@ -13,6 +13,7 @@ import History from "@/pages/History";
 import OwnerDashboard from "@/pages/owner/Dashboard";
 import OwnerProfile from "@/pages/owner/Profile";
 import OwnerProperties from "@/pages/owner/Properties";
+import DeveloperDashboard from "@/pages/developer/Dashboard";
 import { PrivateRoute } from "@/components/auth/PrivateRoute";
 
 export const AppRoutes = () => {
@@ -38,6 +39,11 @@ export const AppRoutes = () => {
         <Route path="dashboard" element={<PrivateRoute><OwnerDashboard /></PrivateRoute>} />
         <Route path="profile" element={<PrivateRoute><OwnerProfile /></PrivateRoute>} />
         <Route path="properties" element={<PrivateRoute><OwnerProperties /></PrivateRoute>} />
+      </Route>
+
+      {/* Routes spécifiques aux promoteurs */}
+      <Route path="/developer">
+        <Route path="dashboard" element={<PrivateRoute><DeveloperDashboard /></PrivateRoute>} />
       </Route>
     </Routes>
   );
