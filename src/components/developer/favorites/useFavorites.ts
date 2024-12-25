@@ -31,8 +31,12 @@ const initialFilters: FavoriteFilters = {
 export const useFavorites = () => {
   const [filters, setFilters] = useState<FavoriteFilters>(initialFilters);
 
-  // Simuler des favoris à partir des données mockées
-  const favorites: Property[] = mockParcels.slice(0, 5).map(parcel => ({
+  // Ensure mockParcels exists and has elements before trying to slice
+  const validParcels = Array.isArray(mockParcels) ? mockParcels : [];
+  console.log('Valid parcels count:', validParcels.length);
+
+  // Convert valid parcels to favorites
+  const favorites: Property[] = validParcels.slice(0, 5).map(parcel => ({
     id: parcel.id,
     title: parcel.titleDeedNumber,
     description: parcel.address,
@@ -42,11 +46,13 @@ export const useFavorites = () => {
     fiscal_status: parcel.taxStatus === "PAID" ? "compliant" : "non_compliant",
     status: parcel.status.toLowerCase(),
     is_for_sale: false,
-    price: parcel.tnbInfo.pricePerMeter * parcel.surface,
+    price: parcel.tnbInfo?.pricePerMeter * parcel.surface || 0,
     owner_id: parcel.owner,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   }));
+
+  console.log('Converted favorites count:', favorites.length);
 
   return {
     favorites,
