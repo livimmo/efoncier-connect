@@ -182,17 +182,19 @@ export const MapFilters = ({
                 onValueChange={(value) => handleFilterChange('paymentStatus', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner un statut" />
+                  <SelectValue placeholder="Sélectionner un statut">
+                    {filters.paymentStatus && getStatusBadge(filters.paymentStatus)}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="PAID">
-                    {getStatusBadge('PAID')} Payé
+                    {getStatusBadge('PAID')}
                   </SelectItem>
                   <SelectItem value="OVERDUE">
-                    {getStatusBadge('OVERDUE')} En retard
+                    {getStatusBadge('OVERDUE')}
                   </SelectItem>
                   <SelectItem value="PENDING">
-                    {getStatusBadge('PENDING')} En attente
+                    {getStatusBadge('PENDING')}
                   </SelectItem>
                 </SelectContent>
               </Select>
