@@ -3,8 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RegisterFormFields } from "./RegisterFormFields";
+import { RegisterFormFields } from "../RegisterFormFields";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,9 +20,6 @@ const formSchema = z.object({
   confirmPassword: z.string(),
   phone: z.string().min(10, "Numéro de téléphone invalide"),
   city: z.string().min(1, "Veuillez sélectionner une ville"),
-  acceptTerms: z.boolean().refine((val) => val === true, {
-    message: "Vous devez accepter les conditions d'utilisation",
-  }),
   role: z.enum(["taxpayer", "developer", "commune"]),
   firstName: z.string().min(2, "Le prénom est requis"),
   lastName: z.string().min(2, "Le nom est requis"),
@@ -46,7 +42,6 @@ export const RegisterForm = () => {
       confirmPassword: "",
       phone: "",
       city: "",
-      acceptTerms: false,
       role: "taxpayer",
       firstName: "",
       lastName: "",
@@ -55,6 +50,8 @@ export const RegisterForm = () => {
 
   const onSubmit = async (values: RegisterFormData) => {
     try {
+      console.log("Submitting registration form with values:", values);
+
       const { data, error } = await supabase.auth.signUp({
         email: values.email.trim(),
         password: values.password,
@@ -69,9 +66,13 @@ export const RegisterForm = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Registration error:", error);
+        throw error;
+      }
 
       if (data.user) {
+        console.log("Registration successful:", data);
         toast({
           title: "Compte créé avec succès !",
           description: "Veuillez vérifier votre boîte email pour activer votre compte.",
