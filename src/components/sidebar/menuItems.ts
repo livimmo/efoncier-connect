@@ -24,15 +24,15 @@ const commonItems = [
 export const roleSpecificItems: MenuItems = {
   owner: [
     { icon: LayoutDashboard, label: "Tableau de Bord", href: "/owner/dashboard" },
+    { icon: Building2, label: "Mes Biens", href: "/owner/properties" },
     { icon: Plus, label: "Ajouter un Terrain", href: "/owner/property/add" },
-    { icon: FileText, label: "Mes Biens", href: "/owner/properties" },
     { icon: CreditCard, label: "Paiements", href: "/payments" },
     { icon: MessageSquare, label: "Messagerie", href: "/messages" },
   ],
   developer: [
     { icon: LayoutDashboard, label: "Tableau de Bord", href: "/developer/dashboard" },
+    { icon: Building2, label: "Mes Biens", href: "/developer/properties" },
     { icon: MapPin, label: "Carte Interactive", href: "/map" },
-    { icon: FileText, label: "Fiches Détaillées", href: "/properties" },
     { icon: MessageSquare, label: "Messagerie", href: "/messages" },
     { icon: Search, label: "Recherche Avancée", href: "/search" },
   ],
