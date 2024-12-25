@@ -47,15 +47,16 @@ export interface MapFiltersProps {
   mapInstance: google.maps.Map | null;
 }
 
-export interface MapMobileControlsProps {
-  onToggleFilters: () => void;
-  showFilters: boolean;
-}
-
 export interface MapSettings {
   center: {
     lat: number;
     lng: number;
   };
   zoom: number;
+  showLabels?: boolean;
+  showBoundaries?: boolean;
+  showTerrain?: boolean;
+  show3D?: boolean;
+  theme?: string;
+  unit?: string;
 }

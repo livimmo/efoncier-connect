@@ -8,6 +8,7 @@ import { Button } from './ui/button';
 import { Map as MapIcon, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { MapFilters } from './map/MapFilters';
+import { ListViewFilters } from './map/filters/ListViewFilters';
 import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -85,6 +86,15 @@ const Map = () => {
     });
   };
 
+  const filteredParcels = mockParcels.filter(parcel => {
+    if (filters.propertyType && parcel.type !== filters.propertyType) return false;
+    if (filters.paymentStatus && parcel.taxStatus !== filters.paymentStatus) return false;
+    if (filters.size[0] > 0 || filters.size[1] < 15000) {
+      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+    }
+    return true;
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -154,7 +164,18 @@ const Map = () => {
               </div>
             </div>
           ) : (
-            <DeveloperPropertiesTable data={mockParcels} />
+            <div className="space-y-4">
+              <div className="p-4 bg-background rounded-lg shadow">
+                <ListViewFilters
+                  filters={filters}
+                  setFilters={setFilters}
+                  onFilterChange={(type, value) => {
+                    handleApplyFilters();
+                  }}
+                />
+              </div>
+              <DeveloperPropertiesTable data={filteredParcels} />
+            </div>
           )}
         </div>
       </div>
