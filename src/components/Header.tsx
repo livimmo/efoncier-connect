@@ -3,7 +3,7 @@ import { Logo } from "./Logo";
 import { MainNav } from "./MainNav";
 import { ModeToggle } from "./theme/mode-toggle";
 import { Button } from "./ui/button";
-import { Bell, Menu, X } from "lucide-react";
+import { Bell, Menu, X, Plus, MessageSquare, BarChart2, Shield, Database, Users } from "lucide-react";
 import { SearchModal } from "./search/SearchModal";
 import { LoginDialog } from "./auth/LoginDialog";
 import { RegisterDialog } from "./auth/RegisterDialog";
@@ -25,6 +25,82 @@ export const Header = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
   const navigate = useNavigate();
+
+  const getRoleSpecificButtons = () => {
+    if (!profile) return null;
+
+    switch (profile.role) {
+      case "owner":
+        return (
+          <>
+            <AddPropertyButton />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/stats")}
+              className="relative"
+            >
+              <BarChart2 className="h-5 w-5" />
+            </Button>
+          </>
+        );
+      case "developer":
+        return (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/map")}
+            className="relative"
+          >
+            <Plus className="h-5 w-5" />
+          </Button>
+        );
+      case "commune":
+        return (
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/stats")}
+              className="relative"
+            >
+              <BarChart2 className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/fiscal")}
+              className="relative"
+            >
+              <Shield className="h-5 w-5" />
+            </Button>
+          </>
+        );
+      case "admin":
+        return (
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/users")}
+              className="relative"
+            >
+              <Users className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/logs")}
+              className="relative"
+            >
+              <Database className="h-5 w-5" />
+            </Button>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -66,6 +142,20 @@ export const Header = () => {
                 variant="ghost"
                 size="icon"
                 className="relative"
+                onClick={() => navigate("/messages")}
+              >
+                <MessageSquare className="h-5 w-5" />
+                <Badge 
+                  variant="default"
+                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
+                >
+                  2
+                </Badge>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative"
                 onClick={() => navigate("/notifications")}
               >
                 <Bell className="h-5 w-5" />
@@ -76,7 +166,7 @@ export const Header = () => {
                   3
                 </Badge>
               </Button>
-              <AddPropertyButton />
+              {getRoleSpecificButtons()}
             </>
           )}
           

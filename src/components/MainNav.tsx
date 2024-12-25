@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Map, CreditCard, MessageSquare, HelpCircle, History } from "lucide-react";
+import { Home, Map, LayoutDashboard, FileText, CreditCard, MessageSquare, Settings, HelpCircle, Building2, Users } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useAuth } from "./auth/AuthProvider";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -10,34 +11,99 @@ interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
 export function MainNav({ className, ...props }: MainNavProps) {
   const location = useLocation();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { profile } = useAuth();
 
-  const navItems = [
-    {
-      href: "/map",
-      label: "Carte",
-      icon: Map
-    },
-    {
-      href: "/payment",
-      label: "Paiements",
-      icon: CreditCard
-    },
-    {
-      href: "/history",
-      label: "Historique",
-      icon: History
-    },
-    {
-      href: "/messages",
-      label: "Messages",
-      icon: MessageSquare
-    },
-    {
-      href: "/support",
-      label: "Support",
-      icon: HelpCircle
-    }
-  ];
+  const getNavItems = () => {
+    const commonItems = [
+      {
+        href: "/",
+        label: "Accueil",
+        icon: Home
+      },
+      {
+        href: "/map",
+        label: "Carte",
+        icon: Map
+      },
+      {
+        href: "/dashboard",
+        label: "Tableau de Bord",
+        icon: LayoutDashboard
+      },
+      {
+        href: "/messages",
+        label: "Messagerie",
+        icon: MessageSquare
+      },
+      {
+        href: "/settings",
+        label: "Paramètres",
+        icon: Settings
+      },
+      {
+        href: "/support",
+        label: "Support",
+        icon: HelpCircle
+      }
+    ];
+
+    const roleSpecificItems = {
+      owner: [
+        {
+          href: "/properties",
+          label: "Mes Biens",
+          icon: FileText
+        },
+        {
+          href: "/payment",
+          label: "Paiements",
+          icon: CreditCard
+        }
+      ],
+      developer: [
+        {
+          href: "/available-properties",
+          label: "Biens Disponibles",
+          icon: Building2
+        }
+      ],
+      commune: [
+        {
+          href: "/owners",
+          label: "Propriétaires",
+          icon: Users
+        },
+        {
+          href: "/properties",
+          label: "Gestion des Biens",
+          icon: Building2
+        },
+        {
+          href: "/payment",
+          label: "Paiements",
+          icon: CreditCard
+        }
+      ],
+      admin: [
+        {
+          href: "/users",
+          label: "Utilisateurs",
+          icon: Users
+        },
+        {
+          href: "/properties",
+          label: "Liste des Biens",
+          icon: Building2
+        }
+      ]
+    };
+
+    return profile 
+      ? [...commonItems, ...(roleSpecificItems[profile.role] || [])]
+      : commonItems.filter(item => !["/dashboard", "/messages", "/settings"].includes(item.href));
+  };
+
+  const navItems = getNavItems();
 
   return (
     <nav 
