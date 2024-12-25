@@ -29,14 +29,14 @@ export const GoogleMap = ({
   zoom = DEFAULT_ZOOM,
   getMarkerColor = (status: string) => {
     switch (status) {
-      case 'PAID':
-        return '#10B981';
-      case 'PENDING':
-        return '#F59E0B';
-      case 'OVERDUE':
-        return '#EF4444';
+      case 'AVAILABLE':
+        return '#10B981'; // Green for available
+      case 'IN_TRANSACTION':
+        return '#F97316'; // Orange for in transaction
+      case 'SOLD':
+        return '#8B5CF6'; // Purple for sold
       default:
-        return '#6B7280';
+        return '#6B7280'; // Gray for unknown status
     }
   }
 }: GoogleMapProps) => {

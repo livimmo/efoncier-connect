@@ -8,7 +8,7 @@ export interface Property {
   owner_id: string;
   price: number;
   property_type: string;
-  status: string;
+  status: "AVAILABLE" | "IN_TRANSACTION" | "SOLD";
   surface_area: number;
   title: string;
   updated_at: string;
