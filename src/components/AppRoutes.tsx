@@ -8,6 +8,7 @@ import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import FlashNews from "@/pages/FlashNews";
 
 // Dashboard Pages
 import Dashboard from "@/pages/Dashboard";
@@ -37,6 +38,7 @@ export const AppRoutes = () => {
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/flash-news" element={<FlashNews />} />
       
       {/* Dashboard Routes */}
       <Route path="/dashboard" element={<Dashboard />} />
