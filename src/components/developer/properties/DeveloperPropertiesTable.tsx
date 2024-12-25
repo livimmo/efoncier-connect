@@ -15,8 +15,9 @@ import { formatCurrency } from "@/utils/format";
 import { Property } from "@/types";
 import { LoginDialog } from "@/components/auth/LoginDialog";
 import { RegisterDialog } from "@/components/auth/RegisterDialog";
-import { Eye, Lock } from "lucide-react";
+import { Eye, Lock, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
 
 interface DeveloperPropertiesTableProps {
   data: Property[];
@@ -52,6 +53,26 @@ export function DeveloperPropertiesTable({ data }: DeveloperPropertiesTableProps
 
   return (
     <>
+      {!profile && (
+        <Card className="p-4 mb-4 bg-primary/5 border-primary/20">
+          <div className="text-center space-y-2">
+            <h3 className="text-lg font-semibold">
+              Liste des Biens Disponibles sur la Carte
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Consultez les biens disponibles, en transaction ou vendus. 
+              Inscrivez-vous pour accéder aux détails complets et à leur localisation exacte.
+            </p>
+            <Button
+              onClick={() => setShowRegisterDialog(true)}
+              className="bg-primary hover:bg-primary/90"
+            >
+              Créer un Compte Promoteur
+            </Button>
+          </div>
+        </Card>
+      )}
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -75,7 +96,10 @@ export function DeveloperPropertiesTable({ data }: DeveloperPropertiesTableProps
                   </div>
                 </TableCell>
                 <TableCell>
-                  {maskLocation(property.city, property.address)}
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    {maskLocation(property.city, property.address)}
+                  </div>
                 </TableCell>
                 <TableCell>{property.surface_area} m²</TableCell>
                 <TableCell>{property.property_type}</TableCell>
