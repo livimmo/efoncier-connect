@@ -1,124 +1,68 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Eye, Star, BarChart2, Download } from "lucide-react";
-import { formatCurrency } from "@/utils/format";
-import { PropertyChat } from "@/components/chat/PropertyChat";
-import { useToast } from "@/hooks/use-toast";
+import { FileText, MapPin, Download } from "lucide-react";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { GoogleMap } from "@/components/map/GoogleMap";
 import type { Parcel } from "@/utils/mockData/types";
+import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
 
-export interface DeveloperPropertiesTableProps {
+interface DeveloperPropertiesTableProps {
   data: Parcel[];
 }
 
 export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
-  const { toast } = useToast();
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [showDocuments, setShowDocuments] = useState(false);
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
-  const toggleFavorite = (parcelId: string) => {
-    setFavorites(prev => {
-      const newFavorites = prev.includes(parcelId)
-        ? prev.filter(id => id !== parcelId)
-        : [...prev, parcelId];
-      
-      toast({
-        title: prev.includes(parcelId) ? "Retiré des favoris" : "Ajouté aux favoris",
-        description: prev.includes(parcelId) 
-          ? "Le bien a été retiré de vos favoris"
-          : "Le bien a été ajouté à vos favoris",
-      });
-      
-      return newFavorites;
-    });
+  const handleLocationClick = (location: { lat: number; lng: number }) => {
+    setSelectedLocation(location);
   };
 
-  const showDetails = (parcelId: string) => {
-    toast({
-      title: "Détails du bien",
-      description: "Affichage des détails en cours...",
-    });
-  };
-
-  const showHistory = (parcelId: string) => {
-    toast({
-      title: "Historique",
-      description: "Affichage de l'historique en cours...",
-    });
+  const handleDocumentsClick = (parcel: Parcel) => {
+    setSelectedParcel(parcel);
+    setShowDocuments(true);
   };
 
   return (
-    <div className="rounded-md border">
+    <>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Numéro TF</TableHead>
+            <TableHead>Titre Foncier</TableHead>
             <TableHead>Localisation</TableHead>
-            <TableHead>Superficie (m²)</TableHead>
-            <TableHead>Prix (DHS/m²)</TableHead>
+            <TableHead>Surface (m²)</TableHead>
+            <TableHead>Type</TableHead>
             <TableHead>Statut</TableHead>
-            <TableHead>Statut Fiscal</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((parcel) => (
             <TableRow key={parcel.id}>
-              <TableCell className="font-medium">{parcel.titleDeedNumber}</TableCell>
+              <TableCell>{parcel.titleDeedNumber}</TableCell>
               <TableCell>{parcel.address}</TableCell>
-              <TableCell>{parcel.surface.toLocaleString()} m²</TableCell>
-              <TableCell>{formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS</TableCell>
+              <TableCell>{parcel.surface}</TableCell>
+              <TableCell>{parcel.type}</TableCell>
+              <TableCell>{parcel.status}</TableCell>
               <TableCell>
-                <Badge
-                  variant={
-                    parcel.status === "AVAILABLE"
-                      ? "success"
-                      : parcel.status === "UNAVAILABLE"
-                      ? "destructive"
-                      : "warning"
-                  }
-                >
-                  {parcel.status === "AVAILABLE"
-                    ? "Disponible"
-                    : parcel.status === "UNAVAILABLE"
-                    ? "Indisponible"
-                    : "En Transaction"}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge
-                  variant={parcel.taxStatus === "PAID" ? "success" : "destructive"}
-                >
-                  {parcel.taxStatus === "PAID" ? "Payé" : "Impayé"}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline" size="icon" onClick={() => showDetails(parcel.id)}>
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <PropertyChat propertyId={parcel.id} propertyTitle={parcel.titleDeedNumber} />
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => toggleFavorite(parcel.id)}
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleLocationClick(parcel.location)}
                   >
-                    <Star 
-                      className={`h-4 w-4 ${favorites.includes(parcel.id) ? "fill-yellow-400" : ""}`} 
-                    />
+                    <MapPin className="h-4 w-4 mr-2" />
+                    Localisation
                   </Button>
-                  <Button variant="outline" size="icon" onClick={() => showHistory(parcel.id)}>
-                    <BarChart2 className="h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" size="icon">
-                    <Download className="h-4 w-4" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDocumentsClick(parcel)}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Documents
                   </Button>
                 </div>
               </TableCell>
@@ -126,6 +70,37 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
           ))}
         </TableBody>
       </Table>
-    </div>
+
+      {/* Dialog pour la carte */}
+      <Dialog open={!!selectedLocation} onOpenChange={() => setSelectedLocation(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Localisation du Bien</DialogTitle>
+          </DialogHeader>
+          <div className="h-[400px] relative">
+            {selectedLocation && (
+              <GoogleMap
+                parcels={[]}
+                onMarkerClick={() => {}}
+                theme="light"
+                setMapInstance={() => {}}
+                center={selectedLocation}
+                zoom={15}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog pour les documents */}
+      <Dialog open={showDocuments} onOpenChange={setShowDocuments}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Documents du Bien</DialogTitle>
+          </DialogHeader>
+          {selectedParcel && <PropertyDocuments parcel={selectedParcel} />}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

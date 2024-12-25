@@ -1,25 +1,31 @@
-import { PropertyType, ZoneType } from "@/utils/mockData/types";
-import type { Parcel } from "@/utils/mockData/types";
 import { UserRole } from "@/types/auth";
 
 export interface MapFilters {
   region: string;
   commune: string;
-  propertyType: PropertyType | '';
-  zoneType: ZoneType | '';
+  propertyType: PropertyType | "";
+  zoneType: ZoneType | "";
   size: [number, number];
-  status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
+  status: Status | "";
   ownerName: string;
   titleDeedNumber: string;
   lastPaymentDate: string | null;
-  fiscalStatus: 'compliant' | 'non_compliant' | '';
+  fiscalStatus: FiscalStatus | "";
   maxPrice: number;
 }
 
-export interface MapFiltersProps {
-  filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
-  onApplyFilters: () => void;
-  className?: string;
-  userRole: UserRole;
+export type PropertyType = "RESIDENTIAL" | "COMMERCIAL" | "INDUSTRIAL" | "AGRICULTURAL" | "SEASIDE";
+export type ZoneType = "URBAN" | "RURAL" | "INDUSTRIAL" | "COMMERCIAL";
+export type Status = "PAID" | "PENDING" | "OVERDUE";
+export type FiscalStatus = "compliant" | "non_compliant";
+
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+}
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
 }
