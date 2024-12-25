@@ -4,6 +4,7 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import Support from "@/pages/Support";
 import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
 
 export const AppRoutes = () => {
   return (
@@ -13,6 +14,7 @@ export const AppRoutes = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/support" element={<Support />} />
       <Route path="/terms" element={<Terms />} />
+      <Route path="/privacy" element={<Privacy />} />
     </Routes>
   );
 };
