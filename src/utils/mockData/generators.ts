@@ -1,36 +1,35 @@
-import { TNBInfo, TNBStatus, PropertyType } from './types';
+import { PropertyType } from './types';
 
-export const generateTNBInfo = (surface: number, type: PropertyType): TNBInfo => {
-  // Base price per property type
-  const basePrices: Record<PropertyType, number> = {
-    'RESIDENTIAL': 12,
-    'COMMERCIAL': 15,
-    'INDUSTRIAL': 10,
-    'AGRICULTURAL': 5,
-    'MIXED': 13,
-    'SEASIDE': 20,
-    'HOUSE': 12,
-    'APARTMENT': 14
-  };
+// Base rates per square meter for different property types
+export const baseRates: Record<PropertyType, number> = {
+  'RESIDENTIAL': 1000,
+  'COMMERCIAL': 2000,
+  'INDUSTRIAL': 1500,
+  'AGRICULTURAL': 500,
+  'MIXED': 1200,
+  'SEASIDE': 2500,
+  'HOUSE': 1800,
+  'APARTMENT': 1600
+};
 
-  const basePrice = basePrices[type] || 10;
-  
-  // Add some variation
-  const priceVariation = Math.random() * 5 - 2.5; // -2.5 to +2.5
-  const finalPrice = Math.max(basePrice + priceVariation, 5);
-  
-  // Calculate total amount
-  const totalAmount = finalPrice * surface;
-  
-  // Determine status based on price compared to base
-  let status: TNBStatus = 'AVERAGE';
-  if (finalPrice < basePrice - 1) status = 'LOW';
-  if (finalPrice > basePrice + 1) status = 'HIGH';
+// Function to calculate property price based on type and area
+export const calculatePropertyPrice = (type: PropertyType, area: number): number => {
+  const baseRate = baseRates[type];
+  return baseRate * area;
+};
 
-  return {
-    pricePerMeter: Math.round(finalPrice * 100) / 100,
-    totalAmount: Math.round(totalAmount * 100) / 100,
-    lastUpdate: '2024-03-15',
-    status
-  };
+// Function to generate a random property type
+export const getRandomPropertyType = (): PropertyType => {
+  const types: PropertyType[] = [
+    'RESIDENTIAL',
+    'COMMERCIAL',
+    'INDUSTRIAL',
+    'AGRICULTURAL',
+    'MIXED',
+    'SEASIDE',
+    'HOUSE',
+    'APARTMENT'
+  ];
+  const randomIndex = Math.floor(Math.random() * types.length);
+  return types[randomIndex];
 };
