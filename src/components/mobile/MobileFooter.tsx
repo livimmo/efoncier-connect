@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, MapPin, CreditCard, Bell, Search, Plus } from "lucide-react";
+import { Home, MapPin, CreditCard, Bell, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MobileFooterMenu } from "./MobileFooterMenu";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export const MobileFooter = () => {
   const [showMore, setShowMore] = useState(false);
@@ -13,8 +14,26 @@ export const MobileFooter = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
+  const { profile } = useAuth();
 
   if (!isMobile) return null;
+
+  const getProjectsRoute = () => {
+    if (!profile) return "/";
+    switch (profile.role) {
+      case "developer":
+        return "/developer/properties";
+      case "owner":
+        return "/owner/properties";
+      default:
+        return "/";
+    }
+  };
+
+  const getProjectsLabel = () => {
+    if (!profile) return "";
+    return profile.role === "developer" ? "Mes Projets" : "Mes Biens";
+  };
 
   const menuItems = [
     {
@@ -28,9 +47,10 @@ export const MobileFooter = () => {
       path: "/map",
     },
     {
-      icon: Search,
-      label: "Recherche",
-      path: "/search",
+      icon: Building2,
+      label: getProjectsLabel(),
+      path: getProjectsRoute(),
+      show: profile && (profile.role === "developer" || profile.role === "owner"),
     },
     {
       icon: Bell,
@@ -50,7 +70,7 @@ export const MobileFooter = () => {
       label: "Paiements",
       path: "/payment",
     },
-  ];
+  ].filter(item => !item.show || item.show === true);
 
   return (
     <>
@@ -78,16 +98,8 @@ export const MobileFooter = () => {
               <span className="text-[10px]">{item.label}</span>
             </button>
           ))}
-          <button
-            onClick={() => setShowMore(true)}
-            className="flex flex-col items-center justify-center gap-1 rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-primary"
-          >
-            <Plus className="h-5 w-5" />
-            <span className="text-[10px]">Plus</span>
-          </button>
         </div>
       </nav>
-      <MobileFooterMenu open={showMore} onClose={() => setShowMore(false)} />
     </>
   );
 };
