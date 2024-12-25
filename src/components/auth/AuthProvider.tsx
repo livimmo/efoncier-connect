@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 interface User {
   email: string;
   role: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  profile: any | null;
+  profile: User | null;
   signOut: () => Promise<void>;
   loading: boolean;
 }
@@ -30,10 +30,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check localStorage for user data
+    // Vérifier le localStorage pour les données utilisateur
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      // S'assurer que l'utilisateur a toutes les propriétés nécessaires
+      if (!parsedUser.first_name) {
+        parsedUser.first_name = parsedUser.firstName || 'Utilisateur';
+      }
+      if (!parsedUser.last_name) {
+        parsedUser.last_name = parsedUser.lastName || '';
+      }
+      setUser(parsedUser);
     }
     setLoading(false);
   }, []);
