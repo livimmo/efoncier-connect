@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Card } from "@/components/ui/card";
 import { Building, Shield, Users } from "lucide-react";
+import { PartnersCarousel } from "@/components/map/PartnersCarousel";
 
 const About = () => {
   return (
@@ -63,6 +64,10 @@ const About = () => {
               </p>
             </div>
           </Card>
+
+          <div className="mt-12">
+            <PartnersCarousel />
+          </div>
         </div>
       </main>
     </div>
