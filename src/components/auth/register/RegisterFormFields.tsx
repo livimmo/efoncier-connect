@@ -2,15 +2,16 @@ import { UseFormReturn } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, Lock, Smartphone, MapPin, User } from "lucide-react";
+import { Mail, Lock, Smartphone, MapPin, User, Building, Briefcase } from "lucide-react";
 import type { RegisterFormData } from "@/types/auth";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface RegisterFormFieldsProps {
   form: UseFormReturn<RegisterFormData>;
 }
 
 export const RegisterFormFields = ({ form }: RegisterFormFieldsProps) => {
+  const role = form.watch("role");
+
   return (
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
@@ -138,28 +139,80 @@ export const RegisterFormFields = ({ form }: RegisterFormFieldsProps) => {
         />
       </div>
 
-      <FormField
-        control={form.control}
-        name="role"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Type de compte</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez votre type de compte" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="taxpayer">Contribuable</SelectItem>
-                <SelectItem value="developer">Promoteur</SelectItem>
-                <SelectItem value="commune">Commune</SelectItem>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      {/* Champs spécifiques selon le rôle */}
+      {role === "developer" && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="companyName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom de l'entreprise</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="Nom de votre entreprise" {...field} />
+                    <Building className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="registrationNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>RC</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="Numéro RC" {...field} />
+                    <Briefcase className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
+
+      {role === "commune" && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="communeName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom de la commune</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="Nom de la commune" {...field} />
+                    <Building className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="region"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Région</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="Région administrative" {...field} />
+                    <MapPin className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
 
       <FormField
         control={form.control}

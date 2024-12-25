@@ -25,6 +25,11 @@ const formSchema = z.object({
   acceptTerms: z.boolean().refine((val) => val === true, {
     message: "Vous devez accepter les conditions d'utilisation",
   }),
+  // Champs optionnels selon le rôle
+  companyName: z.string().optional(),
+  registrationNumber: z.string().optional(),
+  communeName: z.string().optional(),
+  region: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"],
@@ -50,6 +55,10 @@ export const RegisterForm = ({ selectedRole, onSuccess }: RegisterFormProps) => 
       city: "",
       role: selectedRole,
       acceptTerms: false,
+      companyName: "",
+      registrationNumber: "",
+      communeName: "",
+      region: "",
     },
   });
 
@@ -64,6 +73,10 @@ export const RegisterForm = ({ selectedRole, onSuccess }: RegisterFormProps) => 
         role: data.role,
         phone: data.phone,
         city: data.city,
+        companyName: data.companyName,
+        registrationNumber: data.registrationNumber,
+        communeName: data.communeName,
+        region: data.region,
       };
       
       localStorage.setItem('user', JSON.stringify(userData));
