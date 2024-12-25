@@ -24,8 +24,8 @@ export const DeveloperPropertiesMap = ({
     switch (status) {
       case 'AVAILABLE':
         return '#10B981'; // Vert pour disponible
-      case 'SOLD':
-        return '#ea384c'; // Rouge pour vendu
+      case 'UNAVAILABLE':
+        return '#EF4444'; // Rouge pour indisponible
       case 'IN_TRANSACTION':
         return '#F59E0B'; // Orange pour en transaction
       default:
@@ -74,7 +74,7 @@ export const DeveloperPropertiesMap = ({
                   ? 'Disponible'
                   : selectedParcel.status === 'IN_TRANSACTION'
                   ? 'En Transaction'
-                  : 'Vendu'}
+                  : 'Indisponible'}
               </span>
             </div>
             
