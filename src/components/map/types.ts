@@ -23,6 +23,7 @@ export interface MapFilters {
   searchQuery: string;
   zoning: string;
   paymentStatus: string;
+  tnbStatus: string; // Nouveau champ pour le statut TNB
 }
 
 export interface MapFiltersProps {

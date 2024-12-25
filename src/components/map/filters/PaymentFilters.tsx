@@ -1,13 +1,12 @@
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { MapFilters } from "../types";
-import { mockParcels } from "@/utils/mockData/parcels";
 
 interface PaymentFiltersProps {
   filters: MapFilters;
@@ -18,14 +17,27 @@ interface PaymentFiltersProps {
 export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFiltersProps) => {
   if (userRole !== 'commune') return null;
 
-  const paymentStatusCounts = {
-    PAID: mockParcels.filter(p => p.taxStatus === 'PAID').length,
-    PENDING: mockParcels.filter(p => p.taxStatus === 'PENDING').length,
-    OVERDUE: mockParcels.filter(p => p.taxStatus === 'OVERDUE').length
-  };
-
   return (
     <>
+      <div className="space-y-2">
+        <Label>Statut TNB</Label>
+        <Select
+          value={filters.tnbStatus}
+          onValueChange={(value) => setFilters({ ...filters, tnbStatus: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Sélectionner un statut TNB" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">Tous les statuts</SelectItem>
+            <SelectItem value="PAID">Payé</SelectItem>
+            <SelectItem value="PENDING">En attente</SelectItem>
+            <SelectItem value="OVERDUE">En retard</SelectItem>
+            <SelectItem value="EXEMPT">Exonéré</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="space-y-2">
         <Label>Statut de paiement</Label>
         <Select
@@ -37,9 +49,9 @@ export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFilters
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="">Tous les statuts</SelectItem>
-            <SelectItem value="PAID">Payé ({paymentStatusCounts.PAID})</SelectItem>
-            <SelectItem value="PENDING">En attente ({paymentStatusCounts.PENDING})</SelectItem>
-            <SelectItem value="OVERDUE">En retard ({paymentStatusCounts.OVERDUE})</SelectItem>
+            <SelectItem value="PAID">Payé</SelectItem>
+            <SelectItem value="PENDING">En attente</SelectItem>
+            <SelectItem value="OVERDUE">En retard</SelectItem>
           </SelectContent>
         </Select>
       </div>

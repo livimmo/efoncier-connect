@@ -31,7 +31,8 @@ const Map = () => {
     tnbReference: '',
     searchQuery: '',
     zoning: '',
-    paymentStatus: ''
+    paymentStatus: '',
+    tnbStatus: '' // Ajout du nouveau filtre
   });
 
   const handleParcelSelect = (parcelId: string) => {
