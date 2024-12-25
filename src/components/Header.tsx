@@ -39,7 +39,7 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {profile && <NotificationsArea />}
+          {profile && !isMobile && <NotificationsArea />}
           <ModeToggle />
           {profile ? (
             <UserMenu />
