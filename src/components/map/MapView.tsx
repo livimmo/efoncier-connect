@@ -26,7 +26,18 @@ export const MapView = ({
   setMapInstance,
   userRole,
 }: MapViewProps) => {
-  const { toast } = useToast();
+  const getMarkerColor = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return '#10B981'; // Vert pour disponible
+      case 'SOLD':
+        return '#EF4444'; // Rouge pour vendu
+      case 'IN_TRANSACTION':
+        return '#F59E0B'; // Orange pour en transaction
+      default:
+        return '#6B7280'; // Gris par défaut
+    }
+  };
 
   return (
     <div className="relative flex-1 h-full">
@@ -37,6 +48,7 @@ export const MapView = ({
           theme={settings.theme}
           setMapInstance={setMapInstance}
           userRole={userRole}
+          getMarkerColor={getMarkerColor}
         />
       </div>
 
