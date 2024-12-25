@@ -2,22 +2,16 @@ import { useState, useEffect } from "react";
 import { ParcelInfo } from "./ParcelInfo";
 import { Parcel } from "@/utils/mockData/types";
 import { useParcelPosition } from "./parcel-info/useParcelPosition";
-import { UserRole } from "./types";
-
-interface DraggableParcelInfoProps {
-  parcel: Parcel;
-  onClose: () => void;
-  className?: string;
-  userRole: UserRole;
-}
+import { DraggableParcelInfoProps } from "./types";
 
 export const DraggableParcelInfo = ({ 
   parcel, 
   onClose,
   className,
-  userRole 
+  userRole,
+  markerPosition 
 }: DraggableParcelInfoProps) => {
-  const { position, updatePosition } = useParcelPosition();
+  const { position, setPosition } = useParcelPosition(markerPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
@@ -28,7 +22,7 @@ export const DraggableParcelInfo = ({
       const newX = e.clientX - dragOffset.x;
       const newY = e.clientY - dragOffset.y;
       
-      updatePosition({ x: newX, y: newY });
+      setPosition({ x: newX, y: newY });
     };
 
     const handleMouseUp = () => {
@@ -44,7 +38,7 @@ export const DraggableParcelInfo = ({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, dragOffset, updatePosition]);
+  }, [isDragging, dragOffset, setPosition]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.target instanceof HTMLElement && e.target.closest('.no-drag')) {

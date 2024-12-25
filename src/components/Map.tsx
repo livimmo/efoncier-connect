@@ -12,11 +12,10 @@ const Map = () => {
       toast({
         title: "Connexion requise",
         description: "Veuillez vous connecter pour accéder à plus de détails.",
-        variant: "destructive", // Changed from "warning" to "destructive"
+        variant: "destructive",
       });
       return;
     }
-    // Logique de sélection de parcelle selon le type d'utilisateur
   };
 
   return (

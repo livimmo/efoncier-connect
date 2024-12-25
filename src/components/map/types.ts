@@ -1,4 +1,5 @@
 import { Parcel } from "@/utils/mockData/types";
+import { Property } from "@/types";
 
 export type UserRole = "admin" | "developer" | "owner" | "commune";
 
@@ -6,6 +7,11 @@ export type MapSettings = {
   theme: "light" | "dark";
   unit: "metric" | "imperial";
 };
+
+export interface MapContainerProps {
+  userRole?: UserRole;
+  onParcelSelect?: (parcelId: string) => void;
+}
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -56,10 +62,8 @@ export interface MapMobileControlsProps {
   onLocateMe?: () => void;
 }
 
-export interface DraggableParcelInfoProps {
-  parcel: Parcel;
-  onClose: () => void;
-  className?: string;
-  userRole?: UserRole;
+export interface DraggableParcelInfoProps extends ParcelInfoProps {
   markerPosition?: { x: number; y: number };
 }
+
+export type ParcelToPropertyMapper = (parcel: Parcel) => Property;
