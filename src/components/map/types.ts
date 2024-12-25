@@ -1,5 +1,3 @@
-import { MapSettings } from "./types";
-
 export type MapSettings = {
   theme: "light" | "dark";
   unit: "metric" | "imperial";

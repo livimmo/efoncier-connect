@@ -8,7 +8,7 @@ const Properties = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const [mapCenter, setMapCenter] = useState({ lat: 33.5731, lng: -7.5898, zoom: 6 });
+  const [mapCenter] = useState({ lat: 33.5731, lng: -7.5898, zoom: 6 });
 
   const [settings] = useState<MapSettings>({
     theme: 'light',
