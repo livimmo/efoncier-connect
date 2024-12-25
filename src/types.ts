@@ -12,4 +12,10 @@ export interface Property {
   surface_area: number;
   title: string;
   updated_at: string;
+  taxStatus?: 'PAID' | 'UNPAID';
+  tnbInfo?: {
+    totalAmount: number;
+    pricePerMeter: number;
+    lastUpdate: string;
+  };
 }

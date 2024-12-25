@@ -1,17 +1,25 @@
 import { GoogleMap } from './GoogleMap';
 import { DraggableParcelInfo } from './DraggableParcelInfo';
 import { MapLegend } from './MapLegend';
-import type { Parcel } from '@/utils/mockData/types';
-import type { MapSettings } from './types';
+import type { Property } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { UserRole } from '@/types/auth';
 import { useState } from 'react';
 
+interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+  showLabels: boolean;
+  showBoundaries: boolean;
+  showTerrain: boolean;
+  show3D: boolean;
+}
+
 interface MapViewProps {
-  selectedParcel: Parcel | null;
+  selectedParcel: Property | null;
   markerPosition: { x: number; y: number } | null;
-  onParcelSelect: (parcel: Parcel | null, position?: { x: number; y: number }) => void;
-  filteredParcels: Parcel[];
+  onParcelSelect: (parcel: Property | null, position?: { x: number; y: number }) => void;
+  filteredParcels: Property[];
   settings: MapSettings;
   mapInstance: google.maps.Map | null;
   setMapInstance: (map: google.maps.Map) => void;
@@ -44,7 +52,7 @@ export const MapView = ({
     }
   };
 
-  const handleParcelClick = (parcel: Parcel, position: { x: number; y: number }) => {
+  const handleParcelClick = (parcel: Property, position: { x: number; y: number }) => {
     onParcelSelect(parcel, position);
   };
 
@@ -85,9 +93,7 @@ export const MapView = ({
         <DraggableParcelInfo
           parcel={selectedParcel}
           onClose={() => onParcelSelect(null)}
-          markerPosition={markerPosition}
-          className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-          userRole={userRole}
+          position={markerPosition}
         />
       )}
     </div>

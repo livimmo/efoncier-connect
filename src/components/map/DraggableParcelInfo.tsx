@@ -10,10 +10,10 @@ import { ParcelDetails } from "./parcel-info/ParcelDetails";
 import { ParcelActions } from "./parcel-info/ParcelActions";
 import { ReceiptDialog } from "./parcel-info/dialogs/ReceiptDialog";
 import { PaymentDialog } from "@/components/notifications/dialogs/PaymentDialog";
-import type { Parcel } from "@/utils/mockData/types";
+import type { Property } from "@/types";
 
 interface DraggableParcelInfoProps {
-  parcel: Parcel;
+  parcel: Property;
   onClose: () => void;
   position?: { x: number; y: number };
 }
@@ -31,7 +31,7 @@ export const DraggableParcelInfo = ({
   const dragRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const isOwner = profile?.id === parcel.ownerId;
+  const isOwner = profile?.id === parcel.owner_id;
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (cardRef.current) {
@@ -85,7 +85,7 @@ export const DraggableParcelInfo = ({
       >
         <ParcelInfoHeader
           title={parcel.title}
-          ownerName={parcel.ownerName}
+          ownerName={parcel.description}
           isMinimized={isMinimized}
           isDragging={isDragging}
           onToggleMinimize={() => setIsMinimized(!isMinimized)}
@@ -108,27 +108,30 @@ export const DraggableParcelInfo = ({
           <div className="p-2 space-y-2">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-medium">{parcel.surface} m²</p>
+                <p className="text-sm font-medium">{parcel.surface_area} m²</p>
                 <p className="text-xs text-muted-foreground">
-                  {formatCurrency(parcel.tnbInfo.pricePerMeter)} DH/m²
+                  {formatCurrency(parcel.price)} DH/m²
                 </p>
               </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handlePaymentClick}
-              >
-                <CreditCard className="w-4 h-4 mr-2" />
-                Payer TNB
-              </Button>
-              {isOwner && parcel.taxStatus === 'PAID' && (
+              {parcel.taxStatus === 'PAID' ? (
+                isOwner && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleReceiptClick}
+                  >
+                    <Receipt className="w-4 h-4 mr-2" />
+                    Reçu
+                  </Button>
+                )
+              ) : (
                 <Button
-                  variant="outline"
+                  variant="destructive"
                   size="sm"
-                  onClick={handleReceiptClick}
+                  onClick={handlePaymentClick}
                 >
-                  <Receipt className="w-4 h-4 mr-2" />
-                  Reçu
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Payer TNB
                 </Button>
               )}
             </div>
@@ -139,8 +142,8 @@ export const DraggableParcelInfo = ({
       <PaymentDialog
         open={showPayment}
         onOpenChange={setShowPayment}
-        titleDeedNumber={parcel.titleDeedNumber}
-        amount={parcel.tnbInfo.totalAmount}
+        titleDeedNumber={parcel.id}
+        amount={parcel.price}
       />
 
       {isOwner && (
@@ -149,8 +152,8 @@ export const DraggableParcelInfo = ({
           onOpenChange={setShowReceipt}
           receiptData={{
             parcelId: parcel.id,
-            amount: parcel.tnbInfo.totalAmount,
-            date: parcel.tnbInfo.lastUpdate,
+            amount: parcel.price,
+            date: new Date().toISOString(),
           }}
         />
       )}
