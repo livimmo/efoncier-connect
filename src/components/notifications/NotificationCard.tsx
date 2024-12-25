@@ -17,6 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { NotificationType, NotificationPriority, Notification } from "@/types/notifications";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { PaymentDialog } from "@/components/map/parcel-info/dialogs/PaymentDialog";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export interface NotificationCardProps {
   notification: Notification;
@@ -27,9 +31,46 @@ export const NotificationCard = ({
   notification,
   onClick,
 }: NotificationCardProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [paymentOpen, setPaymentOpen] = useState(false);
+
   if (!notification) return null;
 
-  const { type, priority, status, title, message, date, metadata, actions } = notification;
+  const { type, priority, status, title, message, date, metadata } = notification;
+
+  const handleAction = (actionType: string) => {
+    switch (actionType) {
+      case "payment":
+        if (metadata?.titleDeedNumber) {
+          setPaymentOpen(true);
+        }
+        break;
+      case "property_details":
+        if (metadata?.titleDeedNumber) {
+          navigate(`/map?property=${metadata.titleDeedNumber}`);
+        }
+        break;
+      case "chat":
+        if (metadata?.titleDeedNumber) {
+          navigate(`/messages?property=${metadata.titleDeedNumber}`);
+        }
+        break;
+      case "document":
+        if (metadata?.documentUrl) {
+          window.open(metadata.documentUrl, '_blank');
+        } else {
+          toast({
+            title: "Document non disponible",
+            description: "Le document n'est pas encore disponible au téléchargement.",
+            variant: "destructive",
+          });
+        }
+        break;
+      default:
+        onClick?.();
+    }
+  };
 
   const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
@@ -70,114 +111,91 @@ export const NotificationCard = ({
     }
   };
 
-  const getDefaultActions = (type: NotificationType) => {
+  const getActionButtons = () => {
     switch (type) {
-      case "PAYMENT":
       case "PAYMENT_DUE":
-        return {
-          primary: {
-            label: "Payer maintenant",
-            icon: <DollarSign className="h-4 w-4" />
-          },
-          secondary: {
-            label: "Voir l'historique",
-            icon: <Eye className="h-4 w-4" />
-          }
-        };
-      case "FISCAL_STATUS":
-        return {
-          primary: {
-            label: "Voir les détails",
-            icon: <Eye className="h-4 w-4" />
-          }
-        };
+        return (
+          <Button size="sm" onClick={() => handleAction("payment")}>
+            <DollarSign className="h-4 w-4 mr-2" />
+            Payer maintenant
+          </Button>
+        );
+      case "PROPERTY_UPDATE":
+      case "NEW_PROPERTY":
+        return (
+          <Button size="sm" onClick={() => handleAction("property_details")}>
+            <Eye className="h-4 w-4 mr-2" />
+            Voir les détails
+          </Button>
+        );
       case "MESSAGE":
-        return {
-          primary: {
-            label: "Répondre",
-            icon: <MessageSquare className="h-4 w-4" />
-          }
-        };
-      case "DOCUMENT":
+        return (
+          <Button size="sm" onClick={() => handleAction("chat")}>
+            <MessageSquare className="h-4 w-4 mr-2" />
+            Répondre
+          </Button>
+        );
       case "DOCUMENT_RECEIVED":
-        return {
-          primary: {
-            label: "Télécharger",
-            icon: <Download className="h-4 w-4" />
-          },
-          secondary: {
-            label: "Aperçu",
-            icon: <Eye className="h-4 w-4" />
-          }
-        };
+        return (
+          <Button size="sm" onClick={() => handleAction("document")}>
+            <Download className="h-4 w-4 mr-2" />
+            Télécharger
+          </Button>
+        );
       default:
-        return {};
+        return null;
     }
   };
 
-  const defaultActions = getDefaultActions(type);
-
   return (
-    <div
-      onClick={onClick}
-      className={cn(
-        "p-4 rounded-lg border cursor-pointer transition-colors duration-200",
-        status === "UNREAD" ? "bg-blue-50/50 dark:bg-blue-950/20" : "bg-background",
-        "hover:bg-accent"
-      )}
-    >
-      <div className="flex items-start gap-4">
-        <div className={cn("p-2 rounded-full", getPriorityColor(priority))}>
-          {getNotificationIcon(type)}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <h3 className="font-semibold">{title}</h3>
-            <span className="text-sm text-muted-foreground whitespace-nowrap">
-              {new Date(date).toLocaleDateString()}
-            </span>
+    <>
+      <div
+        onClick={onClick}
+        className={cn(
+          "p-4 rounded-lg border cursor-pointer transition-colors duration-200",
+          status === "UNREAD" ? "bg-blue-50/50 dark:bg-blue-950/20" : "bg-background",
+          "hover:bg-accent"
+        )}
+      >
+        <div className="flex items-start gap-4">
+          <div className={cn("p-2 rounded-full", getPriorityColor(priority))}>
+            {getNotificationIcon(type)}
           </div>
-          <p className="text-sm text-muted-foreground mt-1 break-words">{message}</p>
-          
-          {metadata?.titleDeedNumber && (
-            <Badge variant="outline" className="mt-2">
-              TF: {metadata.titleDeedNumber}
-            </Badge>
-          )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <h3 className="font-semibold">{title}</h3>
+              <span className="text-sm text-muted-foreground whitespace-nowrap">
+                {new Date(date).toLocaleDateString()}
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1 break-words">{message}</p>
+            
+            {metadata?.titleDeedNumber && (
+              <Badge variant="outline" className="mt-2">
+                TF: {metadata.titleDeedNumber}
+              </Badge>
+            )}
 
-          {metadata?.dueDate && (
-            <Badge variant="outline" className="mt-2 ml-2">
-              Échéance: {new Date(metadata.dueDate).toLocaleDateString()}
-            </Badge>
-          )}
-          
-          <div className="flex gap-2 mt-3 flex-wrap">
-            {(actions?.primary || defaultActions.primary) && (
-              <Button size="sm" onClick={(e) => {
-                e.stopPropagation();
-                actions?.primary?.action?.();
-              }}>
-                {defaultActions.primary?.icon}
-                <span className="ml-2">{actions?.primary?.label || defaultActions.primary?.label}</span>
-              </Button>
+            {metadata?.dueDate && (
+              <Badge variant="outline" className="mt-2 ml-2">
+                Échéance: {new Date(metadata.dueDate).toLocaleDateString()}
+              </Badge>
             )}
             
-            {(actions?.secondary || defaultActions.secondary) && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  actions?.secondary?.action?.();
-                }}
-              >
-                {defaultActions.secondary?.icon}
-                <span className="ml-2">{actions?.secondary?.label || defaultActions.secondary?.label}</span>
-              </Button>
-            )}
+            <div className="flex gap-2 mt-3">
+              {getActionButtons()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {metadata?.titleDeedNumber && (
+        <PaymentDialog
+          open={paymentOpen}
+          onOpenChange={setPaymentOpen}
+          parcelId={metadata.titleDeedNumber}
+        />
+      )}
+    </>
   );
 };
