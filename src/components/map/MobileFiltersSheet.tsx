@@ -9,12 +9,16 @@ interface MobileFiltersSheetProps {
   filters: MapFiltersType;
   setFilters: (filters: MapFiltersType) => void;
   filteredParcelsCount: number;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export const MobileFiltersSheet = ({ 
   filters, 
   setFilters, 
-  filteredParcelsCount 
+  filteredParcelsCount,
+  open,
+  onOpenChange
 }: MobileFiltersSheetProps) => {
   const { toast } = useToast();
 
@@ -26,7 +30,7 @@ export const MobileFiltersSheet = ({
   };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
         <Button variant="secondary" size="sm" className="shadow-lg">
           <Filter className="h-4 w-4 mr-2" />

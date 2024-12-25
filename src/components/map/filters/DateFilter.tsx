@@ -21,14 +21,14 @@ export const DateFilter = ({ value, onChange }: DateFilterProps) => {
           }`}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(new Date(value), "PP", { locale: fr }) : "Sélectionner une date"}
+          {value ? format(value, "PP", { locale: fr }) : "Sélectionner une date"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
-          selected={value ? new Date(value) : undefined}
-          onSelect={(date) => onChange(date ? date.toISOString() : null)}
+          selected={value}
+          onSelect={onChange}
           initialFocus
         />
       </PopoverContent>

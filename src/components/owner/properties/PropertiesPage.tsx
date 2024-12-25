@@ -5,6 +5,7 @@ import { PropertiesTable } from "./PropertiesTable";
 import { MapView } from "@/components/map/MapView";
 import { Parcel } from "@/utils/mockData/types";
 import { MapSettings } from "@/components/map/types";
+import { Property } from "@/types";
 
 export const PropertiesPage = () => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
@@ -12,6 +13,8 @@ export const PropertiesPage = () => {
   const [filteredParcels, setFilteredParcels] = useState<Parcel[]>([]);
   const [settings, setSettings] = useState<MapSettings>({ theme: "light", unit: "metric" });
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleParcelSelect = (parcel: Parcel | null, position?: { x: number; y: number }) => {
     setSelectedParcel(parcel);
@@ -26,7 +29,7 @@ export const PropertiesPage = () => {
     <div className="container mx-auto p-4">
       <div className="space-y-4">
         <PropertiesHeader />
-        <PropertiesStats />
+        <PropertiesStats data={properties} />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2">
             <MapView
@@ -41,7 +44,7 @@ export const PropertiesPage = () => {
             />
           </div>
           <div>
-            <PropertiesTable />
+            <PropertiesTable data={properties} isLoading={isLoading} />
           </div>
         </div>
       </div>
