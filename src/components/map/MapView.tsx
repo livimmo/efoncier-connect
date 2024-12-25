@@ -1,4 +1,4 @@
-import GoogleMap from './GoogleMap';
+import { GoogleMap } from './GoogleMap';
 import { DraggableParcelInfo } from './DraggableParcelInfo';
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapSettings } from './types';

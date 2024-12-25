@@ -3,7 +3,7 @@ import { MapContainer } from './map/MapContainer';
 import { Header } from './Header';
 import { useAuth } from './auth/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
-import DeveloperPropertiesTable from './developer/properties/DeveloperPropertiesTable';
+import { DeveloperPropertiesTable } from './developer/properties/DeveloperPropertiesTable';
 import { Button } from './ui/button';
 import { Map as MapIcon, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import { mockParcels } from '@/utils/mockData/parcels';

@@ -1,4 +1,4 @@
-import GoogleMap from '@/components/map/GoogleMap';
+import { GoogleMap } from '@/components/map/GoogleMap';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
@@ -20,6 +20,19 @@ export const DeveloperPropertiesMap = ({
   const [infoWindowPosition, setInfoWindowPosition] = useState<{ x: number; y: number } | null>(null);
   const { theme } = useTheme();
 
+  const getMarkerColor = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return '#10B981'; // Vert pour disponible
+      case 'UNAVAILABLE':
+        return '#EF4444'; // Rouge pour indisponible
+      case 'IN_TRANSACTION':
+        return '#F59E0B'; // Orange pour en transaction
+      default:
+        return '#6B7280'; // Gris par défaut
+    }
+  };
+
   const handleMarkerClick = (parcel: Parcel, position: { x: number; y: number }) => {
     setSelectedParcel(parcel);
     setInfoWindowPosition(position);
@@ -37,6 +50,7 @@ export const DeveloperPropertiesMap = ({
         parcels={parcels}
         theme={theme as 'light' | 'dark'}
         setMapInstance={handleMapLoad}
+        getMarkerColor={getMarkerColor}
       />
 
       {selectedParcel && infoWindowPosition && (
