@@ -6,7 +6,7 @@ import { RegisterFormFields } from "./RegisterFormFields";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { RegisterFormData } from "@/types/auth";
+import type { RegisterFormData, UserRole } from "@/types/auth";
 
 const formSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -25,7 +25,12 @@ const formSchema = z.object({
   path: ["confirmPassword"],
 });
 
-export const RegisterForm = () => {
+interface RegisterFormProps {
+  selectedRole: UserRole;
+  onSuccess: () => void;
+}
+
+export const RegisterForm = ({ selectedRole, onSuccess }: RegisterFormProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -39,7 +44,7 @@ export const RegisterForm = () => {
       lastName: "",
       phone: "",
       city: "",
-      role: "owner",
+      role: selectedRole,
       acceptTerms: false,
     },
   });
@@ -62,7 +67,7 @@ export const RegisterForm = () => {
         description: "Vous pouvez maintenant vous connecter",
       });
 
-      navigate("/login");
+      onSuccess();
     } catch (error) {
       toast({
         title: "Erreur",
