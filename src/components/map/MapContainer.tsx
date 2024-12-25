@@ -92,8 +92,9 @@ export const MapContainer = () => {
               size="sm"
               onClick={toggleFilters}
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 z-10 shadow-lg transition-all duration-300 ease-in-out",
-                isFiltersCollapsed ? "left-2" : "left-[19.5rem]"
+                "fixed left-0 top-1/2 -translate-y-1/2 z-10 shadow-lg transition-all duration-300 ease-in-out",
+                isFiltersCollapsed ? "translate-x-0" : "translate-x-80",
+                "h-12 w-6 rounded-r-full rounded-l-none border-l-0"
               )}
             >
               {isFiltersCollapsed ? (
