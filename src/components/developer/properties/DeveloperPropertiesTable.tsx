@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import type { Parcel } from "@/utils/mockData/types";
 
-interface DeveloperPropertiesTableProps {
+export interface DeveloperPropertiesTableProps {
   data: Parcel[];
 }
 

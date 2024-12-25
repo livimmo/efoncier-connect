@@ -1,45 +1,62 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Filter } from "lucide-react";
-import { MapFilters } from './MapFilters';
-import { MapFilters as MapFiltersType } from './types';
-import { useToast } from "@/hooks/use-toast";
+import { Dispatch, SetStateAction } from "react";
+import { MapFilters } from "./types";
+import { UserRole } from "@/types/auth";
 
-interface MobileFiltersSheetProps {
-  filters: MapFiltersType;
-  setFilters: (filters: MapFiltersType) => void;
+export interface MobileFiltersSheetProps {
+  filters: MapFilters;
+  setFilters: Dispatch<SetStateAction<MapFilters>>;
   filteredParcelsCount: number;
+  userRole: UserRole;
 }
 
-export const MobileFiltersSheet = ({ 
-  filters, 
-  setFilters, 
-  filteredParcelsCount 
-}: MobileFiltersSheetProps) => {
-  const { toast } = useToast();
-
+export const MobileFiltersSheet = ({ filters, setFilters, filteredParcelsCount, userRole }: MobileFiltersSheetProps) => {
   return (
-    <div className="absolute top-4 left-4 z-10">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="secondary" size="sm" className="shadow-lg">
-            <Filter className="h-4 w-4 mr-2" />
-            Filtres
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-[85vw] sm:w-[385px] p-4">
-          <MapFilters 
-            filters={filters}
-            setFilters={setFilters}
-            onApplyFilters={() => {
-              toast({
-                title: "Filtres appliqués",
-                description: `${filteredParcelsCount} parcelles trouvées`,
-              });
+    <div className="fixed inset-0 z-50 bg-background p-4">
+      <h2 className="text-lg font-semibold">Filtres</h2>
+      <div className="mt-4">
+        {/* Example filter for property type */}
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            checked={filters.propertyType.includes("house")}
+            onChange={() => {
+              const newFilters = { ...filters };
+              if (newFilters.propertyType.includes("house")) {
+                newFilters.propertyType = newFilters.propertyType.filter(type => type !== "house");
+              } else {
+                newFilters.propertyType.push("house");
+              }
+              setFilters(newFilters);
             }}
           />
-        </SheetContent>
-      </Sheet>
+          <label className="ml-2">Maison</label>
+        </div>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            checked={filters.propertyType.includes("apartment")}
+            onChange={() => {
+              const newFilters = { ...filters };
+              if (newFilters.propertyType.includes("apartment")) {
+                newFilters.propertyType = newFilters.propertyType.filter(type => type !== "apartment");
+              } else {
+                newFilters.propertyType.push("apartment");
+              }
+              setFilters(newFilters);
+            }}
+          />
+          <label className="ml-2">Appartement</label>
+        </div>
+        {/* Add more filters as needed */}
+      </div>
+      <div className="mt-4">
+        <button
+          className="w-full bg-primary text-white py-2 rounded"
+          onClick={onApplyFilters}
+        >
+          Appliquer les filtres ({filteredParcelsCount})
+        </button>
+      </div>
     </div>
   );
 };

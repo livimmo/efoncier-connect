@@ -5,6 +5,7 @@ import { Map, List } from "lucide-react";
 import { DeveloperPropertiesTable } from "./DeveloperPropertiesTable";
 import { DeveloperPropertiesMap } from "./DeveloperPropertiesMap";
 import { DeveloperPropertiesFilters } from "./DeveloperPropertiesFilters";
+import { mockParcels } from "@/utils/mockData/parcels";
 
 interface DeveloperPropertiesViewProps {
   viewMode: "map" | "table";
@@ -40,7 +41,7 @@ export const DeveloperPropertiesView = ({
         </div>
 
         {viewMode === "table" ? (
-          <DeveloperPropertiesTable />
+          <DeveloperPropertiesTable data={mockParcels} />
         ) : (
           <Card className="h-[600px]">
             <DeveloperPropertiesMap />
