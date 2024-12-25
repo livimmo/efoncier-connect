@@ -10,7 +10,6 @@ import { Parcel } from '@/utils/mockData/types';
 import { UserRole } from '@/types/auth';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ParcelStatusBadges } from "./parcel-info/ParcelStatusBadges";
-import { BlurredField } from "./minimized/BlurredField";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -41,32 +40,22 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
               <ParcelStatusBadges 
                 status={parcel.status}
                 taxStatus={parcel.taxStatus}
+                fiscalStatus={parcel.fiscalStatus}
               />
               <p className="text-sm text-muted-foreground">
-                <BlurredField
-                  value={`Référence: ${parcel.titleDeedNumber}`}
-                  onBlurredClick={handleLoginClick}
-                />
+                Référence: {parcel.titleDeedNumber}
               </p>
             </div>
 
             <div className="grid gap-4">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
-                <BlurredField
-                  value={parcel.address}
-                  onBlurredClick={handleLoginClick}
-                  className="text-sm"
-                />
+                <span className="text-sm">{parcel.address}</span>
               </div>
               
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4 text-muted-foreground" />
-                <BlurredField
-                  value={parcel.ownerName}
-                  onBlurredClick={handleLoginClick}
-                  className="text-sm"
-                />
+                <span className="text-sm">{parcel.ownerName}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -77,11 +66,9 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
               {parcel.price && (
                 <div className="flex items-center gap-2">
                   <CreditCard className="w-4 h-4 text-muted-foreground" />
-                  <BlurredField
-                    value={`Prix de vente: ${formatCurrency(parcel.price)} DHS`}
-                    onBlurredClick={handleLoginClick}
-                    className="text-sm font-medium text-green-600"
-                  />
+                  <span className="text-sm font-medium text-green-600">
+                    Prix de vente: {formatCurrency(parcel.price)} DHS
+                  </span>
                 </div>
               )}
 

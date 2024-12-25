@@ -10,7 +10,6 @@ import { RegisterDialog } from "@/components/auth/RegisterDialog";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { UserPlus } from "lucide-react";
 import { LoginDialog } from "@/components/auth/LoginDialog";
-import { BlurredField } from "../minimized/BlurredField";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -75,10 +74,6 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
     }
   };
 
-  const handleBlurredClick = () => {
-    setLoginOpen(true);
-  };
-
   return (
     <>
       <PropertyPopup 
@@ -118,19 +113,20 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                   <span>{parcel.surface} m² •</span>
                   <span>Zone {parcel.zone}</span>
                 </div>
-                {parcel.price && (
-                  <BlurredField
-                    value={`${formatCurrency(parcel.price)} DHS`}
-                    onBlurredClick={handleLoginClick}
-                    className="text-sm font-medium text-green-600"
-                  />
-                )}
+                <div className="text-sm font-medium text-green-600 mt-1">
+                  {profile ? (
+                    `${formatCurrency(parcel.price)} DHS`
+                  ) : (
+                    <span 
+                      className="blur-sm select-none cursor-pointer"
+                      onClick={handleLoginClick}
+                    >
+                      {formatCurrency(parcel.price)} DHS
+                    </span>
+                  )}
+                </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  <BlurredField
-                    value={`TF: ${parcel.titleDeedNumber}`}
-                    onBlurredClick={handleLoginClick}
-                    className="text-xs"
-                  />
+                  TF: {parcel.titleDeedNumber}
                 </div>
                 <div className="mt-1">
                   <ParcelStatusInfo 
@@ -149,7 +145,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                 ) : (
                   <span 
                     className="blur-sm select-none cursor-pointer"
-                    onClick={handleBlurredClick}
+                    onClick={handleLoginClick}
                   >
                     {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
                   </span>
@@ -161,7 +157,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                 ) : (
                   <span 
                     className="blur-sm select-none cursor-pointer"
-                    onClick={handleBlurredClick}
+                    onClick={handleLoginClick}
                   >
                     {parcel.ownerName}
                   </span>
