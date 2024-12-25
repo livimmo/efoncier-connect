@@ -1,55 +1,167 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "@/components/auth/AuthProvider";
-import Login from "@/pages/auth/Login";
-import Register from "@/pages/auth/Register";
+import { Routes, Route } from "react-router-dom";
+import { PrivateRoute } from "./auth/PrivateRoute";
+import Home from "@/pages/Home";
+import About from "@/pages/About";
+import Map from "@/components/Map";
 import Dashboard from "@/pages/Dashboard";
-import Map from "@/pages/Map";
-import Properties from "@/pages/Properties";
-import Property from "@/pages/Property";
-import Documents from "@/pages/Documents";
-import Payments from "@/pages/Payments";
-import Settings from "@/pages/Settings";
-import Messages from "@/pages/Messages";
-import NotificationsPage from "@/pages/notifications/NotificationsPage";
+import Register from "@/pages/Register";
+import DeveloperDashboard from "@/pages/developer/Dashboard";
+import DeveloperProperties from "@/pages/developer/Properties";
+import DeveloperFavorites from "@/pages/developer/Favorites";
+import CommuneDashboard from "@/pages/commune/Dashboard";
 import CommuneNotifications from "@/pages/commune/Notifications";
-import OwnerNotifications from "@/pages/owner/Notifications";
+import OwnerDashboard from "@/pages/owner/Dashboard";
+import OwnerProperties from "@/pages/owner/Properties";
+import AdminDashboard from "@/pages/admin/Dashboard";
+import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
+import Notifications from "@/pages/Notifications";
+import Messages from "@/pages/Messages";
+import Support from "@/pages/Support";
+import Payment from "@/pages/Payment";
+import History from "@/pages/History";
+import { UserRole } from "@/types/auth";
 
 export const AppRoutes = () => {
-  const { isAuthenticated, profile } = useAuth();
-
-  if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    );
-  }
-
-  const NotificationsComponent = () => {
-    switch (profile?.role) {
-      case "commune":
-        return <CommuneNotifications />;
-      case "owner":
-        return <OwnerNotifications />;
-      default:
-        return <NotificationsPage />;
-    }
-  };
-
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
       <Route path="/map" element={<Map />} />
-      <Route path="/properties" element={<Properties />} />
-      <Route path="/property/:id" element={<Property />} />
-      <Route path="/documents" element={<Documents />} />
-      <Route path="/payments" element={<Payments />} />
-      <Route path="/settings" element={<Settings />} />
-      <Route path="/messages" element={<Messages />} />
-      <Route path="/notifications" element={<NotificationsComponent />} />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/support" element={<Support />} />
+      
+      {/* Common Dashboard Route - Will redirect to role-specific dashboard */}
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Developer Routes */}
+      <Route
+        path="/developer/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
+            <DeveloperDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/developer/properties"
+        element={
+          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
+            <DeveloperProperties />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/developer/favorites"
+        element={
+          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
+            <DeveloperFavorites />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Commune Routes */}
+      <Route
+        path="/commune/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["commune"] as UserRole[]}>
+            <CommuneDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/commune/notifications"
+        element={
+          <PrivateRoute allowedRoles={["commune"] as UserRole[]}>
+            <CommuneNotifications />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Owner Routes */}
+      <Route
+        path="/owner/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
+            <OwnerDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/owner/properties"
+        element={
+          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
+            <OwnerProperties />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Admin Routes */}
+      <Route
+        path="/admin/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["admin"] as UserRole[]}>
+            <AdminDashboard />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Common Protected Routes */}
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <Profile />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <Settings />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <Notifications />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/messages"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <Messages />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/payment"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune"] as UserRole[]}>
+            <Payment />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/history"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <History />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 };

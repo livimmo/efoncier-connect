@@ -24,9 +24,7 @@ const PropertiesPage = () => {
     showLabels: true,
     showBoundaries: true,
     showTerrain: false,
-    show3D: false,
-    center: { lat: 31.7917, lng: -7.0926 }, // Center of Morocco
-    zoom: 5,
+    show3D: false
   });
 
   // Transform mockParcels to match Property type

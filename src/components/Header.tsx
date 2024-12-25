@@ -51,9 +51,7 @@ export const Header = () => {
             <span className="sr-only">Rechercher</span>
           </Button>
           
-          {profile && !isMobile && (
-            <NotificationsArea />
-          )}
+          {profile && !isMobile && <NotificationsArea />}
           <ModeToggle />
           {profile ? (
             <UserMenu />

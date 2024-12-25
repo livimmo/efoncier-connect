@@ -1,6 +1,3 @@
-export type NotificationStatus = "read" | "unread";
-export type NotificationPriority = "high" | "medium" | "low";
-export type NotificationCategory = "payment" | "document" | "property" | "system" | "message";
 export type NotificationType = 
   | "PAYMENT" 
   | "FISCAL_STATUS" 
@@ -10,59 +7,79 @@ export type NotificationType =
   | "PROPERTY" 
   | "REPORT" 
   | "PROPERTY_UPDATE" 
-  | "NEW_PROPERTY" 
-  | "STATUS_UPDATE"
-  | "PAYMENT_DUE"
-  | "DOCUMENT_RECEIVED"
-  | "SYSTEM";
+  | "NEW_PROPERTY"
+  | "PAYMENT_DUE" 
+  | "DOCUMENT_RECEIVED" 
+  | "STATUS_UPDATE";
+
+export type NotificationPriority = "HIGH" | "MEDIUM" | "LOW";
+export type NotificationStatus = "READ" | "UNREAD";
+
+export interface NotificationMetadata {
+  propertyId?: string;
+  documentId?: string;
+  paymentId?: string;
+  amount?: number;
+  dueDate?: string;
+  location?: string;
+  titleDeedNumber?: string;
+  documentType?: string;
+  documentUrl?: string;
+  surface?: number;
+  price?: number;
+}
 
 export interface NotificationAction {
   label: string;
   icon?: React.ReactNode;
   action: () => void;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 }
 
-export interface NotificationActions {
-  primary?: NotificationAction;
-  secondary?: NotificationAction;
-}
-
-export interface NotificationMetadata {
+export interface NotificationFilter {
+  type: string;
+  status: string;
+  priority: string;
+  date: string | null;
+  location: string;
+  search: string;
   titleDeedNumber?: string;
-  amount?: number;
-  dueDate?: string;
-  documentType?: string;
-  documentUrl?: string;
-}
-
-export interface NotificationLocation {
-  city: string;
-  district: string;
 }
 
 export interface Notification {
   id: string;
+  type: NotificationType;
+  priority: NotificationPriority;
+  status: NotificationStatus;
   title: string;
   message: string;
-  status: NotificationStatus;
-  priority: NotificationPriority;
-  category: NotificationCategory;
-  type: NotificationType;
-  createdAt: string;
+  date: string;
   read: boolean;
   metadata?: NotificationMetadata;
-  location?: NotificationLocation;
-  actions?: NotificationActions;
+  actions?: {
+    primary?: NotificationAction;
+    secondary?: NotificationAction;
+  };
+  location?: {
+    city?: string;
+    district?: string;
+  };
 }
 
-export interface NotificationFilter {
-  status: NotificationStatus | "all";
-  priority: NotificationPriority | "all";
-  category?: NotificationCategory;
-  type: NotificationType | "all";
-  date?: string | null;
-  location: string | "all";
-  search: string;
-  titleDeedNumber?: string;
+export interface MapFilters {
+  region: string;
+  commune: string;
+  propertyType: string;
+  zoneType: string;
+  size: [number, number];
+  status: string;
+  ownerName: string;
+  titleDeedNumber: string;
+  lastPaymentDate: Date | null;
+  fiscalStatus: string;
+  maxPrice: number;
+  tnbReference: string;
+  searchQuery: string;
+  zoning: string;
+  paymentStatus: string;
+  tnbStatus: string;
 }

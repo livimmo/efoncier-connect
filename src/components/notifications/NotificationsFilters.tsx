@@ -18,38 +18,39 @@ export const NotificationsFilters = ({ filters, onChange }: NotificationsFilters
     <div className="space-y-6">
       <FilterSection title="Recherche">
         <Input
-          placeholder="Rechercher par mot-clé..."
+          placeholder="Rechercher par TF, ville, promoteur..."
           value={filters.search}
           onChange={(e) => handleFilterChange("search", e.target.value)}
         />
       </FilterSection>
 
-      <FilterSection title="Type">
+      <FilterSection title="Catégorie">
         <SelectFilter
           value={filters.type}
           onChange={(value) => handleFilterChange("type", value)}
           options={[
-            { value: "all", label: "Tous les types" },
-            { value: "PAYMENT", label: "💳 Paiements" },
-            { value: "DOCUMENT", label: "📑 Documents" },
-            { value: "MESSAGE", label: "💬 Messages" },
-            { value: "STATUS", label: "📊 Statuts" },
+            { value: "all", label: "Toutes les catégories" },
+            { value: "payment", label: "💳 Paiements TNB" },
+            { value: "fiscal_status", label: "🛡️ Statut Fiscal" },
+            { value: "message", label: "💬 Messages" },
+            { value: "document", label: "📁 Documents" },
           ]}
-          placeholder="Sélectionner un type"
+          placeholder="Sélectionner une catégorie"
         />
       </FilterSection>
 
-      <FilterSection title="Priorité">
+      <FilterSection title="Localisation">
         <SelectFilter
-          value={filters.priority}
-          onChange={(value) => handleFilterChange("priority", value)}
+          value={filters.location}
+          onChange={(value) => handleFilterChange("location", value)}
           options={[
-            { value: "all", label: "Toutes les priorités" },
-            { value: "HIGH", label: "⚠️ Urgent" },
-            { value: "MEDIUM", label: "📢 Important" },
-            { value: "LOW", label: "ℹ️ Information" },
+            { value: "all", label: "Toutes les zones" },
+            { value: "casablanca", label: "Casablanca" },
+            { value: "rabat", label: "Rabat" },
+            { value: "tanger", label: "Tanger" },
+            { value: "marrakech", label: "Marrakech" },
           ]}
-          placeholder="Sélectionner une priorité"
+          placeholder="Sélectionner une zone"
         />
       </FilterSection>
 
@@ -58,9 +59,9 @@ export const NotificationsFilters = ({ filters, onChange }: NotificationsFilters
           value={filters.status}
           onChange={(value) => handleFilterChange("status", value)}
           options={[
-            { value: "all", label: "Tous les statuts" },
-            { value: "unread", label: "🔴 Non lu" },
-            { value: "read", label: "✅ Lu" },
+            { value: "all", label: "Tous" },
+            { value: "unread", label: "Non lus" },
+            { value: "read", label: "Lus" },
           ]}
           placeholder="Sélectionner un statut"
         />

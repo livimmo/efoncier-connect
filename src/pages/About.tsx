@@ -1,24 +1,61 @@
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Header } from "@/components/Header";
+import { Card } from "@/components/ui/card";
+import { Building, Shield, Users } from "lucide-react";
+import { PartnersCarousel } from "@/components/map/PartnersCarousel";
 
 const About = () => {
   return (
-    <MainLayout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">À propos de eFoncier</h1>
-        <p className="text-lg mb-4">
-          eFoncier est une plateforme innovante dédiée à la gestion et au suivi des biens fonciers au Maroc.
-        </p>
-        <p className="text-lg mb-4">
-          Notre mission est de simplifier le processus de gestion foncière pour les propriétaires, les développeurs et les collectivités.
-        </p>
-        <p className="text-lg mb-4">
-          Grâce à notre interface conviviale et à nos outils avancés, nous permettons à nos utilisateurs de suivre leurs biens, de gérer les paiements et d'accéder à des informations précieuses sur le marché foncier.
-        </p>
-        <p className="text-lg mb-4">
-          Rejoignez-nous dans notre mission de rendre la gestion foncière plus accessible et efficace pour tous.
-        </p>
-      </div>
-    </MainLayout>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-16">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold mb-8 text-center">
+            À Propos d'eFoncier
+          </h1>
+          
+          <Card className="p-8 mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Notre Mission</h2>
+            <p className="text-gray-600 mb-6">
+              eFoncier est une initiative gouvernementale marocaine visant à moderniser
+              et digitaliser la gestion du foncier. Notre plateforme facilite
+              l'identification des terrains non bâtis, le recouvrement fiscal et
+              la mise en relation entre propriétaires et promoteurs.
+            </p>
+          </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card className="p-6 text-center">
+              <Shield className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <h3 className="text-lg font-semibold mb-2">Sécurité</h3>
+              <p className="text-gray-600">
+                Protection des données et transactions sécurisées
+              </p>
+            </Card>
+            
+            <Card className="p-6 text-center">
+              <Users className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <h3 className="text-lg font-semibold mb-2">Transparence</h3>
+              <p className="text-gray-600">
+                Accès équitable aux informations foncières
+              </p>
+            </Card>
+            
+            <Card className="p-6 text-center">
+              <Building className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <h3 className="text-lg font-semibold mb-2">Innovation</h3>
+              <p className="text-gray-600">
+                Technologies modernes au service du foncier
+              </p>
+            </Card>
+          </div>
+
+          <div className="mt-12">
+            <PartnersCarousel />
+          </div>
+        </div>
+      </main>
+    </div>
   );
 };
 

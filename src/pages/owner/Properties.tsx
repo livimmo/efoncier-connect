@@ -1,86 +1,117 @@
-import { useState } from "react";
-import { MapLayout } from "@/components/map/MapLayout";
-import { MapView } from "@/components/map/MapView";
-import { mockParcels } from "@/utils/mockData/parcels";
-import { useAuth } from "@/components/auth/AuthProvider";
-import { MapSettings } from "@/components/map/types";
-import { DeveloperPropertiesTable } from "@/components/developer/properties/DeveloperPropertiesTable";
+import { useState } from 'react';
+import { Header } from "@/components/Header";
+import { PropertiesHeader } from '@/components/owner/properties/PropertiesHeader';
+import { PropertiesStats } from '@/components/owner/properties/PropertiesStats';
+import { PropertiesTable } from '@/components/owner/properties/PropertiesTable';
+import { MapView } from '@/components/map/MapView';
+import { MapSettings } from '@/components/map/types';
+import { mockParcels } from '@/utils/mockData/parcels';
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { useToast } from "@/hooks/use-toast";
+import { Property } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Map as MapIcon, List } from "lucide-react";
-import { Parcel } from "@/utils/mockData/types";
+import { Plus } from "lucide-react";
+import { AddPropertyDialog } from "@/components/property/AddPropertyDialog";
 
-const Properties = () => {
-  const { profile } = useAuth();
-  const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
-  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+const PropertiesPage = () => {
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [showAddProperty, setShowAddProperty] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const mapSettings: MapSettings = {
-    center: { lat: 31.7917, lng: -7.0926 },
-    zoom: 5,
-    theme: "light",
-    unit: "metric",
+  const [settings] = useState<MapSettings>({
+    theme: 'light',
+    unit: 'metric',
     showLabels: true,
     showBoundaries: true,
     showTerrain: false,
     show3D: false
-  };
-
-  const handleParcelSelect = (parcel: Parcel, position?: { x: number; y: number }) => {
-    setSelectedParcelId(parcel.id);
-    if (position) {
-      setMarkerPosition(position);
-    }
-  };
-
-  const filteredParcels = mockParcels.filter(parcel => {
-    if (profile?.role === 'owner') {
-      return parcel.owner === profile.id;
-    }
-    return true;
   });
 
-  const selectedParcel = selectedParcelId ? mockParcels.find(p => p.id === selectedParcelId) : null;
+  // Transform mockParcels to match Property type
+  const properties: Property[] = mockParcels.map(parcel => ({
+    id: parcel.id,
+    title: parcel.title,
+    description: parcel.address,
+    property_type: parcel.type.toLowerCase(),
+    surface_area: parcel.surface,
+    location: parcel.location,
+    fiscal_status: "under_review",
+    status: "pending",
+    is_for_sale: false,
+    price: parcel.price || 0,
+    owner_id: parcel.owner,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }));
+
+  const selectedParcel = selectedParcelId 
+    ? mockParcels.find(p => p.id === selectedParcelId) 
+    : null;
+
+  const handleParcelSelect = (parcelId: string | null, position?: { x: number; y: number }) => {
+    setSelectedParcelId(parcelId);
+    if (position) {
+      setMarkerPosition(position);
+    } else {
+      setMarkerPosition(null);
+    }
+  };
 
   return (
-    <div className="min-h-screen">
-      <div className="p-4 flex justify-end gap-2">
-        <Button
-          variant={viewMode === 'map' ? 'default' : 'outline'}
-          onClick={() => setViewMode('map')}
-        >
-          <MapIcon className="h-4 w-4 mr-2" />
-          Carte
-        </Button>
-        <Button
-          variant={viewMode === 'list' ? 'default' : 'outline'}
-          onClick={() => setViewMode('list')}
-        >
-          <List className="h-4 w-4 mr-2" />
-          Liste
-        </Button>
-      </div>
-      <MapLayout>
-        <div className="h-[600px]">
-          {viewMode === 'map' ? (
-            <MapView
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <PropertiesHeader />
+          <Button
+            onClick={() => setShowAddProperty(true)}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Ajouter un Terrain</span>
+          </Button>
+        </div>
+        
+        <PropertiesStats data={properties} />
+        
+        <div className="grid lg:grid-cols-2 gap-8 mt-8">
+          <div className="space-y-4">
+            <PropertiesTable 
+              data={properties}
+              isLoading={isLoading}
+            />
+          </div>
+
+          <div className="h-[600px] relative rounded-lg border">
+            <MapView 
               selectedParcel={selectedParcel}
               markerPosition={markerPosition}
-              onParcelSelect={handleParcelSelect}
-              filteredParcels={filteredParcels}
-              settings={mapSettings}
+              onParcelSelect={(parcel, position) => {
+                if (parcel) {
+                  handleParcelSelect(parcel.id, position);
+                } else {
+                  handleParcelSelect(null);
+                }
+              }}
+              filteredParcels={mockParcels}
+              settings={settings}
               mapInstance={mapInstance}
               setMapInstance={setMapInstance}
-              userRole={profile?.role}
             />
-          ) : (
-            <DeveloperPropertiesTable data={filteredParcels} />
-          )}
+          </div>
         </div>
-      </MapLayout>
+
+        <AddPropertyDialog 
+          open={showAddProperty}
+          onOpenChange={setShowAddProperty}
+        />
+      </main>
     </div>
   );
 };
 
-export default Properties;
+export default PropertiesPage;

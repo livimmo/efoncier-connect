@@ -11,6 +11,7 @@ const Notifications = () => {
     date: null,
     location: "all",
     search: "",
+    titleDeedNumber: "",
     priority: "all"
   });
 

@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { ZONE_TYPES } from "./constants";
+import { ZONING_TYPES } from "./constants";
 
 interface ZoningFilterProps {
   value: string;
@@ -16,7 +16,7 @@ export const ZoningFilter = ({ value, onChange }: ZoningFilterProps) => {
           <SelectValue placeholder="Sélectionner un zonage" />
         </SelectTrigger>
         <SelectContent>
-          {Object.entries(ZONE_TYPES).map(([key, label]) => (
+          {Object.entries(ZONING_TYPES).map(([key, label]) => (
             <SelectItem key={key} value={key}>
               {label}
             </SelectItem>

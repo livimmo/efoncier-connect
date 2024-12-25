@@ -1,3 +1,19 @@
+export interface Property {
+  created_at: string;
+  description: string;
+  fiscal_status: "compliant" | "non_compliant" | "under_review";
+  id: string;
+  is_for_sale: boolean;
+  location: any;
+  owner_id: string;
+  price: number;
+  property_type: string;
+  status: string;
+  surface_area: number;
+  title: string;
+  updated_at: string;
+}
+
 export interface MapFilters {
   region: string;
   commune: string;
@@ -19,32 +35,29 @@ export interface MapFilters {
   propertyStatus: string;
 }
 
-export interface MapSettings {
-  showLabels: boolean;
-  showBoundaries: boolean;
-  showTerrain: boolean;
-  show3D: boolean;
-  theme: 'light' | 'dark';
-  unit: 'metric' | 'imperial';
-  center: { lat: number; lng: number };
-  zoom: number;
-}
-
 export interface MapFiltersProps {
   onRegionChange: (regionId: string) => void;
   onCityChange: (cityName: string) => void;
   onDistrictChange: (districtName: string) => void;
   filters: MapFilters;
   setFilters: (filters: MapFilters) => void;
-  onApplyFilters: () => void;
+  onApplyFilters?: () => void;
   userRole?: string;
-  isCollapsed?: boolean;
-  onToggleCollapse?: () => void;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
   mapInstance: google.maps.Map | null;
 }
 
-export interface MapMobileControlsProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onLocate: () => void;
+export interface MapSettings {
+  center: {
+    lat: number;
+    lng: number;
+  };
+  zoom: number;
+  showLabels?: boolean;
+  showBoundaries?: boolean;
+  showTerrain?: boolean;
+  show3D?: boolean;
+  theme?: "light" | "dark";
+  unit?: string;
 }

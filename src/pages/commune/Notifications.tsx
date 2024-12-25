@@ -26,11 +26,11 @@ const CommuneNotifications = () => {
     {
       id: "1",
       type: "PAYMENT",
-      priority: "high",
-      status: "unread",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Retards de Paiement TNB",
       message: "20 biens dans le quartier Ain Sebaa ont dépassé la date limite de paiement de la TNB.",
-      createdAt: new Date().toISOString(),
+      date: new Date().toISOString(),
       read: false,
       metadata: {
         titleDeedNumber: "Multiple",
@@ -59,11 +59,11 @@ const CommuneNotifications = () => {
     {
       id: "2",
       type: "FISCAL_STATUS",
-      priority: "medium",
-      status: "read",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour de statut fiscal",
       message: "Le bien TF-12345 a été régularisé avec succès.",
-      createdAt: new Date(Date.now() - 86400000).toISOString(),
+      date: new Date(Date.now() - 86400000).toISOString(),
       read: true,
       metadata: {
         titleDeedNumber: "TF-12345",
@@ -72,11 +72,11 @@ const CommuneNotifications = () => {
     {
       id: "3",
       type: "MESSAGE",
-      priority: "low",
-      status: "unread",
+      priority: "LOW",
+      status: "UNREAD",
       title: "Nouvelle demande d'information",
       message: "Un propriétaire a envoyé une demande d'informations sur la régularisation du bien TF-33445.",
-      createdAt: new Date(Date.now() - 172800000).toISOString(),
+      date: new Date(Date.now() - 172800000).toISOString(),
       read: false,
       metadata: {
         titleDeedNumber: "TF-33445",
@@ -96,11 +96,11 @@ const CommuneNotifications = () => {
     {
       id: "4",
       type: "REPORT",
-      priority: "medium",
-      status: "unread",
+      priority: "MEDIUM",
+      status: "UNREAD",
       title: "Nouveau rapport disponible",
       message: "Le rapport mensuel sur les statuts fiscaux est prêt à être consulté.",
-      createdAt: new Date(Date.now() - 259200000).toISOString(),
+      date: new Date(Date.now() - 259200000).toISOString(),
       read: false,
       actions: {
         primary: {

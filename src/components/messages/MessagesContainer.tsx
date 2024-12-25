@@ -26,8 +26,8 @@ export const MessagesContainer = () => {
       <div className="mt-6 flex gap-6">
         <div className={`${selectedConversation ? 'hidden md:block w-1/3' : 'w-full'}`}>
           <MessagesList 
-            onMessageSelect={handleSelectConversation}
-            messages={[]} // We'll need to pass the messages prop
+            onSelectConversation={handleSelectConversation}
+            selectedConversationId={selectedConversation}
           />
         </div>
         {selectedConversation && (
