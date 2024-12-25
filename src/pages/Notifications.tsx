@@ -1,25 +1,32 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NotificationFilters } from "@/components/notifications/NotificationFilters";
+import { NotificationHeader } from "@/components/notifications/NotificationHeader";
 import { NotificationList } from "@/components/notifications/NotificationList";
-import type { Notification } from "@/components/notifications/types";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import type { Notification, NotificationFilter } from "@/components/notifications/types";
 
 const Notifications = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState<"all" | "unread" | "important">("all");
+  const [activeFilters, setActiveFilters] = useState<NotificationFilter>({
+    type: "all",
+    status: "all",
+    date: null,
+    search: "",
+  });
+  
+  const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  // Données de démonstration pour les notifications
+  // Mock notifications - à remplacer par des données réelles
   const notifications: Notification[] = [
     {
       id: "1",
       type: "payment",
       priority: "high",
-      title: "Paiement en attente",
-      message: "Vous avez une taxe foncière en attente de paiement pour la parcelle #12345",
+      title: "TNB en attente de paiement",
+      message: "Votre TNB est due avant le 30 juin pour le bien TF-12345",
       date: new Date().toISOString(),
       read: false,
       actions: {
@@ -39,7 +46,7 @@ const Notifications = () => {
       type: "property",
       priority: "medium",
       title: "Mise à jour de statut",
-      message: "Le statut de votre parcelle à Ain Sebaa a été mis à jour",
+      message: "Le statut de votre bien TF-56789 a été mis à jour",
       date: new Date(Date.now() - 86400000).toISOString(),
       read: true,
     },
@@ -48,12 +55,12 @@ const Notifications = () => {
       type: "message",
       priority: "low",
       title: "Nouveau message",
-      message: "Vous avez reçu un nouveau message concernant votre demande d'information",
+      message: "Un promoteur a envoyé un message concernant votre bien TF-12345",
       date: new Date(Date.now() - 172800000).toISOString(),
       read: false,
       actions: {
         primary: {
-          label: "Lire le message",
+          label: "Voir le message",
           action: () => {
             toast({
               title: "Message",
@@ -65,66 +72,48 @@ const Notifications = () => {
     },
   ];
 
-  const filteredNotifications = notifications.filter((notification) => {
-    const matchesSearch = notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notification.message.toLowerCase().includes(searchQuery.toLowerCase());
+  const handleMarkAllAsRead = () => {
+    toast({
+      title: "Succès",
+      description: "Toutes les notifications ont été marquées comme lues",
+    });
+  };
 
-    switch (activeFilter) {
-      case "unread":
-        return !notification.read && matchesSearch;
-      case "important":
-        return notification.priority === "high" && matchesSearch;
-      default:
-        return matchesSearch;
-    }
-  });
+  const handleRefresh = () => {
+    toast({
+      title: "Actualisation",
+      description: "Les notifications ont été actualisées",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-4 py-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold">Notifications</h1>
-            <span className="text-sm text-muted-foreground">
-              {filteredNotifications.filter(n => !n.read).length} non lues
-            </span>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <NotificationHeader 
+            onMarkAllAsRead={handleMarkAllAsRead}
+            onRefresh={handleRefresh}
+            unreadCount={notifications.filter(n => !n.read).length}
+          />
           
-          <div className="mb-6">
-            <Input
-              placeholder="Rechercher dans les notifications..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          <Tabs defaultValue="all" className="w-full" onValueChange={(value) => setActiveFilter(value as typeof activeFilter)}>
-            <TabsList className="w-full justify-start mb-6">
-              <TabsTrigger value="all">Toutes</TabsTrigger>
-              <TabsTrigger value="unread">Non lues</TabsTrigger>
-              <TabsTrigger value="important">Importantes</TabsTrigger>
-            </TabsList>
-
+          <div className="mt-6 grid gap-6 md:grid-cols-[240px_1fr]">
+            {!isMobile && (
+              <aside className="space-y-6">
+                <NotificationFilters
+                  filters={activeFilters}
+                  onChange={setActiveFilters}
+                />
+              </aside>
+            )}
+            
             <ScrollArea className="h-[calc(100vh-300px)]">
-              <TabsContent value="all">
-                <NotificationList notifications={filteredNotifications} />
-              </TabsContent>
-
-              <TabsContent value="unread">
-                <NotificationList 
-                  notifications={filteredNotifications.filter(n => !n.read)} 
-                />
-              </TabsContent>
-
-              <TabsContent value="important">
-                <NotificationList 
-                  notifications={filteredNotifications.filter(n => n.priority === "high")} 
-                />
-              </TabsContent>
+              <NotificationList 
+                notifications={notifications}
+                filters={activeFilters}
+              />
             </ScrollArea>
-          </Tabs>
+          </div>
         </div>
       </main>
     </div>

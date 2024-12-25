@@ -11,6 +11,7 @@ import Messages from "@/pages/Messages";
 import Dashboard from "@/pages/Dashboard";
 import History from "@/pages/History";
 import Payment from "@/pages/Payment";
+import Notifications from "@/pages/Notifications";
 import OwnerDashboard from "@/pages/owner/Dashboard";
 import OwnerProfile from "@/pages/owner/Profile";
 import OwnerProperties from "@/pages/owner/Properties";
@@ -37,6 +38,7 @@ export const AppRoutes = () => {
       <Route path="/messages" element={<PrivateRoute><Messages /></PrivateRoute>} />
       <Route path="/history" element={<PrivateRoute><History /></PrivateRoute>} />
       <Route path="/payments" element={<PrivateRoute><Payment /></PrivateRoute>} />
+      <Route path="/notifications" element={<PrivateRoute><Notifications /></PrivateRoute>} />
 
       {/* Routes spécifiques aux propriétaires */}
       <Route path="/owner">
