@@ -108,8 +108,6 @@ export const HeroSlider = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
-      onMouseEnter={() => setIsPlaying(false)}
-      onMouseLeave={() => setIsPlaying(true)}
       tabIndex={0}
       role="region"
       aria-label="Carrousel de contenu"
