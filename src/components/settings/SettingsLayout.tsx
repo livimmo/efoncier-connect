@@ -1,46 +1,43 @@
-import { useAuth } from "@/components/auth/AuthProvider";
-import { Separator } from "@/components/ui/separator";
-import { SettingsSidebar } from "./SettingsSidebar";
+import { useState } from "react";
 import { PersonalSettings } from "./sections/PersonalSettings";
 import { SecuritySettings } from "./sections/SecuritySettings";
 import { NotificationSettings } from "./sections/NotificationSettings";
 import { AdvancedSettings } from "./sections/AdvancedSettings";
-import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type SettingsSection = "personal" | "security" | "notifications" | "advanced";
 
 export const SettingsLayout = () => {
-  const { profile } = useAuth();
-  const [currentSection, setCurrentSection] = useState<SettingsSection>("personal");
+  const [activeSection, setActiveSection] = useState<SettingsSection>("personal");
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex flex-col space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Paramètres du Compte</h1>
-          <p className="text-muted-foreground">
-            Personnalisez vos préférences et informations personnelles.
-          </p>
-        </div>
-        <Separator />
+      <h1 className="text-2xl font-bold mb-6">Paramètres</h1>
+      
+      <Tabs value={activeSection} onValueChange={(value) => setActiveSection(value as SettingsSection)}>
+        <TabsList className="mb-6">
+          <TabsTrigger value="personal">Profil Personnel</TabsTrigger>
+          <TabsTrigger value="security">Sécurité</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+          <TabsTrigger value="advanced">Avancé</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="personal">
+          <PersonalSettings />
+        </TabsContent>
         
-        <div className="flex flex-col md:flex-row gap-8">
-          <aside className="md:w-1/4">
-            <SettingsSidebar 
-              currentSection={currentSection}
-              onSectionChange={setCurrentSection}
-              userRole={profile?.role}
-            />
-          </aside>
-          
-          <main className="flex-1">
-            {currentSection === "personal" && <PersonalSettings />}
-            {currentSection === "security" && <SecuritySettings />}
-            {currentSection === "notifications" && <NotificationSettings />}
-            {currentSection === "advanced" && <AdvancedSettings />}
-          </main>
-        </div>
-      </div>
+        <TabsContent value="security">
+          <SecuritySettings />
+        </TabsContent>
+        
+        <TabsContent value="notifications">
+          <NotificationSettings />
+        </TabsContent>
+        
+        <TabsContent value="advanced">
+          <AdvancedSettings />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
