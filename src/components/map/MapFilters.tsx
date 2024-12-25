@@ -10,7 +10,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 import { REGIONS } from "@/utils/mockData/locations";
 
 export const MapFilters = ({ 
@@ -27,7 +26,6 @@ export const MapFilters = ({
 }: MapFiltersProps) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const years = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString());
-  const { toast } = useToast();
 
   const handleSearch = (query: string) => {
     setFilters?.({
@@ -47,10 +45,6 @@ export const MapFilters = ({
         if (selectedRegion) {
           mapInstance.panTo({ lat: selectedRegion.center.lat, lng: selectedRegion.center.lng });
           mapInstance.setZoom(10);
-          toast({
-            title: "Carte mise à jour",
-            description: `Vue centrée sur ${selectedRegion.name}`,
-          });
         }
         break;
 
@@ -65,10 +59,6 @@ export const MapFilters = ({
           const coords = cityCoordinates[value as keyof typeof cityCoordinates];
           mapInstance.panTo({ lat: coords.lat, lng: coords.lng });
           mapInstance.setZoom(coords.zoom);
-          toast({
-            title: "Carte mise à jour",
-            description: `Vue centrée sur ${value}`,
-          });
         }
         break;
     }
@@ -109,10 +99,6 @@ export const MapFilters = ({
     if (mapInstance) {
       mapInstance.panTo({ lat: 33.5731, lng: -7.5898 }); // Default center
       mapInstance.setZoom(12); // Default zoom
-      toast({
-        title: "Filtres réinitialisés",
-        description: "La carte a été réinitialisée",
-      });
     }
     
     onApplyFilters?.();
