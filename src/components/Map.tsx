@@ -36,7 +36,8 @@ const Map = () => {
     searchQuery: '',
     zoning: '',
     paymentStatus: '',
-    tnbStatus: ''
+    tnbStatus: '',
+    propertyStatus: ''
   });
 
   const handleParcelSelect = (parcelId: string) => {

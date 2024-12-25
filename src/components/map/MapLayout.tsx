@@ -32,7 +32,8 @@ export const MapLayout = ({
     searchQuery: '',
     zoning: '',
     paymentStatus: '',
-    tnbStatus: ''
+    tnbStatus: '',
+    propertyStatus: ''
   });
 
   return (

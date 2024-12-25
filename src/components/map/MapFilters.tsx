@@ -101,7 +101,8 @@ export const MapFilters = ({
         searchQuery: '',
         zoning: '',
         paymentStatus: '',
-        tnbStatus: ''
+        tnbStatus: '',
+        propertyStatus: ''
       });
     }
     
