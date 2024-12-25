@@ -1,5 +1,6 @@
 import { GoogleMap } from './GoogleMap';
 import { DraggableParcelInfo } from './DraggableParcelInfo';
+import { MapLegend } from './MapLegend';
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapSettings } from './types';
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +29,19 @@ export const MapView = ({
 }: MapViewProps) => {
   const { toast } = useToast();
 
+  const getMarkerColor = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return '#10B981'; // Green for available
+      case 'IN_TRANSACTION':
+        return '#F59E0B'; // Orange for in transaction
+      case 'SOLD':
+        return '#EF4444'; // Red for sold
+      default:
+        return '#6B7280'; // Gray default
+    }
+  };
+
   return (
     <div className="relative flex-1 h-full">
       <div className="absolute inset-0">
@@ -37,8 +51,11 @@ export const MapView = ({
           theme={settings.theme}
           setMapInstance={setMapInstance}
           userRole={userRole}
+          getMarkerColor={getMarkerColor}
         />
       </div>
+
+      <MapLegend className="hidden md:block" />
 
       {selectedParcel && markerPosition && (
         <DraggableParcelInfo

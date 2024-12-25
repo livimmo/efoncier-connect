@@ -12,6 +12,7 @@ import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
+import { LoginDialog } from './auth/LoginDialog';
 
 const Map = () => {
   const { profile } = useAuth();
@@ -19,6 +20,7 @@ const Map = () => {
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
@@ -41,11 +43,7 @@ const Map = () => {
 
   const handleParcelSelect = (parcelId: string) => {
     if (!profile) {
-      toast({
-        title: "Connexion requise",
-        description: "Veuillez vous connecter pour accéder à plus de détails.",
-        variant: "destructive",
-      });
+      setIsLoginDialogOpen(true);
       return;
     }
   };
@@ -78,10 +76,7 @@ const Map = () => {
   };
 
   const handleApplyFilters = () => {
-    toast({
-      title: "Filtres appliqués",
-      description: "Les résultats ont été mis à jour selon vos critères.",
-    });
+    // Filter logic here
   };
 
   return (
@@ -157,6 +152,11 @@ const Map = () => {
           )}
         </div>
       </div>
+
+      <LoginDialog 
+        open={isLoginDialogOpen}
+        onOpenChange={setIsLoginDialogOpen}
+      />
     </div>
   );
 };

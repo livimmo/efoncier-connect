@@ -27,25 +27,23 @@ export const GoogleMap = ({
   userRole,
   center,
   zoom = DEFAULT_ZOOM,
-  getMarkerColor
+  getMarkerColor = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return '#10B981';
+      case 'PENDING':
+        return '#F59E0B';
+      case 'OVERDUE':
+        return '#EF4444';
+      default:
+        return '#6B7280';
+    }
+  }
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
-
-  const defaultMarkerColor = (status: string) => {
-    switch (status) {
-      case 'PAID':
-        return '#10B981'; // Green for paid
-      case 'PENDING':
-        return '#F59E0B'; // Orange for pending
-      case 'OVERDUE':
-        return '#EF4444'; // Red for overdue
-      default:
-        return '#6B7280'; // Gray default
-    }
-  };
 
   useEffect(() => {
     const initMap = async () => {
@@ -112,12 +110,27 @@ export const GoogleMap = ({
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor ? getMarkerColor(parcel.taxStatus) : defaultMarkerColor(parcel.taxStatus),
+          fillColor: getMarkerColor(parcel.status),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
           scale: 8,
         },
+      });
+
+      // Add hover effect
+      marker.addListener('mouseover', () => {
+        marker.setIcon({
+          ...marker.getIcon() as google.maps.Symbol,
+          scale: 10,
+        });
+      });
+
+      marker.addListener('mouseout', () => {
+        marker.setIcon({
+          ...marker.getIcon() as google.maps.Symbol,
+          scale: 8,
+        });
       });
 
       marker.addListener("click", () => {
