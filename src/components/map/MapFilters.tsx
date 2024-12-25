@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { REGIONS } from "@/utils/mockData/locations";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -42,14 +43,26 @@ export const MapFilters = ({
     // Animate map based on filter type
     switch (filterType) {
       case 'region':
-        const regionCoords = {
-          'casablanca': { lat: 33.5731, lng: -7.5898, zoom: 12 },
-          'rabat': { lat: 34.0209, lng: -6.8416, zoom: 12 },
-          'marrakech': { lat: 31.6295, lng: -7.9811, zoom: 12 }
+        const selectedRegion = REGIONS.find(r => r.id === value);
+        if (selectedRegion) {
+          mapInstance.panTo({ lat: selectedRegion.center.lat, lng: selectedRegion.center.lng });
+          mapInstance.setZoom(10);
+          toast({
+            title: "Carte mise à jour",
+            description: `Vue centrée sur ${selectedRegion.name}`,
+          });
+        }
+        break;
+
+      case 'city':
+        const cityCoordinates = {
+          'Casablanca': { lat: 33.5731, lng: -7.5898, zoom: 12 },
+          'Rabat': { lat: 34.0209, lng: -6.8416, zoom: 12 },
+          'Marrakech': { lat: 31.6295, lng: -7.9811, zoom: 12 }
         };
         
-        if (value in regionCoords) {
-          const coords = regionCoords[value as keyof typeof regionCoords];
+        if (value in cityCoordinates) {
+          const coords = cityCoordinates[value as keyof typeof cityCoordinates];
           mapInstance.panTo({ lat: coords.lat, lng: coords.lng });
           mapInstance.setZoom(coords.zoom);
           toast({
@@ -57,24 +70,6 @@ export const MapFilters = ({
             description: `Vue centrée sur ${value}`,
           });
         }
-        break;
-
-      case 'propertyType':
-        // Zoom out slightly to show all properties of this type
-        mapInstance.setZoom(11);
-        toast({
-          title: "Filtre appliqué",
-          description: `Affichage des propriétés de type: ${value}`,
-        });
-        break;
-
-      case 'status':
-        // Zoom out to show all properties with this status
-        mapInstance.setZoom(10);
-        toast({
-          title: "Filtre appliqué",
-          description: `Affichage des propriétés avec le statut: ${value}`,
-        });
         break;
     }
 
