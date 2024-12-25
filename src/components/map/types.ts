@@ -22,6 +22,7 @@ export interface MapFilters {
   tnbReference: string;
   searchQuery: string;
   zoning: string;
+  paymentStatus: string;
 }
 
 export interface MapFiltersProps {

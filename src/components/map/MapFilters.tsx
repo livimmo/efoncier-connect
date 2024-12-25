@@ -1,16 +1,10 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { REGIONS } from "@/utils/mockData/locations";
-import { MapFiltersProps } from "./types";
-import { SmartSearchBar } from "./filters/SmartSearchBar";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { SmartSearchBar } from "./filters/SmartSearchBar";
+import { BasicFilters } from "./filters/BasicFilters";
+import { PropertyFilters } from "./filters/PropertyFilters";
+import { PaymentFilters } from "./filters/PaymentFilters";
+import { MapFiltersProps } from "./types";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -45,11 +39,14 @@ export const MapFilters = ({
         maxPrice: 0,
         tnbReference: '',
         searchQuery: '',
-        zoning: ''
+        zoning: '',
+        paymentStatus: ''
       });
     }
     onApplyFilters?.();
   };
+
+  if (!filters || !setFilters) return null;
 
   return (
     <Card className="h-fit">
@@ -66,131 +63,23 @@ export const MapFilters = ({
           className="mb-6"
         />
 
-        <div className="space-y-2">
-          <Label>Région</Label>
-          <Select 
-            value={filters?.region} 
-            onValueChange={(value) => {
-              setFilters?.({ ...filters!, region: value });
-              onRegionChange?.(value);
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner une région" />
-            </SelectTrigger>
-            <SelectContent>
-              {REGIONS.map((region) => (
-                <SelectItem key={region.id} value={region.id}>
-                  {region.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <BasicFilters
+          filters={filters}
+          onRegionChange={onRegionChange!}
+          onCityChange={onCityChange!}
+          setFilters={setFilters}
+        />
 
-        <div className="space-y-2">
-          <Label>Ville</Label>
-          <Select
-            value={filters?.commune}
-            onValueChange={(value) => {
-              setFilters?.({ ...filters!, commune: value });
-              onCityChange?.(value);
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner une ville" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Casablanca">Casablanca</SelectItem>
-              <SelectItem value="Rabat">Rabat</SelectItem>
-              <SelectItem value="Marrakech">Marrakech</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <PropertyFilters
+          filters={filters}
+          setFilters={setFilters}
+        />
 
-        <div className="space-y-2">
-          <Label>Type de propriété</Label>
-          <Select
-            value={filters?.propertyType}
-            onValueChange={(value) => setFilters?.({ ...filters!, propertyType: value })}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner un type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="RESIDENTIAL">Résidentiel</SelectItem>
-              <SelectItem value="COMMERCIAL">Commercial</SelectItem>
-              <SelectItem value="INDUSTRIAL">Industriel</SelectItem>
-              <SelectItem value="AGRICULTURAL">Agricole</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-4">
-          <Label>Superficie (m²)</Label>
-          <Slider
-            defaultValue={[0, 15000]}
-            max={15000}
-            step={100}
-            value={filters?.size}
-            onValueChange={(value) => setFilters?.({ ...filters!, size: value as [number, number] })}
-            className="mt-2"
-          />
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>0 m²</span>
-            <span>15 000 m²</span>
-          </div>
-        </div>
-
-        {userRole === 'commune' && (
-          <>
-            <div className="space-y-2">
-              <Label>Statut fiscal</Label>
-              <Select
-                value={filters?.fiscalStatus}
-                onValueChange={(value) => setFilters?.({ ...filters!, fiscalStatus: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner un statut" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="PAID">Payé</SelectItem>
-                  <SelectItem value="PENDING">En attente</SelectItem>
-                  <SelectItem value="OVERDUE">En retard</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Dernière date de paiement</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !filters?.lastPaymentDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {filters?.lastPaymentDate ? (
-                      format(filters.lastPaymentDate, "PPP")
-                    ) : (
-                      <span>Sélectionner une date</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={filters?.lastPaymentDate || undefined}
-                    onSelect={(date) => setFilters?.({ ...filters!, lastPaymentDate: date })}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </>
-        )}
+        <PaymentFilters
+          filters={filters}
+          setFilters={setFilters}
+          userRole={userRole}
+        />
 
         {onApplyFilters && (
           <Button 
