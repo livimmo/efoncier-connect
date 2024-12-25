@@ -59,6 +59,35 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
     },
   });
 
+  const handleAuthError = (error: any) => {
+    console.error("Registration error:", error);
+    let errorMessage = "Une erreur est survenue lors de l'inscription.";
+
+    switch (error.message) {
+      case "User already registered":
+        errorMessage = "Cette adresse email est déjà utilisée.";
+        break;
+      case "Password should be at least 6 characters":
+        errorMessage = "Le mot de passe doit contenir au moins 6 caractères.";
+        break;
+      case "Email not confirmed":
+        errorMessage = "Veuillez vérifier votre email pour confirmer votre compte.";
+        break;
+      case "Invalid email":
+        errorMessage = "L'adresse email n'est pas valide.";
+        break;
+      case "email_provider_disabled":
+        errorMessage = "L'authentification par email est désactivée. Veuillez contacter l'administrateur.";
+        break;
+    }
+
+    toast({
+      variant: "destructive",
+      title: "Erreur lors de l'inscription",
+      description: errorMessage,
+    });
+  };
+
   const onSubmit = async (values: RegisterFormData) => {
     try {
       setIsLoading(true);
@@ -77,12 +106,7 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
       });
 
       if (error) {
-        console.error("Registration error:", error);
-        toast({
-          variant: "destructive",
-          title: "Erreur lors de l'inscription",
-          description: error.message,
-        });
+        handleAuthError(error);
         return;
       }
 
@@ -95,12 +119,7 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
         navigate("/dashboard");
       }
     } catch (error: any) {
-      console.error("Registration error:", error);
-      toast({
-        variant: "destructive",
-        title: "Erreur lors de l'inscription",
-        description: "Une erreur est survenue. Veuillez réessayer.",
-      });
+      handleAuthError(error);
     } finally {
       setIsLoading(false);
     }
