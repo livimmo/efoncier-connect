@@ -69,3 +69,31 @@ export interface MapFilters {
   paymentStatus: string;
   tnbStatus: string;
 }
+
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+  showLabels: boolean;
+  showBoundaries: boolean;
+  showTerrain: boolean;
+  show3D: boolean;
+}
+
+export interface MapFiltersProps {
+  onRegionChange?: (regionId: string) => void;
+  onCityChange?: (city: string) => void;
+  onDistrictChange?: (district: string) => void;
+  filters?: MapFilters;
+  setFilters?: (filters: MapFilters) => void;
+  onApplyFilters?: () => void;
+  userRole?: string;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
+  mapInstance?: google.maps.Map | null;
+}
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
+}
