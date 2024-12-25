@@ -1,23 +1,22 @@
-import { useEffect, useState } from "react";
-import GoogleMap from "./GoogleMap";
-import { DraggableParcelInfo } from "./DraggableParcelInfo";
-import { Parcel } from "@/utils/mockData/types";
-import { UserRole } from "@/types/auth";
+import { GoogleMap } from './GoogleMap';
+import { DraggableParcelInfo } from './DraggableParcelInfo';
+import type { Parcel } from '@/utils/mockData/types';
+import type { MapSettings } from './types';
+import { useToast } from "@/hooks/use-toast";
+import { UserRole } from '@/types/auth';
 
 interface MapViewProps {
-  onMarkerClick: (parcel: Parcel, position: { x: number; y: number }) => void;
   selectedParcel: Parcel | null;
   markerPosition: { x: number; y: number } | null;
-  onParcelSelect: (parcelId: string) => void;
+  onParcelSelect: (parcel: Parcel | null, position?: { x: number; y: number }) => void;
   filteredParcels: Parcel[];
-  settings: any;
+  settings: MapSettings;
   mapInstance: google.maps.Map | null;
   setMapInstance: (map: google.maps.Map) => void;
   userRole?: UserRole;
 }
 
 export const MapView = ({
-  onMarkerClick,
   selectedParcel,
   markerPosition,
   onParcelSelect,
@@ -25,37 +24,40 @@ export const MapView = ({
   settings,
   mapInstance,
   setMapInstance,
-  userRole
+  userRole,
 }: MapViewProps) => {
   const getMarkerColor = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return '#10B981';
+        return '#10B981'; // Vert pour disponible
       case 'SOLD':
-        return '#ea384c';
+        return '#EF4444'; // Rouge pour vendu
       case 'IN_TRANSACTION':
-        return '#F59E0B';
+        return '#F59E0B'; // Orange pour en transaction
       default:
-        return '#6B7280';
+        return '#6B7280'; // Gris par défaut
     }
   };
 
   return (
-    <div className="relative w-full h-full">
-      <GoogleMap
-        onMarkerClick={onMarkerClick}
-        parcels={filteredParcels}
-        theme={settings.theme}
-        setMapInstance={setMapInstance}
-        userRole={userRole}
-        getMarkerColor={getMarkerColor}
-      />
-      
+    <div className="relative flex-1 h-full">
+      <div className="absolute inset-0">
+        <GoogleMap 
+          onMarkerClick={(parcel, position) => onParcelSelect(parcel, position)}
+          parcels={filteredParcels}
+          theme={settings.theme}
+          setMapInstance={setMapInstance}
+          userRole={userRole}
+          getMarkerColor={getMarkerColor}
+        />
+      </div>
+
       {selectedParcel && markerPosition && (
         <DraggableParcelInfo
           parcel={selectedParcel}
-          onClose={() => onParcelSelect("")}
+          onClose={() => onParcelSelect(null)}
           markerPosition={markerPosition}
+          className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
           userRole={userRole}
         />
       )}

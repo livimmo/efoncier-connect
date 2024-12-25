@@ -18,16 +18,15 @@ interface MapContainerProps {
   onParcelSelect: (parcelId: string) => void;
   mapInstance: google.maps.Map | null;
   setMapInstance: (map: google.maps.Map) => void;
-  parcels: Parcel[];
 }
 
-export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInstance, parcels }: MapContainerProps) => {
+export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInstance }: MapContainerProps) => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
-
+  
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
     commune: '',
@@ -109,7 +108,6 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
           mapInstance={mapInstance}
           setMapInstance={setMapInstance}
           userRole={userRole}
-          onMarkerClick={(parcel, position) => handleParcelSelect(parcel, position)}
         />
       </div>
 

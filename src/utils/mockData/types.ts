@@ -58,8 +58,6 @@ export interface Parcel {
   status: PropertyStatus;
   fiscalStatus: FiscalStatus;
   location: Location;
-  latitude: number; // Added
-  longitude: number; // Added
   ownerName: string;
   phone?: string;
   email?: string;
