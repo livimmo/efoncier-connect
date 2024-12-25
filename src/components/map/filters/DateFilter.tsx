@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DateFilterProps } from "./types";
+import { DateFilterProps } from "../types";
 
 export const DateFilter = ({ value, onChange }: DateFilterProps) => {
   return (

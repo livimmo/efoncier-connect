@@ -47,3 +47,8 @@ export interface MapViewProps {
   setMapInstance: (map: google.maps.Map) => void;
   mapCenter: { lat: number; lng: number; zoom: number };
 }
+
+export interface DateFilterProps {
+  value: Date | null;
+  onChange: (value: Date | null) => void;
+}
