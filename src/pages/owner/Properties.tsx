@@ -25,8 +25,8 @@ const Properties = () => {
     show3D: false
   };
 
-  const handleParcelSelect = (parcelId: string) => {
-    setSelectedParcelId(parcelId);
+  const handleParcelSelect = (parcel: Parcel, position?: { x: number; y: number }) => {
+    setSelectedParcelId(parcel.id);
   };
 
   const filteredParcels = mockParcels.filter(parcel => {
@@ -54,7 +54,6 @@ const Properties = () => {
           Liste
         </Button>
       </div>
-
       <MapLayout>
         <div className="h-[600px]">
           {viewMode === 'map' ? (

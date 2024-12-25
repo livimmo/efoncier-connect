@@ -2,7 +2,7 @@ import { Parcel, PropertyType, FiscalStatus } from '../types';
 import { generateTNBInfo } from './tnbGenerator';
 import { calculatePropertyPrice } from '../generators';
 
-export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus' | 'price'>;
+export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'>;
 
 const getFiscalStatus = (taxStatus: string): FiscalStatus => {
   switch (taxStatus) {
@@ -18,6 +18,5 @@ const getFiscalStatus = (taxStatus: string): FiscalStatus => {
 export const createParcelWithTNB = (data: ParcelInput): Parcel => ({
   ...data,
   fiscalStatus: getFiscalStatus(data.taxStatus),
-  price: calculatePropertyPrice(data.type as PropertyType, data.surface),
   tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
 });
