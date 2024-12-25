@@ -19,16 +19,14 @@ export type ZoneType =
   | "PROTECTED" 
   | "CONSTRUCTIBLE";
 
-export type TaxStatus = "PAID" | "OVERDUE" | "PENDING";
+export type TaxStatus = "PAID" | "UNPAID" | "PENDING";
 
 export type PropertyStatus = 
   | "AVAILABLE"
-  | "UNAVAILABLE"
   | "IN_TRANSACTION"
-  | "SOLD"
-  | "DISPUTED";
+  | "SOLD";
 
-export type FiscalStatus = "COMPLIANT" | "NON_COMPLIANT" | "UNDER_REVIEW";
+export type FiscalStatus = "PAID" | "UNPAID" | "under_review";
 
 export type TransactionType = "SALE" | "RENT" | "TAX_PAYMENT";
 
@@ -65,6 +63,13 @@ export interface Parcel {
   owner?: string;
   isFavorite?: boolean;
   tnbInfo: TNBInfo;
+  property_type: string;
+  surface_area: number;
+  fiscal_status: FiscalStatus;
+  is_for_sale: boolean;
+  owner_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Transaction {

@@ -34,3 +34,6 @@ export interface Property {
   taxStatus: "PAID" | "UNPAID";
   tnbInfo: TNBInfo;
 }
+
+export type PropertyStatus = "AVAILABLE" | "IN_TRANSACTION" | "SOLD";
+export type FiscalStatus = "PAID" | "UNPAID" | "under_review";
