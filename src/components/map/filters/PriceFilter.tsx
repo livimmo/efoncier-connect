@@ -3,34 +3,39 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { MapFilters } from "../types";
 import { formatCurrency } from "@/utils/format";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PriceFilterProps {
   filters: MapFilters;
-  onFilterChange: (filterType: string, value: number) => void;
+  onFilterChange: (filterType: string, value: string | number) => void;
   setFilters: (filters: MapFilters) => void;
 }
 
 export const PriceFilter = ({ filters, onFilterChange, setFilters }: PriceFilterProps) => {
   const [showCustomInput, setShowCustomInput] = useState(false);
 
+  useEffect(() => {
+    setShowCustomInput(filters.maxPrice >= 20000000);
+  }, [filters.maxPrice]);
+
   const handlePriceInputChange = (value: string) => {
     const numericValue = value ? parseInt(value.replace(/[^0-9]/g, '')) : 0;
     setFilters({
       ...filters,
-      minPrice: filters.minPrice,
+      minPrice: filters.minPrice || 0,
       maxPrice: numericValue
     });
-    onFilterChange('price', numericValue);
+    onFilterChange('maxPrice', numericValue);
   };
 
-  const handleSliderChange = ([min, max]: number[]) => {
+  const handleSliderChange = (value: number[]) => {
+    const [min, max] = value;
     setFilters({
       ...filters,
       minPrice: min,
       maxPrice: max
     });
-    onFilterChange('price', max);
+    onFilterChange('maxPrice', max);
     setShowCustomInput(max >= 20000000);
   };
 
