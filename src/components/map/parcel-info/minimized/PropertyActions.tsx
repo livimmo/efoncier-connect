@@ -1,4 +1,3 @@
-import { Parcel } from "@/utils/mockData/types";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -63,7 +62,7 @@ export const PropertyActions = ({
               </Button>
               <Badge 
                 variant="secondary" 
-                className="mt-2 py-2 text-base font-semibold bg-background border-2 border-secondary text-secondary"
+                className="mt-2 py-2 text-base font-semibold bg-background border-2 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 text-center mx-auto"
               >
                 {formatCurrency(parcel.price)} DHS
               </Badge>
