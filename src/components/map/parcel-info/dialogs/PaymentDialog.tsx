@@ -5,11 +5,19 @@ interface PaymentDialogProps {
   parcelId: string;
   hideHeader?: boolean;
   onClose?: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export const PaymentDialog = ({ parcelId, hideHeader, onClose }: PaymentDialogProps) => {
+export const PaymentDialog = ({ 
+  parcelId, 
+  hideHeader, 
+  onClose,
+  open,
+  onOpenChange 
+}: PaymentDialogProps) => {
   return (
-    <Dialog open onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onOpenChange || onClose}>
       <DialogContent className="max-w-3xl">
         <PaymentForm parcelId={parcelId} hideHeader={hideHeader} />
       </DialogContent>

@@ -17,12 +17,28 @@ export const ParcelDialogs = ({ parcelId, activeDialog, onClose }: ParcelDialogs
           parcelId={parcelId} 
           hideHeader={true} 
           onClose={onClose}
+          open={true}
         />
       )}
       {activeDialog === "receipt" && (
         <ReceiptDialog 
-          parcelId={parcelId} 
-          onClose={onClose}
+          receiptData={{
+            referenceNumber: `TNB-${parcelId}`,
+            date: new Date().toISOString(),
+            taxpayer: {
+              name: "Propriétaire",
+              fiscalId: parcelId,
+            },
+            parcel: {
+              id: parcelId,
+              location: "Location",
+              area: 0,
+              amount: 0,
+              transactionRef: `TX-${parcelId}`,
+            },
+          }}
+          open={true}
+          onOpenChange={() => onClose()}
         />
       )}
     </>
