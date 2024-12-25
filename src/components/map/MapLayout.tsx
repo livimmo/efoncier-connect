@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { MapContainer } from "./MapContainer";
-import { MapControls } from "./MapControls";
 import { MapFilters } from "./MapFilters";
 import { MapControls as MapControlsType, MapFilters as MapFiltersType } from "./types";
 import { useMediaQuery } from "@/hooks/use-media-query";
