@@ -31,8 +31,8 @@ export const useLogin = () => {
     });
   };
 
-  const login = async ({ email, password, role }: LoginCredentials) => {
-    if (!email || !password) {
+  const login = async ({ email, password, role }: LoginCredentials): Promise<boolean> => {
+    if (!email || !password || !role) {
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
@@ -45,7 +45,7 @@ export const useLogin = () => {
       setIsLoading(true);
       console.log("Attempting login with role:", role);
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data: { user }, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
@@ -55,12 +55,28 @@ export const useLogin = () => {
         return false;
       }
 
-      if (data.user) {
+      if (user) {
+        // Check if the user's role matches the selected role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+
+        if (profile && profile.role !== role) {
+          toast({
+            variant: "destructive",
+            title: "Erreur de connexion",
+            description: "Le type de compte sélectionné ne correspond pas à votre profil.",
+          });
+          await supabase.auth.signOut();
+          return false;
+        }
+
         toast({
           title: "Connexion réussie",
           description: "Bienvenue sur eFoncier !",
         });
-        navigate("/dashboard");
         return true;
       }
 
