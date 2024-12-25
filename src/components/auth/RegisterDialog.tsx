@@ -7,7 +7,6 @@ import { RoleSelection } from "./register/RoleSelection";
 import { RegisterForm } from "./register/RegisterForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { UserRole } from "@/types/auth";
-import { X } from "lucide-react";
 
 interface RegisterDialogProps {
   open: boolean;
@@ -38,15 +37,7 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto relative">
-        <button
-          onClick={() => onOpenChange(false)}
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
-        >
-          <X className="h-6 w-6" />
-          <span className="sr-only">Fermer</span>
-        </button>
-
+      <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Créer un Compte sur eFoncier
