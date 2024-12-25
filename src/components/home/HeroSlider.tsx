@@ -11,11 +11,20 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 const slides = [
   {
     type: "ad" as const,
-    title: "Profitez d'une Offre Exclusive sur vos Transactions Foncières !",
+    title: "Explorez Notre Carte Interactive des Terrains",
     image: "/photo-1506744038136-46273834b3fb",
     cta: {
-      text: "Découvrir l'offre",
-      link: "/offers"
+      text: "Explorer la Carte",
+      link: "/map"
+    }
+  },
+  {
+    type: "ad" as const,
+    title: "Effectuez vos Paiements en Toute Sécurité",
+    image: "/photo-1426604966848-d7adac402bff",
+    cta: {
+      text: "Payer Maintenant",
+      link: "/payment"
     }
   },
   {
