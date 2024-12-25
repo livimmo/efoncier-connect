@@ -10,6 +10,7 @@ import { Parcel } from '@/utils/mockData/types';
 import { UserRole } from '@/types/auth';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ParcelStatusBadges } from "./parcel-info/ParcelStatusBadges";
+import { BlurredField } from "./parcel-info/BlurredField";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -36,7 +37,9 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
         <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
           <div className="space-y-4">
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">{parcel.title}</h3>
+              <h3 className="text-lg font-semibold">
+                <BlurredField value={parcel.title} />
+              </h3>
               <ParcelStatusBadges 
                 status={parcel.status}
                 taxStatus={parcel.taxStatus}
@@ -50,12 +53,12 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
             <div className="grid gap-4">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">{parcel.address}</span>
+                <BlurredField value={parcel.address} className="text-sm" />
               </div>
               
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">{parcel.ownerName}</span>
+                <BlurredField value={parcel.ownerName} className="text-sm" />
               </div>
 
               <div className="flex items-center gap-2">
@@ -82,6 +85,18 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
                 <span className="text-sm">Type: {parcel.type}</span>
               </div>
             </div>
+
+            {!isAuthenticated && (
+              <div className="pt-4 border-t">
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={handleLoginClick}
+                >
+                  Se connecter pour voir plus de détails
+                </Button>
+              </div>
+            )}
 
             {isAuthenticated && (
               <div className="space-y-3 pt-4 border-t">
