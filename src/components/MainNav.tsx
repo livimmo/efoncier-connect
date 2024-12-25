@@ -36,8 +36,8 @@ export function MainNav({ className, ...props }: MainNavProps) {
       icon: Home
     },
     {
-      href: "/contact",
-      label: "Contact",
+      href: "/about",
+      label: "Qui sommes nous",
       icon: Contact
     },
     {
