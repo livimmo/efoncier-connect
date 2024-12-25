@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/utils/format";
+import { BlurredField } from "../BlurredField";
 
 interface PropertyActionsProps {
   parcel: Parcel;
@@ -28,7 +29,7 @@ export const PropertyActions = ({
   return (
     <div className="text-right shrink-0">
       <div className="text-sm font-semibold whitespace-nowrap">
-        {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
+        <BlurredField value={`${formatCurrency(parcel.tnbInfo.totalAmount)} DHS`} />
       </div>
       <div className="flex flex-col gap-2 mt-2">
         {profile ? (
