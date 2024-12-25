@@ -77,6 +77,11 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
     setDialogOpen(true);
   };
 
+  // Fonction pour masquer partiellement le texte
+  const maskText = (text: string) => {
+    return 'XX-XXXXX';
+  };
+
   return (
     <>
       <PropertyPopup 
@@ -117,7 +122,11 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                   <span>Zone {parcel.zone}</span>
                 </div>
                 <div className="text-xs font-medium text-red-600 dark:text-red-500">
-                  {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
+                  {profile ? (
+                    `${formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²`
+                  ) : (
+                    'Prix TNB masqué (Connectez-vous pour voir)'
+                  )}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   {profile ? (
@@ -137,10 +146,18 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
             </div>
             <div className="text-right shrink-0">
               <div className="text-sm font-semibold whitespace-nowrap">
-                {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
+                {profile ? (
+                  `${formatCurrency(parcel.tnbInfo.totalAmount)} DHS`
+                ) : (
+                  'Montant TNB masqué'
+                )}
               </div>
               <div className="text-xs font-medium whitespace-nowrap text-muted-foreground">
-                {profile ? parcel.ownerName : 'Propriétaire (Connectez-vous pour voir)'}
+                {profile ? (
+                  parcel.ownerName
+                ) : (
+                  'Propriétaire (Connectez-vous pour voir)'
+                )}
               </div>
               <div className="flex flex-col gap-2 mt-2">
                 {profile ? (
