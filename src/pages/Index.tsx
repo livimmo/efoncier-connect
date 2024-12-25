@@ -1,14 +1,15 @@
-import { Header } from "@/components/Header";
-import Map from "@/components/Map";
+import { MapLayout } from "@/components/map/MapLayout";
+import { MainLayout } from "@/components/layout/MainLayout";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="pt-16">
-        <Map />
-      </main>
-    </div>
+    <MainLayout hideFooter>
+      <MapLayout>
+        <div className="h-full w-full">
+          {/* Map content */}
+        </div>
+      </MapLayout>
+    </MainLayout>
   );
 };
 
