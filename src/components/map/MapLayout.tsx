@@ -16,6 +16,7 @@ export const MapLayout = ({
   showFilters = true,
 }: MapLayoutProps) => {
   const { profile } = useAuth();
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
     commune: '',
@@ -27,7 +28,8 @@ export const MapLayout = ({
     titleDeedNumber: '',
     lastPaymentDate: null,
     fiscalStatus: '',
-    maxPrice: 0,
+    maxPrice: 20000000,
+    minPrice: 0,
     tnbReference: '',
     searchQuery: '',
     zoning: '',
@@ -63,6 +65,8 @@ export const MapLayout = ({
             onCityChange={handleCityChange}
             onDistrictChange={handleDistrictChange}
             mapInstance={null}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
           />
         </div>
       )}

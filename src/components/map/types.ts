@@ -61,3 +61,9 @@ export interface MapSettings {
   theme?: "light" | "dark";
   unit?: string;
 }
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
+}

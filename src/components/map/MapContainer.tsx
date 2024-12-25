@@ -39,12 +39,13 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     lastPaymentDate: null,
     fiscalStatus: '',
     maxPrice: 0,
+    minPrice: 0,
     tnbReference: '',
     searchQuery: '',
     zoning: '',
     paymentStatus: '',
     tnbStatus: '',
-    propertyStatus: '' // Added this field with empty string as default
+    propertyStatus: ''
   });
 
   const filteredParcels = useMemo(() => {
@@ -92,7 +93,9 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     showTerrain: false,
     show3D: false,
     theme: 'light' as const,
-    unit: 'metric' as const
+    unit: 'metric' as const,
+    center: { lat: 31.7917, lng: -7.0926 }, // Center of Morocco
+    zoom: 5,
   };
 
   return (
