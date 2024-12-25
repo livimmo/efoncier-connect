@@ -1,168 +1,138 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FileText, MapPin, Download, MessageSquare, Search } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Eye, MapPin, UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import { RegisterDialog } from "@/components/auth/RegisterDialog";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { GoogleMap } from "@/components/map/GoogleMap";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { formatCurrency } from "@/utils/format";
 import type { Parcel } from "@/utils/mockData/types";
-import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
-import { PropertyChat } from "@/components/chat/PropertyChat";
-import { DownloadPropertyDialog } from "./DownloadPropertyDialog";
-import { Input } from "@/components/ui/input";
 
 interface DeveloperPropertiesTableProps {
   data: Parcel[];
 }
 
 export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
-  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [showDocuments, setShowDocuments] = useState(false);
-  const [showDownload, setShowDownload] = useState(false);
-  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { profile } = useAuth();
+  const [registerOpen, setRegisterOpen] = useState(false);
 
-  const handleLocationClick = (location: { lat: number; lng: number }) => {
-    setSelectedLocation(location);
+  const handleViewDetails = (parcelId: string) => {
+    if (!profile) {
+      setRegisterOpen(true);
+      return;
+    }
+    navigate(`/property/${parcelId}`);
   };
 
-  const handleDocumentsClick = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-    setShowDocuments(true);
-  };
-
-  const handleDownloadClick = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-    setShowDownload(true);
+  const handleViewOnMap = (parcelId: string) => {
+    if (!profile) {
+      setRegisterOpen(true);
+      return;
+    }
+    navigate(`/map?parcel=${parcelId}`);
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return <span className="text-green-600">🟢 Disponible</span>;
+        return <Badge variant="success" className="whitespace-nowrap">🟢 Disponible</Badge>;
       case 'UNAVAILABLE':
-        return <span className="text-red-600">🔴 Indisponible</span>;
+        return <Badge variant="destructive" className="whitespace-nowrap">🔴 Indisponible</Badge>;
+      case 'IN_TRANSACTION':
+        return <Badge variant="warning" className="whitespace-nowrap">🟡 En Transaction</Badge>;
       default:
-        return <span className="text-orange-600">🟡 En Transaction</span>;
+        return null;
     }
   };
 
-  const filteredData = data.filter(parcel => {
-    const searchLower = searchQuery.toLowerCase();
+  if (!data) {
     return (
-      parcel.titleDeedNumber.toLowerCase().includes(searchLower) ||
-      parcel.address.toLowerCase().includes(searchLower) ||
-      parcel.type.toLowerCase().includes(searchLower) ||
-      parcel.status.toLowerCase().includes(searchLower)
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
     );
-  });
+  }
 
   return (
     <>
-      <div className="space-y-4">
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Rechercher par titre foncier, adresse, type..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8"
-          />
-        </div>
-
+      <RegisterDialog open={registerOpen} onOpenChange={setRegisterOpen} />
+      
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Statut</TableHead>
               <TableHead>Titre Foncier</TableHead>
               <TableHead>Localisation</TableHead>
-              <TableHead>Surface (m²)</TableHead>
+              <TableHead>Surface</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>Statut</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Prix TNB</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.map((parcel) => (
+            {data.map((parcel) => (
               <TableRow key={parcel.id}>
-                <TableCell>{parcel.titleDeedNumber}</TableCell>
-                <TableCell>{parcel.address}</TableCell>
-                <TableCell>{parcel.surface}</TableCell>
-                <TableCell>{parcel.type}</TableCell>
                 <TableCell>{getStatusBadge(parcel.status)}</TableCell>
                 <TableCell>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDocumentsClick(parcel)}
-                    >
-                      <FileText className="h-4 w-4 mr-2" />
-                      Documents
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleLocationClick(parcel.location)}
-                    >
-                      <MapPin className="h-4 w-4 mr-2" />
-                      Localisation
-                    </Button>
-                    <PropertyChat 
-                      propertyId={parcel.id}
-                      propertyTitle={parcel.title}
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDownloadClick(parcel)}
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Télécharger
-                    </Button>
+                  {profile ? parcel.titleDeedNumber : 'XX-XXXXX'}
+                </TableCell>
+                <TableCell>
+                  {profile ? parcel.address : `${parcel.city} (Connectez-vous pour plus de détails)`}
+                </TableCell>
+                <TableCell>{parcel.surface} m²</TableCell>
+                <TableCell>{parcel.type}</TableCell>
+                <TableCell>{formatCurrency(parcel.tnbInfo.totalAmount)} DHS</TableCell>
+                <TableCell>
+                  <div className="flex justify-end gap-2">
+                    {profile ? (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewDetails(parcel.id)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewOnMap(parcel.id)}
+                        >
+                          <MapPin className="h-4 w-4" />
+                        </Button>
+                      </>
+                    ) : (
+                      parcel.status === 'AVAILABLE' && (
+                        <Button
+                          size="sm"
+                          onClick={() => setRegisterOpen(true)}
+                          className="gap-2"
+                        >
+                          <UserPlus className="h-4 w-4" />
+                          Créer un compte promoteur
+                        </Button>
+                      )
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
             ))}
+            {data.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center">
+                  Aucun bien trouvé
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
-
-      {/* Dialog pour la carte */}
-      <Dialog open={!!selectedLocation} onOpenChange={() => setSelectedLocation(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Localisation du Bien</DialogTitle>
-          </DialogHeader>
-          <div className="h-[400px] relative">
-            {selectedLocation && (
-              <GoogleMap
-                parcels={[]}
-                onMarkerClick={() => {}}
-                theme="light"
-                setMapInstance={() => {}}
-                center={selectedLocation}
-                zoom={15}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog pour les documents */}
-      <Dialog open={showDocuments} onOpenChange={setShowDocuments}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Documents du Bien</DialogTitle>
-          </DialogHeader>
-          {selectedParcel && <PropertyDocuments parcel={selectedParcel} />}
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog pour le téléchargement */}
-      <DownloadPropertyDialog
-        parcel={selectedParcel}
-        open={showDownload}
-        onOpenChange={setShowDownload}
-      />
     </>
   );
 };
