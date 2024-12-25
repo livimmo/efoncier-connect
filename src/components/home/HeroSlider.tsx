@@ -12,7 +12,7 @@ const slides = [
   {
     type: "ad" as const,
     title: "Explorez Notre Carte Interactive des Terrains",
-    image: "/photo-1506744038136-46273834b3fb",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
     cta: {
       text: "Explorer la Carte",
       link: "/map"
@@ -21,7 +21,7 @@ const slides = [
   {
     type: "ad" as const,
     title: "Effectuez vos Paiements en Toute Sécurité",
-    image: "/photo-1426604966848-d7adac402bff",
+    image: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9",
     cta: {
       text: "Payer Maintenant",
       link: "/payment"
@@ -30,7 +30,7 @@ const slides = [
   {
     type: "news" as const,
     title: "Mise à jour du Statut Fiscal pour les Terrains en Zone Urbaine",
-    image: "/photo-1426604966848-d7adac402bff",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
     cta: {
       text: "Voir les détails",
       link: "/news/fiscal-update"
@@ -39,7 +39,7 @@ const slides = [
   {
     type: "flash" as const,
     title: "Flash News : Nouveaux Terrains Disponibles à Rabat – Zone Industrielle",
-    image: "/photo-1501854140801-50d01698950b",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
     cta: {
       text: "Lire la news",
       link: "/news/new-lands"
@@ -48,7 +48,7 @@ const slides = [
   {
     type: "event" as const,
     title: "Prochain Forum de l'Immobilier Foncier – 15 Avril 2024",
-    image: "/photo-1615729947596-a598e5de0ab3",
+    image: "https://images.unsplash.com/photo-1483058712412-4245e9b90334",
     cta: {
       text: "S'inscrire maintenant",
       link: "/events/forum-2024"
