@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatCurrency } from "@/utils/format";
 import { MapPin, User, Ruler, CreditCard, FileText, Building } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LoginDialog } from "@/components/auth/LoginDialog";
+import { PropertyPopup } from "./property-popup/PropertyPopup";
 import { Parcel } from '@/utils/mockData/types';
 import { UserRole } from '@/types/auth';
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -21,6 +23,7 @@ export interface ParcelInfoProps {
 export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoProps) => {
   const { profile } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
+  const [propertyPopupOpen, setPropertyPopupOpen] = useState(false);
   const isAuthenticated = !!profile;
   const isMobile = useMediaQuery("(max-width: 768px)");
   const showFavoriteButton = userRole === "developer" || userRole === "owner";
@@ -33,6 +36,11 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
   return (
     <>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
+      <PropertyPopup 
+        parcel={parcel}
+        open={propertyPopupOpen}
+        onOpenChange={setPropertyPopupOpen}
+      />
       <Card className={`overflow-hidden animate-fade-in ${className}`}>
         <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
           <div className="space-y-4">
@@ -105,7 +113,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
                   <Button 
                     variant="default"
                     className="w-full"
-                    onClick={() => console.log("View Details")}
+                    onClick={() => setPropertyPopupOpen(true)}
                   >
                     Voir les détails complets
                   </Button>
