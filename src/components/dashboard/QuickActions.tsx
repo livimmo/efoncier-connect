@@ -1,36 +1,87 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CreditCard, FileText, MapPin, MessageSquare } from "lucide-react";
+import { CreditCard, FileText, MapPin, MessageSquare, Download, Printer } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PaymentDialog } from "../map/parcel-info/dialogs/PaymentDialog";
 import { MessagesContainer } from "../messages/MessagesContainer";
 import { useToast } from "@/hooks/use-toast";
+import { ReceiptPreview } from "../receipt/ReceiptPreview";
 
 export const QuickActions = () => {
   const navigate = useNavigate();
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [messagesOpen, setMessagesOpen] = useState(false);
   const [reportsOpen, setReportsOpen] = useState(false);
+  const [selectedReport, setSelectedReport] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleReportAction = (type: string, action: 'download' | 'print') => {
-    setReportsOpen(false);
-
     if (action === 'download') {
-      // Simuler le téléchargement
       toast({
         title: "Téléchargement du rapport",
         description: `Le rapport ${type} a été téléchargé au format PDF.`
       });
     } else {
-      // Ouvrir la fenêtre d'impression
       window.print();
     }
+  };
 
-    // Naviguer vers la page des rapports après l'action
-    navigate(`/dashboard?tab=reports&type=${type}`);
+  const getReportData = (type: string) => {
+    // Exemple de données pour chaque type de rapport
+    switch (type) {
+      case 'payment':
+        return {
+          referenceNumber: "PAY-2024-001",
+          date: new Date().toISOString(),
+          taxpayer: {
+            name: "John Doe",
+            fiscalId: "FIS123456"
+          },
+          parcel: {
+            id: "PARC-001",
+            location: "123 Rue Example",
+            area: 500,
+            amount: 1500,
+            transactionRef: "TXN-123456"
+          }
+        };
+      case 'property':
+        return {
+          referenceNumber: "PROP-2024-001",
+          date: new Date().toISOString(),
+          taxpayer: {
+            name: "John Doe",
+            fiscalId: "FIS123456"
+          },
+          parcel: {
+            id: "PARC-002",
+            location: "456 Avenue Example",
+            area: 750,
+            amount: 2000,
+            transactionRef: "TXN-789012"
+          }
+        };
+      case 'activity':
+        return {
+          referenceNumber: "ACT-2024-001",
+          date: new Date().toISOString(),
+          taxpayer: {
+            name: "John Doe",
+            fiscalId: "FIS123456"
+          },
+          parcel: {
+            id: "PARC-003",
+            location: "789 Boulevard Example",
+            area: 1000,
+            amount: 2500,
+            transactionRef: "TXN-345678"
+          }
+        };
+      default:
+        return null;
+    }
   };
 
   return (
@@ -62,64 +113,61 @@ export const QuickActions = () => {
             <div className="space-y-4">
               <h4 className="font-medium">Rapports Disponibles</h4>
               <div className="grid grid-cols-1 gap-3">
-                <div className="space-y-2">
-                  <Button 
-                    variant="outline" 
-                    className="justify-start w-full"
-                    onClick={() => handleReportAction('payment', 'download')}
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Rapport des Paiements
-                  </Button>
-                  <div className="flex gap-2 pl-6">
-                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('payment', 'download')}>
-                      Télécharger PDF
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('payment', 'print')}>
-                      Imprimer
-                    </Button>
-                  </div>
-                </div>
+                <Button 
+                  variant="outline" 
+                  className="justify-start w-full"
+                  onClick={() => setSelectedReport('payment')}
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  Rapport des Paiements
+                </Button>
 
-                <div className="space-y-2">
-                  <Button 
-                    variant="outline"
-                    className="justify-start w-full"
-                    onClick={() => handleReportAction('property', 'download')}
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Rapport des Biens
-                  </Button>
-                  <div className="flex gap-2 pl-6">
-                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('property', 'download')}>
-                      Télécharger PDF
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('property', 'print')}>
-                      Imprimer
-                    </Button>
-                  </div>
-                </div>
+                <Button 
+                  variant="outline"
+                  className="justify-start w-full"
+                  onClick={() => setSelectedReport('property')}
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  Rapport des Biens
+                </Button>
 
-                <div className="space-y-2">
-                  <Button 
-                    variant="outline"
-                    className="justify-start w-full"
-                    onClick={() => handleReportAction('activity', 'download')}
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Rapport d'Activité
-                  </Button>
-                  <div className="flex gap-2 pl-6">
-                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('activity', 'download')}>
-                      Télécharger PDF
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('activity', 'print')}>
-                      Imprimer
-                    </Button>
-                  </div>
-                </div>
+                <Button 
+                  variant="outline"
+                  className="justify-start w-full"
+                  onClick={() => setSelectedReport('activity')}
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  Rapport d'Activité
+                </Button>
               </div>
             </div>
+
+            {selectedReport && (
+              <div className="border-t pt-4">
+                <div className="flex justify-end gap-2 mb-4">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handleReportAction(selectedReport, 'download')}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Télécharger
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handleReportAction(selectedReport, 'print')}
+                  >
+                    <Printer className="mr-2 h-4 w-4" />
+                    Imprimer
+                  </Button>
+                </div>
+                <ReceiptPreview 
+                  data={getReportData(selectedReport)!}
+                  onClose={() => setSelectedReport(null)}
+                />
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
