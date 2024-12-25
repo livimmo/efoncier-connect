@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Header } from "@/components/Header";
 import { PropertiesHeader } from '@/components/owner/properties/PropertiesHeader';
 import { PropertiesStats } from '@/components/owner/properties/PropertiesStats';
@@ -8,12 +9,15 @@ import { mockParcels } from '@/utils/mockData/parcels';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useToast } from "@/hooks/use-toast";
 import { Property } from "@/types";
-import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { AddPropertyDialog } from "@/components/property/AddPropertyDialog";
 
 const PropertiesPage = () => {
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [showAddProperty, setShowAddProperty] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +61,17 @@ const PropertiesPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <PropertiesHeader />
+        <div className="flex justify-between items-center mb-8">
+          <PropertiesHeader />
+          <Button
+            onClick={() => setShowAddProperty(true)}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Ajouter un Terrain</span>
+          </Button>
+        </div>
+        
         <PropertiesStats data={properties} />
         
         <div className="grid lg:grid-cols-2 gap-8 mt-8">
@@ -86,6 +100,11 @@ const PropertiesPage = () => {
             />
           </div>
         </div>
+
+        <AddPropertyDialog 
+          open={showAddProperty}
+          onOpenChange={setShowAddProperty}
+        />
       </main>
     </div>
   );
