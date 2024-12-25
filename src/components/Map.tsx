@@ -12,7 +12,6 @@ import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
-import { LoginDialog } from './auth/LoginDialog';
 
 const Map = () => {
   const { profile } = useAuth();
@@ -20,7 +19,6 @@ const Map = () => {
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
-  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
@@ -42,10 +40,7 @@ const Map = () => {
   });
 
   const handleParcelSelect = (parcelId: string) => {
-    if (!profile) {
-      setIsLoginDialogOpen(true);
-      return;
-    }
+    // Ne rien faire ici, la logique est gérée dans MapContainer
   };
 
   const handleRegionChange = (regionId: string) => {
@@ -152,11 +147,6 @@ const Map = () => {
           )}
         </div>
       </div>
-
-      <LoginDialog 
-        open={isLoginDialogOpen}
-        onOpenChange={setIsLoginDialogOpen}
-      />
     </div>
   );
 };

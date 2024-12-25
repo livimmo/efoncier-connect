@@ -48,12 +48,12 @@ export const DraggableParcelInfo = ({
         "hover:shadow-lg will-change-transform",
         isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-24" : "w-[400px]",
         !isMobile && "absolute",
-        isMinimized ? "z-[40]" : "z-[100]", // Ajustement du z-index selon l'état
+        isMinimized ? "z-[40]" : "z-[100]",
         className
       )}
       style={!isMobile ? {
         left: `${position.x}px`,
-        top: isMinimized ? `${position.y + 60}px` : `${position.y}px`, // Décalage vers le bas en mode minimisé
+        top: isMinimized ? `${position.y + 60}px` : `${position.y}px`,
         transform: isMinimized 
           ? 'translate(-50%, -50%)'
           : 'translate(-50%, -50%)',
@@ -63,7 +63,7 @@ export const DraggableParcelInfo = ({
     >
       <ParcelInfoHeader
         title={parcel.title}
-        ownerName={parcel.ownerName}
+        ownerName={userRole ? parcel.ownerName : "Information réservée aux promoteurs"}
         isMinimized={isMinimized}
         isDragging={isDragging}
         onToggleMinimize={() => setIsMinimized(!isMinimized)}
@@ -89,12 +89,16 @@ export const DraggableParcelInfo = ({
         "rounded-b-lg shadow-lg",
         isMinimized ? "scale-y-0 h-0" : "scale-y-100"
       )}>
-        <ParcelInfo 
-          parcel={parcel}
-          onClose={handleClose}
-          className="rounded-t-none border-t-0"
-          userRole={userRole}
-        />
+        {userRole ? (
+          <ParcelInfo 
+            parcel={parcel}
+            onClose={handleClose}
+            className="rounded-t-none border-t-0"
+            userRole={userRole}
+          />
+        ) : (
+          <MinimizedParcelInfo parcel={parcel} />
+        )}
       </div>
 
       {isMinimized && <MinimizedParcelInfo parcel={parcel} />}
