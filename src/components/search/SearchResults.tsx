@@ -5,12 +5,21 @@ import { Property } from "@/types";
 import { MapPin, Building, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-interface SearchResultsProps {
+export interface SearchResultsProps {
   results: Property[];
   isLoading: boolean;
+  query?: string;
+  filters?: {
+    minSurface: number;
+    maxSurface: number;
+    minPrice: number;
+    maxPrice: number;
+    city: string;
+    district: string;
+  };
 }
 
-export const SearchResults = ({ results, isLoading }: SearchResultsProps) => {
+export const SearchResults = ({ results, isLoading, query, filters }: SearchResultsProps) => {
   const { profile } = useAuth();
 
   if (isLoading) {

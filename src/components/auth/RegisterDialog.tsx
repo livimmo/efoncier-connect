@@ -8,12 +8,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserRole } from "@/types/auth";
 
-interface LoginDialogProps {
+interface RegisterDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
+export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("owner");
@@ -21,12 +21,12 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Simuler une connexion réussie
+      // Simuler une inscription réussie
       const user = {
         id: crypto.randomUUID(),
         email,
@@ -38,7 +38,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       localStorage.setItem('user', JSON.stringify(user));
       
       toast({
-        title: "Connexion réussie",
+        title: "Inscription réussie",
         description: "Bienvenue sur eFoncier !",
       });
 
@@ -46,8 +46,8 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       navigate("/dashboard");
     } catch (error) {
       toast({
-        title: "Erreur de connexion",
-        description: "Identifiants incorrects",
+        title: "Erreur d'inscription",
+        description: "Une erreur est survenue lors de l'inscription",
         variant: "destructive",
       });
     } finally {
@@ -59,9 +59,9 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Connexion à eFoncier</DialogTitle>
+          <DialogTitle>Inscription à eFoncier</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -98,7 +98,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
             </Select>
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Connexion..." : "Se connecter"}
+            {isLoading ? "Inscription..." : "S'inscrire"}
           </Button>
         </form>
       </DialogContent>
