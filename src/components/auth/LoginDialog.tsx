@@ -7,20 +7,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OTPInput } from "./OTPInput";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { useLogin } from "@/hooks/useLogin";
-import { UserRole } from "./AuthProvider";
+import { UserRole } from "@/types";
 
 interface LoginDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
+export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
   const navigate = useNavigate();
   const { login, isLoading } = useLogin();
   const [showOTP, setShowOTP] = useState(false);
@@ -30,12 +29,8 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    if (!email || !password || !selectedRole) {
-      return;
-    }
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     const success = await login({
       email,
@@ -48,8 +43,8 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     }
   };
 
-  const handleWhatsAppLogin = () => {
-    setShowOTP(true);
+  const handleRoleChange = (role: UserRole) => {
+    setSelectedRole(role);
   };
 
   const verifyOTP = () => {
@@ -65,69 +60,38 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Bienvenue sur eFoncier</DialogTitle>
+          <DialogTitle>Connexion</DialogTitle>
           <DialogDescription>
-            Choisissez votre méthode de connexion préférée
+            Connectez-vous à votre compte pour accéder à votre espace personnel
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-6">
-          {showOTP ? (
-            <div className="grid gap-4">
-              <Label>Entrez le code reçu sur WhatsApp</Label>
-              <OTPInput
-                value={otp}
-                onChange={setOTP}
-                onComplete={verifyOTP}
-              />
-              <div className="text-center text-sm">
-                <Button
-                  variant="link"
-                  className="p-0"
-                  onClick={() => setShowOTP(false)}
-                >
-                  Retour aux options de connexion
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <EmailLoginForm 
-                isLoading={isLoading} 
+
+        {showOTP ? (
+          <OTPInput
+            value={otp}
+            onChange={setOTP}
+            onComplete={verifyOTP}
+          />
+        ) : (
+          <Tabs defaultValue="email" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="email">Email</TabsTrigger>
+              <TabsTrigger value="social">Social</TabsTrigger>
+            </TabsList>
+            <TabsContent value="email">
+              <EmailLoginForm
+                isLoading={isLoading}
                 onSubmit={handleEmailLogin}
                 selectedRole={selectedRole}
-                onRoleChange={setSelectedRole}
+                onRoleChange={handleRoleChange}
               />
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Ou continuer avec
-                  </span>
-                </div>
-              </div>
-              <SocialLoginButtons
-                isLoading={isLoading}
-                onWhatsAppLogin={handleWhatsAppLogin}
-              />
-              <div className="text-center text-sm">
-                Vous n'avez pas de compte ?{" "}
-                <Button
-                  variant="link"
-                  className="p-0"
-                  onClick={() => {
-                    onOpenChange(false);
-                    navigate("/register");
-                  }}
-                >
-                  Inscrivez-vous ici
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
+            </TabsContent>
+            <TabsContent value="social">
+              <SocialLoginButtons />
+            </TabsContent>
+          </Tabs>
+        )}
       </DialogContent>
     </Dialog>
   );
-}
+};

@@ -13,3 +13,14 @@ export interface Property {
   title: string;
   updated_at: string;
 }
+
+export type UserRole = "taxpayer" | "developer" | "commune" | "admin";
+
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+}
