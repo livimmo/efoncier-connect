@@ -1,15 +1,15 @@
 import { Parcel } from "@/utils/mockData/types";
 
 export const getMarkerColor = (status: string) => {
-  switch (status) {
+  switch (status.toUpperCase()) {
     case 'AVAILABLE':
-      return '#006233';
+      return '#22C55E'; // Vert vif
     case 'IN_TRANSACTION':
-      return '#FFA500';
+      return '#F97316'; // Orange vif
     case 'SOLD':
-      return '#C1272D';
+      return '#EF4444'; // Rouge vif
     default:
-      return '#808080';
+      return '#6B7280'; // Gris par défaut
   }
 };
 
@@ -114,9 +114,9 @@ export const createMarkers = (
           path: google.maps.SymbolPath.CIRCLE,
           fillColor: getMarkerColor(parcel.status),
           fillOpacity: 1,
-          strokeWeight: 1,
+          strokeWeight: 2,
           strokeColor: '#FFFFFF',
-          scale: 8,
+          scale: 10,
         },
       });
 
