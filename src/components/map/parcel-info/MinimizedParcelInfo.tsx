@@ -9,9 +9,10 @@ import { ParcelStatusInfo } from "./ParcelStatusInfo";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
+  onClose?: () => void;
 }
 
-export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
+export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [receiptOpen, setReceiptOpen] = useState(false);
@@ -49,6 +50,17 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
       amount: parcel.tnbInfo.totalAmount,
       transactionRef: `TX-${parcel.id}`,
     },
+  };
+
+  const handlePaymentClick = () => {
+    if (parcel.taxStatus === 'PAID') {
+      setReceiptOpen(true);
+    } else {
+      setPaymentOpen(true);
+    }
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
@@ -106,7 +118,7 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
                 <Button 
                   variant={paymentStatus.buttonVariant}
                   size="sm"
-                  onClick={() => parcel.taxStatus === 'PAID' ? setReceiptOpen(true) : setPaymentOpen(true)}
+                  onClick={handlePaymentClick}
                   className={`w-full ${paymentStatus.buttonClass}`}
                 >
                   {paymentStatus.buttonText}
