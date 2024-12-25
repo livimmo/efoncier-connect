@@ -8,7 +8,7 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
 const DEFAULT_ZOOM = 12;
 
-interface GoogleMapProps {
+export interface GoogleMapProps {
   onMarkerClick: (parcel: Parcel, position: { x: number, y: number }) => void;
   parcels: Parcel[];
   theme: 'light' | 'dark';
@@ -16,32 +16,30 @@ interface GoogleMapProps {
   userRole?: UserRole;
   center?: { lat: number; lng: number };
   zoom?: number;
-  getMarkerColor?: (status: string) => string;
 }
 
-export const GoogleMap = ({ 
+const GoogleMap = ({ 
   onMarkerClick, 
   parcels, 
   theme, 
   setMapInstance, 
   userRole,
-  center,
+  center = DEFAULT_CENTER,
   zoom = DEFAULT_ZOOM,
-  getMarkerColor
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
 
-  const defaultMarkerColor = (status: string) => {
+  const getMarkerColor = (status: string) => {
     switch (status) {
-      case 'PAID':
-        return '#10B981'; // Green for paid
-      case 'PENDING':
-        return '#F59E0B'; // Orange for pending
-      case 'OVERDUE':
-        return '#EF4444'; // Red for overdue
+      case 'AVAILABLE':
+        return '#10B981'; // Green for available
+      case 'SOLD':
+        return '#EF4444'; // Red for sold
+      case 'IN_TRANSACTION':
+        return '#F59E0B'; // Orange for in transaction
       default:
         return '#6B7280'; // Gray default
     }
@@ -58,8 +56,8 @@ export const GoogleMap = ({
         const google = await loader.load();
         if (mapRef.current) {
           const mapInstance = new google.maps.Map(mapRef.current, {
-            center: center || DEFAULT_CENTER,
-            zoom: zoom,
+            center,
+            zoom,
             styles: theme === 'dark' ? [
               { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
               { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
@@ -106,13 +104,13 @@ export const GoogleMap = ({
     
     const newMarkers = parcels.map(parcel => {
       const marker = new google.maps.Marker({
-        position: parcel.location,
+        position: { lat: parcel.location.lat, lng: parcel.location.lng },
         map: map,
         title: parcel.title,
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor ? getMarkerColor(parcel.taxStatus) : defaultMarkerColor(parcel.taxStatus),
+          fillColor: getMarkerColor(parcel.status),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
@@ -169,3 +167,5 @@ export const GoogleMap = ({
     />
   );
 };
+
+export default GoogleMap;

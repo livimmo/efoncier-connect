@@ -9,6 +9,11 @@ import { FilterHeader } from "./filters/FilterHeader";
 import { FiscalYearFilter } from "./filters/FiscalYearFilter";
 import { StatusFilter } from "./filters/StatusFilter";
 import { FilterActions } from "./filters/FilterActions";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { REGIONS } from '@/utils/mockData/locations';
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -111,15 +116,22 @@ export const MapFilters = ({
             className="mb-6"
           />
 
-          <FiscalYearFilter
-            selectedYear={selectedYear}
-            onYearChange={(value) => handleFilterChange('fiscalYear', value)}
-          />
-
-          <StatusFilter
-            value={filters.paymentStatus}
-            onChange={(value) => handleFilterChange('paymentStatus', value)}
-          />
+          <div className="space-y-4">
+            <Label>Statut du Bien</Label>
+            <Select
+              value={filters.status}
+              onValueChange={(value) => handleFilterChange('status', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionner un statut" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="AVAILABLE">🟢 Disponible</SelectItem>
+                <SelectItem value="IN_TRANSACTION">🟠 En Transaction</SelectItem>
+                <SelectItem value="SOLD">🔴 Vendu</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           <BasicFilters
             filters={filters}
@@ -133,6 +145,23 @@ export const MapFilters = ({
             setFilters={setFilters}
             onFilterChange={handleFilterChange}
           />
+
+          <div className="space-y-4">
+            <Label>Superficie (m²)</Label>
+            <Slider
+              min={0}
+              max={15000}
+              step={100}
+              value={filters.size}
+              onValueChange={(value) => 
+                setFilters({ ...filters, size: value as [number, number] })
+              }
+            />
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>{filters.size[0]} m²</span>
+              <span>{filters.size[1]} m²</span>
+            </div>
+          </div>
 
           <PaymentFilters
             filters={filters}
