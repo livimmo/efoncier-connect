@@ -1,4 +1,4 @@
-import { Home, CreditCard, Database, LogOut } from "lucide-react";
+import { Home, CreditCard, Database, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
