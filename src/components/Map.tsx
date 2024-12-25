@@ -39,43 +39,45 @@ const Map = () => {
     tnbStatus: ''
   });
 
-  // Filtrer les parcelles en fonction des filtres
+  // Filter parcels based on filters
   const filteredParcels = useMemo(() => {
     return mockParcels.filter(parcel => {
-      // Filtre par région
+      // Region filter
       if (filters.region && parcel.region !== filters.region) return false;
 
-      // Filtre par commune
+      // Commune filter
       if (filters.commune && parcel.city.toLowerCase() !== filters.commune.toLowerCase()) return false;
 
-      // Filtre par type de propriété
+      // Property type filter
       if (filters.propertyType && parcel.type !== filters.propertyType) return false;
 
-      // Filtre par zone
+      // Zone filter
       if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
 
-      // Filtre par surface
-      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+      // Surface area filter
+      if (Array.isArray(filters.size) && filters.size.length === 2) {
+        if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+      }
 
-      // Filtre par statut
+      // Status filter
       if (filters.status && parcel.status !== filters.status) return false;
 
-      // Filtre par propriétaire
+      // Owner name filter
       if (filters.ownerName && !parcel.ownerName.toLowerCase().includes(filters.ownerName.toLowerCase())) return false;
 
-      // Filtre par numéro de titre foncier
+      // Title deed number filter
       if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
 
-      // Filtre par statut fiscal
+      // Fiscal status filter
       if (filters.fiscalStatus && parcel.taxStatus !== filters.fiscalStatus) return false;
 
-      // Filtre par statut de paiement
+      // Payment status filter
       if (filters.paymentStatus && parcel.taxStatus !== filters.paymentStatus) return false;
 
-      // Filtre par statut TNB
-      if (filters.tnbStatus && parcel.tnbInfo.status !== filters.tnbStatus) return false;
+      // TNB status filter
+      if (filters.tnbStatus && parcel.tnbInfo?.status !== filters.tnbStatus) return false;
 
-      // Filtre par recherche globale
+      // Global search filter
       if (filters.searchQuery) {
         const searchLower = filters.searchQuery.toLowerCase();
         return (
@@ -129,7 +131,7 @@ const Map = () => {
   };
 
   const handleApplyFilters = () => {
-    // Removed toast notification, function now just exists to maintain the interface
+    // Function exists to maintain the interface
   };
 
   return (
