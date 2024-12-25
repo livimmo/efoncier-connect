@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { SmartSearchBar } from "./filters/SmartSearchBar";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -57,12 +58,53 @@ export const MapFilters = ({
     }
   }, [selectedCity]);
 
+  const handleSearch = (query: string) => {
+    setFilters?.({
+      ...filters!,
+      searchQuery: query
+    });
+    onApplyFilters?.();
+  };
+
+  const handleReset = () => {
+    if (setFilters) {
+      setFilters({
+        region: '',
+        commune: '',
+        propertyType: '',
+        zoneType: '',
+        size: [0, 15000],
+        status: '',
+        ownerName: '',
+        titleDeedNumber: '',
+        lastPaymentDate: null,
+        fiscalStatus: '',
+        maxPrice: 0,
+        tnbReference: '',
+        searchQuery: '',
+        zoning: ''
+      });
+    }
+    setSelectedRegion("");
+    setSelectedCity("");
+    onApplyFilters?.();
+  };
+
   return (
     <Card className="h-fit">
       <CardHeader>
         <CardTitle>Filtres</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        <SmartSearchBar
+          onSearch={handleSearch}
+          onReset={handleReset}
+          onViewListResults={() => {
+            // Handle view list results
+          }}
+          className="mb-6"
+        />
+
         <div className="space-y-2">
           <Label>Région</Label>
           <Select 
