@@ -23,7 +23,7 @@ export interface MapFilters {
   status: string;
   ownerName: string;
   titleDeedNumber: string;
-  lastPaymentDate: string | null;
+  lastPaymentDate: Date | null;
   fiscalStatus: string;
   maxPrice: number;
   tnbReference: string;

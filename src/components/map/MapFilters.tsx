@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { FilterHeader } from "./filters/FilterHeader";
 import { REGIONS } from "@/utils/mockData/locations";
+import { SurfaceFilter } from "./filters/SurfaceFilter";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -138,6 +139,12 @@ export const MapFilters = ({
             onReset={handleReset}
             onViewListResults={() => {}}
             className="mb-6"
+          />
+
+          <SurfaceFilter 
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            setFilters={setFilters}
           />
 
           <div className="space-y-4">
