@@ -11,28 +11,55 @@ export interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
   className?: string;
-  userRole: UserRole;
-}
-
-export interface MapFiltersProps {
-  filters: MapFilters;
-  setFilters: React.Dispatch<React.SetStateAction<MapFilters>>;
-  onApplyFilters: () => void;
-  userRole: UserRole;
-}
-
-export interface MobileFiltersSheetProps {
-  filters: MapFilters;
-  setFilters: React.Dispatch<React.SetStateAction<MapFilters>>;
-  filteredParcelsCount: number;
-  userRole: UserRole;
+  userRole?: UserRole;
 }
 
 export interface MapFilters {
   search: string;
-  priceRange: [number, number];
-  surfaceRange: [number, number];
+  region: string;
+  commune: string;
+  propertyType: string;
+  zoneType: string;
+  size: [number, number];
   status: string[];
   type: string[];
-  date: Date | undefined;
+  ownerName: string;
+  titleDeedNumber: string;
+  lastPaymentDate: string | null;
+  priceRange: [number, number];
+  surfaceRange: [number, number];
+  date?: Date;
+}
+
+export interface MapFiltersProps {
+  filters: MapFilters;
+  setFilters: (filters: MapFilters) => void;
+  onApplyFilters: () => void;
+  userRole?: UserRole;
+}
+
+export interface MobileFiltersSheetProps {
+  filters: MapFilters;
+  setFilters: (filters: MapFilters) => void;
+  filteredParcelsCount: number;
+  userRole?: UserRole;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export interface MapMobileControlsProps {
+  settings: MapSettings;
+  onSettingChange: (setting: keyof MapSettings, value: string) => void;
+  onFilterClick?: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onLocateMe?: () => void;
+}
+
+export interface DraggableParcelInfoProps {
+  parcel: Parcel;
+  onClose: () => void;
+  className?: string;
+  userRole?: UserRole;
+  markerPosition?: { x: number; y: number };
 }

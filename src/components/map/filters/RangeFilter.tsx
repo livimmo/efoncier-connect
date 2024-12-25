@@ -1,7 +1,22 @@
 import { Slider } from "@/components/ui/slider";
-import { RangeFilterProps } from "./types";
 
-export const RangeFilter = ({ value, onChange, min, max, step, unit }: RangeFilterProps) => {
+interface RangeFilterProps {
+  value: [number, number];
+  onChange: (value: [number, number]) => void;
+  min: number;
+  max: number;
+  step: number;
+  unit: string;
+}
+
+export const RangeFilter = ({ 
+  value = [0, 100],
+  onChange, 
+  min, 
+  max, 
+  step, 
+  unit 
+}: RangeFilterProps) => {
   return (
     <div className="space-y-2">
       <Slider

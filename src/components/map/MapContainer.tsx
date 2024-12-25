@@ -26,10 +26,18 @@ export const MapContainer = ({ userRole }: MapContainerProps) => {
 
   const [filters, setFilters] = useState<MapFiltersType>({
     search: "",
-    priceRange: [0, 10000],
-    surfaceRange: [0, 10000],
+    region: "",
+    commune: "",
+    propertyType: "",
+    zoneType: "",
+    size: [0, 15000],
     status: [],
     type: [],
+    ownerName: "",
+    titleDeedNumber: "",
+    lastPaymentDate: null,
+    priceRange: [0, 10000],
+    surfaceRange: [0, 10000],
     date: undefined,
   });
 
@@ -37,7 +45,7 @@ export const MapContainer = ({ userRole }: MapContainerProps) => {
     if (filters.search && !parcel.titleDeedNumber.toLowerCase().includes(filters.search.toLowerCase())) {
       return false;
     }
-    if (filters.status.length > 0 && !filters.status.includes(parcel.status)) {
+    if (filters.status.length > 0 && !filters.status.includes(parcel.taxStatus)) {
       return false;
     }
     if (filters.type.length > 0 && !filters.type.includes(parcel.type)) {
