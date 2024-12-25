@@ -6,15 +6,9 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { MapFilters } from "../types";
+import { PaymentFiltersProps } from "./types";
 
-interface PaymentFiltersProps {
-  filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
-  userRole?: string;
-}
-
-export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFiltersProps) => {
+export const PaymentFilters = ({ filters, setFilters, userRole, onFilterChange }: PaymentFiltersProps) => {
   if (userRole !== 'commune') return null;
 
   return (
@@ -23,7 +17,10 @@ export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFilters
         <Label>Statut TNB</Label>
         <Select
           value={filters.tnbStatus}
-          onValueChange={(value) => setFilters({ ...filters, tnbStatus: value })}
+          onValueChange={(value) => {
+            setFilters({ ...filters, tnbStatus: value });
+            onFilterChange('tnbStatus', value);
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Sélectionner un statut TNB" />
@@ -42,7 +39,10 @@ export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFilters
         <Label>Statut de paiement</Label>
         <Select
           value={filters.paymentStatus}
-          onValueChange={(value) => setFilters({ ...filters, paymentStatus: value })}
+          onValueChange={(value) => {
+            setFilters({ ...filters, paymentStatus: value });
+            onFilterChange('paymentStatus', value);
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Sélectionner un statut" />
@@ -79,7 +79,12 @@ export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFilters
             <Calendar
               mode="single"
               selected={filters.lastPaymentDate || undefined}
-              onSelect={(date) => setFilters({ ...filters, lastPaymentDate: date })}
+              onSelect={(date) => {
+                setFilters({ ...filters, lastPaymentDate: date });
+                if (date) {
+                  onFilterChange('lastPaymentDate', date.toISOString());
+                }
+              }}
             />
           </PopoverContent>
         </Popover>

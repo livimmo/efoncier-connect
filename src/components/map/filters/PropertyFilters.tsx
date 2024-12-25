@@ -3,20 +3,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { MapFilters } from "../types";
 import { ZONING_OPTIONS, PAYMENT_STATUS_OPTIONS } from "./filterConstants";
+import { PropertyFiltersProps } from "./types";
 
-interface PropertyFiltersProps {
-  filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
-}
-
-export const PropertyFilters = ({ filters, setFilters }: PropertyFiltersProps) => {
+export const PropertyFilters = ({ filters, setFilters, onFilterChange }: PropertyFiltersProps) => {
   return (
     <>
       <div className="space-y-2">
         <Label>Type de propriété</Label>
         <Select
           value={filters.propertyType}
-          onValueChange={(value) => setFilters({ ...filters, propertyType: value })}
+          onValueChange={(value) => {
+            setFilters({ ...filters, propertyType: value });
+            onFilterChange('propertyType', value);
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Sélectionner un type" />
@@ -34,7 +33,10 @@ export const PropertyFilters = ({ filters, setFilters }: PropertyFiltersProps) =
         <Label>Zonage</Label>
         <Select
           value={filters.zoning}
-          onValueChange={(value) => setFilters({ ...filters, zoning: value })}
+          onValueChange={(value) => {
+            setFilters({ ...filters, zoning: value });
+            onFilterChange('zoning', value);
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Sélectionner un zonage" />
@@ -56,7 +58,10 @@ export const PropertyFilters = ({ filters, setFilters }: PropertyFiltersProps) =
           max={15000}
           step={100}
           value={filters.size}
-          onValueChange={(value) => setFilters({ ...filters, size: value as [number, number] })}
+          onValueChange={(value) => {
+            setFilters({ ...filters, size: value as [number, number] });
+            onFilterChange('size', value.join(','));
+          }}
           className="mt-2"
         />
         <div className="flex justify-between text-sm text-muted-foreground">
