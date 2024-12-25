@@ -46,7 +46,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
                 fiscalStatus={parcel.fiscalStatus}
               />
               <p className="text-sm text-muted-foreground">
-                Référence: {parcel.titleDeedNumber}
+                Référence: <BlurredField value={parcel.titleDeedNumber} />
               </p>
             </div>
 
