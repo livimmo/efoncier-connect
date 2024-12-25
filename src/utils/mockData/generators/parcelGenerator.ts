@@ -1,6 +1,6 @@
 import { Property, TNBInfo, Location, PropertyType, ZoneType, TaxStatus, PropertyStatus } from '@/types';
 
-interface ParcelGeneratorInput {
+export interface ParcelGeneratorInput {
   id: string;
   title: string;
   address: string;
@@ -15,6 +15,9 @@ interface ParcelGeneratorInput {
   titleDeedNumber: string;
   description?: string;
   price?: number;
+  owner?: string;
+  phone?: string;
+  email?: string;
 }
 
 export const createParcelWithTNB = (input: ParcelGeneratorInput): Property => {
@@ -47,6 +50,8 @@ export const createParcelWithTNB = (input: ParcelGeneratorInput): Property => {
     type: input.type,
     surface: input.surface,
     taxStatus: input.taxStatus,
-    tnbInfo: tnbInfo
+    tnbInfo: tnbInfo,
+    phone: input.phone,
+    email: input.email
   };
 };

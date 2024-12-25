@@ -25,7 +25,8 @@ export const PROPERTY_STATUSES: PropertyStatus[] = [
   'PENDING',
   'APPROVED',
   'REJECTED',
-  'ARCHIVED'
+  'ARCHIVED',
+  'DISPUTED'
 ];
 
 export const TAX_STATUSES: TaxStatus[] = [
@@ -45,9 +46,5 @@ export const ZONE_TYPES_ARRAY: ZoneType[] = [
   'MIXED_USE_ZONE',
   'PROTECTED_ZONE',
   'CONSTRUCTIBLE_ZONE',
-  'URBAN',
-  'E3',
-  'E4',
-  'BT2',
-  'I2S12'
+  'URBAN'
 ];

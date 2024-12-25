@@ -35,17 +35,12 @@ const Properties = () => {
     tnbInfo: parcel.tnbInfo
   }));
 
-  const selectedParcel = selectedParcelId 
-    ? properties.find(p => p.id === selectedParcelId)
-    : null;
-
   return (
     <div className="container mx-auto p-4 space-y-6">
       <PropertiesHeader />
       <PropertiesStats data={properties} />
       <PropertiesTable 
         data={properties}
-        selectedParcel={selectedParcel}
         onParcelSelect={setSelectedParcelId}
       />
     </div>
