@@ -31,26 +31,17 @@ const PropertiesPage = () => {
   const properties: Property[] = mockParcels.map(parcel => ({
     id: parcel.id,
     title: parcel.title,
-    description: parcel.description || '',
-    property_type: parcel.type,
+    description: parcel.address,
+    property_type: parcel.type.toLowerCase(),
     surface_area: parcel.surface,
     location: parcel.location,
-    fiscal_status: parcel.fiscal_status || "under_review",
-    status: parcel.status || "PENDING",
+    fiscal_status: "under_review",
+    status: "pending",
     is_for_sale: false,
     price: parcel.price || 0,
-    owner_id: parcel.owner_id || '',
+    owner_id: parcel.owner,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    titleDeedNumber: parcel.titleDeedNumber || '',
-    ownerName: parcel.ownerName || '',
-    address: parcel.address || '',
-    city: parcel.city || '',
-    zone: parcel.zone,
-    type: parcel.type,
-    surface: parcel.surface,
-    taxStatus: parcel.taxStatus,
-    tnbInfo: parcel.tnbInfo
+    updated_at: new Date().toISOString()
   }));
 
   const selectedParcel = selectedParcelId 

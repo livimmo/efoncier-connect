@@ -25,13 +25,13 @@ export const PropertiesStats = ({ data }: PropertiesStatsProps) => {
     },
     {
       title: "Non conformes",
-      value: data.filter(p => p.fiscal_status === "non_compliant").length,
+      value: data.filter(p => p.fiscal_status === 'non_compliant').length,
       icon: AlertTriangle,
       onClick: () => navigate('/properties?status=non_compliant'),
     },
     {
       title: "Conformes",
-      value: data.filter(p => p.fiscal_status === "compliant").length,
+      value: data.filter(p => p.fiscal_status === 'compliant').length,
       icon: CheckCircle2,
       onClick: () => navigate('/properties?status=compliant'),
     },

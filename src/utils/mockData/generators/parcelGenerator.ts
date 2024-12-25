@@ -1,58 +1,21 @@
-import { Property, TNBInfo, Location, PropertyType, ZoneType, TaxStatus, PropertyStatus } from '@/types';
+import { Parcel, PropertyType, FiscalStatus } from '../types';
+import { generateTNBInfo } from './tnbGenerator';
 
-export interface ParcelGeneratorInput {
-  id: string;
-  title: string;
-  address: string;
-  city: string;
-  surface: number;
-  type: PropertyType;
-  zone: ZoneType;
-  taxStatus: TaxStatus;
-  status: PropertyStatus;
-  ownerName: string;
-  location: Location;
-  titleDeedNumber: string;
-  description?: string;
-  price?: number;
-  owner?: string;
-  phone?: string;
-  email?: string;
-}
+export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'>;
 
-// Renamed from createParcelWithTNB to generateParcel for consistency
-export const generateParcel = (input: ParcelGeneratorInput): Property => {
-  const tnbInfo: TNBInfo = {
-    pricePerMeter: Math.floor(Math.random() * 100) + 50,
-    totalAmount: input.surface * (Math.floor(Math.random() * 100) + 50),
-    lastUpdate: new Date().toISOString(),
-    status: input.taxStatus
-  };
-
-  return {
-    id: input.id,
-    title: input.title,
-    description: input.description || '',
-    property_type: input.type,
-    surface_area: input.surface,
-    location: input.location,
-    fiscal_status: 'compliant',
-    status: input.status,
-    is_for_sale: Math.random() > 0.5,
-    price: input.price || input.surface * 1000,
-    owner_id: `owner-${input.id}`,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    titleDeedNumber: input.titleDeedNumber,
-    ownerName: input.ownerName,
-    address: input.address,
-    city: input.city,
-    zone: input.zone,
-    type: input.type,
-    surface: input.surface,
-    taxStatus: input.taxStatus,
-    tnbInfo: tnbInfo,
-    phone: input.phone,
-    email: input.email
-  };
+const getFiscalStatus = (taxStatus: string): FiscalStatus => {
+  switch (taxStatus) {
+    case 'PAID':
+      return 'COMPLIANT';
+    case 'OVERDUE':
+      return 'NON_COMPLIANT';
+    default:
+      return 'UNDER_REVIEW';
+  }
 };
+
+export const createParcelWithTNB = (data: ParcelInput): Parcel => ({
+  ...data,
+  fiscalStatus: getFiscalStatus(data.taxStatus),
+  tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
+});

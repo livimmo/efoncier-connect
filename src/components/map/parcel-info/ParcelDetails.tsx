@@ -1,90 +1,68 @@
-import { Property } from "@/types";
+import { Parcel } from "@/utils/mockData/types";
 import { formatCurrency } from "@/utils/format";
 
 interface ParcelDetailsProps {
-  parcel: Property;
-  compact?: boolean;
+  parcel: Parcel;
 }
 
-export const ParcelDetails = ({ parcel, compact = false }: ParcelDetailsProps) => {
-  const getTaxStatusColor = (status: string) => {
+export const ParcelDetails = ({ parcel }: ParcelDetailsProps) => {
+  const getTNBStatusColor = (status: 'LOW' | 'AVERAGE' | 'HIGH') => {
     switch (status) {
-      case 'PAID':
+      case 'LOW':
         return 'text-green-600';
-      case 'UNPAID':
-      case 'OVERDUE':
+      case 'AVERAGE':
+        return 'text-yellow-600';
+      case 'HIGH':
         return 'text-red-600';
       default:
-        return 'text-orange-600';
+        return 'text-gray-600';
     }
   };
-
-  if (compact) {
-    return (
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Surface</span>
-          <span className="font-medium">{parcel.surface_area} m²</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Zone</span>
-          <span className="font-medium">{parcel.property_type}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Prix moyen</span>
-          <span className="font-medium">{formatCurrency(parcel.price)} DH/m²</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Statut fiscal</span>
-          <span className={`font-medium ${getTaxStatusColor(parcel.taxStatus)}`}>
-            {parcel.taxStatus === 'PAID' 
-              ? 'Payé' 
-              : parcel.taxStatus === 'UNPAID' || parcel.taxStatus === 'OVERDUE'
-              ? 'Non payé'
-              : 'En attente'}
-          </span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-2">
       <div className="flex justify-between">
-        <span className="text-muted-foreground">N° Titre Foncier</span>
-        <span className="font-medium">{parcel.titleDeedNumber}</span>
+        <span className="text-sm text-muted-foreground">N° Titre Foncier</span>
+        <span className="text-sm font-medium">{parcel.titleDeedNumber}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-muted-foreground">Propriétaire</span>
-        <span className="font-medium">{parcel.ownerName}</span>
+        <span className="text-sm text-muted-foreground">Propriétaire</span>
+        <span className="text-sm font-medium">{parcel.ownerName}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-muted-foreground">Surface</span>
-        <span className="font-medium">{parcel.surface} m²</span>
+        <span className="text-sm text-muted-foreground">Surface</span>
+        <span className="text-sm font-medium">{parcel.surface} m²</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-muted-foreground">Type</span>
-        <span className="font-medium">{parcel.type}</span>
+        <span className="text-sm text-muted-foreground">Type</span>
+        <span className="text-sm font-medium">{parcel.type}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-muted-foreground">Zone</span>
-        <span className="font-medium">{parcel.zone}</span>
+        <span className="text-sm text-muted-foreground">Zone</span>
+        <span className="text-sm font-medium">{parcel.zone}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-muted-foreground">Statut</span>
-        <span className={`text-sm font-medium ${getTaxStatusColor(parcel.taxStatus)}`}>
+        <span className="text-sm text-muted-foreground">Statut</span>
+        <span className={`text-sm font-medium ${
+          parcel.taxStatus === 'PAID' 
+            ? 'text-green-600' 
+            : parcel.taxStatus === 'OVERDUE' 
+            ? 'text-red-600' 
+            : 'text-orange-600'
+        }`}>
           {parcel.taxStatus === 'PAID' 
             ? 'Payé' 
-            : parcel.taxStatus === 'UNPAID' || parcel.taxStatus === 'OVERDUE'
-            ? 'Non payé' 
+            : parcel.taxStatus === 'OVERDUE' 
+            ? 'En retard' 
             : 'En attente'}
         </span>
       </div>
 
+      {/* TNB Information */}
       <div className="pt-2 border-t">
         <div className="flex justify-between">
           <span className="text-sm text-muted-foreground">Prix TNB</span>
-          <span className={`text-sm font-medium ${getTaxStatusColor(parcel.tnbInfo.status)}`}>
+          <span className={`text-sm font-medium ${getTNBStatusColor(parcel.tnbInfo.status)}`}>
             {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
           </span>
         </div>
