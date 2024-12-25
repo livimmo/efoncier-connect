@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Download, FileSpreadsheet, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Parcel } from "@/utils/mockData/types";
+import { Parcel } from "@/types";
 import { formatCurrency } from "@/utils/format";
 
 interface DownloadPropertyDialogProps {
@@ -25,7 +25,6 @@ export const DownloadPropertyDialog = ({
       title: "Téléchargement démarré",
       description: "Le fichier PDF sera bientôt disponible",
     });
-    // Logique de téléchargement PDF à implémenter
   };
 
   const handleDownloadExcel = () => {
@@ -33,7 +32,6 @@ export const DownloadPropertyDialog = ({
       title: "Téléchargement démarré",
       description: "Le fichier Excel sera bientôt disponible",
     });
-    // Logique de téléchargement Excel à implémenter
   };
 
   const handlePreview = () => {
@@ -41,7 +39,23 @@ export const DownloadPropertyDialog = ({
       title: "Aperçu",
       description: "L'aperçu sera bientôt disponible",
     });
-    // Logique d'aperçu à implémenter
+  };
+
+  const getStatusDisplay = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return '🟢 Disponible';
+      case 'IN_TRANSACTION':
+        return '🟡 En Transaction';
+      case 'SOLD':
+        return '🔴 Vendu';
+      default:
+        return '⚪ Indéfini';
+    }
+  };
+
+  const getTaxStatusDisplay = (status: string) => {
+    return status === 'PAID' ? '✅ Payé' : '❌ Impayé';
   };
 
   return (
@@ -77,15 +91,13 @@ export const DownloadPropertyDialog = ({
             <div>
               <p className="text-sm font-medium">Statut</p>
               <p className="text-sm text-muted-foreground">
-                {parcel.status === 'AVAILABLE' ? '🟢 Disponible' : 
-                 parcel.status === 'UNAVAILABLE' ? '🔴 Indisponible' : 
-                 '🟡 En Transaction'}
+                {getStatusDisplay(parcel.status)}
               </p>
             </div>
             <div>
               <p className="text-sm font-medium">Statut Fiscal</p>
               <p className="text-sm text-muted-foreground">
-                {parcel.taxStatus === 'PAID' ? '✅ Payé' : '❌ Impayé'}
+                {getTaxStatusDisplay(parcel.taxStatus)}
               </p>
             </div>
           </div>

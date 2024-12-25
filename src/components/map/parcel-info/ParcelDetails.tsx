@@ -12,6 +12,7 @@ export const ParcelDetails = ({ parcel, compact = false }: ParcelDetailsProps) =
       case 'PAID':
         return 'text-green-600';
       case 'UNPAID':
+      case 'OVERDUE':
         return 'text-red-600';
       default:
         return 'text-orange-600';
@@ -38,7 +39,7 @@ export const ParcelDetails = ({ parcel, compact = false }: ParcelDetailsProps) =
           <span className={`font-medium ${getTaxStatusColor(parcel.taxStatus)}`}>
             {parcel.taxStatus === 'PAID' 
               ? 'Payé' 
-              : parcel.taxStatus === 'UNPAID'
+              : parcel.taxStatus === 'UNPAID' || parcel.taxStatus === 'OVERDUE'
               ? 'Non payé'
               : 'En attente'}
           </span>
@@ -71,22 +72,15 @@ export const ParcelDetails = ({ parcel, compact = false }: ParcelDetailsProps) =
       </div>
       <div className="flex justify-between">
         <span className="text-muted-foreground">Statut</span>
-        <span className={`text-sm font-medium ${
-          parcel.taxStatus === 'PAID' 
-            ? 'text-green-600' 
-            : parcel.taxStatus === 'OVERDUE' 
-            ? 'text-red-600' 
-            : 'text-orange-600'
-        }`}>
+        <span className={`text-sm font-medium ${getTaxStatusColor(parcel.taxStatus)}`}>
           {parcel.taxStatus === 'PAID' 
             ? 'Payé' 
-            : parcel.taxStatus === 'OVERDUE' 
-            ? 'En retard' 
+            : parcel.taxStatus === 'UNPAID' || parcel.taxStatus === 'OVERDUE'
+            ? 'Non payé' 
             : 'En attente'}
         </span>
       </div>
 
-      {/* TNB Information */}
       <div className="pt-2 border-t">
         <div className="flex justify-between">
           <span className="text-sm text-muted-foreground">Prix TNB</span>

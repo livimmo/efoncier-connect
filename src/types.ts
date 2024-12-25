@@ -14,11 +14,19 @@ export type PropertyType =
 export type PropertyStatus = 
   | "AVAILABLE"
   | "IN_TRANSACTION"
-  | "SOLD";
+  | "SOLD"
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "ARCHIVED";
 
 export type TaxStatus = 
   | "PAID"
-  | "PENDING";
+  | "PENDING"
+  | "UNPAID"
+  | "OVERDUE"
+  | "LOW"
+  | "AVERAGE";
 
 export type FiscalStatus = 
   | "compliant"
@@ -32,7 +40,12 @@ export type ZoneType =
   | "AGRICULTURAL_ZONE"
   | "MIXED_USE_ZONE"
   | "PROTECTED_ZONE"
-  | "CONSTRUCTIBLE_ZONE";
+  | "CONSTRUCTIBLE_ZONE"
+  | "URBAN"
+  | "E3"
+  | "E4"
+  | "BT2"
+  | "I2S12";
 
 export interface TNBInfo {
   pricePerMeter: number;
@@ -73,4 +86,5 @@ export interface Property extends ParcelInput {
 
 export interface Parcel extends Property {
   isFavorite?: boolean;
+  owner?: string;
 }

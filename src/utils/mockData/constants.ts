@@ -21,10 +21,33 @@ export const PROPERTY_TYPES: PropertyType[] = [
 export const PROPERTY_STATUSES: PropertyStatus[] = [
   'AVAILABLE',
   'IN_TRANSACTION',
-  'SOLD'
+  'SOLD',
+  'PENDING',
+  'APPROVED',
+  'REJECTED',
+  'ARCHIVED'
 ];
 
 export const TAX_STATUSES: TaxStatus[] = [
   'PAID',
-  'PENDING'
+  'PENDING',
+  'UNPAID',
+  'OVERDUE',
+  'LOW',
+  'AVERAGE'
+];
+
+export const ZONE_TYPES_ARRAY: ZoneType[] = [
+  'RESIDENTIAL_ZONE',
+  'COMMERCIAL_ZONE',
+  'INDUSTRIAL_ZONE',
+  'AGRICULTURAL_ZONE',
+  'MIXED_USE_ZONE',
+  'PROTECTED_ZONE',
+  'CONSTRUCTIBLE_ZONE',
+  'URBAN',
+  'E3',
+  'E4',
+  'BT2',
+  'I2S12'
 ];
