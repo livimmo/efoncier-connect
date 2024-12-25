@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, MapPin, CreditCard, Bell, Building2 } from "lucide-react";
+import { Home, MapPin, CreditCard, Bell, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MobileFooterMenu } from "./MobileFooterMenu";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -18,21 +18,16 @@ export const MobileFooter = () => {
 
   if (!isMobile) return null;
 
-  const getProjectsRoute = () => {
-    if (!profile) return "/";
-    switch (profile.role) {
-      case "developer":
-        return "/developer/properties";
-      case "owner":
-        return "/owner/properties";
-      default:
-        return "/";
+  const handleChatClick = () => {
+    if (!profile) {
+      toast({
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour accéder à la messagerie",
+        variant: "destructive",
+      });
+      return;
     }
-  };
-
-  const getProjectsLabel = () => {
-    if (!profile) return "";
-    return profile.role === "developer" ? "Mes Projets" : "Mes Biens";
+    navigate("/messages");
   };
 
   const menuItems = [
@@ -47,10 +42,11 @@ export const MobileFooter = () => {
       path: "/map",
     },
     {
-      icon: Building2,
-      label: getProjectsLabel(),
-      path: getProjectsRoute(),
-      show: profile && (profile.role === "developer" || profile.role === "owner"),
+      icon: MessageCircle,
+      label: "Messages",
+      onClick: handleChatClick,
+      path: "/messages",
+      badge: true,
     },
     {
       icon: Bell,
@@ -70,7 +66,7 @@ export const MobileFooter = () => {
       label: "Paiements",
       path: "/payment",
     },
-  ].filter(item => !item.show || item.show === true);
+  ];
 
   return (
     <>
@@ -82,7 +78,7 @@ export const MobileFooter = () => {
               key={item.path}
               onClick={() => item.onClick ? item.onClick() : navigate(item.path)}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-primary",
+                "flex flex-col items-center justify-center gap-1 rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-primary relative",
                 location.pathname === item.path && "text-primary"
               )}
             >
@@ -91,7 +87,7 @@ export const MobileFooter = () => {
                 {item.badge && (
                   <Badge 
                     variant="default"
-                    className="absolute -right-1 -top-1 h-2 w-2 p-0 bg-primary"
+                    className="absolute -right-1 -top-1 h-2 w-2 p-0 bg-primary animate-pulse"
                   />
                 )}
               </div>
