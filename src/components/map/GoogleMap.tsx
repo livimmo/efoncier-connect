@@ -110,54 +110,49 @@ export const GoogleMap = ({
   };
 
   useEffect(() => {
-    const initMap = async () => {
-      const loader = new Loader({
-        apiKey: GOOGLE_MAPS_API_KEY,
-        version: 'weekly',
+
+const initMap = async () => {
+  const loader = new Loader({
+    apiKey: GOOGLE_MAPS_API_KEY,
+    version: 'weekly',
+  });
+
+  try {
+    const google = await loader.load();
+    if (mapRef.current) {
+      const mapInstance = new google.maps.Map(mapRef.current, {
+        center: { lat: mapCenter.lat, lng: mapCenter.lng },
+        zoom: mapCenter.zoom,
+        styles: theme === 'dark' ? [
+          { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+          { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+          { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+        ] : [
+          { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#7c93a3" }] },
+          { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#E3F2FD" }] },
+          { featureType: "landscape", elementType: "geometry.fill", stylers: [{ color: "#F5F5F5" }] },
+        ],
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true,
+        gestureHandling: "greedy",
+        minZoom: 5,
+        maxZoom: 18,
       });
 
-      try {
-        const google = await loader.load();
-        if (mapRef.current) {
-          const mapInstance = new google.maps.Map(mapRef.current, {
-            center: { lat: mapCenter.lat, lng: mapCenter.lng },
-            zoom: mapCenter.zoom,
-            styles: theme === 'dark' ? [
-              { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-              { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-              { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-            ] : [
-              { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#7c93a3" }] },
-              { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#E3F2FD" }] },
-              { featureType: "landscape", elementType: "geometry.fill", stylers: [{ color: "#F5F5F5" }] },
-            ],
-            mapTypeControl: true,
-            streetViewControl: true,
-            fullscreenControl: true,
-            gestureHandling: "greedy",
-            minZoom: 5,
-            maxZoom: 18,
-          });
-
-          // Add smooth pan/zoom animations
-          mapInstance.setOptions({
-            zoomAnimation: true,
-            panAnimation: true,
-          });
-
-          setMap(mapInstance);
-          setMapInstance(mapInstance);
-          createMarkers(parcels, mapInstance);
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement de la carte:", error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger la carte Google Maps",
-          variant: "destructive",
-        });
-      }
-    };
+      setMap(mapInstance);
+      setMapInstance(mapInstance);
+      createMarkers(parcels, mapInstance);
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement de la carte:", error);
+    toast({
+      title: "Erreur",
+      description: "Impossible de charger la carte Google Maps",
+      variant: "destructive",
+    });
+  }
+};
 
     initMap();
   }, []);

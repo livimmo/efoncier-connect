@@ -1,7 +1,13 @@
-import { Dialog } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Property } from "@/types";
-import { useState } from "react";
 
 interface PropertyDocumentsDialogProps {
   property: Property;
@@ -12,24 +18,24 @@ interface PropertyDocumentsDialogProps {
 export default function PropertyDocumentsDialog({ property, open, onOpenChange }: PropertyDocumentsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content>
-        <Dialog.Header>
-          <Dialog.Title>Documents du bien</Dialog.Title>
-          <Dialog.Description>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Documents du bien</DialogTitle>
+          <DialogDescription>
             Liste des documents associés au bien
-          </Dialog.Description>
-        </Dialog.Header>
+          </DialogDescription>
+        </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <p>Documents en cours de chargement...</p>
         </div>
 
-        <Dialog.Footer>
+        <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Fermer
           </Button>
-        </Dialog.Footer>
-      </Dialog.Content>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

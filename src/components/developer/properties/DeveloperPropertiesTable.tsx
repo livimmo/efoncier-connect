@@ -8,10 +8,10 @@ import PropertyDocumentsDialog from "./PropertyDocumentsDialog";
 import { PropertyDetailsDialog } from "./PropertyDetailsDialog";
 
 interface DeveloperPropertiesTableProps {
-  properties: Property[];
+  data: Property[];
 }
 
-export const DeveloperPropertiesTable = ({ properties }: DeveloperPropertiesTableProps) => {
+export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
   const { toast } = useToast();
   const [openLocationDialog, setOpenLocationDialog] = useState(false);
   const [openDocumentsDialog, setOpenDocumentsDialog] = useState(false);
@@ -36,7 +36,7 @@ export const DeveloperPropertiesTable = ({ properties }: DeveloperPropertiesTabl
   return (
     <div>
       <DataTable
-        data={properties}
+        data={data}
         columns={[
           {
             accessorKey: "title",

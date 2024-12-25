@@ -1,4 +1,11 @@
-import { Dialog } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Property } from "@/types";
@@ -16,13 +23,13 @@ export default function PropertyLocationDialog({ property, open, onOpenChange }:
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content>
-        <Dialog.Header>
-          <Dialog.Title>Localisation du bien</Dialog.Title>
-          <Dialog.Description>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Localisation du bien</DialogTitle>
+          <DialogDescription>
             Détails de localisation et informations sur le bien
-          </Dialog.Description>
-        </Dialog.Header>
+          </DialogDescription>
+        </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -64,12 +71,12 @@ export default function PropertyLocationDialog({ property, open, onOpenChange }:
           </div>
         </div>
 
-        <Dialog.Footer>
+        <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Fermer
           </Button>
-        </Dialog.Footer>
-      </Dialog.Content>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

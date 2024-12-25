@@ -2,13 +2,18 @@ import { useState, useEffect } from "react";
 import { ParcelInfo } from "./ParcelInfo";
 import { Parcel } from "@/utils/mockData/types";
 import { useParcelPosition } from "./parcel-info/useParcelPosition";
-import { DraggableParcelInfoProps } from "./types";
+
+export interface DraggableParcelInfoProps {
+  parcel: Parcel;
+  onClose: () => void;
+  className?: string;
+  markerPosition?: { x: number; y: number };
+}
 
 export const DraggableParcelInfo = ({ 
   parcel, 
   onClose,
   className,
-  userRole,
   markerPosition 
 }: DraggableParcelInfoProps) => {
   const { position, setPosition } = useParcelPosition(markerPosition);
@@ -70,7 +75,6 @@ export const DraggableParcelInfo = ({
         parcel={parcel} 
         onClose={onClose} 
         className="w-[300px]"
-        userRole={userRole}
       />
     </div>
   );
