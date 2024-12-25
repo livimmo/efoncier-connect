@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { MapFilters } from "./types";
+import type { MapFilters as MapFiltersType } from "./types";
 import { UserRole } from "@/types/auth";
 
 export interface MapFiltersProps {
-  filters: MapFilters;
-  setFilters: Dispatch<SetStateAction<MapFilters>>;
+  filters: MapFiltersType;
+  setFilters: Dispatch<SetStateAction<MapFiltersType>>;
   onApplyFilters: () => void;
   userRole: UserRole;
 }
@@ -17,7 +17,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters, userRole }: Ma
         <label className="text-sm">Type de Propriété</label>
         <select
           value={filters.propertyType}
-          onChange={(e) => setFilters({ ...filters, propertyType: e.target.value })}
+          onChange={(e) => setFilters({ ...filters, propertyType: e.target.value as MapFiltersType['propertyType'] })}
           className="border rounded p-2"
         >
           <option value="">Tous</option>
@@ -30,7 +30,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters, userRole }: Ma
         <label className="text-sm">Statut Fiscal</label>
         <select
           value={filters.fiscalStatus}
-          onChange={(e) => setFilters({ ...filters, fiscalStatus: e.target.value })}
+          onChange={(e) => setFilters({ ...filters, fiscalStatus: e.target.value as MapFiltersType['fiscalStatus'] })}
           className="border rounded p-2"
         >
           <option value="">Tous</option>

@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react";
 import { MapFilters } from "./MapFilters";
 import { cn } from "@/lib/utils";
 import { MapFilters as MapFiltersType } from "./types";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface MapLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ export const MapLayout = ({
   className,
   showFilters = true,
 }: MapLayoutProps) => {
+  const { profile } = useAuth();
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
     commune: '',
@@ -23,12 +25,14 @@ export const MapLayout = ({
     status: '',
     ownerName: '',
     titleDeedNumber: '',
-    lastPaymentDate: null
+    lastPaymentDate: null,
+    fiscalStatus: '',
+    maxPrice: 0
   });
 
   return (
     <div className={cn("flex h-full", className)}>
-      {showFilters && (
+      {showFilters && profile?.role && (
         <div className="w-80 border-r">
           <MapFilters 
             filters={filters}
@@ -36,6 +40,7 @@ export const MapLayout = ({
             onApplyFilters={() => {
               console.log("Filters applied:", filters);
             }}
+            userRole={profile.role}
           />
         </div>
       )}

@@ -7,26 +7,29 @@ export interface MobileFiltersSheetProps {
   setFilters: Dispatch<SetStateAction<MapFilters>>;
   filteredParcelsCount: number;
   userRole: UserRole;
+  onApplyFilters: () => void;
 }
 
-export const MobileFiltersSheet = ({ filters, setFilters, filteredParcelsCount, userRole }: MobileFiltersSheetProps) => {
+export const MobileFiltersSheet = ({ 
+  filters, 
+  setFilters, 
+  filteredParcelsCount, 
+  userRole,
+  onApplyFilters 
+}: MobileFiltersSheetProps) => {
   return (
     <div className="fixed inset-0 z-50 bg-background p-4">
       <h2 className="text-lg font-semibold">Filtres</h2>
       <div className="mt-4">
-        {/* Example filter for property type */}
         <div className="flex items-center">
           <input
             type="checkbox"
-            checked={filters.propertyType.includes("house")}
+            checked={filters.propertyType === "house"}
             onChange={() => {
-              const newFilters = { ...filters };
-              if (newFilters.propertyType.includes("house")) {
-                newFilters.propertyType = newFilters.propertyType.filter(type => type !== "house");
-              } else {
-                newFilters.propertyType.push("house");
-              }
-              setFilters(newFilters);
+              setFilters(prev => ({
+                ...prev,
+                propertyType: prev.propertyType === "house" ? "" : "house"
+              }));
             }}
           />
           <label className="ml-2">Maison</label>
@@ -34,20 +37,16 @@ export const MobileFiltersSheet = ({ filters, setFilters, filteredParcelsCount, 
         <div className="flex items-center">
           <input
             type="checkbox"
-            checked={filters.propertyType.includes("apartment")}
+            checked={filters.propertyType === "apartment"}
             onChange={() => {
-              const newFilters = { ...filters };
-              if (newFilters.propertyType.includes("apartment")) {
-                newFilters.propertyType = newFilters.propertyType.filter(type => type !== "apartment");
-              } else {
-                newFilters.propertyType.push("apartment");
-              }
-              setFilters(newFilters);
+              setFilters(prev => ({
+                ...prev,
+                propertyType: prev.propertyType === "apartment" ? "" : "apartment"
+              }));
             }}
           />
           <label className="ml-2">Appartement</label>
         </div>
-        {/* Add more filters as needed */}
       </div>
       <div className="mt-4">
         <button

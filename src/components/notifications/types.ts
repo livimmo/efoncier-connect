@@ -6,7 +6,8 @@ export type NotificationType =
   | "system" 
   | "warning" 
   | "reminder" 
-  | "transaction";
+  | "transaction"
+  | "payment";
 
 export type NotificationPriority = "high" | "medium" | "low";
 
