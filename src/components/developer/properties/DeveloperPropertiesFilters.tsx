@@ -4,8 +4,17 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { REGIONS } from "@/utils/mockData/locations";
+import { PropertyFilters } from "./useProperties";
 
-export const DeveloperPropertiesFilters = () => {
+interface DeveloperPropertiesFiltersProps {
+  filters: PropertyFilters;
+  onFiltersChange: (filters: PropertyFilters) => void;
+}
+
+export const DeveloperPropertiesFilters = ({ 
+  filters, 
+  onFiltersChange 
+}: DeveloperPropertiesFiltersProps) => {
   return (
     <Card className="h-fit">
       <CardHeader>
@@ -14,7 +23,10 @@ export const DeveloperPropertiesFilters = () => {
       <CardContent className="space-y-6">
         <div className="space-y-2">
           <Label>Région</Label>
-          <Select>
+          <Select 
+            value={filters.region} 
+            onValueChange={(value) => onFiltersChange({ ...filters, region: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une région" />
             </SelectTrigger>
@@ -30,12 +42,19 @@ export const DeveloperPropertiesFilters = () => {
 
         <div className="space-y-2">
           <Label>Numéro TF</Label>
-          <Input placeholder="Entrez le numéro TF" />
+          <Input 
+            placeholder="Entrez le numéro TF" 
+            value={filters.titleDeedNumber}
+            onChange={(e) => onFiltersChange({ ...filters, titleDeedNumber: e.target.value })}
+          />
         </div>
 
         <div className="space-y-2">
           <Label>Statut du bien</Label>
-          <Select>
+          <Select 
+            value={filters.status}
+            onValueChange={(value) => onFiltersChange({ ...filters, status: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner un statut" />
             </SelectTrigger>
@@ -49,14 +68,17 @@ export const DeveloperPropertiesFilters = () => {
 
         <div className="space-y-2">
           <Label>Statut fiscal</Label>
-          <Select>
+          <Select 
+            value={filters.fiscalStatus}
+            onValueChange={(value) => onFiltersChange({ ...filters, fiscalStatus: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner un statut" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="paid">Payé</SelectItem>
-              <SelectItem value="unpaid">Impayé</SelectItem>
-              <SelectItem value="partial">Partiellement payé</SelectItem>
+              <SelectItem value="compliant">Payé</SelectItem>
+              <SelectItem value="non_compliant">Impayé</SelectItem>
+              <SelectItem value="under_review">En révision</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -64,20 +86,24 @@ export const DeveloperPropertiesFilters = () => {
         <div className="space-y-4">
           <Label>Superficie (m²)</Label>
           <Slider
-            defaultValue={[0, 15000]}
+            value={filters.surfaceRange}
+            onValueChange={(value) => onFiltersChange({ ...filters, surfaceRange: value as [number, number] })}
             max={15000}
             step={100}
             className="mt-2"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>0 m²</span>
-            <span>15 000 m²</span>
+            <span>{filters.surfaceRange[0]} m²</span>
+            <span>{filters.surfaceRange[1]} m²</span>
           </div>
         </div>
 
         <div className="space-y-2">
           <Label>Année fiscale</Label>
-          <Select>
+          <Select 
+            value={filters.fiscalYear}
+            onValueChange={(value) => onFiltersChange({ ...filters, fiscalYear: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une année" />
             </SelectTrigger>

@@ -5,6 +5,7 @@ import { Map, List } from "lucide-react";
 import { DeveloperPropertiesTable } from "./DeveloperPropertiesTable";
 import { DeveloperPropertiesMap } from "./DeveloperPropertiesMap";
 import { DeveloperPropertiesFilters } from "./DeveloperPropertiesFilters";
+import { useProperties } from "./useProperties";
 
 interface DeveloperPropertiesViewProps {
   viewMode: "map" | "table";
@@ -15,9 +16,11 @@ export const DeveloperPropertiesView = ({
   viewMode,
   onViewModeChange,
 }: DeveloperPropertiesViewProps) => {
+  const { properties, filters, setFilters } = useProperties();
+
   return (
     <div className="grid lg:grid-cols-[300px,1fr] gap-6">
-      <DeveloperPropertiesFilters />
+      <DeveloperPropertiesFilters filters={filters} onFiltersChange={setFilters} />
       
       <div className="space-y-4">
         <div className="flex justify-end gap-2">
@@ -40,10 +43,10 @@ export const DeveloperPropertiesView = ({
         </div>
 
         {viewMode === "table" ? (
-          <DeveloperPropertiesTable />
+          <DeveloperPropertiesTable data={properties} />
         ) : (
           <Card className="h-[600px]">
-            <DeveloperPropertiesMap />
+            <DeveloperPropertiesMap properties={properties} />
           </Card>
         )}
       </div>

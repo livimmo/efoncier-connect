@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Star, BarChart2, Download, MapPin, FileText } from "lucide-react";
-import { mockParcels } from "@/utils/mockData/parcels";
 import { formatCurrency } from "@/utils/format";
 import { PropertyChat } from "@/components/chat/PropertyChat";
 import { useToast } from "@/hooks/use-toast";
@@ -18,7 +17,11 @@ import { PropertyLocationDialog } from "./PropertyLocationDialog";
 import { PropertyDocumentsDialog } from "./PropertyDocumentsDialog";
 import { Property } from "@/types";
 
-export const DeveloperPropertiesTable = () => {
+interface DeveloperPropertiesTableProps {
+  data: Property[];
+}
+
+export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
   const { toast } = useToast();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
@@ -56,50 +59,19 @@ export const DeveloperPropertiesTable = () => {
     });
   };
 
-  const handleDownload = (parcel: any) => {
-    // Simuler le téléchargement d'un fichier
+  const handleDownload = (parcel: Property) => {
     toast({
       title: "Téléchargement en cours",
       description: "La fiche du bien va être téléchargée",
     });
   };
 
-  const showDocuments = (parcel: any) => {
-    const property: Property = {
-      id: parcel.id,
-      title: parcel.titleDeedNumber,
-      description: parcel.address,
-      property_type: parcel.type.toLowerCase(),
-      surface_area: parcel.surface,
-      location: parcel.location,
-      fiscal_status: "under_review",
-      status: "pending",
-      is_for_sale: false,
-      price: parcel.tnbInfo.pricePerMeter * parcel.surface,
-      owner_id: parcel.owner,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+  const showDocuments = (property: Property) => {
     setSelectedProperty(property);
     setShowDocumentsDialog(true);
   };
 
-  const showLocation = (parcel: any) => {
-    const property: Property = {
-      id: parcel.id,
-      title: parcel.titleDeedNumber,
-      description: parcel.address,
-      property_type: parcel.type.toLowerCase(),
-      surface_area: parcel.surface,
-      location: parcel.location,
-      fiscal_status: "under_review",
-      status: "pending",
-      is_for_sale: false,
-      price: parcel.tnbInfo.pricePerMeter * parcel.surface,
-      owner_id: parcel.owner,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+  const showLocation = (property: Property) => {
     setSelectedProperty(property);
     setShowLocationDialog(true);
   };
@@ -120,67 +92,67 @@ export const DeveloperPropertiesTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockParcels.map((parcel) => (
-              <TableRow key={parcel.id}>
-                <TableCell className="font-medium">{parcel.titleDeedNumber}</TableCell>
+            {data.map((property) => (
+              <TableRow key={property.id}>
+                <TableCell className="font-medium">{property.title}</TableCell>
                 <TableCell>
                   <Button 
                     variant="ghost" 
                     className="flex items-center gap-2 text-primary hover:text-primary"
-                    onClick={() => showLocation(parcel)}
+                    onClick={() => showLocation(property)}
                   >
                     <MapPin className="h-4 w-4" />
-                    {parcel.address}
+                    {property.description}
                   </Button>
                 </TableCell>
-                <TableCell>{parcel.surface.toLocaleString()} m²</TableCell>
-                <TableCell>{formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS</TableCell>
+                <TableCell>{property.surface_area.toLocaleString()} m²</TableCell>
+                <TableCell>{formatCurrency(property.price)} DHS</TableCell>
                 <TableCell>
                   <Badge
                     variant={
-                      parcel.status === "AVAILABLE"
+                      property.status === "available"
                         ? "success"
-                        : parcel.status === "UNAVAILABLE"
+                        : property.status === "unavailable"
                         ? "destructive"
                         : "warning"
                     }
                   >
-                    {parcel.status === "AVAILABLE"
+                    {property.status === "available"
                       ? "Disponible"
-                      : parcel.status === "UNAVAILABLE"
+                      : property.status === "unavailable"
                       ? "Indisponible"
                       : "En Transaction"}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <Badge
-                    variant={parcel.taxStatus === "PAID" ? "success" : "destructive"}
+                    variant={property.fiscal_status === "compliant" ? "success" : "destructive"}
                   >
-                    {parcel.taxStatus === "PAID" ? "Payé" : "Impayé"}
+                    {property.fiscal_status === "compliant" ? "Payé" : "Impayé"}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => showDetails(parcel.id)}>
+                    <Button variant="outline" size="icon" onClick={() => showDetails(property.id)}>
                       <Eye className="h-4 w-4" />
                     </Button>
-                    <PropertyChat propertyId={parcel.id} propertyTitle={parcel.titleDeedNumber} />
+                    <PropertyChat propertyId={property.id} propertyTitle={property.title} />
                     <Button 
                       variant="outline" 
                       size="icon"
-                      onClick={() => toggleFavorite(parcel.id)}
+                      onClick={() => toggleFavorite(property.id)}
                     >
                       <Star 
-                        className={`h-4 w-4 ${favorites.includes(parcel.id) ? "fill-yellow-400" : ""}`} 
+                        className={`h-4 w-4 ${favorites.includes(property.id) ? "fill-yellow-400" : ""}`} 
                       />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => showHistory(parcel.id)}>
+                    <Button variant="outline" size="icon" onClick={() => showHistory(property.id)}>
                       <BarChart2 className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => handleDownload(parcel)}>
+                    <Button variant="outline" size="icon" onClick={() => handleDownload(property)}>
                       <Download className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => showDocuments(parcel)}>
+                    <Button variant="outline" size="icon" onClick={() => showDocuments(property)}>
                       <FileText className="h-4 w-4" />
                     </Button>
                   </div>
