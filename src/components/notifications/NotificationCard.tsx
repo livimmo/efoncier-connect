@@ -1,15 +1,15 @@
 import { 
-  Bell, 
-  MessageCircle, 
-  CreditCard, 
   Building2, 
-  AlertTriangle, 
-  Calendar, 
-  RefreshCw,
-  FileText 
+  MessageCircle, 
+  FileText, 
+  AlertTriangle,
+  Eye,
+  MapPin,
+  Download,
+  MessageSquare
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { NotificationType, NotificationPriority } from "./types";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +21,13 @@ interface NotificationCardProps {
   message: string;
   date: string;
   read: boolean;
+  metadata?: {
+    titleDeedNumber?: string;
+    surface?: number;
+    price?: number;
+    documentUrl?: string;
+    documentType?: string;
+  };
   actions?: {
     primary?: {
       label: string;
@@ -41,27 +48,24 @@ export const NotificationCard = ({
   message,
   date,
   read,
+  metadata,
   actions,
   onClick,
 }: NotificationCardProps) => {
   const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
+      case "new_property":
+        return <Building2 className="h-5 w-5" />;
+      case "property_update":
+        return <Eye className="h-5 w-5" />;
       case "message":
         return <MessageCircle className="h-5 w-5" />;
-      case "fiscal":
-        return <CreditCard className="h-5 w-5" />;
-      case "property":
-        return <Building2 className="h-5 w-5" />;
-      case "warning":
-        return <AlertTriangle className="h-5 w-5" />;
-      case "reminder":
-        return <Calendar className="h-5 w-5" />;
-      case "transaction":
-        return <RefreshCw className="h-5 w-5" />;
       case "document":
         return <FileText className="h-5 w-5" />;
+      case "urgent":
+        return <AlertTriangle className="h-5 w-5" />;
       default:
-        return <Bell className="h-5 w-5" />;
+        return <AlertTriangle className="h-5 w-5" />;
     }
   };
 
@@ -75,6 +79,51 @@ export const NotificationCard = ({
         return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300";
     }
   };
+
+  const getDefaultActions = (type: NotificationType) => {
+    switch (type) {
+      case "new_property":
+        return {
+          primary: {
+            label: "Voir les détails",
+            icon: <Eye className="h-4 w-4" />
+          },
+          secondary: {
+            label: "Voir sur la carte",
+            icon: <MapPin className="h-4 w-4" />
+          }
+        };
+      case "property_update":
+        return {
+          primary: {
+            label: "Voir les changements",
+            icon: <Eye className="h-4 w-4" />
+          }
+        };
+      case "message":
+        return {
+          primary: {
+            label: "Répondre",
+            icon: <MessageSquare className="h-4 w-4" />
+          }
+        };
+      case "document":
+        return {
+          primary: {
+            label: "Télécharger",
+            icon: <Download className="h-4 w-4" />
+          },
+          secondary: {
+            label: "Aperçu",
+            icon: <Eye className="h-4 w-4" />
+          }
+        };
+      default:
+        return {};
+    }
+  };
+
+  const defaultActions = getDefaultActions(type);
 
   return (
     <div
@@ -97,30 +146,38 @@ export const NotificationCard = ({
             </span>
           </div>
           <p className="text-sm text-muted-foreground mt-1 break-words">{message}</p>
-          {actions && (
-            <div className="flex gap-2 mt-3 flex-wrap">
-              {actions.primary && (
-                <Button size="sm" onClick={(e) => {
-                  e.stopPropagation();
-                  actions.primary?.action();
-                }}>
-                  {actions.primary.label}
-                </Button>
-              )}
-              {actions.secondary && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    actions.secondary?.action();
-                  }}
-                >
-                  {actions.secondary.label}
-                </Button>
-              )}
-            </div>
+          
+          {metadata?.titleDeedNumber && (
+            <Badge variant="outline" className="mt-2">
+              TF: {metadata.titleDeedNumber}
+            </Badge>
           )}
+          
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {(actions?.primary || defaultActions.primary) && (
+              <Button size="sm" onClick={(e) => {
+                e.stopPropagation();
+                actions?.primary?.action?.();
+              }}>
+                {defaultActions.primary?.icon}
+                <span className="ml-2">{actions?.primary?.label || defaultActions.primary?.label}</span>
+              </Button>
+            )}
+            
+            {(actions?.secondary || defaultActions.secondary) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  actions?.secondary?.action?.();
+                }}
+              >
+                {defaultActions.secondary?.icon}
+                <span className="ml-2">{actions?.secondary?.label || defaultActions.secondary?.label}</span>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { NotificationFilters } from "@/components/notifications/NotificationFilters";
 import { NotificationHeader } from "@/components/notifications/NotificationHeader";
-import { NotificationList } from "@/components/notifications/NotificationList";
+import { NotificationCard } from "@/components/notifications/NotificationCard";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,6 +13,7 @@ const Notifications = () => {
     type: "all",
     status: "all",
     date: null,
+    location: "all",
     search: "",
   });
   
@@ -23,19 +24,37 @@ const Notifications = () => {
   const notifications: Notification[] = [
     {
       id: "1",
-      type: "payment",
+      type: "new_property",
       priority: "high",
-      title: "TNB en attente de paiement",
-      message: "Votre TNB est due avant le 30 juin pour le bien TF-12345",
+      title: "Nouveau bien disponible à Ain Sebaa",
+      message: "Un nouveau bien est disponible dans le quartier Ain Sebaa, Casablanca (TF-12345).",
       date: new Date().toISOString(),
       read: false,
+      metadata: {
+        titleDeedNumber: "TF-12345",
+        surface: 1200,
+        price: 2500000,
+      },
+      location: {
+        city: "Casablanca",
+        district: "Ain Sebaa"
+      },
       actions: {
         primary: {
-          label: "Payer maintenant",
+          label: "Voir les détails",
           action: () => {
             toast({
               title: "Redirection",
-              description: "Redirection vers la page de paiement...",
+              description: "Redirection vers la page du bien...",
+            });
+          },
+        },
+        secondary: {
+          label: "Voir sur la carte",
+          action: () => {
+            toast({
+              title: "Carte",
+              description: "Ouverture de la carte...",
             });
           },
         },
@@ -43,28 +62,68 @@ const Notifications = () => {
     },
     {
       id: "2",
-      type: "property",
+      type: "property_update",
       priority: "medium",
       title: "Mise à jour de statut",
-      message: "Le statut de votre bien TF-56789 a été mis à jour",
+      message: "Le prix du bien TF-56789 a été ajusté à la baisse.",
       date: new Date(Date.now() - 86400000).toISOString(),
       read: true,
+      metadata: {
+        titleDeedNumber: "TF-56789",
+      },
     },
     {
       id: "3",
       type: "message",
       priority: "low",
-      title: "Nouveau message",
-      message: "Un promoteur a envoyé un message concernant votre bien TF-12345",
+      title: "Nouveau message du propriétaire",
+      message: "Le propriétaire du bien TF-11223 a répondu à votre demande d'information.",
       date: new Date(Date.now() - 172800000).toISOString(),
       read: false,
+      metadata: {
+        titleDeedNumber: "TF-11223",
+      },
       actions: {
         primary: {
-          label: "Voir le message",
+          label: "Répondre",
           action: () => {
             toast({
               title: "Message",
-              description: "Ouverture du message...",
+              description: "Ouverture de la conversation...",
+            });
+          },
+        },
+      },
+    },
+    {
+      id: "4",
+      type: "document",
+      priority: "medium",
+      title: "Nouveau document disponible",
+      message: "Un nouveau plan cadastral a été ajouté pour le bien TF-99876.",
+      date: new Date(Date.now() - 259200000).toISOString(),
+      read: false,
+      metadata: {
+        titleDeedNumber: "TF-99876",
+        documentType: "Plan cadastral",
+        documentUrl: "/documents/plan-cadastral-99876.pdf",
+      },
+      actions: {
+        primary: {
+          label: "Télécharger",
+          action: () => {
+            toast({
+              title: "Téléchargement",
+              description: "Le document est en cours de téléchargement...",
+            });
+          },
+        },
+        secondary: {
+          label: "Aperçu",
+          action: () => {
+            toast({
+              title: "Aperçu",
+              description: "Ouverture de l'aperçu du document...",
             });
           },
         },
@@ -86,14 +145,39 @@ const Notifications = () => {
     });
   };
 
+  const handleExport = () => {
+    toast({
+      title: "Export",
+      description: "L'export des notifications est en cours...",
+    });
+  };
+
+  const filteredNotifications = notifications.filter(notification => {
+    if (activeFilters.type !== "all" && notification.type !== activeFilters.type) return false;
+    if (activeFilters.status === "unread" && notification.read) return false;
+    if (activeFilters.status === "read" && !notification.read) return false;
+    if (activeFilters.location !== "all" && notification.location?.city?.toLowerCase() !== activeFilters.location) return false;
+    if (activeFilters.search) {
+      const searchLower = activeFilters.search.toLowerCase();
+      return (
+        notification.title.toLowerCase().includes(searchLower) ||
+        notification.message.toLowerCase().includes(searchLower) ||
+        notification.metadata?.titleDeedNumber?.toLowerCase().includes(searchLower) ||
+        notification.location?.city?.toLowerCase().includes(searchLower)
+      );
+    }
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <NotificationHeader 
             onMarkAllAsRead={handleMarkAllAsRead}
             onRefresh={handleRefresh}
+            onExport={handleExport}
             unreadCount={notifications.filter(n => !n.read).length}
           />
           
@@ -108,10 +192,19 @@ const Notifications = () => {
             )}
             
             <ScrollArea className="h-[calc(100vh-300px)]">
-              <NotificationList 
-                notifications={notifications}
-                filters={activeFilters}
-              />
+              <div className="space-y-4">
+                {filteredNotifications.map((notification) => (
+                  <NotificationCard 
+                    key={notification.id}
+                    {...notification}
+                  />
+                ))}
+                {filteredNotifications.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Aucune notification ne correspond à vos critères.
+                  </div>
+                )}
+              </div>
             </ScrollArea>
           </div>
         </div>

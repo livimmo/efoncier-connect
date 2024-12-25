@@ -18,24 +18,39 @@ export const NotificationFilters = ({ filters, onChange }: NotificationFiltersPr
     <div className="space-y-6">
       <FilterSection title="Recherche">
         <Input
-          placeholder="Rechercher..."
+          placeholder="Rechercher par TF, ville, propriétaire..."
           value={filters.search}
           onChange={(e) => handleFilterChange("search", e.target.value)}
         />
       </FilterSection>
 
-      <FilterSection title="Type">
+      <FilterSection title="Catégorie">
         <SelectFilter
           value={filters.type}
           onChange={(value) => handleFilterChange("type", value)}
           options={[
-            { value: "all", label: "Tous" },
-            { value: "payment", label: "Paiements" },
-            { value: "property", label: "Biens" },
-            { value: "message", label: "Messages" },
-            { value: "document", label: "Documents" },
+            { value: "all", label: "Toutes les catégories" },
+            { value: "new_property", label: "🆕 Nouveaux biens" },
+            { value: "property_update", label: "📊 Mises à jour" },
+            { value: "message", label: "💬 Messages" },
+            { value: "document", label: "📁 Documents" },
           ]}
-          placeholder="Sélectionner un type"
+          placeholder="Sélectionner une catégorie"
+        />
+      </FilterSection>
+
+      <FilterSection title="Localisation">
+        <SelectFilter
+          value={filters.location}
+          onChange={(value) => handleFilterChange("location", value)}
+          options={[
+            { value: "all", label: "Toutes les zones" },
+            { value: "casablanca", label: "Casablanca" },
+            { value: "rabat", label: "Rabat" },
+            { value: "tanger", label: "Tanger" },
+            { value: "marrakech", label: "Marrakech" },
+          ]}
+          placeholder="Sélectionner une zone"
         />
       </FilterSection>
 

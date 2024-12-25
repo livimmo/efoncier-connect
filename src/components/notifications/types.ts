@@ -1,13 +1,10 @@
 export type NotificationType = 
-  | "fiscal" 
-  | "property" 
-  | "message" 
-  | "document" 
-  | "system" 
-  | "warning" 
-  | "reminder" 
-  | "transaction"
-  | "payment";
+  | "new_property"    // Nouveaux biens disponibles
+  | "property_update" // Mises à jour des biens suivis
+  | "message"        // Messages des propriétaires
+  | "document"       // Nouveaux documents disponibles
+  | "system"         // Notifications système
+  | "urgent";        // Notifications urgentes
 
 export type NotificationPriority = "high" | "medium" | "low";
 
@@ -15,6 +12,7 @@ export interface NotificationFilter {
   type: string;
   status: string;
   date: string | null;
+  location: string;
   search: string;
 }
 
@@ -26,6 +24,19 @@ export interface Notification {
   message: string;
   date: string;
   read: boolean;
+  propertyId?: string;
+  location?: {
+    region?: string;
+    city?: string;
+    district?: string;
+  };
+  metadata?: {
+    titleDeedNumber?: string;
+    surface?: number;
+    price?: number;
+    documentUrl?: string;
+    documentType?: string;
+  };
   actions?: {
     primary?: {
       label: string;
@@ -36,9 +47,4 @@ export interface Notification {
       action: () => void;
     };
   };
-}
-
-export interface NotificationGroup {
-  title: string;
-  notifications: Notification[];
 }
