@@ -46,6 +46,14 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
       },
     },
     {
+      icon: MessageSquare,
+      label: "Messages",
+      onClick: () => {
+        navigate("/messages");
+        onClose();
+      },
+    },
+    {
       icon: HelpCircle,
       label: "FAQ",
       onClick: () => {
@@ -58,14 +66,6 @@ export const MobileFooterMenu = ({ open, onClose }: MobileFooterMenuProps) => {
       label: "Contact",
       onClick: () => {
         navigate("/contact");
-        onClose();
-      },
-    },
-    {
-      icon: MessageSquare,
-      label: "Support",
-      onClick: () => {
-        navigate("/support");
         onClose();
       },
     },
