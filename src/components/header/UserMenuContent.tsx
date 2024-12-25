@@ -1,4 +1,4 @@
-import { Home, User, CreditCard, Database, LogOut } from "lucide-react";
+import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -14,6 +14,28 @@ const roleLabels = {
   developer: "Promoteur",
   commune: "Commune",
   admin: "Administrateur"
+};
+
+const getRoleSpecificMenuItems = (role: string) => {
+  const items = {
+    owner: [
+      { icon: Building2, label: "Mes Biens", href: "/owner/properties" },
+      { icon: CreditCard, label: "Paiements", href: "/owner/payments" },
+    ],
+    developer: [
+      { icon: Building2, label: "Mes Projets", href: "/developer/properties" },
+      { icon: FileText, label: "Documents", href: "/developer/documents" },
+    ],
+    commune: [
+      { icon: Building2, label: "Gestion des Biens", href: "/commune/properties" },
+      { icon: CreditCard, label: "Paiements", href: "/commune/payments" },
+    ],
+    admin: [
+      { icon: Building2, label: "Gestion des Biens", href: "/admin/properties" },
+      { icon: FileText, label: "Rapports", href: "/admin/reports" },
+    ],
+  };
+  return items[role as keyof typeof items] || items.owner;
 };
 
 export const UserMenuContent = () => {
@@ -38,6 +60,8 @@ export const UserMenuContent = () => {
     }
   };
 
+  const roleSpecificItems = getRoleSpecificMenuItems(profile?.role || 'owner');
+
   return (
     <DropdownMenuContent className="w-56" align="end" forceMount>
       <DropdownMenuLabel className="font-normal">
@@ -49,7 +73,7 @@ export const UserMenuContent = () => {
             {profile?.email}
           </p>
           <p className="text-xs font-medium text-primary">
-            {profile?.role ? roleLabels[profile.role] : ''}
+            {profile?.role ? roleLabels[profile.role as keyof typeof roleLabels] : ''}
           </p>
         </div>
       </DropdownMenuLabel>
@@ -62,13 +86,19 @@ export const UserMenuContent = () => {
         <User className="mr-2 h-4 w-4" />
         <span>Profil</span>
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/history")}>
-        <CreditCard className="mr-2 h-4 w-4" />
-        <span>Historique</span>
+      {roleSpecificItems.map((item) => (
+        <DropdownMenuItem key={item.href} onClick={() => navigate(item.href)}>
+          <item.icon className="mr-2 h-4 w-4" />
+          <span>{item.label}</span>
+        </DropdownMenuItem>
+      ))}
+      <DropdownMenuItem onClick={() => navigate("/notifications")}>
+        <Bell className="mr-2 h-4 w-4" />
+        <span>Notifications</span>
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/support")}>
-        <Database className="mr-2 h-4 w-4" />
-        <span>Support</span>
+      <DropdownMenuItem onClick={() => navigate("/settings")}>
+        <Settings className="mr-2 h-4 w-4" />
+        <span>Paramètres</span>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem onClick={handleLogout}>

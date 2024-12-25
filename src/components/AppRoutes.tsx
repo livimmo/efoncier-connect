@@ -10,6 +10,7 @@ import Map from "@/components/Map";
 import Messages from "@/pages/Messages";
 import Dashboard from "@/pages/Dashboard";
 import History from "@/pages/History";
+import Payment from "@/pages/Payment";
 import OwnerDashboard from "@/pages/owner/Dashboard";
 import OwnerProfile from "@/pages/owner/Profile";
 import OwnerProperties from "@/pages/owner/Properties";
@@ -30,17 +31,19 @@ export const AppRoutes = () => {
       <Route path="/support" element={<Support />} />
       <Route path="/map" element={<Map />} />
 
-      {/* Routes protégées */}
+      {/* Routes protégées communes */}
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="/messages" element={<PrivateRoute><Messages /></PrivateRoute>} />
       <Route path="/history" element={<PrivateRoute><History /></PrivateRoute>} />
+      <Route path="/payments" element={<PrivateRoute><Payment /></PrivateRoute>} />
 
       {/* Routes spécifiques aux propriétaires */}
       <Route path="/owner">
         <Route path="dashboard" element={<PrivateRoute><OwnerDashboard /></PrivateRoute>} />
         <Route path="profile" element={<PrivateRoute><OwnerProfile /></PrivateRoute>} />
         <Route path="properties" element={<PrivateRoute><OwnerProperties /></PrivateRoute>} />
+        <Route path="payments" element={<PrivateRoute><Payment /></PrivateRoute>} />
       </Route>
 
       {/* Route pour ajouter un bien */}
