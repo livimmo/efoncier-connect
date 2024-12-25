@@ -25,9 +25,11 @@ export const SmartSearchBar = ({
   // Simulated suggestions based on query
   useEffect(() => {
     if (query.length > 2) {
-      // This would be replaced with actual API calls in production
+      // Ajout des suggestions pour TNB et CIN
       const mockSuggestions = [
         `TF-${query}`,
+        `TNB-${query}`,
+        `CIN-${query}`,
         `Casablanca - ${query}`,
         `Propriétaire: ${query}`,
       ];
@@ -64,7 +66,7 @@ export const SmartSearchBar = ({
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Recherchez par TF, Région, Ville, Propriétaire..."
+          placeholder="Recherchez par TF, TNB, CIN, Région, Ville, Propriétaire..."
           className="pl-9 pr-4"
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />

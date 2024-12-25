@@ -2,17 +2,15 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { REGIONS } from "@/utils/mockData/locations";
-import { useEffect, useState } from "react";
 import { MapFiltersProps } from "./types";
+import { SmartSearchBar } from "./filters/SmartSearchBar";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { SmartSearchBar } from "./filters/SmartSearchBar";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -23,41 +21,6 @@ export const MapFilters = ({
   onApplyFilters,
   userRole 
 }: MapFiltersProps) => {
-  const [selectedRegion, setSelectedRegion] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-  const [cities, setCities] = useState<string[]>([]);
-  const [districts, setDistricts] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (selectedRegion) {
-      const region = REGIONS.find(r => r.id === selectedRegion);
-      if (region) {
-        setCities(region.communes);
-        setSelectedCity("");
-        setDistricts([]);
-      }
-    } else {
-      setCities([]);
-      setSelectedCity("");
-      setDistricts([]);
-    }
-  }, [selectedRegion]);
-
-  useEffect(() => {
-    if (selectedCity) {
-      const mockDistricts = [
-        `${selectedCity} Nord`,
-        `${selectedCity} Sud`,
-        `${selectedCity} Est`,
-        `${selectedCity} Ouest`,
-        `Centre ${selectedCity}`
-      ];
-      setDistricts(mockDistricts);
-    } else {
-      setDistricts([]);
-    }
-  }, [selectedCity]);
-
   const handleSearch = (query: string) => {
     setFilters?.({
       ...filters!,
@@ -85,8 +48,6 @@ export const MapFilters = ({
         zoning: ''
       });
     }
-    setSelectedRegion("");
-    setSelectedCity("");
     onApplyFilters?.();
   };
 
@@ -96,7 +57,7 @@ export const MapFilters = ({
         <CardTitle>Filtres</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <SmartSearchBar
+        <SmartSearchBar 
           onSearch={handleSearch}
           onReset={handleReset}
           onViewListResults={() => {
@@ -108,9 +69,9 @@ export const MapFilters = ({
         <div className="space-y-2">
           <Label>Région</Label>
           <Select 
-            value={selectedRegion} 
+            value={filters?.region} 
             onValueChange={(value) => {
-              setSelectedRegion(value);
+              setFilters?.({ ...filters!, region: value });
               onRegionChange?.(value);
             }}
           >
@@ -129,42 +90,20 @@ export const MapFilters = ({
 
         <div className="space-y-2">
           <Label>Ville</Label>
-          <Select 
-            value={selectedCity} 
+          <Select
+            value={filters?.commune}
             onValueChange={(value) => {
-              setSelectedCity(value);
+              setFilters?.({ ...filters!, commune: value });
               onCityChange?.(value);
             }}
-            disabled={!selectedRegion}
           >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une ville" />
             </SelectTrigger>
             <SelectContent>
-              {cities.map((city) => (
-                <SelectItem key={city} value={city}>
-                  {city}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Quartier</Label>
-          <Select 
-            onValueChange={(value) => onDistrictChange?.(value)}
-            disabled={!selectedCity}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner un quartier" />
-            </SelectTrigger>
-            <SelectContent>
-              {districts.map((district) => (
-                <SelectItem key={district} value={district}>
-                  {district}
-                </SelectItem>
-              ))}
+              <SelectItem value="Casablanca">Casablanca</SelectItem>
+              <SelectItem value="Rabat">Rabat</SelectItem>
+              <SelectItem value="Marrakech">Marrakech</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -252,15 +191,6 @@ export const MapFilters = ({
             </div>
           </>
         )}
-
-        <div className="space-y-2">
-          <Label>Numéro de titre foncier</Label>
-          <Input
-            placeholder="Entrer le numéro"
-            value={filters?.titleDeedNumber}
-            onChange={(e) => setFilters?.({ ...filters!, titleDeedNumber: e.target.value })}
-          />
-        </div>
 
         {onApplyFilters && (
           <Button 
