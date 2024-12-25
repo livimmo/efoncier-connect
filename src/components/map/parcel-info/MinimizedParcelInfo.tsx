@@ -18,7 +18,7 @@ export const MinimizedParcelInfo = ({
 }: MinimizedParcelInfoProps) => {
   return (
     <div className="p-2 space-y-2">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-2">
         <div>
           <p className="text-sm font-medium">{parcel.surface_area} m²</p>
           <p className="text-xs text-muted-foreground">
@@ -28,15 +28,13 @@ export const MinimizedParcelInfo = ({
         {parcel.taxStatus === "PAID" ? (
           isOwner && (
             <Button variant="outline" size="sm" onClick={onReceiptClick}>
-              <Receipt className="w-4 h-4 mr-2" />
-              Reçu
+              <Receipt className="w-4 h-4" />
             </Button>
           )
         ) : (
           isOwner && (
             <Button variant="destructive" size="sm" onClick={onPaymentClick}>
-              <CreditCard className="w-4 h-4 mr-2" />
-              Payer TNB
+              <CreditCard className="w-4 h-4" />
             </Button>
           )
         )}

@@ -23,7 +23,6 @@ export const DraggableParcelInfo = ({
 }: DraggableParcelInfoProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const { profile } = useAuth();
@@ -56,23 +55,6 @@ export const DraggableParcelInfo = ({
     setIsDragging(false);
   };
 
-  const handlePaymentClick = () => {
-    if (isOwner) {
-      setShowPayment(true);
-    }
-  };
-
-  const handleReceiptClick = () => {
-    if (isOwner) {
-      setShowReceipt(true);
-    }
-  };
-
-  const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
-    setIsMinimized(false);
-  };
-
   return (
     <>
       <Card
@@ -80,8 +62,7 @@ export const DraggableParcelInfo = ({
         className={cn(
           "fixed z-50 bg-background/95 backdrop-blur-sm shadow-lg transition-all duration-300 ease-in-out",
           isDragging && "cursor-grabbing",
-          isMinimized ? "w-auto max-w-[300px]" : "min-w-[300px] max-w-md",
-          isExpanded && "!max-w-2xl w-full",
+          isMinimized ? "w-auto max-w-[250px]" : "w-[300px]",
           "hover:shadow-xl"
         )}
         style={{
@@ -98,18 +79,18 @@ export const DraggableParcelInfo = ({
           isDragging={isDragging}
           isMinimized={isMinimized}
           setIsMinimized={setIsMinimized}
-          handleToggleExpand={handleToggleExpand}
+          handleToggleExpand={() => {}}
           onClose={onClose}
           onMouseDown={handleMouseDown}
         />
 
         {!isMinimized ? (
-          <div className="p-4 space-y-4">
-            <ParcelDetails parcel={parcel} />
+          <div className="p-3 space-y-3">
+            <ParcelDetails parcel={parcel} compact />
             <ParcelActions
               parcel={parcel}
-              onPaymentClick={handlePaymentClick}
-              onReceiptClick={handleReceiptClick}
+              onPaymentClick={() => setShowPayment(true)}
+              onReceiptClick={() => setShowReceipt(true)}
               onContactClick={() => {}}
               onCalculatorClick={() => {}}
             />
@@ -118,8 +99,8 @@ export const DraggableParcelInfo = ({
           <MinimizedParcelInfo
             parcel={parcel}
             isOwner={isOwner}
-            onReceiptClick={handleReceiptClick}
-            onPaymentClick={handlePaymentClick}
+            onReceiptClick={() => setShowReceipt(true)}
+            onPaymentClick={() => setShowPayment(true)}
           />
         )}
       </Card>
