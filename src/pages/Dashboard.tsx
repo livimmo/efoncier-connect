@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { DashboardTab } from "@/components/profile/tabs/DashboardTab";
+import { Header } from "@/components/Header";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -34,15 +35,23 @@ const Dashboard = () => {
 
   // Show loading state while checking auth
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Chargement...</div>;
+    return (
+      <>
+        <Header />
+        <div className="flex items-center justify-center min-h-screen">Chargement...</div>
+      </>
+    );
   }
 
   // If no specific role or waiting for redirect, show default dashboard
   return (
-    <div className="container mx-auto p-6 mt-16">
-      <h1 className="text-2xl font-bold mb-6">Tableau de Bord</h1>
-      <DashboardTab />
-    </div>
+    <>
+      <Header />
+      <div className="container mx-auto p-6 mt-16">
+        <h1 className="text-2xl font-bold mb-6">Tableau de Bord</h1>
+        <DashboardTab />
+      </div>
+    </>
   );
 };
 
