@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Send, Download, Flag, Bell } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface MessageDetailProps {
   conversationId: string;
@@ -34,9 +35,38 @@ const mockConversation = {
 };
 
 export const MessageDetail = ({ conversationId, onClose }: MessageDetailProps) => {
+  const { toast } = useToast();
+  
+  const handleSendMessage = () => {
+    toast({
+      title: "Message envoyé",
+      description: "Votre message a été envoyé avec succès.",
+    });
+  };
+
+  const handleDownload = () => {
+    toast({
+      title: "Téléchargement",
+      description: "La conversation sera bientôt disponible au téléchargement.",
+    });
+  };
+
+  const handleFlag = () => {
+    toast({
+      title: "Message signalé",
+      description: "Le message a été signalé avec succès.",
+    });
+  };
+
+  const handleNotification = () => {
+    toast({
+      title: "Notifications activées",
+      description: "Vous recevrez des notifications pour cette conversation.",
+    });
+  };
+
   return (
     <div className="border rounded-lg">
-      {/* Header */}
       <div className="p-4 border-b">
         <div className="flex items-center gap-3">
           <Button
@@ -57,13 +87,13 @@ export const MessageDetail = ({ conversationId, onClose }: MessageDetailProps) =
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={handleDownload}>
               <Download className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={handleFlag}>
               <Flag className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={handleNotification}>
               <Bell className="h-4 w-4" />
             </Button>
           </div>
@@ -75,7 +105,6 @@ export const MessageDetail = ({ conversationId, onClose }: MessageDetailProps) =
         </div>
       </div>
 
-      {/* Messages */}
       <div className="p-4 space-y-4 max-h-[500px] overflow-y-auto">
         {mockConversation.messages.map((message) => (
           <div
@@ -93,14 +122,13 @@ export const MessageDetail = ({ conversationId, onClose }: MessageDetailProps) =
         ))}
       </div>
 
-      {/* Reply */}
       <div className="p-4 border-t">
         <div className="flex gap-3">
           <Textarea
             placeholder="Tapez votre message..."
             className="min-h-[80px]"
           />
-          <Button className="self-end">
+          <Button className="self-end" onClick={handleSendMessage}>
             <Send className="h-4 w-4 mr-2" />
             Envoyer
           </Button>

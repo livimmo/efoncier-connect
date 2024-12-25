@@ -12,7 +12,7 @@ export const MessagesHeader = () => {
       title: "Nouveau message",
       description: "Création d'un nouveau message...",
     });
-    // Ici vous pouvez ajouter la logique pour créer un nouveau message
+    navigate("/messages/new");
   };
 
   const handleExport = () => {
@@ -20,6 +20,7 @@ export const MessagesHeader = () => {
       title: "Export en cours",
       description: "Vos conversations seront bientôt disponibles au téléchargement.",
     });
+    // Logique d'export à implémenter
   };
 
   return (
@@ -31,7 +32,7 @@ export const MessagesHeader = () => {
         </p>
       </div>
       <div className="flex flex-wrap gap-3">
-        <Button className="bg-primary hover:bg-primary/90" onClick={handleNewMessage}>
+        <Button onClick={handleNewMessage} className="bg-primary hover:bg-primary/90">
           <PenSquare className="w-4 h-4 mr-2" />
           Nouveau Message
         </Button>

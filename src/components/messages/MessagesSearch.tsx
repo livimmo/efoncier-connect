@@ -8,8 +8,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, Filter, RefreshCcw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export const MessagesSearch = () => {
+  const { toast } = useToast();
+
+  const handleRefresh = () => {
+    toast({
+      title: "Actualisation",
+      description: "La liste des messages a été actualisée.",
+    });
+  };
+
+  const handleFilter = () => {
+    toast({
+      title: "Filtres appliqués",
+      description: "Les filtres ont été appliqués avec succès.",
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex gap-3">
@@ -20,17 +37,17 @@ export const MessagesSearch = () => {
             className="pl-9"
           />
         </div>
-        <Button variant="outline">
+        <Button variant="outline" onClick={handleFilter}>
           <Filter className="w-4 h-4 mr-2" />
           Filtres
         </Button>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" onClick={handleRefresh}>
           <RefreshCcw className="w-4 h-4" />
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <Select>
+        <Select onValueChange={(value) => console.log("Location:", value)}>
           <SelectTrigger>
             <SelectValue placeholder="Localisation" />
           </SelectTrigger>
@@ -41,7 +58,7 @@ export const MessagesSearch = () => {
           </SelectContent>
         </Select>
 
-        <Select>
+        <Select onValueChange={(value) => console.log("User type:", value)}>
           <SelectTrigger>
             <SelectValue placeholder="Type d'utilisateur" />
           </SelectTrigger>
@@ -51,7 +68,7 @@ export const MessagesSearch = () => {
           </SelectContent>
         </Select>
 
-        <Select>
+        <Select onValueChange={(value) => console.log("Status:", value)}>
           <SelectTrigger>
             <SelectValue placeholder="Statut" />
           </SelectTrigger>

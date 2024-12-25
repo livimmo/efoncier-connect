@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Pin, Archive, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface MessagesListProps {
   onSelectConversation: (id: string) => void;
@@ -37,20 +38,46 @@ const mockConversations = [
 ];
 
 export const MessagesList = ({ onSelectConversation, selectedConversationId }: MessagesListProps) => {
+  const { toast } = useToast();
+
+  const handlePin = (id: string) => {
+    toast({
+      title: "Message épinglé",
+      description: "Le message a été épinglé avec succès.",
+    });
+  };
+
+  const handleArchive = (id: string) => {
+    toast({
+      title: "Message archivé",
+      description: "Le message a été archivé avec succès.",
+    });
+  };
+
+  const handleFlag = (id: string) => {
+    toast({
+      title: "Message signalé",
+      description: "Le message a été signalé avec succès.",
+    });
+  };
+
   return (
     <div className="space-y-4">
       {mockConversations.map((conversation) => (
         <div
           key={conversation.id}
           className={cn(
-            "p-4 rounded-lg border transition-colors",
+            "p-4 rounded-lg border transition-colors cursor-pointer",
             selectedConversationId === conversation.id
               ? "bg-accent"
               : "hover:bg-accent/50"
           )}
         >
           <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0 flex-1">
+            <div 
+              className="min-w-0 flex-1"
+              onClick={() => onSelectConversation(conversation.id)}
+            >
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold truncate">{conversation.subject}</h3>
                 <Badge
@@ -86,13 +113,25 @@ export const MessagesList = ({ onSelectConversation, selectedConversationId }: M
               >
                 <Eye className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => handlePin(conversation.id)}
+              >
                 <Pin className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => handleArchive(conversation.id)}
+              >
                 <Archive className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => handleFlag(conversation.id)}
+              >
                 <Flag className="h-4 w-4" />
               </Button>
             </div>
