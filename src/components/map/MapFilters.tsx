@@ -2,22 +2,31 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { REGIONS } from "@/utils/mockData/locations";
 import { useEffect, useState } from "react";
+import { MapFiltersProps } from "./types";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 
-interface MapFiltersProps {
-  onRegionChange?: (regionId: string) => void;
-  onCityChange?: (city: string) => void;
-  onDistrictChange?: (district: string) => void;
-}
-
-export const MapFilters = ({ onRegionChange, onCityChange, onDistrictChange }: MapFiltersProps) => {
+export const MapFilters = ({ 
+  onRegionChange, 
+  onCityChange, 
+  onDistrictChange,
+  filters,
+  setFilters,
+  onApplyFilters,
+  userRole 
+}: MapFiltersProps) => {
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [cities, setCities] = useState<string[]>([]);
   const [districts, setDistricts] = useState<string[]>([]);
 
-  // Mise à jour des villes quand une région est sélectionnée
   useEffect(() => {
     if (selectedRegion) {
       const region = REGIONS.find(r => r.id === selectedRegion);
@@ -33,10 +42,8 @@ export const MapFilters = ({ onRegionChange, onCityChange, onDistrictChange }: M
     }
   }, [selectedRegion]);
 
-  // Mise à jour des quartiers quand une ville est sélectionnée
   useEffect(() => {
     if (selectedCity) {
-      // Simulons quelques quartiers pour la ville sélectionnée
       const mockDistricts = [
         `${selectedCity} Nord`,
         `${selectedCity} Sud`,
@@ -120,12 +127,32 @@ export const MapFilters = ({ onRegionChange, onCityChange, onDistrictChange }: M
           </Select>
         </div>
 
+        <div className="space-y-2">
+          <Label>Type de propriété</Label>
+          <Select
+            value={filters?.propertyType}
+            onValueChange={(value) => setFilters?.({ ...filters!, propertyType: value })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner un type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="RESIDENTIAL">Résidentiel</SelectItem>
+              <SelectItem value="COMMERCIAL">Commercial</SelectItem>
+              <SelectItem value="INDUSTRIAL">Industriel</SelectItem>
+              <SelectItem value="AGRICULTURAL">Agricole</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="space-y-4">
           <Label>Superficie (m²)</Label>
           <Slider
             defaultValue={[0, 15000]}
             max={15000}
             step={100}
+            value={filters?.size}
+            onValueChange={(value) => setFilters?.({ ...filters!, size: value as [number, number] })}
             className="mt-2"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
@@ -133,6 +160,74 @@ export const MapFilters = ({ onRegionChange, onCityChange, onDistrictChange }: M
             <span>15 000 m²</span>
           </div>
         </div>
+
+        {userRole === 'commune' && (
+          <>
+            <div className="space-y-2">
+              <Label>Statut fiscal</Label>
+              <Select
+                value={filters?.fiscalStatus}
+                onValueChange={(value) => setFilters?.({ ...filters!, fiscalStatus: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner un statut" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PAID">Payé</SelectItem>
+                  <SelectItem value="PENDING">En attente</SelectItem>
+                  <SelectItem value="OVERDUE">En retard</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Dernière date de paiement</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !filters?.lastPaymentDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {filters?.lastPaymentDate ? (
+                      format(filters.lastPaymentDate, "PPP")
+                    ) : (
+                      <span>Sélectionner une date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={filters?.lastPaymentDate || undefined}
+                    onSelect={(date) => setFilters?.({ ...filters!, lastPaymentDate: date })}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </>
+        )}
+
+        <div className="space-y-2">
+          <Label>Numéro de titre foncier</Label>
+          <Input
+            placeholder="Entrer le numéro"
+            value={filters?.titleDeedNumber}
+            onChange={(e) => setFilters?.({ ...filters!, titleDeedNumber: e.target.value })}
+          />
+        </div>
+
+        {onApplyFilters && (
+          <Button 
+            className="w-full" 
+            onClick={onApplyFilters}
+          >
+            Appliquer les filtres
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

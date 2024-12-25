@@ -21,10 +21,12 @@ export interface MapFilters {
   maxPrice: number;
 }
 
-export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICULTURAL' | 'MIXED' | 'SEASIDE' | 'HOUSE' | 'APARTMENT';
-
-export interface MapMobileControlsProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onLocate: () => void;
+export interface MapFiltersProps {
+  onRegionChange?: (regionId: string) => void;
+  onCityChange?: (city: string) => void;
+  onDistrictChange?: (district: string) => void;
+  filters?: MapFilters;
+  setFilters?: (filters: MapFilters) => void;
+  onApplyFilters?: () => void;
+  userRole?: string;
 }

@@ -9,12 +9,26 @@ import { Map as MapIcon, List } from 'lucide-react';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { MapFilters } from './map/MapFilters';
 import { REGIONS } from '@/utils/mockData/locations';
+import { MapFilters as MapFiltersType } from './map/types';
 
 const Map = () => {
   const { profile } = useAuth();
   const { toast } = useToast();
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [filters, setFilters] = useState<MapFiltersType>({
+    region: '',
+    commune: '',
+    propertyType: '',
+    zoneType: '',
+    size: [0, 15000],
+    status: '',
+    ownerName: '',
+    titleDeedNumber: '',
+    lastPaymentDate: null,
+    fiscalStatus: '',
+    maxPrice: 0
+  });
 
   const handleParcelSelect = (parcelId: string) => {
     if (!profile) {
@@ -31,31 +45,34 @@ const Map = () => {
     const region = REGIONS.find(r => r.id === regionId);
     if (region && mapInstance) {
       mapInstance.panTo({ lat: region.center.lat, lng: region.center.lng });
-      mapInstance.setZoom(7); // Zoom adapté pour une région
+      mapInstance.setZoom(7);
     }
   };
 
   const handleCityChange = (cityName: string) => {
-    // Simulons des coordonnées pour les villes (à remplacer par des vraies données)
     const cityCoordinates = {
       'Casablanca': { lat: 33.5731, lng: -7.5898 },
       'Rabat': { lat: 34.0209, lng: -6.8416 },
       'Marrakech': { lat: 31.6295, lng: -7.9811 },
-      // Ajoutez d'autres villes selon vos besoins
     };
 
     if (mapInstance && cityCoordinates[cityName as keyof typeof cityCoordinates]) {
       mapInstance.panTo(cityCoordinates[cityName as keyof typeof cityCoordinates]);
-      mapInstance.setZoom(12); // Zoom adapté pour une ville
+      mapInstance.setZoom(12);
     }
   };
 
   const handleDistrictChange = (districtName: string) => {
     if (mapInstance) {
-      // Ici vous pouvez ajouter la logique pour zoomer sur le quartier
-      // Pour l'instant, on zoom juste un peu plus
-      mapInstance.setZoom(14); // Zoom adapté pour un quartier
+      mapInstance.setZoom(14);
     }
+  };
+
+  const handleApplyFilters = () => {
+    toast({
+      title: "Filtres appliqués",
+      description: "Les résultats ont été mis à jour selon vos critères.",
+    });
   };
 
   return (
@@ -86,11 +103,16 @@ const Map = () => {
                 onRegionChange={handleRegionChange}
                 onCityChange={handleCityChange}
                 onDistrictChange={handleDistrictChange}
+                filters={filters}
+                setFilters={setFilters}
+                onApplyFilters={handleApplyFilters}
+                userRole={profile?.role}
               />
               <div className="h-[600px] relative">
                 <MapContainer 
                   userRole={profile?.role} 
                   onParcelSelect={handleParcelSelect}
+                  mapInstance={mapInstance}
                   setMapInstance={setMapInstance}
                 />
               </div>
