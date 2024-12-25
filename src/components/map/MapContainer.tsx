@@ -87,8 +87,6 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
   };
 
   const settings = {
-    center: { lat: 31.7917, lng: -7.0926 }, // Centre du Maroc
-    zoom: 6,
     showLabels: true,
     showBoundaries: true,
     showTerrain: false,

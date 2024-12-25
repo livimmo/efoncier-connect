@@ -6,11 +6,4 @@ export const ZONE_TYPES = {
   MIXED: "Mixte"
 };
 
-export const PROPERTY_TYPES = {
-  RESIDENTIAL: "Résidentiel",
-  COMMERCIAL: "Commercial",
-  INDUSTRIAL: "Industriel",
-  AGRICULTURAL: "Agricole"
-};
-
 export const ZONING_TYPES = ZONE_TYPES;

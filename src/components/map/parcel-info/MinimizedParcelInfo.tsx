@@ -1,14 +1,16 @@
 import { Parcel } from "@/utils/mockData/types";
 import { formatCurrency } from "@/utils/format";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { PropertyPopup } from "../property-popup/PropertyPopup";
 import { PaymentDialog } from "./dialogs/PaymentDialog";
 import { ReceiptDialog } from "./dialogs/ReceiptDialog";
+import { ParcelStatusInfo } from "./ParcelStatusInfo";
 import { RegisterDialog } from "@/components/auth/RegisterDialog";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Badge } from "@/components/ui/badge";
+import { UserPlus } from "lucide-react";
 import { LoginDialog } from "@/components/auth/LoginDialog";
-import { ParcelBasicInfo } from "./minimized/ParcelBasicInfo";
-import { ParcelActions } from "./minimized/ParcelActions";
-import { BlurredField } from "./minimized/BlurredField";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -21,6 +23,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const { profile } = useAuth();
 
   const getPaymentStatusInfo = (status: string) => {
     switch (status) {
@@ -105,30 +108,107 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
       <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border border-t-0 border-border/50 min-w-[300px]">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-start gap-4">
-            <ParcelBasicInfo 
-              parcel={parcel}
-              onBlurredClick={handleBlurredClick}
-            />
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-col">
+                <div className="text-xs text-muted-foreground flex items-center gap-1">
+                  <span>{parcel.surface} m² •</span>
+                  <span>Zone {parcel.zone}</span>
+                </div>
+                {profile ? (
+                  <div className="text-xs font-medium text-red-600 dark:text-red-500">
+                    {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
+                  </div>
+                ) : (
+                  <div 
+                    className="text-xs font-medium blur-sm select-none cursor-pointer"
+                    onClick={handleBlurredClick}
+                  >
+                    {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
+                  </div>
+                )}
+                {profile?.role === 'developer' && parcel.price && (
+                  <div className="text-sm font-semibold text-green-600 dark:text-green-500 mt-1">
+                    Prix: {formatCurrency(parcel.price)} DHS
+                  </div>
+                )}
+                <div className="text-xs text-muted-foreground mt-1">
+                  {profile ? (
+                    `TF: ${parcel.titleDeedNumber}`
+                  ) : (
+                    <span 
+                      className="blur-sm select-none cursor-pointer"
+                      onClick={handleBlurredClick}
+                    >
+                      TF: {parcel.titleDeedNumber}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-1">
+                  <ParcelStatusInfo 
+                    status={parcel.status}
+                    fiscalStatus={parcel.fiscalStatus}
+                    taxStatus={parcel.taxStatus}
+                  />
+                </div>
+              </div>
+            </div>
             <div className="text-right shrink-0">
               <div className="text-sm font-semibold whitespace-nowrap">
-                <BlurredField
-                  value={`${formatCurrency(parcel.tnbInfo.totalAmount)} DHS`}
-                  onBlurredClick={handleBlurredClick}
-                />
+                {profile ? (
+                  `${formatCurrency(parcel.tnbInfo.totalAmount)} DHS`
+                ) : (
+                  <span 
+                    className="blur-sm select-none cursor-pointer"
+                    onClick={handleBlurredClick}
+                  >
+                    {formatCurrency(parcel.tnbInfo.totalAmount)} DHS
+                  </span>
+                )}
               </div>
               <div className="text-xs font-medium whitespace-nowrap text-muted-foreground">
-                <BlurredField
-                  value={parcel.ownerName}
-                  onBlurredClick={handleBlurredClick}
-                />
+                {profile ? (
+                  parcel.ownerName
+                ) : (
+                  <span 
+                    className="blur-sm select-none cursor-pointer"
+                    onClick={handleBlurredClick}
+                  >
+                    {parcel.ownerName}
+                  </span>
+                )}
               </div>
-              <ParcelActions 
-                parcel={parcel}
-                onPaymentClick={handlePaymentClick}
-                onDetailsClick={() => setDialogOpen(true)}
-                onRegisterClick={() => setRegisterOpen(true)}
-                paymentStatus={paymentStatus}
-              />
+              <div className="flex flex-col gap-2 mt-2">
+                {profile ? (
+                  <>
+                    <Button 
+                      variant={paymentStatus.buttonVariant}
+                      size="sm"
+                      onClick={handlePaymentClick}
+                      className={`w-full ${paymentStatus.buttonClass}`}
+                    >
+                      {paymentStatus.buttonText}
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setDialogOpen(true)}
+                    >
+                      Voir détails
+                    </Button>
+                  </>
+                ) : (
+                  parcel.status === 'AVAILABLE' && (
+                    <Button
+                      size="sm"
+                      onClick={() => setRegisterOpen(true)}
+                      className="bg-primary hover:bg-primary/90"
+                    >
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Créer un compte promoteur
+                    </Button>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>
