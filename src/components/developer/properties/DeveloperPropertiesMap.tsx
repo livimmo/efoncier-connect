@@ -4,26 +4,19 @@ import { useState } from 'react';
 import { useTheme } from 'next-themes';
 
 export const DeveloperPropertiesMap = () => {
-  const [selectedParcel, setSelectedParcel] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(null);
-  const [mapInstance, setMapInstance] = useState(null);
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const { theme } = useTheme();
+
+  const handleMarkerClick = (parcel: any, position: any) => {
+    console.log('Marker clicked:', parcel, position);
+  };
 
   return (
     <div className="h-full relative">
       <GoogleMap
-        selectedParcel={selectedParcel}
-        markerPosition={markerPosition}
-        onParcelSelect={(parcel, position) => {
-          setSelectedParcel(parcel);
-          if (position) setMarkerPosition(position);
-        }}
-        filteredParcels={mockParcels}
-        settings={{
-          theme: theme as 'light' | 'dark',
-          unit: 'metric',
-        }}
-        mapInstance={mapInstance}
+        onMarkerClick={handleMarkerClick}
+        parcels={mockParcels}
+        theme={theme as 'light' | 'dark'}
         setMapInstance={setMapInstance}
       />
     </div>
