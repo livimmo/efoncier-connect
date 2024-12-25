@@ -19,6 +19,7 @@ const createResidentialParcel = (
     city,
     surface,
     type: 'RESIDENTIAL',
+    zone: 'RESIDENTIAL_ZONE',
     taxStatus: 'PAID',
     status: 'AVAILABLE',
     ownerName,

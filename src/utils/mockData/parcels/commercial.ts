@@ -55,7 +55,7 @@ export const commercialParcels: Parcel[] = [
     tnbInfo: {
       pricePerMeter: 120,
       totalAmount: 9600,
-      status: 'LOW',
+      status: "AVERAGE",
       lastUpdate: "2024-02-01"
     }
   },
@@ -84,7 +84,7 @@ export const commercialParcels: Parcel[] = [
     tnbInfo: {
       pricePerMeter: 150,
       totalAmount: 30000,
-      status: 'average',
+      status: "AVERAGE",
       lastUpdate: "2024-01-20"
     }
   }

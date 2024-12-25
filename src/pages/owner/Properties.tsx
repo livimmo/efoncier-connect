@@ -41,7 +41,7 @@ const Properties = () => {
       <PropertiesStats data={properties} />
       <PropertiesTable 
         data={properties}
-        onParcelSelect={setSelectedParcelId}
+        isLoading={false}
       />
     </div>
   );
