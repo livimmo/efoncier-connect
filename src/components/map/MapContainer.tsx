@@ -43,7 +43,8 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     searchQuery: '',
     zoning: '',
     paymentStatus: '',
-    tnbStatus: ''
+    tnbStatus: '',
+    propertyStatus: '' // Added this field with empty string as default
   });
 
   const filteredParcels = useMemo(() => {
