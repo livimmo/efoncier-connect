@@ -1,88 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CreditCard, FileText, MapPin, MessageSquare, Download, Printer } from "lucide-react";
+import { CreditCard, FileText, MapPin, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PaymentDialog } from "../map/parcel-info/dialogs/PaymentDialog";
 import { MessagesContainer } from "../messages/MessagesContainer";
-import { useToast } from "@/hooks/use-toast";
+import { ReportsList } from "../reports/ReportsList";
+import { ReportActions } from "../reports/ReportActions";
 import { ReceiptPreview } from "../receipt/ReceiptPreview";
+import { getReportData } from "@/utils/mockData/reports";
+import { ReportType } from "@/types/reports";
 
 export const QuickActions = () => {
   const navigate = useNavigate();
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [messagesOpen, setMessagesOpen] = useState(false);
   const [reportsOpen, setReportsOpen] = useState(false);
-  const [selectedReport, setSelectedReport] = useState<string | null>(null);
-  const { toast } = useToast();
-
-  const handleReportAction = (type: string, action: 'download' | 'print') => {
-    if (action === 'download') {
-      toast({
-        title: "Téléchargement du rapport",
-        description: `Le rapport ${type} a été téléchargé au format PDF.`
-      });
-    } else {
-      window.print();
-    }
-  };
-
-  const getReportData = (type: string) => {
-    // Exemple de données pour chaque type de rapport
-    switch (type) {
-      case 'payment':
-        return {
-          referenceNumber: "PAY-2024-001",
-          date: new Date().toISOString(),
-          taxpayer: {
-            name: "John Doe",
-            fiscalId: "FIS123456"
-          },
-          parcel: {
-            id: "PARC-001",
-            location: "123 Rue Example",
-            area: 500,
-            amount: 1500,
-            transactionRef: "TXN-123456"
-          }
-        };
-      case 'property':
-        return {
-          referenceNumber: "PROP-2024-001",
-          date: new Date().toISOString(),
-          taxpayer: {
-            name: "John Doe",
-            fiscalId: "FIS123456"
-          },
-          parcel: {
-            id: "PARC-002",
-            location: "456 Avenue Example",
-            area: 750,
-            amount: 2000,
-            transactionRef: "TXN-789012"
-          }
-        };
-      case 'activity':
-        return {
-          referenceNumber: "ACT-2024-001",
-          date: new Date().toISOString(),
-          taxpayer: {
-            name: "John Doe",
-            fiscalId: "FIS123456"
-          },
-          parcel: {
-            id: "PARC-003",
-            location: "789 Boulevard Example",
-            area: 1000,
-            amount: 2500,
-            transactionRef: "TXN-345678"
-          }
-        };
-      default:
-        return null;
-    }
-  };
+  const [selectedReport, setSelectedReport] = useState<ReportType | null>(null);
 
   return (
     <>
@@ -110,60 +45,13 @@ export const QuickActions = () => {
             <DialogTitle>Rapports</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="space-y-4">
-              <h4 className="font-medium">Rapports Disponibles</h4>
-              <div className="grid grid-cols-1 gap-3">
-                <Button 
-                  variant="outline" 
-                  className="justify-start w-full"
-                  onClick={() => setSelectedReport('payment')}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Rapport des Paiements
-                </Button>
-
-                <Button 
-                  variant="outline"
-                  className="justify-start w-full"
-                  onClick={() => setSelectedReport('property')}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Rapport des Biens
-                </Button>
-
-                <Button 
-                  variant="outline"
-                  className="justify-start w-full"
-                  onClick={() => setSelectedReport('activity')}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Rapport d'Activité
-                </Button>
-              </div>
-            </div>
+            <ReportsList onSelectReport={setSelectedReport} />
 
             {selectedReport && (
               <div className="border-t pt-4">
-                <div className="flex justify-end gap-2 mb-4">
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => handleReportAction(selectedReport, 'download')}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Télécharger
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => handleReportAction(selectedReport, 'print')}
-                  >
-                    <Printer className="mr-2 h-4 w-4" />
-                    Imprimer
-                  </Button>
-                </div>
+                <ReportActions reportType={selectedReport} />
                 <ReceiptPreview 
-                  data={getReportData(selectedReport)!}
+                  data={getReportData(selectedReport)}
                   onClose={() => setSelectedReport(null)}
                 />
               </div>
