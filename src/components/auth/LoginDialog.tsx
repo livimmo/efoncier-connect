@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
-import { UserRole } from "@/types/auth";
+import { RegisterDialog } from "./RegisterDialog";
 
 interface LoginDialogProps {
   open: boolean;
@@ -14,74 +15,54 @@ interface LoginDialogProps {
 
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<UserRole>("owner");
+  const [showRegister, setShowRegister] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const formData = new FormData(e.target as HTMLFormElement);
-      const email = formData.get("email") as string;
-      
-      const user = {
-        id: crypto.randomUUID(),
-        email,
-        role: selectedRole,
-        first_name: "John",
-        last_name: "Doe"
-      };
-
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      toast({
-        title: "Connexion réussie",
-        description: "Bienvenue sur eFoncier !",
-      });
-
-      onOpenChange(false);
-      
-      // Rafraîchir la page après une courte pause pour laisser le toast s'afficher
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-      
-    } catch (error) {
-      toast({
-        title: "Erreur de connexion",
-        description: "Identifiants incorrects",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleWhatsAppLogin = () => {
-    toast({
-      title: "Connexion WhatsApp",
-      description: "Cette fonctionnalité sera bientôt disponible",
-    });
+    // Simulate WhatsApp login functionality
   };
+
+  const handleSuccess = () => {
+    // Handle successful login
+  };
+
+  if (showRegister) {
+    return (
+      <RegisterDialog 
+        open={open} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowRegister(false);
+          }
+          onOpenChange(open);
+        }} 
+      />
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px] h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Connexion à eFoncier</DialogTitle>
+          <div className="flex justify-between items-center">
+            <DialogTitle className="text-2xl font-bold">
+              Se connecter à eFoncier
+            </DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0"
+              onClick={() => onOpenChange(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
           <DialogDescription>
-            Connectez-vous pour accéder à votre espace personnel
+            Connectez-vous pour accéder à vos fonctionnalités personnalisées
           </DialogDescription>
         </DialogHeader>
 
-        <EmailLoginForm 
-          isLoading={isLoading} 
-          onSubmit={handleLogin}
-          selectedRole={selectedRole}
-          onRoleChange={(role: UserRole) => setSelectedRole(role)}
-        />
+        <EmailLoginForm onSuccess={handleSuccess} />
 
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
@@ -89,7 +70,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
-              Ou continuez avec
+              Ou connectez-vous avec
             </span>
           </div>
         </div>
@@ -102,10 +83,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         <div className="text-center text-sm">
           Pas encore de compte ?{" "}
           <button
-            onClick={() => {
-              onOpenChange(false);
-              navigate("/register");
-            }}
+            onClick={() => setShowRegister(true)}
             className="text-primary hover:underline"
           >
             Créer un compte

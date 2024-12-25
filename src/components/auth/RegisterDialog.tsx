@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RoleSelection } from "./register/RoleSelection";
 import { RegisterForm } from "./register/RegisterForm";
@@ -39,9 +41,19 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            Créer un Compte sur eFoncier
-          </DialogTitle>
+          <div className="flex justify-between items-center">
+            <DialogTitle className="text-2xl font-bold">
+              Créer un Compte sur eFoncier
+            </DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0"
+              onClick={() => onOpenChange(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
           <DialogDescription>
             Inscrivez-vous pour accéder à vos fonctionnalités personnalisées.
             <br />
@@ -78,10 +90,7 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
         <div className="text-center text-sm">
           Déjà un compte ?{" "}
           <button
-            onClick={() => {
-              onOpenChange(false);
-              navigate("/login");
-            }}
+            onClick={() => onOpenChange(false)}
             className="text-primary hover:underline"
           >
             Se connecter
