@@ -6,8 +6,6 @@ import { useToast } from "@/hooks/use-toast";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { UserRole } from "@/types/auth";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface LoginDialogProps {
   open: boolean;
@@ -75,15 +73,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] relative">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-4 top-4 rounded-full hover:bg-slate-100"
-          onClick={() => onOpenChange(false)}
-        >
-          <X className="h-4 w-4" />
-        </Button>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Connexion à eFoncier</DialogTitle>
           <DialogDescription>
