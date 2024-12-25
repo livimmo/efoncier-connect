@@ -17,16 +17,16 @@ export interface Property {
   owner_id: string;
   created_at: string;
   updated_at: string;
-  taxStatus?: "PAID" | "UNPAID";
+  titleDeedNumber: string;
   ownerName?: string;
   zone?: string;
   type?: string;
   surface?: number;
   city?: string;
   address?: string;
-  titleDeedNumber?: string;
   fiscalStatus?: "COMPLIANT" | "NON_COMPLIANT" | "UNDER_REVIEW";
-  tnbInfo?: {
+  taxStatus: "PAID" | "UNPAID";
+  tnbInfo: {
     pricePerMeter: number;
     totalAmount: number;
     status: 'LOW' | 'AVERAGE' | 'HIGH';

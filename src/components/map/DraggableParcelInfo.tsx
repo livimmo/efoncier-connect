@@ -32,7 +32,7 @@ export const DraggableParcelInfo = ({
   const dragRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const isOwner = profile?.id === parcel.owner_id;
+  const isOwner = profile?.role === "owner";
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (cardRef.current) {
@@ -59,11 +59,15 @@ export const DraggableParcelInfo = ({
   };
 
   const handlePaymentClick = () => {
-    setShowPayment(true);
+    if (isOwner) {
+      setShowPayment(true);
+    }
   };
 
   const handleReceiptClick = () => {
-    setShowReceipt(true);
+    if (isOwner) {
+      setShowReceipt(true);
+    }
   };
 
   const handleToggleExpand = () => {
@@ -159,37 +163,51 @@ export const DraggableParcelInfo = ({
                   </Button>
                 )
               ) : (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handlePaymentClick}
-                >
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  Payer TNB
-                </Button>
+                isOwner && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handlePaymentClick}
+                  >
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Payer TNB
+                  </Button>
+                )
               )}
             </div>
           </div>
         )}
       </Card>
 
-      <PaymentDialog
-        open={showPayment}
-        onOpenChange={setShowPayment}
-        titleDeedNumber={parcel.id}
-        amount={parcel.price}
-      />
-
       {isOwner && (
-        <ReceiptDialog
-          open={showReceipt}
-          onOpenChange={setShowReceipt}
-          receiptData={{
-            parcelId: parcel.id,
-            amount: parcel.price,
-            date: new Date().toISOString(),
-          }}
-        />
+        <>
+          <PaymentDialog
+            open={showPayment}
+            onOpenChange={setShowPayment}
+            titleDeedNumber={parcel.titleDeedNumber}
+            amount={parcel.tnbInfo.totalAmount}
+          />
+
+          <ReceiptDialog
+            open={showReceipt}
+            onOpenChange={setShowReceipt}
+            receiptData={{
+              referenceNumber: `TNB-${parcel.titleDeedNumber}`,
+              date: new Date().toISOString(),
+              taxpayer: {
+                name: parcel.ownerName || "Propriétaire",
+                fiscalId: parcel.titleDeedNumber,
+              },
+              parcel: {
+                id: parcel.titleDeedNumber,
+                location: parcel.address || "",
+                area: parcel.surface_area,
+                amount: parcel.tnbInfo.totalAmount,
+                transactionRef: `TX-${parcel.id}`,
+              },
+            }}
+          />
+        </>
       )}
     </>
   );
