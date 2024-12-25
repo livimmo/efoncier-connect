@@ -3,7 +3,7 @@ import { RegisterFormData } from "./RegisterForm";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, Lock, Smartphone, MapPin, User, FileText, Building2, Key } from "lucide-react";
+import { Mail, Lock, Smartphone, MapPin, User } from "lucide-react";
 
 interface RegisterFormFieldsProps {
   form: UseFormReturn<RegisterFormData>;
