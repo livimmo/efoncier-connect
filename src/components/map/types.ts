@@ -1,67 +1,38 @@
-import { PropertyType, ZoneType } from "@/utils/mockData/types";
-import type { Parcel } from "@/utils/mockData/types";
-import { UserRole } from "@/types/auth";
+import { Parcel } from "@/utils/mockData/types";
 
-export interface MapFilters {
-  region: string;
-  commune: string;
-  propertyType: PropertyType | '';
-  zoneType: ZoneType | '';
-  size: [number, number];
-  status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
-  ownerName: string;
-  titleDeedNumber: string;
-  lastPaymentDate: string | null;
-}
+export type UserRole = "admin" | "developer" | "owner" | "commune";
 
-export interface MapControls {
-  showFilters: boolean;
-  show3DView: boolean;
-  showComparison: boolean;
-  showHistory: boolean;
-}
+export type MapSettings = {
+  theme: "light" | "dark";
+  unit: "metric" | "imperial";
+};
 
-export interface MapSettings {
-  theme: 'light' | 'dark';
-  unit: 'metric' | 'imperial';
+export interface ParcelInfoProps {
+  parcel: Parcel;
+  onClose: () => void;
+  className?: string;
+  userRole: UserRole;
 }
 
 export interface MapFiltersProps {
   filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
+  setFilters: React.Dispatch<React.SetStateAction<MapFilters>>;
   onApplyFilters: () => void;
-  className?: string;
-  userRole?: UserRole;
-}
-
-export interface MapControlsProps {
-  controls: MapControls;
-  settings: MapSettings;
-  onControlChange: (control: keyof MapControls) => void;
-  onSettingChange: (setting: keyof MapSettings, value: any) => void;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onReset: () => void;
-  onLocateMe: () => void;
-  className?: string;
-}
-
-export interface MapMobileControlsProps {
-  settings: MapSettings;
-  onSettingChange: (key: keyof MapSettings, value: any) => void;
-  onFilterClick?: () => void;
-  onZoomIn?: () => void;
-  onZoomOut?: () => void;
-  onLocateMe?: () => void;
+  userRole: UserRole;
 }
 
 export interface MobileFiltersSheetProps {
   filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
+  setFilters: React.Dispatch<React.SetStateAction<MapFilters>>;
   filteredParcelsCount: number;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  userRole?: UserRole;
+  userRole: UserRole;
 }
 
-export type { Parcel };
+export interface MapFilters {
+  search: string;
+  priceRange: [number, number];
+  surfaceRange: [number, number];
+  status: string[];
+  type: string[];
+  date: Date | undefined;
+}

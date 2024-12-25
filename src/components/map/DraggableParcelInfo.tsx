@@ -1,99 +1,83 @@
-import { useRef, useState } from 'react';
-import { ParcelInfo } from './ParcelInfo';
-import { Parcel } from '@/utils/mockData/types';
-import { cn } from "@/lib/utils";
-import { ParcelInfoHeader } from './parcel-info/ParcelInfoHeader';
-import { MinimizedParcelInfo } from './parcel-info/MinimizedParcelInfo';
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { useParcelPosition } from './parcel-info/useParcelPosition';
-import { UserRole } from '@/types/auth';
+import { useState, useEffect } from "react";
+import { ParcelInfo } from "./ParcelInfo";
+import { Parcel } from "@/utils/mockData/types";
+import { useParcelPosition } from "./parcel-info/useParcelPosition";
+import { UserRole } from "./types";
 
 interface DraggableParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
-  markerPosition: { x: number; y: number };
   className?: string;
-  userRole?: UserRole;
+  userRole: UserRole;
 }
 
 export const DraggableParcelInfo = ({ 
   parcel, 
-  onClose, 
-  markerPosition,
+  onClose,
   className,
-  userRole
+  userRole 
 }: DraggableParcelInfoProps) => {
-  const [isMinimized, setIsMinimized] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const { position, updatePosition } = useParcelPosition();
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  const { position, isDragging, handleMouseDown } = useParcelPosition({
-    markerPosition,
-    isMinimized,
-    containerRef,
-  });
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      
+      const newX = e.clientX - dragOffset.x;
+      const newY = e.clientY - dragOffset.y;
+      
+      updatePosition({ x: newX, y: newY });
+    };
 
-  const handleClose = () => {
-    if (onClose) {
-      onClose();
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
     }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragOffset, updatePosition]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.target instanceof HTMLElement && e.target.closest('.no-drag')) {
+      return;
+    }
+    
+    setIsDragging(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
   };
 
   return (
     <div
-      ref={containerRef}
-      className={cn(
-        "fixed transition-all duration-300 ease-out",
-        isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
-        "hover:shadow-lg will-change-transform",
-        isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-[4.5rem]" : "w-[300px]",
-        !isMobile && "absolute",
-        "z-[100]",
-        className
-      )}
-      style={!isMobile ? {
+      className={className}
+      style={{
+        position: 'fixed',
         left: `${position.x}px`,
         top: `${position.y}px`,
-        transform: `translate(-50%, ${isMinimized ? '-50%' : '-100%'})`,
-      } : undefined}
+        cursor: isDragging ? 'grabbing' : 'grab',
+        userSelect: 'none',
+        zIndex: 50,
+      }}
+      onMouseDown={handleMouseDown}
     >
-      <ParcelInfoHeader
-        title={parcel.title}
-        ownerName={parcel.ownerName}
-        isMinimized={isMinimized}
-        isDragging={isDragging}
-        onToggleMinimize={() => setIsMinimized(!isMinimized)}
-        onClose={handleClose}
-        onMouseDown={handleMouseDown}
+      <ParcelInfo 
+        parcel={parcel} 
+        onClose={onClose} 
+        className="w-[300px]"
+        userRole={userRole}
       />
-
-      {!isMobile && (
-        <div 
-          className={cn(
-            "absolute left-1/2 bottom-0 w-px h-4 bg-primary/50",
-            "transform translate-x-[-50%] translate-y-[100%]",
-            "transition-opacity duration-300",
-            isMinimized ? "opacity-0" : "opacity-100"
-          )}
-        />
-      )}
-
-      <div className={cn(
-        "transform-gpu transition-all duration-300 ease-in-out origin-top",
-        "bg-background/95 backdrop-blur-sm",
-        "border border-border/50 border-t-0",
-        "rounded-b-lg shadow-lg",
-        isMinimized ? "scale-y-0 h-0" : "scale-y-100"
-      )}>
-        <ParcelInfo 
-          parcel={parcel}
-          onClose={handleClose}
-          className="rounded-t-none border-t-0"
-          userRole={userRole}
-        />
-      </div>
-
-      {isMinimized && <MinimizedParcelInfo parcel={parcel} />}
     </div>
   );
 };
