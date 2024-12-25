@@ -2,7 +2,7 @@ import { Parcel } from "@/utils/mockData/types";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PropertyStatusIndicator } from "../filters/PropertyStatusIndicator";
-import { Building2, MapPin, Scale, FileCheck, Info } from "lucide-react";
+import { Building2, MapPin, Scale, FileCheck, Info, AlertTriangle, Check, Clock } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
@@ -17,8 +17,34 @@ interface MinimizedParcelInfoProps {
 
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const [priceRange, setPriceRange] = useState([1200, 1800]);
-  const maxPrice = 2500; // Prix maximum en DH/m²
+  const maxPrice = 2500;
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
+  const getTNBStatusConfig = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return {
+          label: "TNB payée",
+          color: "bg-green-500/10 text-green-500 hover:bg-green-500/20",
+          icon: Check
+        };
+      case 'OVERDUE':
+        return {
+          label: "TNB en retard",
+          color: "bg-red-500/10 text-red-500 hover:bg-red-500/20",
+          icon: AlertTriangle
+        };
+      default:
+        return {
+          label: "TNB en traitement",
+          color: "bg-orange-500/10 text-orange-500 hover:bg-orange-500/20",
+          icon: Clock
+        };
+    }
+  };
+
+  const tnbStatus = getTNBStatusConfig(parcel.taxStatus);
+  const TNBIcon = tnbStatus.icon;
 
   // Données mockées pour la distribution des prix
   const priceDistribution = [
@@ -94,10 +120,14 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
 
             <div className="flex items-center gap-2">
               <FileCheck className="w-4 h-4 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium">
-                  {parcel.tnbInfo.status === 'LOW' ? 'TNB à jour' : parcel.tnbInfo.status === 'AVERAGE' ? 'TNB en attente' : 'TNB non payée'}
-                </p>
+              <div className="w-full">
+                <Badge 
+                  variant="secondary"
+                  className={`${tnbStatus.color} mb-2`}
+                >
+                  <TNBIcon className="w-3 h-3 mr-1" />
+                  {tnbStatus.label}
+                </Badge>
                 <p className="text-xs text-muted-foreground">Statut fiscal</p>
               </div>
             </div>
@@ -111,6 +141,13 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
         </div>
 
         <div className="space-y-3">
+          <Button 
+            variant="destructive"
+            className="w-full"
+            onClick={() => setIsRegisterOpen(true)}
+          >
+            Payer la TNB
+          </Button>
           <Button 
             className="w-full"
             onClick={() => setIsRegisterOpen(true)}
