@@ -10,7 +10,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 
 const slides = [
   {
-    type: "ad",
+    type: "ad" as const,
     title: "Profitez d'une Offre Exclusive sur vos Transactions Foncières !",
     image: "/photo-1506744038136-46273834b3fb",
     cta: {
@@ -19,7 +19,7 @@ const slides = [
     }
   },
   {
-    type: "news",
+    type: "news" as const,
     title: "Mise à jour du Statut Fiscal pour les Terrains en Zone Urbaine",
     image: "/photo-1426604966848-d7adac402bff",
     cta: {
@@ -28,7 +28,7 @@ const slides = [
     }
   },
   {
-    type: "flash",
+    type: "flash" as const,
     title: "Flash News : Nouveaux Terrains Disponibles à Rabat – Zone Industrielle",
     image: "/photo-1501854140801-50d01698950b",
     cta: {
@@ -37,7 +37,7 @@ const slides = [
     }
   },
   {
-    type: "event",
+    type: "event" as const,
     title: "Prochain Forum de l'Immobilier Foncier – 15 Avril 2024",
     image: "/photo-1615729947596-a598e5de0ab3",
     cta: {
