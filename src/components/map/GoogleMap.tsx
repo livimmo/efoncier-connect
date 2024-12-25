@@ -27,23 +27,29 @@ export const GoogleMap = ({
   const { toast } = useToast();
 
   const getMarkerPixelPosition = (marker: google.maps.Marker, map: google.maps.Map) => {
-    if (!map.getBounds() || !map.getProjection() || !marker.getPosition()) {
+    const bounds = map.getBounds();
+    const projection = map.getProjection();
+    const position = marker.getPosition();
+
+    if (!bounds || !projection || !position) {
+      console.log('Missing required map properties for pixel calculation');
+      return { x: 0, y: 0 };
+    }
+
+    const nw = new google.maps.LatLng(
+      bounds.getNorthEast()?.lat() || 0,
+      bounds.getSouthWest()?.lng() || 0
+    );
+
+    const worldCoordinateNW = projection.fromLatLngToPoint(nw);
+    const worldCoordinate = projection.fromLatLngToPoint(position);
+    
+    if (!worldCoordinateNW || !worldCoordinate) {
+      console.log('Could not calculate world coordinates');
       return { x: 0, y: 0 };
     }
 
     const scale = Math.pow(2, map.getZoom() || 0);
-    const nw = new google.maps.LatLng(
-      map.getBounds()?.getNorthEast()?.lat() || 0,
-      map.getBounds()?.getSouthWest()?.lng() || 0
-    );
-
-    const worldCoordinateNW = map.getProjection()?.fromLatLngToPoint(nw);
-    const worldCoordinate = map.getProjection()?.fromLatLngToPoint(marker.getPosition() as google.maps.LatLng);
-    
-    if (!worldCoordinateNW || !worldCoordinate) {
-      return { x: 0, y: 0 };
-    }
-
     const pixelOffset = new google.maps.Point(
       Math.floor((worldCoordinate.x - worldCoordinateNW.x) * scale),
       Math.floor((worldCoordinate.y - worldCoordinateNW.y) * scale)
@@ -64,13 +70,13 @@ export const GoogleMap = ({
   const getMarkerColor = (parcel: Parcel) => {
     switch (parcel.status) {
       case 'AVAILABLE':
-        return '#006233'; // Vert
+        return '#006233';
       case 'IN_TRANSACTION':
-        return '#FFA500'; // Orange
+        return '#FFA500';
       case 'SOLD':
-        return '#C1272D'; // Rouge
+        return '#C1272D';
       default:
-        return '#808080'; // Gris pour autres statuts
+        return '#808080';
     }
   };
 
@@ -79,12 +85,18 @@ export const GoogleMap = ({
     markersRef.current.forEach(marker => marker.setMap(null));
     markersRef.current = [];
     
-    if (!parcels || parcels.length === 0) return;
+    if (!parcels || parcels.length === 0) {
+      console.log('No parcels to display');
+      return;
+    }
     
     const bounds = new google.maps.LatLngBounds();
     
-    const newMarkers = parcels.map(parcel => {
-      if (!parcel.location) return null;
+    const newMarkers = parcels.reduce<google.maps.Marker[]>((acc, parcel) => {
+      if (!parcel?.location) {
+        console.log('Parcel missing location:', parcel);
+        return acc;
+      }
 
       const marker = new google.maps.Marker({
         position: parcel.location,
@@ -107,8 +119,8 @@ export const GoogleMap = ({
       });
 
       bounds.extend(parcel.location);
-      return marker;
-    }).filter((marker): marker is google.maps.Marker => marker !== null);
+      return [...acc, marker];
+    }, []);
 
     markersRef.current = newMarkers;
 
@@ -127,33 +139,36 @@ export const GoogleMap = ({
 
       try {
         const google = await loader.load();
-        if (mapRef.current) {
-          const mapInstance = new google.maps.Map(mapRef.current, {
-            center: { lat: mapCenter.lat, lng: mapCenter.lng },
-            zoom: mapCenter.zoom,
-            styles: theme === 'dark' ? [
-              { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-              { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-              { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-            ] : [
-              { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#7c93a3" }] },
-              { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#E3F2FD" }] },
-              { featureType: "landscape", elementType: "geometry.fill", stylers: [{ color: "#F5F5F5" }] },
-            ],
-            mapTypeControl: true,
-            streetViewControl: true,
-            fullscreenControl: true,
-            gestureHandling: "greedy",
-            minZoom: 5,
-            maxZoom: 18,
-          });
-
-          setMap(mapInstance);
-          setMapInstance(mapInstance);
-          createMarkers(parcels, mapInstance);
+        if (!mapRef.current) {
+          console.log('Map reference not found');
+          return;
         }
+
+        const mapInstance = new google.maps.Map(mapRef.current, {
+          center: { lat: mapCenter.lat, lng: mapCenter.lng },
+          zoom: mapCenter.zoom,
+          styles: theme === 'dark' ? [
+            { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+          ] : [
+            { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#7c93a3" }] },
+            { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#E3F2FD" }] },
+            { featureType: "landscape", elementType: "geometry.fill", stylers: [{ color: "#F5F5F5" }] },
+          ],
+          mapTypeControl: true,
+          streetViewControl: true,
+          fullscreenControl: true,
+          gestureHandling: "greedy",
+          minZoom: 5,
+          maxZoom: 18,
+        });
+
+        setMap(mapInstance);
+        setMapInstance(mapInstance);
+        createMarkers(parcels, mapInstance);
       } catch (error) {
-        console.error("Erreur lors du chargement de la carte:", error);
+        console.error("Error loading map:", error);
         toast({
           title: "Erreur",
           description: "Impossible de charger la carte Google Maps",
