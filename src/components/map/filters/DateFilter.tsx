@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DateFilterProps } from "../types";
+import { DateFilterProps } from "./types";
 
 export const DateFilter = ({ value, onChange }: DateFilterProps) => {
   return (
@@ -21,14 +21,14 @@ export const DateFilter = ({ value, onChange }: DateFilterProps) => {
           }`}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(value, "PP", { locale: fr }) : "Sélectionner une date"}
+          {value ? format(new Date(value), "PP", { locale: fr }) : "Sélectionner une date"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
-          selected={value}
-          onSelect={onChange}
+          selected={value ? new Date(value) : undefined}
+          onSelect={(date) => onChange(date ? date.toISOString() : null)}
           initialFocus
         />
       </PopoverContent>

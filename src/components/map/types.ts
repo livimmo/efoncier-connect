@@ -1,23 +1,49 @@
-export type MapSettings = {
-  theme: "light" | "dark";
-  unit: "metric" | "imperial";
-};
+import { PropertyType, ZoneType } from "@/utils/mockData/types";
+import type { Parcel } from "@/utils/mockData/types";
+import { UserRole } from "@/types/auth";
 
 export interface MapFilters {
-  search: string;
   region: string;
   commune: string;
-  propertyType: string;
-  zoneType: string;
+  propertyType: PropertyType | '';
+  zoneType: ZoneType | '';
   size: [number, number];
-  status: string;
-  type: string[];
+  status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
   ownerName: string;
   titleDeedNumber: string;
-  lastPaymentDate: Date | null;
-  priceRange: [number, number];
-  surfaceRange: [number, number];
-  date?: Date;
+  lastPaymentDate: string | null;
+}
+
+export interface MapControls {
+  showFilters: boolean;
+  show3DView: boolean;
+  showComparison: boolean;
+  showHistory: boolean;
+}
+
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+}
+
+export interface MapFiltersProps {
+  filters: MapFilters;
+  setFilters: (filters: MapFilters) => void;
+  onApplyFilters: () => void;
+  className?: string;
+  userRole?: UserRole;
+}
+
+export interface MapControlsProps {
+  controls: MapControls;
+  settings: MapSettings;
+  onControlChange: (control: keyof MapControls) => void;
+  onSettingChange: (setting: keyof MapSettings, value: any) => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onReset: () => void;
+  onLocateMe: () => void;
+  className?: string;
 }
 
 export interface MapMobileControlsProps {
@@ -33,22 +59,9 @@ export interface MobileFiltersSheetProps {
   filters: MapFilters;
   setFilters: (filters: MapFilters) => void;
   filteredParcelsCount: number;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  userRole?: UserRole;
 }
 
-export interface MapViewProps {
-  selectedParcel: any;
-  markerPosition: { x: number; y: number } | null;
-  onParcelSelect: (parcel: any, position?: { x: number; y: number }) => void;
-  filteredParcels: any[];
-  settings: MapSettings;
-  mapInstance: google.maps.Map | null;
-  setMapInstance: (map: google.maps.Map) => void;
-  mapCenter: { lat: number; lng: number; zoom: number };
-}
-
-export interface DateFilterProps {
-  value: Date | null;
-  onChange: (value: Date | null) => void;
-}
+export type { Parcel };

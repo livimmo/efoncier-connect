@@ -15,20 +15,15 @@ export const MapLayout = ({
   showFilters = true,
 }: MapLayoutProps) => {
   const [filters, setFilters] = useState<MapFiltersType>({
-    search: "",
-    region: "",
-    commune: "",
-    propertyType: "",
-    zoneType: "",
+    region: '',
+    commune: '',
+    propertyType: '',
+    zoneType: '',
     size: [0, 15000],
-    status: "",
-    type: [],
-    ownerName: "",
-    titleDeedNumber: "",
-    lastPaymentDate: null,
-    priceRange: [0, 10000],
-    surfaceRange: [0, 10000],
-    date: undefined
+    status: '',
+    ownerName: '',
+    titleDeedNumber: '',
+    lastPaymentDate: null
   });
 
   return (

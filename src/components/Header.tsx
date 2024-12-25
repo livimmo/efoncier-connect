@@ -12,8 +12,6 @@ import { AuthButtons } from "./header/AuthButtons";
 import { MobileMenu } from "./header/MobileMenu";
 import { NotificationsArea } from "./header/NotificationsArea";
 import { useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
-import { Heart } from "lucide-react";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -23,10 +21,6 @@ export const Header = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
   const navigate = useNavigate();
-
-  const handleFavoritesClick = () => {
-    navigate("/developer/favorites");
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -45,22 +39,7 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {profile && !isMobile && (
-            <>
-              <NotificationsArea />
-              {profile.role === "developer" && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleFavoritesClick}
-                  className="relative"
-                  aria-label="Favoris"
-                >
-                  <Heart className="h-5 w-5" />
-                </Button>
-              )}
-            </>
-          )}
+          {profile && !isMobile && <NotificationsArea />}
           <ModeToggle />
           {profile ? (
             <UserMenu />

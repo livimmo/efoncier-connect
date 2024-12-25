@@ -8,10 +8,6 @@ export interface User {
   last_name: string;
   phone?: string;
   city?: string;
-  companyName?: string;
-  registrationNumber?: string;
-  communeName?: string;
-  region?: string;
 }
 
 export interface RegisterFormData {
@@ -24,8 +20,4 @@ export interface RegisterFormData {
   city: string;
   role: UserRole;
   acceptTerms: boolean;
-  companyName?: string;
-  registrationNumber?: string;
-  communeName?: string;
-  region?: string;
 }

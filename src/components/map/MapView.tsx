@@ -3,7 +3,7 @@ import { DraggableParcelInfo } from './DraggableParcelInfo';
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapSettings } from './types';
 import { useToast } from "@/hooks/use-toast";
-import { useCallback } from 'react';
+import { UserRole } from '@/types/auth';
 
 interface MapViewProps {
   selectedParcel: Parcel | null;
@@ -13,7 +13,7 @@ interface MapViewProps {
   settings: MapSettings;
   mapInstance: google.maps.Map | null;
   setMapInstance: (map: google.maps.Map) => void;
-  mapCenter: { lat: number; lng: number; zoom: number };
+  userRole?: UserRole;
 }
 
 export const MapView = ({
@@ -24,27 +24,19 @@ export const MapView = ({
   settings,
   mapInstance,
   setMapInstance,
-  mapCenter,
+  userRole,
 }: MapViewProps) => {
   const { toast } = useToast();
-
-  const handleMapClick = useCallback((e: google.maps.MapMouseEvent) => {
-    // Close parcel info when clicking on the map (not on a marker)
-    if (!e.latLng) {
-      onParcelSelect(null);
-    }
-  }, [onParcelSelect]);
 
   return (
     <div className="relative flex-1 h-full">
       <div className="absolute inset-0">
         <GoogleMap 
           onMarkerClick={(parcel, position) => onParcelSelect(parcel, position)}
-          onMapClick={handleMapClick}
           parcels={filteredParcels}
           theme={settings.theme}
           setMapInstance={setMapInstance}
-          mapCenter={mapCenter}
+          userRole={userRole}
         />
       </div>
 
@@ -54,6 +46,7 @@ export const MapView = ({
           onClose={() => onParcelSelect(null)}
           markerPosition={markerPosition}
           className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+          userRole={userRole}
         />
       )}
     </div>

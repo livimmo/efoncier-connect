@@ -5,24 +5,20 @@ import { useState } from "react";
 import { ParcelDetails } from "./parcel-info/ParcelDetails";
 import { ParcelActions } from "./parcel-info/ParcelActions";
 import { ParcelDialogs } from "./parcel-info/ParcelDialogs";
-import { MinimizedParcelInfo } from "./parcel-info/MinimizedParcelInfo";
-import { useParcelMinimize } from "./parcel-info/useParcelMinimize";
-import { ParcelInfoHeader } from "./parcel-info/ParcelInfoHeader";
 
 interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
   className?: string;
-  isDragging?: boolean;
 }
 
-export const ParcelInfo = ({ parcel, onClose, className, isDragging = false }: ParcelInfoProps) => {
+export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
   const [contactOpen, setContactOpen] = useState(false);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [receiptOpen, setReceiptOpen] = useState(false);
-  const { isMinimized, toggleMinimize } = useParcelMinimize();
 
+  // Mock receipt data based on parcel info
   const receiptData = {
     referenceNumber: `TNB-${parcel.id}`,
     date: new Date().toISOString(),
@@ -55,30 +51,23 @@ export const ParcelInfo = ({ parcel, onClose, className, isDragging = false }: P
       />
 
       {!paymentOpen && !receiptOpen && (
-        <Card className={cn("w-80 p-0 z-50 bg-background/95 backdrop-blur-sm", className)}>
-          <ParcelInfoHeader
-            title={parcel.title}
-            ownerName={parcel.ownerName}
-            isMinimized={isMinimized}
-            isDragging={isDragging}
-            onToggleMinimize={toggleMinimize}
-            onClose={onClose}
-          />
-          
-          {!isMinimized ? (
-            <div className="p-4 space-y-4">
-              <ParcelDetails parcel={parcel} />
-              <ParcelActions
-                parcel={parcel}
-                onPaymentClick={() => setPaymentOpen(true)}
-                onReceiptClick={() => setReceiptOpen(true)}
-                onContactClick={() => setContactOpen(true)}
-                onCalculatorClick={() => setCalculatorOpen(true)}
-              />
+        <Card className={cn("w-80 p-4 space-y-4 z-50 bg-background/95 backdrop-blur-sm", className)}>
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="font-semibold">{parcel.title}</h3>
+              <p className="text-sm text-muted-foreground">{parcel.address}</p>
             </div>
-          ) : (
-            <MinimizedParcelInfo parcel={parcel} />
-          )}
+          </div>
+
+          <ParcelDetails parcel={parcel} />
+
+          <ParcelActions
+            parcel={parcel}
+            onPaymentClick={() => setPaymentOpen(true)}
+            onReceiptClick={() => setReceiptOpen(true)}
+            onContactClick={() => setContactOpen(true)}
+            onCalculatorClick={() => setCalculatorOpen(true)}
+          />
         </Card>
       )}
     </>

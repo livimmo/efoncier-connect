@@ -1,189 +1,161 @@
-import { useState, useEffect } from "react";
-import { MapView } from "./MapView";
-import { MapFilters } from "./MapFilters";
-import { MobileFiltersSheet } from "./MobileFiltersSheet";
-import { Button } from "@/components/ui/button";
-import { Filter, ChevronLeft, ChevronRight } from "lucide-react";
-import { mockParcels } from "@/utils/mockData/parcels";
-import { MapSettings, MapFilters as MapFiltersType } from "./types";
+import { useState, useMemo } from 'react';
+import { MapFilters } from './MapFilters';
+import { MapView } from './MapView';
+import { MobileFiltersSheet } from './MobileFiltersSheet';
+import { PartnersCarousel } from './PartnersCarousel';
+import { WelcomeDialog } from './WelcomeDialog';
+import { MapFilters as MapFiltersType, MapSettings } from './types';
+import { mockParcels } from '@/utils/mockData/parcels';
+import type { Parcel } from '@/utils/mockData/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { REGIONS } from "@/utils/mockData/locations";
+import { UserRole } from '@/types/auth';
 
 interface MapContainerProps {
-  userRole: string;
+  userRole?: UserRole;
   onParcelSelect: (parcelId: string) => void;
 }
 
-const REGION_COORDINATES: Record<string, { lat: number; lng: number; zoom: number }> = {
-  "casablanca-settat": { lat: 33.5731, lng: -7.5898, zoom: 10 },
-  "rabat-sale": { lat: 34.0209, lng: -6.8416, zoom: 10 },
-  "tanger-tetouan": { lat: 35.7595, lng: -5.8330, zoom: 10 },
-  "marrakech-safi": { lat: 31.6295, lng: -7.9811, zoom: 10 },
-  // Add coordinates for other regions...
-};
-
-const CITY_COORDINATES: Record<string, { lat: number; lng: number; zoom: number }> = {
-  "Casablanca": { lat: 33.5731, lng: -7.5898, zoom: 12 },
-  "Rabat": { lat: 34.0209, lng: -6.8416, zoom: 12 },
-  "Tanger": { lat: 35.7595, lng: -5.8330, zoom: 12 },
-  "Marrakech": { lat: 31.6295, lng: -7.9811, zoom: 12 },
-  // Add coordinates for other cities...
-};
-
 export const MapContainer = ({ userRole, onParcelSelect }: MapContainerProps) => {
-  const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [isFiltersPanelCollapsed, setIsFiltersPanelCollapsed] = useState(false);
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number; zoom: number }>({ 
-    lat: 33.5731, 
-    lng: -7.5898, 
-    zoom: 6 
-  });
-
-  const [settings] = useState<MapSettings>({
-    theme: 'light',
-    unit: 'metric',
-  });
-
+  const { toast } = useToast();
+  
   const [filters, setFilters] = useState<MapFiltersType>({
-    search: "",
-    region: "",
-    commune: "",
-    propertyType: "",
-    zoneType: "",
+    region: '',
+    commune: '',
+    propertyType: '',
+    zoneType: '',
     size: [0, 15000],
-    status: "",
-    type: [],
-    ownerName: "",
-    titleDeedNumber: "",
-    lastPaymentDate: null,
-    priceRange: [0, 10000],
-    surfaceRange: [0, 10000],
-    date: undefined,
+    status: '',
+    ownerName: '',
+    titleDeedNumber: '',
+    lastPaymentDate: null
   });
 
-  useEffect(() => {
-    if (filters.region && REGION_COORDINATES[filters.region]) {
-      setMapCenter(REGION_COORDINATES[filters.region]);
-    }
-  }, [filters.region]);
+  const filteredParcels = useMemo(() => {
+    let filtered = mockParcels;
 
-  useEffect(() => {
-    if (filters.commune) {
-      const cityCoords = CITY_COORDINATES[filters.commune];
-      if (cityCoords) {
-        setMapCenter(cityCoords);
-      }
+    // Filtrage selon le rôle utilisateur
+    switch (userRole) {
+      case 'owner':
+        filtered = filtered.filter(parcel => parcel.status === 'AVAILABLE');
+        break;
+      case 'developer':
+        filtered = filtered.filter(parcel => 
+          ['AVAILABLE', 'IN_TRANSACTION'].includes(parcel.status));
+        break;
+      case 'commune':
+        // La commune voit tous les biens
+        break;
+      default:
+        // Visiteur non connecté : uniquement les biens disponibles
+        filtered = filtered.filter(parcel => parcel.status === 'AVAILABLE');
     }
-  }, [filters.commune]);
 
-  const filteredParcels = mockParcels.filter(parcel => {
-    if (filters.search && !parcel.titleDeedNumber.toLowerCase().includes(filters.search.toLowerCase())) {
-      return false;
-    }
-    if (filters.status && parcel.taxStatus !== filters.status) {
-      return false;
-    }
-    if (filters.type.length > 0 && !filters.type.includes(parcel.type)) {
-      return false;
-    }
-    const price = parcel.tnbInfo.pricePerMeter;
-    if (price < filters.priceRange[0] || price > filters.priceRange[1]) {
-      return false;
-    }
-    if (parcel.surface < filters.surfaceRange[0] || parcel.surface > filters.surfaceRange[1]) {
-      return false;
-    }
-    return true;
-  });
+    // Application des filtres standards
+    return filtered.filter(parcel => {
+      if (filters.commune && parcel.city.toLowerCase() !== filters.commune.toLowerCase()) return false;
+      if (filters.propertyType && parcel.type !== filters.propertyType) return false;
+      if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
+      if (filters.status && parcel.taxStatus !== filters.status) return false;
+      if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
+      if (filters.ownerName && !parcel.ownerName.toLowerCase().includes(filters.ownerName.toLowerCase())) return false;
+      if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
+      return true;
+    });
+  }, [filters, userRole]);
 
-  const selectedParcel = selectedParcelId 
-    ? mockParcels.find(p => p.id === selectedParcelId) 
-    : null;
-
-  const handleParcelSelect = (parcelId: string | null, position?: { x: number; y: number }) => {
-    setSelectedParcelId(parcelId);
+  const handleParcelSelect = (parcel: Parcel | null, position?: { x: number; y: number }) => {
+    setSelectedParcel(parcel);
     if (position) {
       setMarkerPosition(position);
-    } else {
-      setMarkerPosition(null);
+    }
+    if (parcel) {
+      onParcelSelect(parcel.id);
     }
   };
 
+  const toggleFilters = () => {
+    setIsFiltersCollapsed(!isFiltersCollapsed);
+  };
+
   return (
-    <div className="relative h-[calc(100vh-64px)]">
-      {isMobile ? (
-        <MobileFiltersSheet
-          filters={filters}
-          setFilters={setFilters}
-          filteredParcelsCount={filteredParcels.length}
-          open={showMobileFilters}
-          onOpenChange={setShowMobileFilters}
-        />
-      ) : (
-        <div className={cn(
-          "absolute top-4 left-4 z-10 transition-all duration-300",
-          isFiltersPanelCollapsed ? "w-12" : "w-[300px]"
-        )}>
-          <div className="relative">
+    <div className="h-[calc(100vh-4rem)] flex flex-col bg-background">
+      <WelcomeDialog />
+      
+      <div className="flex-1 flex relative">
+        {isMobile ? (
+          <MobileFiltersSheet 
+            filters={filters}
+            setFilters={setFilters}
+            filteredParcelsCount={filteredParcels.length}
+            userRole={userRole}
+          />
+        ) : (
+          <>
+            <div 
+              className={cn(
+                "bg-background/95 backdrop-blur-sm border-r h-full transition-all duration-300 ease-in-out",
+                isFiltersCollapsed ? "w-0 -translate-x-full" : "w-80"
+              )}
+            >
+              <MapFilters 
+                filters={filters}
+                setFilters={setFilters}
+                onApplyFilters={() => {
+                  toast({
+                    title: "Filtres appliqués",
+                    description: `${filteredParcels.length} parcelles trouvées`,
+                  });
+                }}
+                userRole={userRole}
+              />
+            </div>
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => setIsFiltersPanelCollapsed(!isFiltersPanelCollapsed)}
-              className="absolute -right-4 top-2 z-20 rounded-full shadow-lg"
+              onClick={toggleFilters}
+              className={cn(
+                "fixed left-0 top-1/2 -translate-y-1/2 z-10 shadow-lg transition-all duration-300 ease-in-out",
+                isFiltersCollapsed ? "translate-x-0" : "translate-x-80",
+                "h-12 w-6 rounded-r-full rounded-l-none border-l-0"
+              )}
             >
-              {isFiltersPanelCollapsed ? (
+              {isFiltersCollapsed ? (
                 <ChevronRight className="h-4 w-4" />
               ) : (
                 <ChevronLeft className="h-4 w-4" />
               )}
             </Button>
-            <div className={cn(
-              "bg-background rounded-lg shadow-lg transition-all duration-300 overflow-hidden",
-              isFiltersPanelCollapsed ? "w-0 opacity-0" : "w-[300px] opacity-100"
-            )}>
-              <MapFilters
-                filters={filters}
-                setFilters={setFilters}
-                onApplyFilters={() => {}}
-              />
-            </div>
-          </div>
+          </>
+        )}
+
+        <div className="flex-1 relative">
+          <MapView 
+            selectedParcel={selectedParcel}
+            markerPosition={markerPosition}
+            onParcelSelect={handleParcelSelect}
+            filteredParcels={filteredParcels}
+            settings={{ theme: 'light', unit: 'metric' }}
+            mapInstance={mapInstance}
+            setMapInstance={setMapInstance}
+            userRole={userRole}
+          />
         </div>
-      )}
+      </div>
 
       {isMobile && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setShowMobileFilters(true)}
-          className="absolute top-4 right-4 z-10"
-        >
-          <Filter className="h-4 w-4 mr-2" />
-          Filtres
-        </Button>
+        <div className="fixed bottom-16 left-0 right-0 bg-background/95 backdrop-blur-sm border-t">
+          <PartnersCarousel compact={true} />
+        </div>
       )}
-
-      <MapView 
-        selectedParcel={selectedParcel}
-        markerPosition={markerPosition}
-        onParcelSelect={(parcel, position) => {
-          if (parcel) {
-            handleParcelSelect(parcel.id, position);
-          } else {
-            handleParcelSelect(null);
-          }
-        }}
-        filteredParcels={filteredParcels}
-        settings={settings}
-        mapInstance={mapInstance}
-        setMapInstance={setMapInstance}
-        mapCenter={mapCenter}
-      />
     </div>
   );
 };

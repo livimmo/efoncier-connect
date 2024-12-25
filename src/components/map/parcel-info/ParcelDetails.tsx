@@ -6,10 +6,8 @@ interface ParcelDetailsProps {
 }
 
 export const ParcelDetails = ({ parcel }: ParcelDetailsProps) => {
-  const getTNBStatusColor = (status: string) => {
+  const getTNBStatusColor = (status: 'LOW' | 'AVERAGE' | 'HIGH') => {
     switch (status) {
-      case 'PAID':
-        return 'text-green-600';
       case 'LOW':
         return 'text-green-600';
       case 'AVERAGE':
@@ -45,11 +43,22 @@ export const ParcelDetails = ({ parcel }: ParcelDetailsProps) => {
       </div>
       <div className="flex justify-between">
         <span className="text-sm text-muted-foreground">Statut</span>
-        <span className={`text-sm font-medium ${getTNBStatusColor(parcel.tnbInfo.status)}`}>
-          {parcel.tnbInfo.status}
+        <span className={`text-sm font-medium ${
+          parcel.taxStatus === 'PAID' 
+            ? 'text-green-600' 
+            : parcel.taxStatus === 'OVERDUE' 
+            ? 'text-red-600' 
+            : 'text-orange-600'
+        }`}>
+          {parcel.taxStatus === 'PAID' 
+            ? 'Payé' 
+            : parcel.taxStatus === 'OVERDUE' 
+            ? 'En retard' 
+            : 'En attente'}
         </span>
       </div>
 
+      {/* TNB Information */}
       <div className="pt-2 border-t">
         <div className="flex justify-between">
           <span className="text-sm text-muted-foreground">Prix TNB</span>

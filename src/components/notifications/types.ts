@@ -4,7 +4,7 @@ export type NotificationPriority = "high" | "medium" | "low";
 export interface NotificationFilter {
   type: string;
   status: string;
-  date: Date | null;
+  date: string | null;
   search: string;
 }
 

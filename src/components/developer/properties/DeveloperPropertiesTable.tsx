@@ -1,92 +1,127 @@
-import { DataTable } from "@/components/ui/data-table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Property } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Eye, Star, BarChart2, Download } from "lucide-react";
+import { mockParcels } from "@/utils/mockData/parcels";
+import { formatCurrency } from "@/utils/format";
+import { PropertyChat } from "@/components/chat/PropertyChat";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import PropertyLocationDialog from "./PropertyLocationDialog";
-import PropertyDocumentsDialog from "./PropertyDocumentsDialog";
-import { PropertyDetailsDialog } from "./PropertyDetailsDialog";
 
-interface DeveloperPropertiesTableProps {
-  data: Property[];
-}
-
-export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
+export const DeveloperPropertiesTable = () => {
   const { toast } = useToast();
-  const [openLocationDialog, setOpenLocationDialog] = useState(false);
-  const [openDocumentsDialog, setOpenDocumentsDialog] = useState(false);
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
-  const handleLocationDialogOpen = (property: Property) => {
-    setSelectedProperty(property);
-    setOpenLocationDialog(true);
+  const toggleFavorite = (parcelId: string) => {
+    setFavorites(prev => {
+      const newFavorites = prev.includes(parcelId)
+        ? prev.filter(id => id !== parcelId)
+        : [...prev, parcelId];
+      
+      toast({
+        title: prev.includes(parcelId) ? "Retiré des favoris" : "Ajouté aux favoris",
+        description: prev.includes(parcelId) 
+          ? "Le bien a été retiré de vos favoris"
+          : "Le bien a été ajouté à vos favoris",
+      });
+      
+      return newFavorites;
+    });
   };
 
-  const handleDocumentsDialogOpen = (property: Property) => {
-    setSelectedProperty(property);
-    setOpenDocumentsDialog(true);
+  const showDetails = (parcelId: string) => {
+    toast({
+      title: "Détails du bien",
+      description: "Affichage des détails en cours...",
+    });
   };
 
-  const handleDetailsDialogOpen = (property: Property) => {
-    setSelectedProperty(property);
-    setOpenDetailsDialog(true);
+  const showHistory = (parcelId: string) => {
+    toast({
+      title: "Historique",
+      description: "Affichage de l'historique en cours...",
+    });
   };
 
   return (
-    <div>
-      <DataTable
-        data={data}
-        columns={[
-          {
-            accessorKey: "title",
-            header: "Titre",
-          },
-          {
-            accessorKey: "description",
-            header: "Description",
-          },
-          {
-            accessorKey: "price",
-            header: "Prix",
-          },
-          {
-            accessorKey: "status",
-            header: "Statut",
-          },
-          {
-            accessorKey: "actions",
-            header: "Actions",
-            cell: ({ row }) => (
-              <div className="flex space-x-2">
-                <Button onClick={() => handleLocationDialogOpen(row.original)}>Localisation</Button>
-                <Button onClick={() => handleDocumentsDialogOpen(row.original)}>Documents</Button>
-                <Button onClick={() => handleDetailsDialogOpen(row.original)}>Détails</Button>
-              </div>
-            ),
-          },
-        ]}
-      />
-
-      {selectedProperty && (
-        <>
-          <PropertyLocationDialog
-            property={selectedProperty}
-            open={openLocationDialog}
-            onOpenChange={setOpenLocationDialog}
-          />
-          <PropertyDocumentsDialog
-            property={selectedProperty}
-            open={openDocumentsDialog}
-            onOpenChange={setOpenDocumentsDialog}
-          />
-          <PropertyDetailsDialog
-            property={selectedProperty}
-            open={openDetailsDialog}
-            onOpenChange={setOpenDetailsDialog}
-          />
-        </>
-      )}
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Numéro TF</TableHead>
+            <TableHead>Localisation</TableHead>
+            <TableHead>Superficie (m²)</TableHead>
+            <TableHead>Prix (DHS/m²)</TableHead>
+            <TableHead>Statut</TableHead>
+            <TableHead>Statut Fiscal</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {mockParcels.map((parcel) => (
+            <TableRow key={parcel.id}>
+              <TableCell className="font-medium">{parcel.titleDeedNumber}</TableCell>
+              <TableCell>{parcel.address}</TableCell>
+              <TableCell>{parcel.surface.toLocaleString()} m²</TableCell>
+              <TableCell>{formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS</TableCell>
+              <TableCell>
+                <Badge
+                  variant={
+                    parcel.status === "AVAILABLE"
+                      ? "success"
+                      : parcel.status === "UNAVAILABLE"
+                      ? "destructive"
+                      : "warning"
+                  }
+                >
+                  {parcel.status === "AVAILABLE"
+                    ? "Disponible"
+                    : parcel.status === "UNAVAILABLE"
+                    ? "Indisponible"
+                    : "En Transaction"}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <Badge
+                  variant={parcel.taxStatus === "PAID" ? "success" : "destructive"}
+                >
+                  {parcel.taxStatus === "PAID" ? "Payé" : "Impayé"}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="icon" onClick={() => showDetails(parcel.id)}>
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <PropertyChat propertyId={parcel.id} propertyTitle={parcel.titleDeedNumber} />
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => toggleFavorite(parcel.id)}
+                  >
+                    <Star 
+                      className={`h-4 w-4 ${favorites.includes(parcel.id) ? "fill-yellow-400" : ""}`} 
+                    />
+                  </Button>
+                  <Button variant="outline" size="icon" onClick={() => showHistory(parcel.id)}>
+                    <BarChart2 className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };

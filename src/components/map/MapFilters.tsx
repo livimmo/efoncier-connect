@@ -9,6 +9,7 @@ import { DateFilter } from "./filters/DateFilter";
 import { useFilterOptions } from "./filters/useFilterOptions";
 import { REGIONS } from "@/utils/mockData/locations";
 import { Badge } from "@/components/ui/badge";
+import { PropertyType, ZoneType } from "@/utils/mockData/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MapFiltersProps {
@@ -29,26 +30,21 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
   const handleStatusChange = (value: string) => {
     setFilters({ 
       ...filters, 
-      status: value === "ALL" ? "" : value
+      status: value === "ALL" ? "" : value as "PAID" | "PENDING" | "OVERDUE" | "" 
     });
   };
 
   const resetFilters = () => {
     setFilters({
-      search: "",
-      region: "",
-      commune: "",
-      propertyType: "",
-      zoneType: "",
+      region: '',
+      commune: '',
+      propertyType: '',
+      zoneType: '',
       size: [0, 15000],
-      status: "",
-      type: [],
-      ownerName: "",
-      titleDeedNumber: "",
-      lastPaymentDate: null,
-      priceRange: [0, 10000],
-      surfaceRange: [0, 10000],
-      date: undefined
+      status: '',
+      ownerName: '',
+      titleDeedNumber: '',
+      lastPaymentDate: null
     });
   };
 
@@ -120,7 +116,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <FilterSection title="Type de Terrain">
             <SelectFilter
               value={filters.propertyType}
-              onChange={(value) => setFilters({ ...filters, propertyType: value === "ALL" ? "" : value })}
+              onChange={(value) => setFilters({ ...filters, propertyType: value === "ALL" ? "" : value as PropertyType })}
               options={[
                 { value: "ALL", label: "Tous les types" },
                 ...propertyTypeOptions
@@ -132,7 +128,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <FilterSection title="Zoning">
             <SelectFilter
               value={filters.zoneType}
-              onChange={(value) => setFilters({ ...filters, zoneType: value === "ALL" ? "" : value })}
+              onChange={(value) => setFilters({ ...filters, zoneType: value === "ALL" ? "" : value as ZoneType })}
               options={[
                 { value: "ALL", label: "Tous les zonings" },
                 ...zoneTypeOptions
@@ -164,7 +160,7 @@ export const MapFilters = ({ filters, setFilters, onApplyFilters }: MapFiltersPr
           <FilterSection title="Dernière Date de Paiement">
             <DateFilter
               value={filters.lastPaymentDate}
-              onChange={(date) => setFilters({ ...filters, lastPaymentDate: date })}
+              onChange={(value) => setFilters({ ...filters, lastPaymentDate: value })}
             />
           </FilterSection>
 
