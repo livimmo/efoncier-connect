@@ -7,7 +7,8 @@ import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
 import Messages from "@/pages/Messages";
 import Properties from "@/pages/owner/Properties";
-import { PrivateRoute } from "./auth/PrivateRoute";
+import DeveloperDashboard from "@/pages/developer/Dashboard";
+import { PrivateRoute } from "@/components/auth/PrivateRoute";
 
 export const AppRoutes = () => {
   return (
@@ -20,6 +21,14 @@ export const AppRoutes = () => {
         element={
           <PrivateRoute>
             <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/developer/dashboard"
+        element={
+          <PrivateRoute>
+            <DeveloperDashboard />
           </PrivateRoute>
         }
       />
