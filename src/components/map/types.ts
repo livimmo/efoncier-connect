@@ -26,6 +26,7 @@ export interface MapFilters {
   lastPaymentDate: Date | null;
   fiscalStatus: string;
   maxPrice: number;
+  minPrice: number;
   tnbReference: string;
   searchQuery: string;
   zoning: string;
@@ -57,6 +58,6 @@ export interface MapSettings {
   showBoundaries?: boolean;
   showTerrain?: boolean;
   show3D?: boolean;
-  theme?: string;
+  theme?: "light" | "dark";
   unit?: string;
 }

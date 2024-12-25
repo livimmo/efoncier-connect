@@ -14,6 +14,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { FilterHeader } from "./filters/FilterHeader";
 import { REGIONS } from "@/utils/mockData/locations";
 import { SurfaceFilter } from "./filters/SurfaceFilter";
+import { PriceFilter } from "./filters/PriceFilter";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -39,7 +40,7 @@ export const MapFilters = ({
     onApplyFilters?.();
   };
 
-  const handleFilterChange = (filterType: string, value: string) => {
+  const handleFilterChange = (filterType: string, value: string | number) => {
     if (!mapInstance) return;
 
     switch (filterType) {
@@ -88,7 +89,8 @@ export const MapFilters = ({
         titleDeedNumber: '',
         lastPaymentDate: null,
         fiscalStatus: '',
-        maxPrice: 0,
+        maxPrice: 20000000,
+        minPrice: 0,
         tnbReference: '',
         searchQuery: '',
         zoning: '',
@@ -104,19 +106,6 @@ export const MapFilters = ({
     }
     
     onApplyFilters?.();
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'PAID':
-        return <Badge variant="secondary" className="bg-green-500/10 text-green-500">Payé</Badge>;
-      case 'OVERDUE':
-        return <Badge variant="secondary" className="bg-red-500/10 text-red-500">En retard</Badge>;
-      case 'PENDING':
-        return <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500">En attente</Badge>;
-      default:
-        return null;
-    }
   };
 
   if (!filters || !setFilters) return null;
@@ -147,49 +136,11 @@ export const MapFilters = ({
             setFilters={setFilters}
           />
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Année fiscale</Label>
-              <Select 
-                value={selectedYear}
-                onValueChange={(value) => handleFilterChange('fiscalYear', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner une année" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year} value={year}>{year}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Statut de paiement</Label>
-              <Select
-                value={filters.paymentStatus}
-                onValueChange={(value) => handleFilterChange('paymentStatus', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner un statut">
-                    {filters.paymentStatus && getStatusBadge(filters.paymentStatus)}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="PAID">
-                    {getStatusBadge('PAID')}
-                  </SelectItem>
-                  <SelectItem value="OVERDUE">
-                    {getStatusBadge('OVERDUE')}
-                  </SelectItem>
-                  <SelectItem value="PENDING">
-                    {getStatusBadge('PENDING')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <PriceFilter 
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            setFilters={setFilters}
+          />
 
           <BasicFilters
             filters={filters}
