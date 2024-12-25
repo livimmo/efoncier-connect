@@ -80,10 +80,7 @@ const Map = () => {
   };
 
   const handleApplyFilters = () => {
-    toast({
-      title: "Filtres appliqués",
-      description: "Les résultats ont été mis à jour selon vos critères.",
-    });
+    // Toast notification removed
   };
 
   const filteredParcels = mockParcels.filter(parcel => {
