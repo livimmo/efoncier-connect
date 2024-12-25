@@ -1,18 +1,18 @@
 import { PropertyType, TNBInfo } from '../types';
 
 const baseRates: Record<PropertyType, number> = {
-  'RESIDENTIAL': 1000,
-  'COMMERCIAL': 2000,
-  'INDUSTRIAL': 1500,
-  'AGRICULTURAL': 500,
-  'MIXED': 1200,
-  'SEASIDE': 2500,
-  'HOUSE': 1800,
-  'APARTMENT': 1600
+  'RESIDENTIAL': 4,
+  'COMMERCIAL': 8,
+  'INDUSTRIAL': 6,
+  'AGRICULTURAL': 2,
+  'MIXED': 5,
+  'SEASIDE': 10,
+  'HOUSE': 4,
+  'APARTMENT': 4
 };
 
 export const generateTNBInfo = (surface: number, type: PropertyType): TNBInfo => {
-  const pricePerMeter = baseRates[type] || 1000;
+  const pricePerMeter = baseRates[type] || 4; // Default to 4 DH/m² if type not found
   const totalAmount = surface * pricePerMeter;
   
   return {
