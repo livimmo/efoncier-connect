@@ -1,7 +1,7 @@
 import { Parcel } from "@/utils/mockData/types";
 
 export const getMarkerColor = (status: string) => {
-  switch (status.toUpperCase()) {
+  switch (status?.toUpperCase()) {
     case 'AVAILABLE':
       return '#22C55E'; // Vert vif
     case 'IN_TRANSACTION':
@@ -17,6 +17,11 @@ export const getMarkerPixelPosition = (
   marker: google.maps.Marker,
   map: google.maps.Map
 ): { x: number; y: number } => {
+  if (!marker || !map) {
+    console.log('Missing marker or map');
+    return { x: 0, y: 0 };
+  }
+
   try {
     const bounds = map.getBounds();
     const projection = map.getProjection();

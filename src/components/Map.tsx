@@ -15,8 +15,8 @@ const Map = () => {
   const { toast } = useToast();
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
 
-  // Convert mockParcels to Property type for the table view
-  const properties: Property[] = mockParcels.map(parcel => ({
+  // Convert mockParcels to Property type for the table view with null checks
+  const properties: Property[] = (mockParcels || []).map(parcel => ({
     id: parcel.id,
     title: parcel.titleDeedNumber,
     description: parcel.address,
@@ -26,7 +26,7 @@ const Map = () => {
     fiscal_status: parcel.taxStatus === "PAID" ? "compliant" : "non_compliant",
     status: parcel.status.toLowerCase(),
     is_for_sale: false,
-    price: parcel.tnbInfo.pricePerMeter * parcel.surface,
+    price: parcel.tnbInfo?.pricePerMeter ? parcel.tnbInfo.pricePerMeter * parcel.surface : 0,
     owner_id: parcel.owner,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -74,7 +74,6 @@ const Map = () => {
         )}>
           <DeveloperPropertiesTable 
             data={properties}
-            isLoading={false}
           />
         </div>
 
