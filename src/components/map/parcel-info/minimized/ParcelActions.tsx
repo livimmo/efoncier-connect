@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { UserPlus } from "lucide-react";
+import { UserPlus, MessageSquare } from "lucide-react";
 import { Parcel } from "@/utils/mockData/types";
 import { UserRole } from "@/types/auth";
 
@@ -9,6 +9,7 @@ interface ParcelActionsProps {
   onPaymentClick: () => void;
   onDialogOpen: () => void;
   onRegisterOpen: () => void;
+  onContactClick?: () => void;
 }
 
 export const ParcelActions = ({
@@ -17,6 +18,7 @@ export const ParcelActions = ({
   onPaymentClick,
   onDialogOpen,
   onRegisterOpen,
+  onContactClick,
 }: ParcelActionsProps) => {
   if (!userRole) {
     return parcel.status === 'AVAILABLE' ? (
@@ -29,6 +31,31 @@ export const ParcelActions = ({
         Créer un compte promoteur
       </Button>
     ) : null;
+  }
+
+  if (userRole === "owner") {
+    return (
+      <div className="flex flex-col gap-2">
+        <Button 
+          variant={parcel.taxStatus === 'PAID' ? 'default' : 'destructive'}
+          size="sm"
+          onClick={onPaymentClick}
+          className={parcel.taxStatus === 'PAID' ? 'bg-green-600 hover:bg-green-700' : ''}
+        >
+          {parcel.taxStatus === 'PAID' ? 'Reçu' : 'Payer la TNB'}
+        </Button>
+        {onContactClick && (
+          <Button 
+            variant="default" 
+            size="sm"
+            onClick={onContactClick}
+          >
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Contacter le Promoteur
+          </Button>
+        )}
+      </div>
+    );
   }
 
   return (

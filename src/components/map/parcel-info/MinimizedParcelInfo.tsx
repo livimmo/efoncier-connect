@@ -9,6 +9,7 @@ import { LoginDialog } from "@/components/auth/LoginDialog";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ParcelHeader } from "./minimized/ParcelHeader";
 import { ParcelActions } from "./minimized/ParcelActions";
+import { ContactPromoteurDialog } from "../contact/ContactPromoteurDialog";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -21,10 +22,19 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const { profile } = useAuth();
 
   const handleLoginClick = () => {
     setLoginOpen(true);
+  };
+
+  const handleContactClick = () => {
+    if (!profile) {
+      setLoginOpen(true);
+      return;
+    }
+    setContactDialogOpen(true);
   };
 
   const receiptData = {
@@ -84,6 +94,12 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
         onOpenChange={setLoginOpen}
       />
 
+      <ContactPromoteurDialog
+        parcel={parcel}
+        open={contactDialogOpen}
+        onOpenChange={setContactDialogOpen}
+      />
+
       <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border border-t-0 border-border/50 min-w-[300px]">
         <div className="flex flex-col gap-2">
           <ParcelHeader 
@@ -107,6 +123,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
               onPaymentClick={handlePaymentClick}
               onDialogOpen={() => setDialogOpen(true)}
               onRegisterOpen={() => setRegisterOpen(true)}
+              onContactClick={handleContactClick}
             />
           </div>
         </div>

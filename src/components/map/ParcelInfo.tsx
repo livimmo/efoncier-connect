@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatCurrency } from "@/utils/format";
-import { MapPin, User, Ruler, CreditCard, FileText, Building } from "lucide-react";
+import { MapPin, User, Ruler, CreditCard, FileText, Building, MessageSquare } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LoginDialog } from "@/components/auth/LoginDialog";
 import { PropertyPopup } from "./property-popup/PropertyPopup";
@@ -12,6 +12,7 @@ import { UserRole } from '@/types/auth';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ParcelStatusBadges } from "./parcel-info/ParcelStatusBadges";
 import { FavoriteButton } from "./parcel-info/FavoriteButton";
+import { ContactPromoteurDialog } from "./contact/ContactPromoteurDialog";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -24,6 +25,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
   const { profile } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const [propertyPopupOpen, setPropertyPopupOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const isAuthenticated = !!profile;
   const isMobile = useMediaQuery("(max-width: 768px)");
   const showFavoriteButton = userRole === "developer" || userRole === "owner";
@@ -31,6 +33,14 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
   const handleLoginClick = () => {
     setLoginOpen(true);
     onClose();
+  };
+
+  const handleContactClick = () => {
+    if (!isAuthenticated) {
+      setLoginOpen(true);
+      return;
+    }
+    setContactDialogOpen(true);
   };
 
   return (
@@ -41,6 +51,12 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
         open={propertyPopupOpen}
         onOpenChange={setPropertyPopupOpen}
       />
+      <ContactPromoteurDialog
+        parcel={parcel}
+        open={contactDialogOpen}
+        onOpenChange={setContactDialogOpen}
+      />
+
       <Card className={`overflow-hidden animate-fade-in ${className}`}>
         <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
           <div className="space-y-4">
@@ -102,15 +118,16 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
               </div>
             </div>
 
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <div className="space-y-3 pt-4 border-t">
                 {userRole === "owner" && (
                   <Button 
-                    variant="outline" 
+                    variant="default" 
                     className="w-full"
-                    onClick={() => console.log("Contact Owner")}
+                    onClick={handleContactClick}
                   >
-                    Contacter le Propriétaire
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Contacter le Promoteur Intéressé
                   </Button>
                 )}
                 
@@ -123,6 +140,16 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
                     Voir les détails complets
                   </Button>
                 )}
+              </div>
+            ) : (
+              <div className="space-y-3 pt-4 border-t">
+                <Button 
+                  variant="default" 
+                  className="w-full"
+                  onClick={handleLoginClick}
+                >
+                  Se connecter pour contacter
+                </Button>
               </div>
             )}
           </div>
