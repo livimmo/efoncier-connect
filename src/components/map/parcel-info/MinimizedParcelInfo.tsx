@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { PropertyPopup } from "../property-popup/PropertyPopup";
 import { Check, X, AlertTriangle } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import Payment from "@/pages/Payment";
 import { ReceiptPreview } from "@/components/receipt/ReceiptPreview";
 
@@ -111,18 +111,40 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
       />
 
       <Dialog open={paymentOpen} onOpenChange={setPaymentOpen}>
-        <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm">
-          <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
+        <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm z-[9999]">
+          <DialogHeader className="flex justify-between items-center">
+            <DialogTitle>Paiement de la Taxe TNB</DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setPaymentOpen(false)}
+              className="absolute right-4 top-4"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </DialogHeader>
           <div className="flex-1 overflow-y-auto pr-2">
-            <Payment parcelId={parcel.id} />
+            <Payment parcelId={parcel.id} hideHeader />
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={receiptOpen} onOpenChange={setReceiptOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogTitle>Reçu de Paiement TNB</DialogTitle>
-          <ReceiptPreview data={receiptData} />
+        <DialogContent className="max-w-2xl h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-sm z-[9999]">
+          <DialogHeader className="flex justify-between items-center">
+            <DialogTitle>Reçu de Paiement TNB</DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setReceiptOpen(false)}
+              className="absolute right-4 top-4"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto pr-2">
+            <ReceiptPreview data={receiptData} />
+          </div>
         </DialogContent>
       </Dialog>
 
