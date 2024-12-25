@@ -57,6 +57,12 @@ export interface MapSettings {
   showBoundaries?: boolean;
   showTerrain?: boolean;
   show3D?: boolean;
-  theme?: string;
-  unit?: string;
+  theme?: "light" | "dark";
+  unit?: "metric" | "imperial";
+}
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
 }
