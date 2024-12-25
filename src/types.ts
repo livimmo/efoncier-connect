@@ -12,4 +12,5 @@ export interface Property {
   surface_area: number;
   title: string;
   updated_at: string;
+  isFavorite?: boolean;
 }

@@ -1,21 +1,28 @@
-import { Parcel, PropertyType, FiscalStatus } from '../types';
+import { BaseParcelData, createBaseParcel } from './baseParcelTemplate';
 import { generateTNBInfo } from './tnbGenerator';
+import { Parcel } from '../types';
 
-export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'>;
+export const createParcelWithTNB = (data: BaseParcelData): Parcel => {
+  const baseParcel = createBaseParcel(data);
+  const tnbInfo = generateTNBInfo(data.surface, data.type);
 
-const getFiscalStatus = (taxStatus: string): FiscalStatus => {
-  switch (taxStatus) {
-    case 'PAID':
-      return 'COMPLIANT';
-    case 'OVERDUE':
-      return 'NON_COMPLIANT';
-    default:
-      return 'UNDER_REVIEW';
-  }
+  return {
+    ...baseParcel,
+    tnbInfo,
+    id: data.id,
+    title: data.title,
+    description: data.description || '',
+    surface_area: data.surface,
+    property_type: data.type,
+    status: data.status,
+    fiscal_status: data.taxStatus === 'PAID' ? 'compliant' : 
+                  data.taxStatus === 'OVERDUE' ? 'non_compliant' : 
+                  'under_review',
+    is_for_sale: true,
+    price: data.price || 0,
+    owner_id: data.owner,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    location: data.location
+  } as Parcel;
 };
-
-export const createParcelWithTNB = (data: ParcelInput): Parcel => ({
-  ...data,
-  fiscalStatus: getFiscalStatus(data.taxStatus),
-  tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
-});
