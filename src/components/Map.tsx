@@ -12,7 +12,6 @@ import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
-import { MapHeader } from './map/MapHeader';
 
 const Map = () => {
   const { profile } = useAuth();
@@ -88,9 +87,8 @@ const Map = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="flex-1 flex flex-col p-4">
-        {!profile && <MapHeader />}
-        <div className="flex justify-end gap-2">
+      <div className="flex-1 flex flex-col">
+        <div className="p-4 flex justify-end gap-2">
           <Button
             variant={viewMode === 'map' ? 'default' : 'outline'}
             onClick={() => setViewMode('map')}
@@ -107,7 +105,7 @@ const Map = () => {
           </Button>
         </div>
         
-        <div className="flex-1">
+        <div className="flex-1 p-4">
           {viewMode === 'map' ? (
             <div className="grid lg:grid-cols-[auto,1fr] gap-4 h-full relative">
               {isMobile && (

@@ -1,4 +1,4 @@
-import GoogleMap from './GoogleMap';
+import { GoogleMap } from './GoogleMap';
 import { DraggableParcelInfo } from './DraggableParcelInfo';
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapSettings } from './types';
@@ -26,18 +26,7 @@ export const MapView = ({
   setMapInstance,
   userRole,
 }: MapViewProps) => {
-  const getMarkerColor = (status: string) => {
-    switch (status) {
-      case 'AVAILABLE':
-        return '#10B981'; // Vert pour disponible
-      case 'SOLD':
-        return '#EF4444'; // Rouge pour vendu
-      case 'IN_TRANSACTION':
-        return '#F59E0B'; // Orange pour en transaction
-      default:
-        return '#6B7280'; // Gris par défaut
-    }
-  };
+  const { toast } = useToast();
 
   return (
     <div className="relative flex-1 h-full">
@@ -48,7 +37,6 @@ export const MapView = ({
           theme={settings.theme}
           setMapInstance={setMapInstance}
           userRole={userRole}
-          getMarkerColor={getMarkerColor}
         />
       </div>
 

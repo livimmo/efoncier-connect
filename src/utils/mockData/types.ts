@@ -67,10 +67,6 @@ export interface Parcel {
   tnbInfo: TNBInfo;
 }
 
-export interface ParcelInput extends Omit<Parcel, 'location'> {
-  location: Location;
-}
-
 export interface Transaction {
   id: string;
   parcelId: string;
