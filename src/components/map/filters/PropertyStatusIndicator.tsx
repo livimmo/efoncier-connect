@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Check, AlertTriangle, X, DollarSign } from "lucide-react";
+import { Check, AlertTriangle, X } from "lucide-react";
 
 interface PropertyStatusIndicatorProps {
   status: string;
@@ -19,25 +19,25 @@ export const PropertyStatusIndicator = ({
       case 'AVAILABLE':
         return {
           label: "Disponible",
-          color: "bg-green-500/10 text-green-500 hover:bg-green-500/20",
+          color: "bg-green-500 text-white hover:bg-green-600",
           icon: Check
         };
       case 'IN_TRANSACTION':
         return {
           label: "En Transaction",
-          color: "bg-orange-500/10 text-orange-500 hover:bg-orange-500/20",
+          color: "bg-orange-500 text-white hover:bg-orange-600",
           icon: AlertTriangle
         };
       case 'SOLD':
         return {
           label: "Vendu",
-          color: "bg-red-500/10 text-red-500 hover:bg-red-500/20",
+          color: "bg-red-500 text-white hover:bg-red-600",
           icon: X
         };
       default:
         return {
           label: "Indisponible",
-          color: "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20",
+          color: "bg-gray-500 text-white hover:bg-gray-600",
           icon: AlertTriangle
         };
     }
@@ -47,18 +47,15 @@ export const PropertyStatusIndicator = ({
     switch (status) {
       case 'PAID':
         return {
-          icon: DollarSign,
           color: "text-green-500"
-        };
-      case 'OVERDUE':
-        return {
-          icon: AlertTriangle,
-          color: "text-red-500"
         };
       case 'PENDING':
         return {
-          icon: AlertTriangle,
           color: "text-orange-500"
+        };
+      case 'UNPAID':
+        return {
+          color: "text-red-500"
         };
       default:
         return null;
@@ -77,9 +74,7 @@ export const PropertyStatusIndicator = ({
       {showIcon && <Icon className="w-3 h-3 mr-1" />}
       {config.label}
       {tnbConfig && (
-        <span className={`ml-1 ${tnbConfig.color}`}>
-          <tnbConfig.icon className="w-3 h-3 inline-block" />
-        </span>
+        <span className={`ml-1 ${tnbConfig.color}`}>•</span>
       )}
     </Badge>
   );
