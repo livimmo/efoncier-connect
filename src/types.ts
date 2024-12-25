@@ -25,4 +25,11 @@ export interface Property {
   city?: string;
   address?: string;
   titleDeedNumber?: string;
+  fiscalStatus?: "COMPLIANT" | "NON_COMPLIANT" | "UNDER_REVIEW";
+  tnbInfo?: {
+    pricePerMeter: number;
+    totalAmount: number;
+    status: 'LOW' | 'AVERAGE' | 'HIGH';
+    lastUpdate: string;
+  };
 }

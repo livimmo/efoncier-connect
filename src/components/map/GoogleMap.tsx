@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
-import type { Parcel } from '@/utils/mockData/types';
+import type { Property } from '@/types';
 import { UserRole } from '@/types/auth';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
@@ -9,8 +9,8 @@ const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
 const DEFAULT_ZOOM = 12;
 
 interface GoogleMapProps {
-  onMarkerClick: (parcel: Parcel, position: { x: number, y: number }) => void;
-  parcels: Parcel[];
+  onMarkerClick: (parcel: Property, position: { x: number, y: number }) => void;
+  parcels: Property[];
   theme: 'light' | 'dark';
   setMapInstance: (map: google.maps.Map) => void;
   userRole?: UserRole;
@@ -30,13 +30,13 @@ export const GoogleMap = ({
   getMarkerColor = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return '#10B981'; // Green for available
+        return '#10B981'; // Vert pour disponible
       case 'IN_TRANSACTION':
-        return '#F97316'; // Orange for in transaction
+        return '#F97316'; // Orange pour en transaction
       case 'SOLD':
-        return '#8B5CF6'; // Purple for sold
+        return '#EF4444'; // Rouge pour vendu
       default:
-        return '#6B7280'; // Gray for unknown status
+        return '#6B7280'; // Gris pour statut inconnu
     }
   }
 }: GoogleMapProps) => {
@@ -99,7 +99,8 @@ export const GoogleMap = ({
     initMap();
   }, [center, zoom, parcels]);
 
-  const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
+  const createMarkers = (parcels: Property[], map: google.maps.Map) => {
+    // Supprimer les marqueurs existants
     markers.forEach(marker => marker.setMap(null));
     
     const newMarkers = parcels.map(parcel => {
@@ -118,7 +119,7 @@ export const GoogleMap = ({
         },
       });
 
-      // Add hover effect
+      // Effet de survol
       marker.addListener('mouseover', () => {
         marker.setIcon({
           ...marker.getIcon() as google.maps.Symbol,
