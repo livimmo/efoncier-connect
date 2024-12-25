@@ -13,19 +13,19 @@ export const RoleSelection = ({ selectedRole, onRoleChange }: RoleSelectionProps
     {
       id: "owner",
       title: "Propriétaire",
-      description: "Gérez et suivez vos biens fonciers",
+      description: "Gérez vos biens fonciers et vos paiements TNB facilement",
       icon: Home,
     },
     {
       id: "developer",
       title: "Promoteur",
-      description: "Recherchez et négociez les terrains disponibles",
+      description: "Découvrez et négociez des opportunités foncières en toute sécurité",
       icon: Building,
     },
     {
       id: "commune",
       title: "Commune",
-      description: "Surveillez et gérez les biens sous votre juridiction",
+      description: "Suivez et gérez les biens fonciers sous votre juridiction",
       icon: Landmark,
     },
   ];
@@ -37,21 +37,31 @@ export const RoleSelection = ({ selectedRole, onRoleChange }: RoleSelectionProps
         return (
           <motion.div
             key={role.id}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             <Card
-              className={`cursor-pointer transition-colors hover:border-primary ${
-                selectedRole === role.id ? "border-primary bg-primary/5" : ""
+              className={`cursor-pointer transition-all hover:shadow-lg ${
+                selectedRole === role.id 
+                  ? "border-primary bg-primary/5 shadow-md" 
+                  : "hover:border-primary/50"
               }`}
               onClick={() => onRoleChange(role.id as UserRole)}
             >
               <CardHeader>
-                <Icon className="h-8 w-8 mb-2 text-primary" />
-                <CardTitle className="text-lg">{role.title}</CardTitle>
-                <CardDescription className="text-sm">
-                  {role.description}
-                </CardDescription>
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className={`p-3 rounded-full ${
+                    selectedRole === role.id 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted"
+                  }`}>
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <CardTitle className="text-lg">{role.title}</CardTitle>
+                  <CardDescription className="text-sm">
+                    {role.description}
+                  </CardDescription>
+                </div>
               </CardHeader>
             </Card>
           </motion.div>
