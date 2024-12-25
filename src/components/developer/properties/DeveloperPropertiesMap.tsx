@@ -6,14 +6,23 @@ import type { Parcel } from '@/utils/mockData/types';
 
 interface DeveloperPropertiesMapProps {
   parcels?: Parcel[];
+  onMapLoad?: (map: google.maps.Map) => void;
 }
 
-export const DeveloperPropertiesMap = ({ parcels = mockParcels }: DeveloperPropertiesMapProps) => {
+export const DeveloperPropertiesMap = ({ 
+  parcels = mockParcels,
+  onMapLoad 
+}: DeveloperPropertiesMapProps) => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const { theme } = useTheme();
 
   const handleMarkerClick = (parcel: any, position: any) => {
     console.log('Marker clicked:', parcel, position);
+  };
+
+  const handleMapLoad = (map: google.maps.Map) => {
+    setMapInstance(map);
+    onMapLoad?.(map);
   };
 
   return (
@@ -22,7 +31,7 @@ export const DeveloperPropertiesMap = ({ parcels = mockParcels }: DeveloperPrope
         onMarkerClick={handleMarkerClick}
         parcels={parcels}
         theme={theme as 'light' | 'dark'}
-        setMapInstance={setMapInstance}
+        setMapInstance={handleMapLoad}
       />
     </div>
   );

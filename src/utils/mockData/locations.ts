@@ -1,146 +1,62 @@
-export interface Location {
-  id: string;
-  name: string;
-  communes: string[];
-}
-
-export const REGIONS: Location[] = [
-  {
-    id: "tanger-tetouan",
-    name: "Tanger-Tétouan-Al Hoceïma",
-    communes: [
-      "Tanger",
-      "Tétouan",
-      "Al Hoceïma",
-      "Chefchaouen",
-      "Ouezzane",
-      "M'Diq-Fnideq",
-      "Larache",
-      "Ksar El Kébir"
-    ]
-  },
-  {
-    id: "oriental",
-    name: "L'Oriental",
-    communes: [
-      "Oujda-Angad",
-      "Berkane",
-      "Nador",
-      "Jerada",
-      "Taourirt",
-      "Driouch",
-      "Figuig"
-    ]
-  },
-  {
-    id: "fes-meknes",
-    name: "Fès-Meknès",
-    communes: [
-      "Fès",
-      "Meknès",
-      "Sefrou",
-      "El Hajeb",
-      "Ifrane",
-      "Taza",
-      "Boulemane"
-    ]
-  },
-  {
-    id: "rabat-sale",
-    name: "Rabat-Salé-Kénitra",
-    communes: [
-      "Rabat",
-      "Salé",
-      "Kénitra",
-      "Skhirat-Témara",
-      "Sidi Slimane",
-      "Sidi Kacem"
-    ]
-  },
-  {
-    id: "beni-mellal",
-    name: "Béni Mellal-Khénifra",
-    communes: [
-      "Béni Mellal",
-      "Khénifra",
-      "Azilal",
-      "Fquih Ben Salah",
-      "Kelaat Sraghna"
-    ]
-  },
+export const REGIONS = [
   {
     id: "casablanca-settat",
     name: "Casablanca-Settat",
-    communes: [
-      "Casablanca",
-      "Mohammedia",
-      "El Jadida",
-      "Settat",
-      "Berrechid",
-      "Benslimane",
-      "Mediouna"
-    ]
+    center: { lat: 33.5731, lng: -7.5898 },
+    communes: ["Casablanca", "Mohammedia", "Settat", "Berrechid"]
+  },
+  {
+    id: "rabat-sale-kenitra",
+    name: "Rabat-Salé-Kénitra",
+    center: { lat: 34.0209, lng: -6.8416 },
+    communes: ["Rabat", "Salé", "Kénitra", "Témara"]
   },
   {
     id: "marrakech-safi",
     name: "Marrakech-Safi",
-    communes: [
-      "Marrakech",
-      "Safi",
-      "Essaouira",
-      "Youssoufia",
-      "Chichaoua",
-      "Al Haouz"
-    ]
+    center: { lat: 31.6295, lng: -7.9811 },
+    communes: ["Marrakech", "Safi", "Essaouira"]
   },
   {
-    id: "draa-tafilalet",
+    id: "fès-meknès",
+    name: "Fès-Meknès",
+    center: { lat: 34.0209, lng: -5.0094 },
+    communes: ["Fès", "Meknès", "Ifrane", "Taza"]
+  },
+  {
+    id: "tanger-tetouan-al-hoceima",
+    name: "Tanger-Tétouan-Al Hoceima",
+    center: { lat: 35.7549, lng: -5.8340 },
+    communes: ["Tanger", "Tetouan", "Al Hoceima"]
+  },
+  {
+    id: "drâa-tafilalet",
     name: "Drâa-Tafilalet",
-    communes: [
-      "Ouarzazate",
-      "Tinghir",
-      "Zagora",
-      "Errachidia",
-      "Midelt"
-    ]
+    center: { lat: 31.1000, lng: -5.5000 },
+    communes: ["Errachidia", "Midelt", "Zagora"]
   },
   {
     id: "souss-massa",
     name: "Souss-Massa",
-    communes: [
-      "Agadir",
-      "Taroudant",
-      "Inezgane",
-      "Tiznit",
-      "Chtouka Aït Baha"
-    ]
+    center: { lat: 30.4280, lng: -9.5980 },
+    communes: ["Agadir", "Taroudant", "Tiznit"]
   },
   {
-    id: "guelmim",
+    id: "guelmim-oued-noun",
     name: "Guelmim-Oued Noun",
-    communes: [
-      "Guelmim",
-      "Assa-Zag",
-      "Tan-Tan",
-      "Sidi Ifni"
-    ]
+    center: { lat: 28.9833, lng: -10.0000 },
+    communes: ["Guelmim", "Tan-Tan"]
   },
   {
-    id: "laayoune",
+    id: "laayoune-sakia-el-hamra",
     name: "Laâyoune-Sakia El Hamra",
-    communes: [
-      "Laâyoune",
-      "Boujdour",
-      "Tarfaya",
-      "Es-Semara"
-    ]
+    center: { lat: 24.8800, lng: -13.2000 },
+    communes: ["Laâyoune", "Boujdour"]
   },
   {
-    id: "dakhla",
+    id: "dakhla-oued-ed-dahab",
     name: "Dakhla-Oued Ed-Dahab",
-    communes: [
-      "Dakhla",
-      "Aousserd"
-    ]
+    center: { lat: 23.7000, lng: -15.9000 },
+    communes: ["Dakhla"]
   }
 ];

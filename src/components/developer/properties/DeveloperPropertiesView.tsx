@@ -6,6 +6,7 @@ import { DeveloperPropertiesTable } from "./DeveloperPropertiesTable";
 import { DeveloperPropertiesMap } from "./DeveloperPropertiesMap";
 import { DeveloperPropertiesFilters } from "./DeveloperPropertiesFilters";
 import { mockParcels } from "@/utils/mockData/parcels";
+import { REGIONS } from "@/utils/mockData/locations";
 import type { Parcel } from "@/utils/mockData/types";
 
 interface DeveloperPropertiesViewProps {
@@ -19,9 +20,19 @@ export const DeveloperPropertiesView = ({
   onViewModeChange,
   data = mockParcels,
 }: DeveloperPropertiesViewProps) => {
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+
+  const handleRegionChange = (regionId: string) => {
+    const selectedRegion = REGIONS.find(r => r.id === regionId);
+    if (selectedRegion && mapInstance) {
+      mapInstance.panTo({ lat: selectedRegion.center.lat, lng: selectedRegion.center.lng });
+      mapInstance.setZoom(10);
+    }
+  };
+
   return (
     <div className="grid lg:grid-cols-[300px,1fr] gap-6">
-      <DeveloperPropertiesFilters />
+      <DeveloperPropertiesFilters onRegionChange={handleRegionChange} />
       
       <div className="space-y-4">
         <div className="flex justify-end gap-2">
@@ -47,7 +58,10 @@ export const DeveloperPropertiesView = ({
           <DeveloperPropertiesTable data={data} />
         ) : (
           <Card className="h-[600px]">
-            <DeveloperPropertiesMap parcels={data} />
+            <DeveloperPropertiesMap 
+              parcels={data} 
+              onMapLoad={setMapInstance}
+            />
           </Card>
         )}
       </div>

@@ -5,7 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { REGIONS } from "@/utils/mockData/locations";
 
-export const DeveloperPropertiesFilters = () => {
+interface DeveloperPropertiesFiltersProps {
+  onRegionChange?: (regionId: string) => void;
+}
+
+export const DeveloperPropertiesFilters = ({ onRegionChange }: DeveloperPropertiesFiltersProps) => {
   return (
     <Card className="h-fit">
       <CardHeader>
@@ -14,7 +18,7 @@ export const DeveloperPropertiesFilters = () => {
       <CardContent className="space-y-6">
         <div className="space-y-2">
           <Label>Région</Label>
-          <Select>
+          <Select onValueChange={(value) => onRegionChange?.(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une région" />
             </SelectTrigger>
