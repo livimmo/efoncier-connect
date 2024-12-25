@@ -2,21 +2,24 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
 import type { Parcel } from '@/utils/mockData/types';
-import { UserRole } from '@/types/auth';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
-const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
-const DEFAULT_ZOOM = 12;
 
 interface GoogleMapProps {
   onMarkerClick: (parcel: Parcel, position: { x: number, y: number }) => void;
   parcels: Parcel[];
   theme: 'light' | 'dark';
   setMapInstance: (map: google.maps.Map) => void;
-  userRole?: UserRole;
+  mapCenter: { lat: number; lng: number; zoom: number };
 }
 
-export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance, userRole }: GoogleMapProps) => {
+export const GoogleMap = ({ 
+  onMarkerClick, 
+  parcels, 
+  theme, 
+  setMapInstance,
+  mapCenter 
+}: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
@@ -117,8 +120,8 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance, userR
         const google = await loader.load();
         if (mapRef.current) {
           const mapInstance = new google.maps.Map(mapRef.current, {
-            center: DEFAULT_CENTER,
-            zoom: DEFAULT_ZOOM,
+            center: { lat: mapCenter.lat, lng: mapCenter.lng },
+            zoom: mapCenter.zoom,
             styles: theme === 'dark' ? [
               { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
               { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
@@ -153,9 +156,16 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance, userR
 
   useEffect(() => {
     if (map) {
+      map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
+      map.setZoom(mapCenter.zoom);
+    }
+  }, [mapCenter]);
+
+  useEffect(() => {
+    if (map) {
       createMarkers(parcels, map);
     }
-  }, [parcels, map, userRole]);
+  }, [parcels, map]);
 
   return (
     <div 

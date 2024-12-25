@@ -1,21 +1,10 @@
 import { Parcel } from "@/utils/mockData/types";
-import { Property } from "@/types";
+import { UserRole } from "@/types/auth";
 
 export type MapSettings = {
   theme: "light" | "dark";
   unit: "metric" | "imperial";
 };
-
-export interface MapContainerProps {
-  userRole: string;
-  onParcelSelect: (parcelId: string) => void;
-}
-
-export interface ParcelInfoProps {
-  parcel: Parcel;
-  onClose: () => void;
-  className?: string;
-}
 
 export interface MapFilters {
   search: string;
@@ -24,20 +13,30 @@ export interface MapFilters {
   propertyType: string;
   zoneType: string;
   size: [number, number];
-  status: string[];
+  status: string;
   type: string[];
   ownerName: string;
   titleDeedNumber: string;
-  lastPaymentDate: string | null;
+  lastPaymentDate: Date | null;
   priceRange: [number, number];
   surfaceRange: [number, number];
   date?: Date;
 }
 
-export interface MapFiltersProps {
-  filters: MapFilters;
-  setFilters: (filters: MapFilters) => void;
-  onApplyFilters: () => void;
+export interface MapMobileControlsProps {
+  settings: MapSettings;
+  onSettingChange: (setting: keyof MapSettings, value: string) => void;
+  onFilterClick?: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onLocateMe?: () => void;
+}
+
+export interface DraggableParcelInfoProps {
+  parcel: Parcel;
+  onClose: () => void;
+  className?: string;
+  markerPosition?: { x: number; y: number };
 }
 
 export interface MobileFiltersSheetProps {
@@ -47,9 +46,3 @@ export interface MobileFiltersSheetProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
-
-export interface DraggableParcelInfoProps extends ParcelInfoProps {
-  markerPosition?: { x: number; y: number };
-}
-
-export type ParcelToPropertyMapper = (parcel: Parcel) => Property;

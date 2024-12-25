@@ -3,7 +3,6 @@ import { DraggableParcelInfo } from './DraggableParcelInfo';
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapSettings } from './types';
 import { useToast } from "@/hooks/use-toast";
-import { UserRole } from '@/types/auth';
 
 interface MapViewProps {
   selectedParcel: Parcel | null;
@@ -13,7 +12,7 @@ interface MapViewProps {
   settings: MapSettings;
   mapInstance: google.maps.Map | null;
   setMapInstance: (map: google.maps.Map) => void;
-  userRole?: UserRole;
+  mapCenter: { lat: number; lng: number; zoom: number };
 }
 
 export const MapView = ({
@@ -24,7 +23,7 @@ export const MapView = ({
   settings,
   mapInstance,
   setMapInstance,
-  userRole,
+  mapCenter,
 }: MapViewProps) => {
   const { toast } = useToast();
 
@@ -36,7 +35,7 @@ export const MapView = ({
           parcels={filteredParcels}
           theme={settings.theme}
           setMapInstance={setMapInstance}
-          userRole={userRole}
+          mapCenter={mapCenter}
         />
       </div>
 
@@ -46,7 +45,6 @@ export const MapView = ({
           onClose={() => onParcelSelect(null)}
           markerPosition={markerPosition}
           className="bg-background/95 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-          userRole={userRole}
         />
       )}
     </div>
