@@ -43,15 +43,11 @@ export const useLogin = () => {
 
     try {
       setIsLoading(true);
+      console.log("Attempting login with role:", role);
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
-        options: {
-          metadata: {
-            role
-          }
-        }
       });
 
       if (error) {
