@@ -16,6 +16,7 @@ interface GoogleMapProps {
   userRole?: UserRole;
   center?: { lat: number; lng: number };
   zoom?: number;
+  getMarkerColor?: (status: string) => string;
 }
 
 export const GoogleMap = ({ 
@@ -25,7 +26,8 @@ export const GoogleMap = ({
   setMapInstance, 
   userRole,
   center,
-  zoom = DEFAULT_ZOOM
+  zoom = DEFAULT_ZOOM,
+  getMarkerColor
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -86,16 +88,16 @@ export const GoogleMap = ({
     initMap();
   }, [center, zoom, parcels]);
 
-  const getMarkerColor = (parcel: Parcel) => {
-    switch (parcel.taxStatus) {
-      case 'PAID':
-        return '#006233'; // Vert foncé
-      case 'PENDING':
-        return '#FFA500'; // Orange
-      case 'OVERDUE':
-        return '#C1272D'; // Rouge foncé
+  const defaultMarkerColor = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return '#10B981';
+      case 'UNAVAILABLE':
+        return '#EF4444';
+      case 'IN_TRANSACTION':
+        return '#F59E0B';
       default:
-        return '#808080'; // Gris par défaut
+        return '#6B7280';
     }
   };
 
@@ -110,7 +112,7 @@ export const GoogleMap = ({
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor(parcel),
+          fillColor: getMarkerColor ? getMarkerColor(parcel.status) : defaultMarkerColor(parcel.status),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
