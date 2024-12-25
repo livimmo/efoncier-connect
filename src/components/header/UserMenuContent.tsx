@@ -1,4 +1,4 @@
-import { Home, Settings, CreditCard, Database, LogOut } from "lucide-react";
+import { Home, User, CreditCard, Database, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -49,7 +49,7 @@ export const UserMenuContent = () => {
         <span>Tableau de Bord</span>
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => navigate("/profile")}>
-        <Settings className="mr-2 h-4 w-4" />
+        <User className="mr-2 h-4 w-4" />
         <span>Profil</span>
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => navigate("/history")}>
