@@ -10,20 +10,20 @@ import { Input } from "@/components/ui/input";
 
 const faqItems = [
   {
+    question: "Comment accéder aux détails d'un terrain ?",
+    answer: "Inscrivez-vous en tant que Promoteur pour débloquer les informations complètes des biens."
+  },
+  {
+    question: "Comment signaler un problème technique ?",
+    answer: "Utilisez le formulaire ci-dessus ou contactez notre support technique directement par email."
+  },
+  {
+    question: "Puis-je prendre rendez-vous avec un conseiller ?",
+    answer: "Oui, vous pouvez nous contacter par téléphone ou remplir le formulaire avec le sujet 'Rendez-vous'."
+  },
+  {
     question: "Comment payer ma taxe TNB en ligne ?",
-    answer: "Pour payer votre taxe TNB en ligne, connectez-vous à votre compte, accédez à la section 'Paiements', sélectionnez la taxe à payer et suivez les instructions pour effectuer le paiement sécurisé."
-  },
-  {
-    question: "Où puis-je télécharger mon reçu fiscal ?",
-    answer: "Les reçus fiscaux sont disponibles dans la section 'Documents' de votre tableau de bord. Cliquez sur 'Reçus Fiscaux' et sélectionnez l'année concernée pour télécharger votre document."
-  },
-  {
-    question: "Comment contacter directement un promoteur ?",
-    answer: "Dans la section 'Annuaire', vous pouvez rechercher un promoteur et utiliser le bouton 'Contacter' pour lui envoyer un message direct via la plateforme."
-  },
-  {
-    question: "Comment mettre à jour mes informations personnelles ?",
-    answer: "Accédez à votre profil en cliquant sur votre avatar en haut à droite, puis sélectionnez 'Paramètres'. Vous pourrez y modifier vos informations personnelles."
+    answer: "Pour payer votre taxe TNB en ligne, connectez-vous à votre compte, accédez à la section 'Paiements' et suivez les instructions."
   }
 ];
 
