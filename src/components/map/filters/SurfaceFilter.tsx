@@ -12,23 +12,37 @@ interface SurfaceFilterProps {
 
 export const SurfaceFilter = ({ filters, onFilterChange, setFilters }: SurfaceFilterProps) => {
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [minSurface, setMinSurface] = useState(filters.size[0]);
+  const [maxSurface, setMaxSurface] = useState(filters.size[1]);
 
   useEffect(() => {
-    setShowCustomInput(filters.size[1] >= 15000);
-  }, [filters.size]);
+    setShowCustomInput(maxSurface >= 15000);
+  }, [maxSurface]);
 
-  const handleSurfaceInputChange = (value: string) => {
+  const handleMinSurfaceInputChange = (value: string) => {
     const numericValue = value ? parseInt(value.replace(/[^0-9]/g, '')) : 0;
-    const newSize: [number, number] = [filters.size[0], numericValue];
+    setMinSurface(numericValue);
+    const newSize: [number, number] = [numericValue, maxSurface];
+    setFilters({ ...filters, size: newSize });
+    onFilterChange('size', newSize.join(','));
+  };
+
+  const handleMaxSurfaceInputChange = (value: string) => {
+    const numericValue = value ? parseInt(value.replace(/[^0-9]/g, '')) : 0;
+    setMaxSurface(numericValue);
+    const newSize: [number, number] = [minSurface, numericValue];
     setFilters({ ...filters, size: newSize });
     onFilterChange('size', newSize.join(','));
   };
 
   const handleSliderChange = (value: number[]) => {
-    const newSize: [number, number] = [value[0], value[1]];
+    const [min, max] = value;
+    setMinSurface(min);
+    setMaxSurface(max);
+    const newSize: [number, number] = [min, max];
     setFilters({ ...filters, size: newSize });
     onFilterChange('size', newSize.join(','));
-    setShowCustomInput(value[1] >= 15000);
+    setShowCustomInput(max >= 15000);
   };
 
   return (
@@ -38,22 +52,28 @@ export const SurfaceFilter = ({ filters, onFilterChange, setFilters }: SurfaceFi
         min={0}
         max={15000}
         step={100}
-        value={[filters.size[0], Math.min(filters.size[1], 15000)]}
+        value={[minSurface, Math.min(maxSurface, 15000)]}
         onValueChange={handleSliderChange}
         className="mt-2"
       />
       <div className="flex justify-between text-sm text-muted-foreground">
-        <span>{filters.size[0].toLocaleString()} m²</span>
+        <Input
+          type="text"
+          value={minSurface.toLocaleString()}
+          onChange={(e) => handleMinSurfaceInputChange(e.target.value)}
+          className="w-32 h-7 text-right"
+          placeholder="Surface min"
+        />
         {showCustomInput ? (
           <Input
             type="text"
-            value={filters.size[1].toLocaleString()}
-            onChange={(e) => handleSurfaceInputChange(e.target.value)}
+            value={maxSurface.toLocaleString()}
+            onChange={(e) => handleMaxSurfaceInputChange(e.target.value)}
             className="w-32 h-7 text-right"
             placeholder="Surface max"
           />
         ) : (
-          <span>{filters.size[1].toLocaleString()} m²</span>
+          <span>{maxSurface.toLocaleString()} m²</span>
         )}
       </div>
     </div>
