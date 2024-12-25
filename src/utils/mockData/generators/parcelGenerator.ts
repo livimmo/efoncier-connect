@@ -1,10 +1,7 @@
 import { Parcel, PropertyType, FiscalStatus } from '../types';
 import { generateTNBInfo } from './tnbGenerator';
 
-export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'> & {
-  latitude: number;
-  longitude: number;
-};
+export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'>;
 
 const getFiscalStatus = (taxStatus: string): FiscalStatus => {
   switch (taxStatus) {
@@ -20,9 +17,5 @@ const getFiscalStatus = (taxStatus: string): FiscalStatus => {
 export const createParcelWithTNB = (data: ParcelInput): Parcel => ({
   ...data,
   fiscalStatus: getFiscalStatus(data.taxStatus),
-  tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType),
-  location: {
-    lat: data.latitude,
-    lng: data.longitude
-  }
+  tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
 });
