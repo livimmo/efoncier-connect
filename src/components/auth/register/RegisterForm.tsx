@@ -17,7 +17,7 @@ const formSchema = z.object({
   lastName: z.string().min(1, "Le nom est requis"),
   phone: z.string().min(1, "Le numéro de téléphone est requis"),
   city: z.string().min(1, "La ville est requise"),
-  role: z.enum(["taxpayer", "developer", "commune"]),
+  role: z.enum(["owner", "developer", "commune", "admin"]),
   acceptTerms: z.boolean().refine((val) => val === true, {
     message: "Vous devez accepter les conditions d'utilisation",
   }),
@@ -40,7 +40,7 @@ export const RegisterForm = () => {
       lastName: "",
       phone: "",
       city: "",
-      role: "taxpayer",
+      role: "owner",
       acceptTerms: false,
     },
   });

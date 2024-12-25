@@ -22,7 +22,7 @@ const Search = () => {
                 Trouvez des opportunités d'investissement en filtrant par localisation, surface et statut fiscal.
               </p>
             )}
-            {profile?.role === "taxpayer" && (
+            {profile?.role === "owner" && (
               <p className="text-muted-foreground">
                 Gérez vos biens et consultez les informations cadastrales.
               </p>
