@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { DashboardTab } from "@/components/profile/tabs/DashboardTab";
 import { Header } from "@/components/Header";
+import { DashboardTab } from "@/components/profile/tabs/DashboardTab";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,47 +12,34 @@ const Dashboard = () => {
     if (!loading && profile) {
       switch (profile.role) {
         case "owner":
-          navigate("/owner/dashboard");
+          navigate("/owner/dashboard", { replace: true });
           break;
         case "developer":
-          navigate("/developer/dashboard");
+          navigate("/developer/dashboard", { replace: true });
           break;
         case "commune":
-          navigate("/commune/dashboard");
+          navigate("/commune/dashboard", { replace: true });
           break;
         case "admin":
-          navigate("/admin/dashboard");
+          navigate("/admin/dashboard", { replace: true });
           break;
         default:
-          // If no specific role or unknown role, show default dashboard
-          return;
+          break;
       }
     } else if (!loading && !profile) {
-      // If not logged in, redirect to login
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
   }, [profile, loading, navigate]);
 
-  // Show loading state while checking auth
   if (loading) {
     return (
-      <>
-        <Header />
-        <div className="flex items-center justify-center min-h-screen">Chargement...</div>
-      </>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
     );
   }
 
-  // If no specific role or waiting for redirect, show default dashboard
-  return (
-    <>
-      <Header />
-      <div className="container mx-auto p-6 mt-16">
-        <h1 className="text-2xl font-bold mb-6">Tableau de Bord</h1>
-        <DashboardTab />
-      </div>
-    </>
-  );
+  return null;
 };
 
 export default Dashboard;

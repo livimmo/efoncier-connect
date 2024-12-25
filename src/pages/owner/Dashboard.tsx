@@ -1,34 +1,56 @@
 import { Header } from "@/components/Header";
 import { StatsWidget } from "@/components/dashboard/StatsWidget";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
-import { ParcelList } from "@/components/owner/ParcelList";
-import { PaymentHistory } from "@/components/owner/PaymentHistory";
-import { AddPropertyButton } from "@/components/header/AddPropertyButton";
+import { QuickActions } from "@/components/dashboard/QuickActions";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const OwnerDashboard = () => {
+  const { profile, loading } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!loading && (!profile || profile.role !== "owner")) {
+      toast({
+        title: "Accès refusé",
+        description: "Vous n'avez pas accès à cette page",
+        variant: "destructive",
+      });
+      navigate("/", { replace: true });
+    }
+  }, [profile, loading, navigate, toast]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Header />
-      <div className="container mx-auto p-6 mt-16 space-y-6">
+      <main className="container mx-auto p-6 mt-16 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Tableau de Bord – Propriétaire</h1>
+            <h1 className="text-2xl font-bold">Tableau de Bord Propriétaire</h1>
             <p className="text-muted-foreground mt-1">
-              Gérez vos biens fonciers, suivez vos paiements TNB et restez informé en temps réel.
+              Gérez vos biens fonciers et suivez vos paiements
             </p>
           </div>
-          <AddPropertyButton />
         </div>
 
         <StatsWidget />
         
         <div className="grid gap-6 md:grid-cols-2">
+          <QuickActions />
           <RecentActivity />
-          <PaymentHistory />
         </div>
-
-        <ParcelList />
-      </div>
+      </main>
     </>
   );
 };
