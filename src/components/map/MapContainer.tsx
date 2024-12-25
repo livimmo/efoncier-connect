@@ -12,8 +12,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { UserRole } from '@/types/auth';
 
-export const MapContainer = () => {
+interface MapContainerProps {
+  userRole?: UserRole;
+  onParcelSelect: (parcelId: string) => void;
+}
+
+export const MapContainer = ({ userRole, onParcelSelect }: MapContainerProps) => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
@@ -34,7 +40,27 @@ export const MapContainer = () => {
   });
 
   const filteredParcels = useMemo(() => {
-    return mockParcels.filter(parcel => {
+    let filtered = mockParcels;
+
+    // Filtrage selon le rôle utilisateur
+    switch (userRole) {
+      case 'owner':
+        filtered = filtered.filter(parcel => parcel.status === 'AVAILABLE');
+        break;
+      case 'developer':
+        filtered = filtered.filter(parcel => 
+          ['AVAILABLE', 'IN_TRANSACTION'].includes(parcel.status));
+        break;
+      case 'commune':
+        // La commune voit tous les biens
+        break;
+      default:
+        // Visiteur non connecté : uniquement les biens disponibles
+        filtered = filtered.filter(parcel => parcel.status === 'AVAILABLE');
+    }
+
+    // Application des filtres standards
+    return filtered.filter(parcel => {
       if (filters.commune && parcel.city.toLowerCase() !== filters.commune.toLowerCase()) return false;
       if (filters.propertyType && parcel.type !== filters.propertyType) return false;
       if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
@@ -44,12 +70,15 @@ export const MapContainer = () => {
       if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
       return true;
     });
-  }, [filters]);
+  }, [filters, userRole]);
 
   const handleParcelSelect = (parcel: Parcel | null, position?: { x: number; y: number }) => {
     setSelectedParcel(parcel);
     if (position) {
       setMarkerPosition(position);
+    }
+    if (parcel) {
+      onParcelSelect(parcel.id);
     }
   };
 
@@ -67,6 +96,7 @@ export const MapContainer = () => {
             filters={filters}
             setFilters={setFilters}
             filteredParcelsCount={filteredParcels.length}
+            userRole={userRole}
           />
         ) : (
           <>
@@ -85,6 +115,7 @@ export const MapContainer = () => {
                     description: `${filteredParcels.length} parcelles trouvées`,
                   });
                 }}
+                userRole={userRole}
               />
             </div>
             <Button
@@ -115,6 +146,7 @@ export const MapContainer = () => {
             settings={{ theme: 'light', unit: 'metric' }}
             mapInstance={mapInstance}
             setMapInstance={setMapInstance}
+            userRole={userRole}
           />
         </div>
       </div>

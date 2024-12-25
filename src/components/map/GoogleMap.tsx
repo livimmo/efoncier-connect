@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
 import type { Parcel } from '@/utils/mockData/types';
+import { UserRole } from '@/types/auth';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
@@ -12,9 +13,10 @@ interface GoogleMapProps {
   parcels: Parcel[];
   theme: 'light' | 'dark';
   setMapInstance: (map: google.maps.Map) => void;
+  userRole?: UserRole;
 }
 
-export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: GoogleMapProps) => {
+export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance, userRole }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
@@ -50,14 +52,27 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: Goo
     return { x: 0, y: 0 };
   };
 
-  const getMarkerColor = (parcel: Parcel) => {
-    switch (parcel.taxStatus) {
-      case 'PAID':
-        return '#006233'; // Vert
-      case 'OVERDUE':
-        return '#C1272D'; // Rouge
-      default:
-        return '#FFA500'; // Orange pour "en attente"
+  const getMarkerColor = (parcel: Parcel, userRole?: UserRole) => {
+    if (userRole === 'commune' || userRole === 'owner') {
+      switch (parcel.taxStatus) {
+        case 'PAID':
+          return '#006233'; // Vert
+        case 'OVERDUE':
+          return '#C1272D'; // Rouge
+        default:
+          return '#FFA500'; // Orange pour "en attente"
+      }
+    } else {
+      switch (parcel.status) {
+        case 'AVAILABLE':
+          return '#006233'; // Vert
+        case 'IN_TRANSACTION':
+          return '#FFA500'; // Orange
+        case 'SOLD':
+          return '#C1272D'; // Rouge
+        default:
+          return '#808080'; // Gris pour autres statuts
+      }
     }
   };
 
@@ -72,7 +87,7 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: Goo
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor(parcel),
+          fillColor: getMarkerColor(parcel, userRole),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
@@ -140,7 +155,7 @@ export const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance }: Goo
     if (map) {
       createMarkers(parcels, map);
     }
-  }, [parcels, map]);
+  }, [parcels, map, userRole]);
 
   return (
     <div 
