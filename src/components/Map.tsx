@@ -27,7 +27,10 @@ const Map = () => {
     titleDeedNumber: '',
     lastPaymentDate: null,
     fiscalStatus: '',
-    maxPrice: 0
+    maxPrice: 0,
+    tnbReference: '',
+    searchQuery: '',
+    zoning: ''
   });
 
   const handleParcelSelect = (parcelId: string) => {

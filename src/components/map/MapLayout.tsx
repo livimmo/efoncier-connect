@@ -27,7 +27,10 @@ export const MapLayout = ({
     titleDeedNumber: '',
     lastPaymentDate: null,
     fiscalStatus: '',
-    maxPrice: 0
+    maxPrice: 0,
+    tnbReference: '',
+    searchQuery: '',
+    zoning: ''
   });
 
   return (

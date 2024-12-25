@@ -33,3 +33,9 @@ export interface MapFiltersProps {
   onApplyFilters?: () => void;
   userRole?: string;
 }
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
+}

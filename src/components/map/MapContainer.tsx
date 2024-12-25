@@ -38,7 +38,10 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     titleDeedNumber: '',
     lastPaymentDate: null,
     fiscalStatus: '',
-    maxPrice: 0
+    maxPrice: 0,
+    tnbReference: '',
+    searchQuery: '',
+    zoning: ''
   });
 
   const filteredParcels = useMemo(() => {
@@ -85,8 +88,8 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     showBoundaries: true,
     showTerrain: false,
     show3D: false,
-    theme: 'light',
-    unit: 'metric'
+    theme: 'light' as const,
+    unit: 'metric' as const
   };
 
   return (
