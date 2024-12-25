@@ -1,11 +1,4 @@
-export interface MapSettings {
-  theme: 'light' | 'dark';
-  unit: 'metric' | 'imperial';
-  showLabels: boolean;
-  showBoundaries: boolean;
-  showTerrain: boolean;
-  show3D: boolean;
-}
+import { Role } from "@/types";
 
 export interface MapFilters {
   region: string;
@@ -28,20 +21,14 @@ export interface MapFilters {
 }
 
 export interface MapFiltersProps {
-  onRegionChange?: (regionId: string) => void;
-  onCityChange?: (city: string) => void;
-  onDistrictChange?: (district: string) => void;
-  filters?: MapFilters;
-  setFilters?: (filters: MapFilters) => void;
+  onRegionChange: (regionId: string) => void;
+  onCityChange: (cityName: string) => void;
+  onDistrictChange: (districtName: string) => void;
+  filters: MapFilters;
+  setFilters: (filters: MapFilters) => void;
   onApplyFilters?: () => void;
-  userRole?: string;
+  userRole?: Role;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
-  mapInstance?: google.maps.Map | null;
-}
-
-export interface MapMobileControlsProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onLocate: () => void;
+  mapInstance: google.maps.Map | null;
 }
