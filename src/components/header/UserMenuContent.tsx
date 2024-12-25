@@ -48,9 +48,9 @@ export const UserMenuContent = () => {
         <Home className="mr-2 h-4 w-4" />
         <span>Tableau de Bord</span>
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/profile?tab=settings")}>
+      <DropdownMenuItem onClick={() => navigate("/profile")}>
         <Settings className="mr-2 h-4 w-4" />
-        <span>Paramètres</span>
+        <span>Profil</span>
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => navigate("/history")}>
         <CreditCard className="mr-2 h-4 w-4" />
