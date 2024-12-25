@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { FileText, MessageSquare, Receipt, Calculator } from "lucide-react";
-import { Parcel } from "@/utils/mockData/types";
+import { FileText, MessageSquare, Receipt, Calculator, CreditCard } from "lucide-react";
+import type { Property } from "@/types";
 
 interface ParcelActionsProps {
-  parcel: Parcel;
+  parcel: Property;
   onPaymentClick: () => void;
   onReceiptClick: () => void;
   onContactClick: () => void;
@@ -34,8 +34,8 @@ export const ParcelActions = ({
             </>
           ) : (
             <>
-              <FileText className="w-4 h-4 mr-2" />
-              Payer
+              <CreditCard className="w-4 h-4 mr-2" />
+              Payer TNB
             </>
           )}
         </Button>
