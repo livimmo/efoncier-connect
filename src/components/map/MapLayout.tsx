@@ -30,7 +30,8 @@ export const MapLayout = ({
     maxPrice: 0,
     tnbReference: '',
     searchQuery: '',
-    zoning: ''
+    zoning: '',
+    paymentStatus: ''
   });
 
   return (

@@ -30,7 +30,8 @@ const Map = () => {
     maxPrice: 0,
     tnbReference: '',
     searchQuery: '',
-    zoning: ''
+    zoning: '',
+    paymentStatus: ''
   });
 
   const handleParcelSelect = (parcelId: string) => {

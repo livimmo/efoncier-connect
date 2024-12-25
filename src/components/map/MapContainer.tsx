@@ -41,7 +41,8 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     maxPrice: 0,
     tnbReference: '',
     searchQuery: '',
-    zoning: ''
+    zoning: '',
+    paymentStatus: ''
   });
 
   const filteredParcels = useMemo(() => {

@@ -7,7 +7,7 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { MapFilters } from "../types";
-import { PAYMENT_STATUS_OPTIONS } from "./filterConstants";
+import { mockParcels } from "@/utils/mockData/parcels";
 
 interface PaymentFiltersProps {
   filters: MapFilters;
@@ -18,25 +18,14 @@ interface PaymentFiltersProps {
 export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFiltersProps) => {
   if (userRole !== 'commune') return null;
 
+  const paymentStatusCounts = {
+    PAID: mockParcels.filter(p => p.taxStatus === 'PAID').length,
+    PENDING: mockParcels.filter(p => p.taxStatus === 'PENDING').length,
+    OVERDUE: mockParcels.filter(p => p.taxStatus === 'OVERDUE').length
+  };
+
   return (
     <>
-      <div className="space-y-2">
-        <Label>Statut fiscal</Label>
-        <Select
-          value={filters.fiscalStatus}
-          onValueChange={(value) => setFilters({ ...filters, fiscalStatus: value })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Sélectionner un statut" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="PAID">Payé</SelectItem>
-            <SelectItem value="PENDING">En attente</SelectItem>
-            <SelectItem value="OVERDUE">En retard</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       <div className="space-y-2">
         <Label>Statut de paiement</Label>
         <Select
@@ -47,11 +36,10 @@ export const PaymentFilters = ({ filters, setFilters, userRole }: PaymentFilters
             <SelectValue placeholder="Sélectionner un statut" />
           </SelectTrigger>
           <SelectContent>
-            {PAYMENT_STATUS_OPTIONS.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
+            <SelectItem value="">Tous les statuts</SelectItem>
+            <SelectItem value="PAID">Payé ({paymentStatusCounts.PAID})</SelectItem>
+            <SelectItem value="PENDING">En attente ({paymentStatusCounts.PENDING})</SelectItem>
+            <SelectItem value="OVERDUE">En retard ({paymentStatusCounts.OVERDUE})</SelectItem>
           </SelectContent>
         </Select>
       </div>
