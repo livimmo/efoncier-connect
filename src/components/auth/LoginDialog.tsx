@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { RegisterDialog } from "./RegisterDialog";
+import { UserRole } from "@/types/auth";
 
 interface LoginDialogProps {
   open: boolean;
@@ -16,6 +17,7 @@ interface LoginDialogProps {
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<UserRole>("owner");
   const navigate = useNavigate();
 
   const handleWhatsAppLogin = () => {
@@ -23,7 +25,18 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   };
 
   const handleSuccess = () => {
-    // Handle successful login
+    onOpenChange(false);
+    navigate("/dashboard");
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Simulate login process
+    setTimeout(() => {
+      setIsLoading(false);
+      handleSuccess();
+    }, 1500);
   };
 
   if (showRegister) {
@@ -62,7 +75,13 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <EmailLoginForm onSuccess={handleSuccess} />
+        <EmailLoginForm 
+          isLoading={isLoading}
+          onSubmit={handleSubmit}
+          selectedRole={selectedRole}
+          onRoleChange={setSelectedRole}
+          onSuccess={handleSuccess}
+        />
 
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
