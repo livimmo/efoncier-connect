@@ -11,6 +11,7 @@ import { UserMenu } from "./header/UserMenu";
 import { AuthButtons } from "./header/AuthButtons";
 import { MobileMenu } from "./header/MobileMenu";
 import { NotificationsArea } from "./header/NotificationsArea";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -19,6 +20,7 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,7 +32,9 @@ export const Header = () => {
               setIsOpen={setIsMobileMenuOpen}
             />
           )}
-          <Logo />
+          <div onClick={() => navigate("/")} className="cursor-pointer">
+            <Logo />
+          </div>
           {!isMobile && <MainNav className="mx-6" />}
         </div>
 

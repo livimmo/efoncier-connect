@@ -1,8 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Home, Map, MessageSquare, Settings, HelpCircle } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useAuth } from "./auth/AuthProvider";
+import { useToast } from "@/hooks/use-toast";
 
 interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -10,8 +11,22 @@ interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export function MainNav({ className, ...props }: MainNavProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
+  const { toast } = useToast();
+
+  const handleNavigation = (href: string) => {
+    if (!profile && (href === "/messages" || href === "/settings")) {
+      toast({
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour accéder à cette page",
+        variant: "destructive",
+      });
+      return;
+    }
+    navigate(href);
+  };
 
   const navItems = [
     {
@@ -53,11 +68,11 @@ export function MainNav({ className, ...props }: MainNavProps) {
       {...props}
     >
       {navItems.map(({ href, label, icon: Icon }) => (
-        <Link
+        <div
           key={href}
-          to={href}
+          onClick={() => handleNavigation(href)}
           className={cn(
-            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group",
+            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group cursor-pointer",
             location.pathname === href 
               ? "text-primary after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-0.5 after:bg-primary" 
               : "text-muted-foreground",
@@ -70,7 +85,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
           ) : (
             <span className="text-center whitespace-nowrap">{label}</span>
           )}
-        </Link>
+        </div>
       ))}
     </nav>
   );
