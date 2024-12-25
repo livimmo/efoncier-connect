@@ -2,20 +2,19 @@ import { useState } from "react";
 import { Logo } from "./Logo";
 import { MainNav } from "./MainNav";
 import { ModeToggle } from "./theme/mode-toggle";
-import { Button } from "./ui/button";
-import { Bell, Menu, X, Plus, MessageSquare, BarChart2, Shield, Database, Users } from "lucide-react";
 import { SearchModal } from "./search/SearchModal";
 import { LoginDialog } from "./auth/LoginDialog";
 import { RegisterDialog } from "./auth/RegisterDialog";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { Badge } from "./ui/badge";
 import { useAuth } from "./auth/AuthProvider";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useNavigate } from "react-router-dom";
 import { UserMenu } from "./header/UserMenu";
 import { AuthButtons } from "./header/AuthButtons";
-import { AddPropertyButton } from "./header/AddPropertyButton";
-import { MobileSearchSheet } from "./search/MobileSearchSheet";
+import { MobileMenu } from "./header/MobileMenu";
+import { NotificationsArea } from "./header/NotificationsArea";
+import { OwnerActions } from "./header/actions/OwnerActions";
+import { DeveloperActions } from "./header/actions/DeveloperActions";
+import { CommuneActions } from "./header/actions/CommuneActions";
+import { AdminActions } from "./header/actions/AdminActions";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -24,79 +23,19 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
-  const navigate = useNavigate();
 
-  const getRoleSpecificButtons = () => {
+  const getRoleSpecificActions = () => {
     if (!profile) return null;
 
     switch (profile.role) {
       case "owner":
-        return (
-          <>
-            <AddPropertyButton />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/stats")}
-              className="relative"
-            >
-              <BarChart2 className="h-5 w-5" />
-            </Button>
-          </>
-        );
+        return <OwnerActions />;
       case "developer":
-        return (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/map")}
-            className="relative"
-          >
-            <Plus className="h-5 w-5" />
-          </Button>
-        );
+        return <DeveloperActions />;
       case "commune":
-        return (
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/stats")}
-              className="relative"
-            >
-              <BarChart2 className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/fiscal")}
-              className="relative"
-            >
-              <Shield className="h-5 w-5" />
-            </Button>
-          </>
-        );
+        return <CommuneActions />;
       case "admin":
-        return (
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/users")}
-              className="relative"
-            >
-              <Users className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/logs")}
-              className="relative"
-            >
-              <Database className="h-5 w-5" />
-            </Button>
-          </>
-        );
+        return <AdminActions />;
       default:
         return null;
     }
@@ -107,29 +46,10 @@ export const Header = () => {
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-4">
           {isMobile && (
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0">
-                <SheetHeader className="p-4 border-b">
-                  <SheetTitle>Menu</SheetTitle>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="absolute right-4 top-4"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </SheetHeader>
-                <div className="py-4 overflow-y-auto">
-                  <MainNav className="flex-col items-start space-y-2 px-4" />
-                </div>
-              </SheetContent>
-            </Sheet>
+            <MobileMenu 
+              isOpen={isMobileMenuOpen}
+              setIsOpen={setIsMobileMenuOpen}
+            />
           )}
           <Logo />
           {!isMobile && <MainNav className="mx-6" />}
@@ -138,35 +58,8 @@ export const Header = () => {
         <div className="flex items-center gap-2">
           {profile && (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative"
-                onClick={() => navigate("/messages")}
-              >
-                <MessageSquare className="h-5 w-5" />
-                <Badge 
-                  variant="default"
-                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
-                >
-                  2
-                </Badge>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative"
-                onClick={() => navigate("/notifications")}
-              >
-                <Bell className="h-5 w-5" />
-                <Badge 
-                  variant="default"
-                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
-                >
-                  3
-                </Badge>
-              </Button>
-              {getRoleSpecificButtons()}
+              <NotificationsArea />
+              {getRoleSpecificActions()}
             </>
           )}
           
