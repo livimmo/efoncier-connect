@@ -3,6 +3,13 @@ export interface Location {
   lng: number;
 }
 
+export interface TNBInfo {
+  pricePerMeter: number;
+  totalAmount: number;
+  status: 'LOW' | 'AVERAGE' | 'HIGH';
+  lastUpdate: string;
+}
+
 export interface Property {
   id: string;
   title: string;
@@ -18,18 +25,12 @@ export interface Property {
   created_at: string;
   updated_at: string;
   titleDeedNumber: string;
-  ownerName?: string;
-  zone?: string;
-  type?: string;
-  surface?: number;
-  city?: string;
-  address?: string;
-  fiscalStatus?: "COMPLIANT" | "NON_COMPLIANT" | "UNDER_REVIEW";
+  ownerName: string;
+  address: string;
+  city: string;
+  zone: string;
+  type: string;
+  surface: number;
   taxStatus: "PAID" | "UNPAID";
-  tnbInfo: {
-    pricePerMeter: number;
-    totalAmount: number;
-    status: 'LOW' | 'AVERAGE' | 'HIGH';
-    lastUpdate: string;
-  };
+  tnbInfo: TNBInfo;
 }

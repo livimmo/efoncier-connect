@@ -44,7 +44,7 @@ export const MapView = ({
       case 'AVAILABLE':
         return '#10B981';
       case 'IN_TRANSACTION':
-        return '#F59E0B';
+        return '#F97316';
       case 'SOLD':
         return '#EF4444';
       default:

@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface MapLegendProps {
@@ -11,7 +10,7 @@ export const MapLegend = ({ className, onStatusFilter, activeStatus }: MapLegend
   const statuses = [
     { id: 'AVAILABLE', label: 'Disponible', color: 'bg-green-500' },
     { id: 'IN_TRANSACTION', label: 'En Transaction', color: 'bg-orange-500' },
-    { id: 'SOLD', label: 'Vendu', color: 'bg-purple-500' }
+    { id: 'SOLD', label: 'Vendu', color: 'bg-red-500' }
   ];
 
   return (

@@ -107,7 +107,7 @@ export const GoogleMap = ({
       const marker = new google.maps.Marker({
         position: parcel.location,
         map: map,
-        title: parcel.title,
+        title: `${parcel.title} - ${parcel.status === 'AVAILABLE' ? 'Disponible' : parcel.status === 'IN_TRANSACTION' ? 'En Transaction' : 'Vendu'}`,
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
