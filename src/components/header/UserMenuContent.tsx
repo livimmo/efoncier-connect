@@ -1,4 +1,4 @@
-import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut, Star, History } from "lucide-react";
+import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut, Star, History, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -21,18 +21,23 @@ const getRoleSpecificMenuItems = (role: string) => {
     owner: [
       { icon: Building2, label: "Mes Biens", href: "/owner/properties" },
       { icon: CreditCard, label: "Paiements", href: "/owner/payments" },
+      { icon: MessageSquare, label: "Messages", href: "/messages" },
     ],
     developer: [
       { icon: Building2, label: "Mes Projets", href: "/developer/properties" },
+      { icon: MapPin, label: "Carte Interactive", href: "/map" },
+      { icon: MessageSquare, label: "Messages", href: "/messages" },
       { icon: Star, label: "Mes Favoris", href: "/developer/favorites" },
     ],
     commune: [
       { icon: Building2, label: "Gestion des Biens", href: "/commune/properties" },
       { icon: CreditCard, label: "Paiements", href: "/commune/payments" },
+      { icon: MessageSquare, label: "Messages", href: "/messages" },
     ],
     admin: [
       { icon: Building2, label: "Gestion des Biens", href: "/admin/properties" },
       { icon: FileText, label: "Rapports", href: "/admin/reports" },
+      { icon: MessageSquare, label: "Messages", href: "/messages" },
     ],
   };
   return items[role as keyof typeof items] || items.owner;

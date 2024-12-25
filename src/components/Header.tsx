@@ -11,7 +11,6 @@ import { UserMenu } from "./header/UserMenu";
 import { AuthButtons } from "./header/AuthButtons";
 import { MobileMenu } from "./header/MobileMenu";
 import { NotificationsArea } from "./header/NotificationsArea";
-import { MessagesArea } from "./header/MessagesArea";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Search } from "lucide-react";
@@ -53,10 +52,7 @@ export const Header = () => {
           </Button>
           
           {profile && !isMobile && (
-            <>
-              <MessagesArea />
-              <NotificationsArea />
-            </>
+            <NotificationsArea />
           )}
           <ModeToggle />
           {profile ? (
