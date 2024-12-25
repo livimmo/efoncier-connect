@@ -1,168 +1,148 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { FileText, MapPin, Download, MessageSquare, Search } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { GoogleMap } from "@/components/map/GoogleMap";
-import type { Parcel } from "@/utils/mockData/types";
-import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
-import { PropertyChat } from "@/components/chat/PropertyChat";
-import { DownloadPropertyDialog } from "./DownloadPropertyDialog";
-import { Input } from "@/components/ui/input";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { PropertyStatusIndicator } from "@/components/map/filters/PropertyStatusIndicator";
+import { formatCurrency } from "@/utils/format";
+import { Property } from "@/types";
+import { LoginDialog } from "@/components/auth/LoginDialog";
+import { RegisterDialog } from "@/components/auth/RegisterDialog";
+import { Eye, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface DeveloperPropertiesTableProps {
-  data: Parcel[];
+  data: Property[];
 }
 
-export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
-  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [showDocuments, setShowDocuments] = useState(false);
-  const [showDownload, setShowDownload] = useState(false);
-  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+export function DeveloperPropertiesTable({ data }: DeveloperPropertiesTableProps) {
+  const { profile } = useAuth();
+  const navigate = useNavigate();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [showRegisterDialog, setShowRegisterDialog] = useState(false);
 
-  const handleLocationClick = (location: { lat: number; lng: number }) => {
-    setSelectedLocation(location);
-  };
-
-  const handleDocumentsClick = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-    setShowDocuments(true);
-  };
-
-  const handleDownloadClick = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-    setShowDownload(true);
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'AVAILABLE':
-        return <span className="text-green-600">🟢 Disponible</span>;
-      case 'UNAVAILABLE':
-        return <span className="text-red-600">🔴 Indisponible</span>;
-      default:
-        return <span className="text-orange-600">🟡 En Transaction</span>;
+  const handleViewDetails = (propertyId: string) => {
+    if (!profile) {
+      setShowLoginDialog(true);
+      return;
     }
+    navigate(`/properties/${propertyId}`);
   };
 
-  const filteredData = data.filter(parcel => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      parcel.titleDeedNumber.toLowerCase().includes(searchLower) ||
-      parcel.address.toLowerCase().includes(searchLower) ||
-      parcel.type.toLowerCase().includes(searchLower) ||
-      parcel.status.toLowerCase().includes(searchLower)
-    );
-  });
+  const maskText = (text: string) => {
+    if (!profile) {
+      return text.slice(0, 3) + "•".repeat(text.length - 3);
+    }
+    return text;
+  };
+
+  const maskLocation = (city: string, address: string) => {
+    if (!profile) {
+      return `${city} (Localisation exacte masquée)`;
+    }
+    return `${city}, ${address}`;
+  };
 
   return (
     <>
-      <div className="space-y-4">
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Rechercher par titre foncier, adresse, type..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8"
-          />
-        </div>
-
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Titre Foncier</TableHead>
-              <TableHead>Localisation</TableHead>
-              <TableHead>Surface (m²)</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Statut</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHeader>Titre Foncier</TableHeader>
+              <TableHeader>Localisation</TableHeader>
+              <TableHeader>Surface</TableHeader>
+              <TableHeader>Type</TableHeader>
+              <TableHeader>Statut</TableHeader>
+              <TableHeader>Prix/m²</TableHeader>
+              <TableHeader>Actions</TableHeader>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.map((parcel) => (
-              <TableRow key={parcel.id}>
-                <TableCell>{parcel.titleDeedNumber}</TableCell>
-                <TableCell>{parcel.address}</TableCell>
-                <TableCell>{parcel.surface}</TableCell>
-                <TableCell>{parcel.type}</TableCell>
-                <TableCell>{getStatusBadge(parcel.status)}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDocumentsClick(parcel)}
-                    >
-                      <FileText className="h-4 w-4 mr-2" />
-                      Documents
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleLocationClick(parcel.location)}
-                    >
-                      <MapPin className="h-4 w-4 mr-2" />
-                      Localisation
-                    </Button>
-                    <PropertyChat 
-                      propertyId={parcel.id}
-                      propertyTitle={parcel.title}
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDownloadClick(parcel)}
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Télécharger
-                    </Button>
+            {data.map((property) => (
+              <TableRow key={property.id}>
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-2">
+                    {maskText(property.titleDeedNumber)}
+                    {!profile && <Lock className="h-4 w-4 text-muted-foreground" />}
                   </div>
+                </TableCell>
+                <TableCell>
+                  {maskLocation(property.city, property.address)}
+                </TableCell>
+                <TableCell>{property.surface_area} m²</TableCell>
+                <TableCell>{property.property_type}</TableCell>
+                <TableCell>
+                  <PropertyStatusIndicator 
+                    status={property.status} 
+                    tnbStatus={property.taxStatus}
+                  />
+                </TableCell>
+                <TableCell>
+                  {formatCurrency(property.price)} DH/m²
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewDetails(property.id)}
+                    className={cn(
+                      "flex items-center gap-2",
+                      !profile && "text-primary hover:text-primary"
+                    )}
+                  >
+                    {profile ? (
+                      <>
+                        <Eye className="h-4 w-4" />
+                        Détails
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="h-4 w-4" />
+                        S'inscrire pour voir
+                      </>
+                    )}
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+
+        {!profile && (
+          <div className="p-4 bg-primary/5 border-t">
+            <div className="text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Inscrivez-vous en tant que Promoteur pour accéder aux informations complètes
+                et à la localisation exacte des biens.
+              </p>
+              <Button
+                onClick={() => setShowRegisterDialog(true)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Créer un Compte Promoteur
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Dialog pour la carte */}
-      <Dialog open={!!selectedLocation} onOpenChange={() => setSelectedLocation(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Localisation du Bien</DialogTitle>
-          </DialogHeader>
-          <div className="h-[400px] relative">
-            {selectedLocation && (
-              <GoogleMap
-                parcels={[]}
-                onMarkerClick={() => {}}
-                theme="light"
-                setMapInstance={() => {}}
-                center={selectedLocation}
-                zoom={15}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog pour les documents */}
-      <Dialog open={showDocuments} onOpenChange={setShowDocuments}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Documents du Bien</DialogTitle>
-          </DialogHeader>
-          {selectedParcel && <PropertyDocuments parcel={selectedParcel} />}
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog pour le téléchargement */}
-      <DownloadPropertyDialog
-        parcel={selectedParcel}
-        open={showDownload}
-        onOpenChange={setShowDownload}
+      <LoginDialog 
+        open={showLoginDialog} 
+        onOpenChange={setShowLoginDialog} 
+      />
+      
+      <RegisterDialog
+        open={showRegisterDialog}
+        onOpenChange={setShowRegisterDialog}
       />
     </>
   );
-};
+}
