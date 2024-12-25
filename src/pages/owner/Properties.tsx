@@ -7,12 +7,14 @@ import { MapSettings } from "@/components/map/types";
 import { DeveloperPropertiesTable } from "@/components/developer/properties/DeveloperPropertiesTable";
 import { Button } from "@/components/ui/button";
 import { Map as MapIcon, List } from "lucide-react";
+import { Parcel } from "@/utils/mockData/types";
 
 const Properties = () => {
   const { profile } = useAuth();
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
+  const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
 
   const mapSettings: MapSettings = {
     center: { lat: 31.7917, lng: -7.0926 },
@@ -27,6 +29,9 @@ const Properties = () => {
 
   const handleParcelSelect = (parcel: Parcel, position?: { x: number; y: number }) => {
     setSelectedParcelId(parcel.id);
+    if (position) {
+      setMarkerPosition(position);
+    }
   };
 
   const filteredParcels = mockParcels.filter(parcel => {
@@ -35,6 +40,8 @@ const Properties = () => {
     }
     return true;
   });
+
+  const selectedParcel = selectedParcelId ? mockParcels.find(p => p.id === selectedParcelId) : null;
 
   return (
     <div className="min-h-screen">
@@ -58,7 +65,8 @@ const Properties = () => {
         <div className="h-[600px]">
           {viewMode === 'map' ? (
             <MapView
-              selectedParcel={filteredParcels.find(p => p.id === selectedParcelId) || null}
+              selectedParcel={selectedParcel}
+              markerPosition={markerPosition}
               onParcelSelect={handleParcelSelect}
               filteredParcels={filteredParcels}
               settings={mapSettings}
