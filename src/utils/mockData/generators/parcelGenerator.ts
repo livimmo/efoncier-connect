@@ -1,13 +1,28 @@
-import { Property, ParcelInput, FiscalStatus, TaxStatus, PropertyType, ZoneType } from '../../../types';
+import { Property, TaxStatus, FiscalStatus, PropertyType, ZoneType } from '../../../types';
 import { generateTNBInfo } from './tnbGenerator';
 
 const getFiscalStatus = (taxStatus: TaxStatus): FiscalStatus => {
   if (taxStatus === 'PAID') {
     return 'compliant';
-  } else if (taxStatus === 'PENDING') {
-    return 'under_review';
   }
-  return 'non_compliant';
+  return 'under_review';
+};
+
+const getZoneType = (propertyType: PropertyType): ZoneType => {
+  switch (propertyType) {
+    case 'RESIDENTIAL':
+      return 'RESIDENTIAL_ZONE';
+    case 'COMMERCIAL':
+      return 'COMMERCIAL_ZONE';
+    case 'INDUSTRIAL':
+      return 'INDUSTRIAL_ZONE';
+    case 'AGRICULTURAL':
+      return 'AGRICULTURAL_ZONE';
+    case 'MIXED':
+      return 'MIXED_USE_ZONE';
+    default:
+      return 'CONSTRUCTIBLE_ZONE';
+  }
 };
 
 export const createParcelWithTNB = (input: Partial<Property>): Property => {
@@ -15,6 +30,7 @@ export const createParcelWithTNB = (input: Partial<Property>): Property => {
   const fiscal_status = getFiscalStatus(taxStatus);
   const surface_area = input.surface || 0;
   const property_type = input.type || 'RESIDENTIAL';
+  const zone = getZoneType(property_type);
   
   const baseParcel: Property = {
     id: input.id || crypto.randomUUID(),
@@ -34,7 +50,7 @@ export const createParcelWithTNB = (input: Partial<Property>): Property => {
     ownerName: input.ownerName || '',
     address: input.address || '',
     city: input.city || '',
-    zone: input.zone || 'RESIDENTIAL_ZONE',
+    zone,
     type: property_type,
     surface: surface_area,
     taxStatus,
