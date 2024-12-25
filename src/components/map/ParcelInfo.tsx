@@ -17,7 +17,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
       <p>Superficie: {parcel.surface} m²</p>
       <p>Prix: {parcel.price} DHS</p>
       <p>Statut: {parcel.status}</p>
-      <p>Statut Fiscal: {parcel.taxStatus}</p>
+      <p className="whitespace-nowrap">Statut Fiscal: {parcel.taxStatus}</p>
       {userRole === "owner" && (
         <div>
           <button onClick={() => console.log("Contact Owner")}>Contacter le Propriétaire</button>
