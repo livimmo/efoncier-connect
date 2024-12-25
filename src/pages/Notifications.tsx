@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NotificationList } from "@/components/notifications/NotificationList";
 import type { Notification } from "@/components/notifications/types";
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Notifications = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -39,7 +40,7 @@ const Notifications = () => {
       priority: "medium",
       title: "Mise à jour de statut",
       message: "Le statut de votre parcelle à Ain Sebaa a été mis à jour",
-      date: new Date(Date.now() - 86400000).toISOString(), // Hier
+      date: new Date(Date.now() - 86400000).toISOString(),
       read: true,
     },
     {
@@ -48,7 +49,7 @@ const Notifications = () => {
       priority: "low",
       title: "Nouveau message",
       message: "Vous avez reçu un nouveau message concernant votre demande d'information",
-      date: new Date(Date.now() - 172800000).toISOString(), // Avant-hier
+      date: new Date(Date.now() - 172800000).toISOString(),
       read: false,
       actions: {
         primary: {
@@ -83,9 +84,13 @@ const Notifications = () => {
       <Header />
       <main className="container mx-auto px-4 py-6">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6">Notifications</h1>
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold">Notifications</h1>
+            <span className="text-sm text-muted-foreground">
+              {filteredNotifications.filter(n => !n.read).length} non lues
+            </span>
+          </div>
           
-          {/* Barre de recherche */}
           <div className="mb-6">
             <Input
               placeholder="Rechercher dans les notifications..."
@@ -95,7 +100,6 @@ const Notifications = () => {
             />
           </div>
 
-          {/* Onglets */}
           <Tabs defaultValue="all" className="w-full" onValueChange={(value) => setActiveFilter(value as typeof activeFilter)}>
             <TabsList className="w-full justify-start mb-6">
               <TabsTrigger value="all">Toutes</TabsTrigger>
@@ -103,21 +107,23 @@ const Notifications = () => {
               <TabsTrigger value="important">Importantes</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="all">
-              <NotificationList notifications={filteredNotifications} />
-            </TabsContent>
+            <ScrollArea className="h-[calc(100vh-300px)]">
+              <TabsContent value="all">
+                <NotificationList notifications={filteredNotifications} />
+              </TabsContent>
 
-            <TabsContent value="unread">
-              <NotificationList 
-                notifications={filteredNotifications.filter(n => !n.read)} 
-              />
-            </TabsContent>
+              <TabsContent value="unread">
+                <NotificationList 
+                  notifications={filteredNotifications.filter(n => !n.read)} 
+                />
+              </TabsContent>
 
-            <TabsContent value="important">
-              <NotificationList 
-                notifications={filteredNotifications.filter(n => n.priority === "high")} 
-              />
-            </TabsContent>
+              <TabsContent value="important">
+                <NotificationList 
+                  notifications={filteredNotifications.filter(n => n.priority === "high")} 
+                />
+              </TabsContent>
+            </ScrollArea>
           </Tabs>
         </div>
       </main>

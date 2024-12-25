@@ -5,12 +5,14 @@ import { cn } from "@/lib/utils";
 import { MobileFooterMenu } from "./MobileFooterMenu";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 export const MobileFooter = () => {
   const [showMore, setShowMore] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { toast } = useToast();
 
   if (!isMobile) return null;
 
@@ -31,15 +33,22 @@ export const MobileFooter = () => {
       path: "/search",
     },
     {
-      icon: CreditCard,
-      label: "Paiements",
-      path: "/payment",
-    },
-    {
       icon: Bell,
       label: "Notifications",
       path: "/notifications",
       badge: true,
+      onClick: () => {
+        navigate("/notifications");
+        toast({
+          title: "Notifications",
+          description: "Chargement de vos notifications...",
+        });
+      },
+    },
+    {
+      icon: CreditCard,
+      label: "Paiements",
+      path: "/payment",
     },
   ];
 
@@ -51,7 +60,7 @@ export const MobileFooter = () => {
           {menuItems.map((item) => (
             <button
               key={item.path}
-              onClick={() => navigate(item.path)}
+              onClick={() => item.onClick ? item.onClick() : navigate(item.path)}
               className={cn(
                 "flex flex-col items-center justify-center gap-1 rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-primary",
                 location.pathname === item.path && "text-primary"

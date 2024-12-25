@@ -6,6 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { NotificationList } from "@/components/notifications/NotificationList";
+import type { Notification } from "@/components/notifications/types";
 
 // Mock data pour la démonstration
 const mockMessages = [
@@ -25,27 +27,24 @@ const mockMessages = [
   },
 ];
 
-const mockNotifications = [
+const mockNotifications: Notification[] = [
   {
     id: "1",
-    title: "Mise à jour de statut",
-    message: "Le statut de votre parcelle a été mis à jour",
-    time: "Il y a 10 min",
-    unread: true,
+    type: "payment",
+    priority: "high",
+    title: "Paiement en attente",
+    message: "Vous avez une taxe foncière en attente de paiement",
+    date: new Date().toISOString(),
+    read: false,
   },
   {
     id: "2",
-    title: "Nouveau document disponible",
-    message: "Un nouveau document a été ajouté à votre dossier",
-    time: "Il y a 2 heures",
-    unread: true,
-  },
-  {
-    id: "3",
-    title: "Rappel de paiement",
-    message: "N'oubliez pas d'effectuer votre paiement avant le 30",
-    time: "Il y a 1 jour",
-    unread: false,
+    type: "property",
+    priority: "medium",
+    title: "Mise à jour de statut",
+    message: "Le statut de votre parcelle a été mis à jour",
+    date: new Date(Date.now() - 86400000).toISOString(),
+    read: true,
   },
 ];
 
@@ -64,13 +63,17 @@ export const NotificationsArea = () => {
     });
   };
 
-  const handleNotificationClick = (notificationId: string) => {
+  const handleNotificationClick = () => {
     setIsNotificationsOpen(false);
+    navigate("/notifications");
     toast({
-      title: "Notification",
-      description: "Notification marquée comme lue",
+      title: "Notifications",
+      description: "Redirection vers les notifications...",
     });
   };
+
+  const unreadNotificationsCount = mockNotifications.filter(n => !n.read).length;
+  const unreadMessagesCount = mockMessages.filter(m => m.unread).length;
 
   return (
     <>
@@ -81,12 +84,14 @@ export const NotificationsArea = () => {
         onClick={() => setIsMessagesOpen(true)}
       >
         <MessageSquare className="h-5 w-5" />
-        <Badge 
-          variant="default"
-          className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
-        >
-          {mockMessages.filter(m => m.unread).length}
-        </Badge>
+        {unreadMessagesCount > 0 && (
+          <Badge 
+            variant="default"
+            className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
+          >
+            {unreadMessagesCount}
+          </Badge>
+        )}
       </Button>
 
       <Button
@@ -96,12 +101,14 @@ export const NotificationsArea = () => {
         onClick={() => setIsNotificationsOpen(true)}
       >
         <Bell className="h-5 w-5" />
-        <Badge 
-          variant="default"
-          className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
-        >
-          {mockNotifications.filter(n => n.unread).length}
-        </Badge>
+        {unreadNotificationsCount > 0 && (
+          <Badge 
+            variant="default"
+            className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary"
+          >
+            {unreadNotificationsCount}
+          </Badge>
+        )}
       </Button>
 
       {/* Messages Sheet */}
@@ -138,22 +145,10 @@ export const NotificationsArea = () => {
           </SheetHeader>
           <ScrollArea className="h-[calc(100vh-100px)] mt-4">
             <div className="space-y-4">
-              {mockNotifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  onClick={() => handleNotificationClick(notification.id)}
-                  className="p-4 rounded-lg border cursor-pointer hover:bg-accent transition-colors"
-                >
-                  <div className="flex justify-between items-start mb-1">
-                    <h3 className="font-medium">{notification.title}</h3>
-                    <span className="text-xs text-muted-foreground">{notification.time}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{notification.message}</p>
-                  {notification.unread && (
-                    <Badge variant="default" className="mt-2">Nouveau</Badge>
-                  )}
-                </div>
-              ))}
+              <NotificationList 
+                notifications={mockNotifications}
+                onClick={handleNotificationClick}
+              />
             </div>
           </ScrollArea>
         </SheetContent>
