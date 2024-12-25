@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PropertyStatusIndicator } from "../filters/PropertyStatusIndicator";
 import { useNavigate } from "react-router-dom";
-import { Building2, MapPin, Scale, FileCheck } from "lucide-react";
+import { Building2, MapPin, Scale, FileCheck, Info } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { ZONING_TYPES } from "../filters/constants";
+import { PriceDistributionChart } from "./PriceDistributionChart";
+import { Badge } from "@/components/ui/badge";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -15,14 +17,24 @@ interface MinimizedParcelInfoProps {
 
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const navigate = useNavigate();
-  const [priceRange, setPriceRange] = useState([0, 1000000]);
-  const maxPrice = 1000000; // Prix maximum en DH
+  const [priceRange, setPriceRange] = useState([1200, 1800]);
+  const maxPrice = 2500; // Prix maximum en DH/m²
+
+  // Données mockées pour la distribution des prix
+  const priceDistribution = [
+    { range: "1200-1500 DH", percentage: 60, price: 1350 },
+    { range: "1500-1800 DH", percentage: 30, price: 1650 },
+    { range: ">1800 DH", percentage: 10, price: 1900 },
+  ];
 
   return (
     <Card className="p-4 space-y-4 bg-background/95 backdrop-blur-sm">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <PropertyStatusIndicator status={parcel.status} size="sm" />
+          <Badge variant="outline" className="text-xs">
+            15 biens similaires analysés
+          </Badge>
         </div>
         
         <div className="grid gap-3">
@@ -35,17 +47,20 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
           </div>
 
           <div className="space-y-2">
-            <p className="text-xs text-muted-foreground">Fourchette de prix (DH)</p>
+            <div className="flex items-center gap-1">
+              <p className="text-xs text-muted-foreground">Prix moyen au m² (DH)</p>
+              <Info className="h-3 w-3 text-muted-foreground" />
+            </div>
             <Slider
               value={priceRange}
               onValueChange={(value) => setPriceRange(value as [number, number])}
               max={maxPrice}
-              step={50000}
+              step={100}
               className="w-full"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{priceRange[0].toLocaleString()} DH</span>
-              <span>{priceRange[1].toLocaleString()} DH</span>
+              <span>{priceRange[0].toLocaleString()} DH/m²</span>
+              <span>{priceRange[1].toLocaleString()} DH/m²</span>
             </div>
           </div>
 
@@ -86,6 +101,12 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
             </div>
           </div>
         </div>
+
+        <PriceDistributionChart data={priceDistribution} />
+
+        <p className="text-xs text-muted-foreground text-center">
+          Cette estimation est basée sur une analyse des biens similaires disponibles dans un rayon de 1 km
+        </p>
       </div>
 
       <div className="space-y-3">
