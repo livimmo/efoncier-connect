@@ -8,13 +8,14 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Star, BarChart2, Download, MapPin } from "lucide-react";
+import { Eye, Star, BarChart2, Download, MapPin, FileText } from "lucide-react";
 import { mockParcels } from "@/utils/mockData/parcels";
 import { formatCurrency } from "@/utils/format";
 import { PropertyChat } from "@/components/chat/PropertyChat";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { PropertyLocationDialog } from "./PropertyLocationDialog";
+import { PropertyDocumentsDialog } from "./PropertyDocumentsDialog";
 import { Property } from "@/types";
 
 export const DeveloperPropertiesTable = () => {
@@ -22,6 +23,7 @@ export const DeveloperPropertiesTable = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [showLocationDialog, setShowLocationDialog] = useState(false);
+  const [showDocumentsDialog, setShowDocumentsDialog] = useState(false);
 
   const toggleFavorite = (parcelId: string) => {
     setFavorites(prev => {
@@ -52,6 +54,34 @@ export const DeveloperPropertiesTable = () => {
       title: "Historique",
       description: "Affichage de l'historique en cours...",
     });
+  };
+
+  const handleDownload = (parcel: any) => {
+    // Simuler le téléchargement d'un fichier
+    toast({
+      title: "Téléchargement en cours",
+      description: "La fiche du bien va être téléchargée",
+    });
+  };
+
+  const showDocuments = (parcel: any) => {
+    const property: Property = {
+      id: parcel.id,
+      title: parcel.titleDeedNumber,
+      description: parcel.address,
+      property_type: parcel.type.toLowerCase(),
+      surface_area: parcel.surface,
+      location: parcel.location,
+      fiscal_status: "under_review",
+      status: "pending",
+      is_for_sale: false,
+      price: parcel.tnbInfo.pricePerMeter * parcel.surface,
+      owner_id: parcel.owner,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    setSelectedProperty(property);
+    setShowDocumentsDialog(true);
   };
 
   const showLocation = (parcel: any) => {
@@ -147,8 +177,11 @@ export const DeveloperPropertiesTable = () => {
                     <Button variant="outline" size="icon" onClick={() => showHistory(parcel.id)}>
                       <BarChart2 className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon">
+                    <Button variant="outline" size="icon" onClick={() => handleDownload(parcel)}>
                       <Download className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="icon" onClick={() => showDocuments(parcel)}>
+                      <FileText className="h-4 w-4" />
                     </Button>
                   </div>
                 </TableCell>
@@ -159,11 +192,18 @@ export const DeveloperPropertiesTable = () => {
       </div>
 
       {selectedProperty && (
-        <PropertyLocationDialog
-          property={selectedProperty}
-          open={showLocationDialog}
-          onOpenChange={setShowLocationDialog}
-        />
+        <>
+          <PropertyLocationDialog
+            property={selectedProperty}
+            open={showLocationDialog}
+            onOpenChange={setShowLocationDialog}
+          />
+          <PropertyDocumentsDialog
+            property={selectedProperty}
+            open={showDocumentsDialog}
+            onOpenChange={setShowDocumentsDialog}
+          />
+        </>
       )}
     </>
   );
