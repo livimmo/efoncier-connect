@@ -26,8 +26,7 @@ const createResidentialParcel = (
     description: '',
     phone: undefined,
     email: undefined,
-    price: 0,
-    isFavorite: false
+    price: 0
   });
 };
 

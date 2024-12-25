@@ -1,27 +1,13 @@
-import { Property, TaxStatus, FiscalStatus, PropertyType, ZoneType } from '../../../types';
+import { Property, TaxStatus, FiscalStatus, PropertyType, ZoneType, PropertyStatus } from '../../../types';
 import { generateTNBInfo } from './tnbGenerator';
+import { ZONE_TYPES } from '../constants';
 
 const getFiscalStatus = (taxStatus: TaxStatus): FiscalStatus => {
   return taxStatus === 'PAID' ? 'compliant' : 'under_review';
 };
 
 const getZoneType = (propertyType: PropertyType): ZoneType => {
-  switch (propertyType) {
-    case 'RESIDENTIAL':
-      return 'RESIDENTIAL_ZONE';
-    case 'COMMERCIAL':
-      return 'COMMERCIAL_ZONE';
-    case 'INDUSTRIAL':
-      return 'INDUSTRIAL_ZONE';
-    case 'AGRICULTURAL':
-      return 'AGRICULTURAL_ZONE';
-    case 'MIXED':
-      return 'MIXED_USE_ZONE';
-    case 'SEASIDE':
-      return 'CONSTRUCTIBLE_ZONE';
-    default:
-      return 'CONSTRUCTIBLE_ZONE';
-  }
+  return ZONE_TYPES[propertyType];
 };
 
 export const createParcelWithTNB = (input: Partial<Property>): Property => {
