@@ -5,6 +5,7 @@ import { Receipt, MessageSquare } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Badge } from "@/components/ui/badge";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -14,14 +15,14 @@ export interface ParcelInfoProps {
 }
 
 export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoProps) => {
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'PAID':
-        return 'text-green-500';
+        return <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">Payé</Badge>;
       case 'OVERDUE':
-        return 'text-red-500';
+        return <Badge className="bg-red-500/10 text-red-500 hover:bg-red-500/20">En retard</Badge>;
       default:
-        return 'text-yellow-500';
+        return <Badge className="bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20">En attente</Badge>;
     }
   };
 
@@ -59,9 +60,9 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
             </div>
             <div>
               <p className="text-gray-400 text-sm">Statut</p>
-              <p className={`font-medium ${getStatusColor(parcel.taxStatus)}`}>
-                {parcel.taxStatus === 'PAID' ? 'Payé' : 'En attente'}
-              </p>
+              <div className="mt-1">
+                {getStatusBadge(parcel.taxStatus)}
+              </div>
             </div>
           </div>
 
