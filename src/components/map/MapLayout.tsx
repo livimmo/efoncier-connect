@@ -21,7 +21,7 @@ export const MapLayout = ({
     propertyType: "",
     zoneType: "",
     size: [0, 15000],
-    status: [],
+    status: "",
     type: [],
     ownerName: "",
     titleDeedNumber: "",

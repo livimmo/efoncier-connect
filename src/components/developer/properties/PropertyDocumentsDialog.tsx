@@ -1,33 +1,27 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Property } from "@/types";
 
 interface PropertyDocumentsDialogProps {
-  property: Property;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  property: Property;
 }
 
-export default function PropertyDocumentsDialog({ property, open, onOpenChange }: PropertyDocumentsDialogProps) {
+const PropertyDocumentsDialog = ({ open, onOpenChange, property }: PropertyDocumentsDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Documents du bien</DialogTitle>
+          <DialogTitle>Documents - {property.title}</DialogTitle>
           <DialogDescription>
-            Liste des documents associés au bien
+            Consultez les documents associés à cette propriété
           </DialogDescription>
         </DialogHeader>
-
-        <div className="grid gap-4 py-4">
-          <p>Documents en cours de chargement...</p>
+        
+        <div className="py-4">
+          {/* Document list will go here */}
+          <p className="text-muted-foreground">Aucun document disponible</p>
         </div>
 
         <DialogFooter>
@@ -38,4 +32,6 @@ export default function PropertyDocumentsDialog({ property, open, onOpenChange }
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default PropertyDocumentsDialog;

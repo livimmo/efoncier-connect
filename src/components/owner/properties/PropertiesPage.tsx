@@ -1,90 +1,50 @@
-import { useState } from 'react';
-import { Header } from "@/components/Header";
-import { PropertiesHeader } from './PropertiesHeader';
-import { PropertiesStats } from './PropertiesStats';
-import { PropertiesTable } from './PropertiesTable';
-import { MapView } from '@/components/map/MapView';
-import { MapSettings } from '@/components/map/types';
-import { mockParcels } from '@/utils/mockData/parcels';
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { useToast } from "@/hooks/use-toast";
-import { Property } from "@/types";
+import { useState } from "react";
+import { PropertiesHeader } from "./PropertiesHeader";
+import { PropertiesStats } from "./PropertiesStats";
+import { PropertiesTable } from "./PropertiesTable";
+import { MapView } from "@/components/map/MapView";
+import { Parcel } from "@/utils/mockData/types";
+import { MapSettings } from "@/components/map/types";
 
-const PropertiesPage = () => {
-  const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
+export const PropertiesPage = () => {
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
+  const [filteredParcels, setFilteredParcels] = useState<Parcel[]>([]);
+  const [settings, setSettings] = useState<MapSettings>({ theme: "light", unit: "metric" });
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const [settings] = useState<MapSettings>({
-    theme: 'light',
-    unit: 'metric',
-  });
-
-  // Transform mockParcels to match Property type
-  const properties: Property[] = mockParcels.map(parcel => ({
-    id: parcel.id,
-    title: parcel.title,
-    description: parcel.address,
-    property_type: parcel.type.toLowerCase(),
-    surface_area: parcel.surface,
-    location: parcel.location,
-    fiscal_status: "under_review",
-    status: "pending",
-    is_for_sale: false,
-    price: parcel.price || 0,
-    owner_id: parcel.owner,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }));
-
-  const selectedParcel = selectedParcelId 
-    ? mockParcels.find(p => p.id === selectedParcelId) 
-    : null;
-
-  const handleParcelSelect = (parcelId: string, position?: { x: number; y: number }) => {
-    setSelectedParcelId(parcelId);
+  const handleParcelSelect = (parcel: Parcel | null, position?: { x: number; y: number }) => {
+    setSelectedParcel(parcel);
     if (position) {
       setMarkerPosition(position);
+    } else {
+      setMarkerPosition(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="container mx-auto px-4 py-8">
+    <div className="container mx-auto p-4">
+      <div className="space-y-4">
         <PropertiesHeader />
-        <PropertiesStats data={properties} />
-        
-        <div className="grid lg:grid-cols-2 gap-8 mt-8">
-          <div className="space-y-4">
-            <PropertiesTable 
-              data={properties}
-              isLoading={isLoading}
-            />
-          </div>
-
-          <div className="h-[600px] relative rounded-lg border">
-            <MapView 
+        <PropertiesStats />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2">
+            <MapView
               selectedParcel={selectedParcel}
               markerPosition={markerPosition}
-              onParcelSelect={(parcel, position) => {
-                if (parcel) {
-                  handleParcelSelect(parcel.id, position);
-                }
-              }}
-              filteredParcels={mockParcels}
+              onParcelSelect={handleParcelSelect}
+              filteredParcels={filteredParcels}
               settings={settings}
               mapInstance={mapInstance}
               setMapInstance={setMapInstance}
+              mapCenter={{ lat: 33.5731, lng: -7.5898, zoom: 10 }}
             />
           </div>
+          <div>
+            <PropertiesTable />
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
-
-export default PropertiesPage;

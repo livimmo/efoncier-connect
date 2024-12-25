@@ -1,20 +1,8 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Eye, MessageSquare, Download, Star } from "lucide-react";
-import { formatCurrency } from "@/utils/format";
-import { Property } from "@/types";
 import { useState } from "react";
+import { Property } from "@/types";
 import { PropertyChat } from "@/components/chat/PropertyChat";
 import { PropertyDetailsDialog } from "../properties/PropertyDetailsDialog";
-import { PropertyDocumentsDialog } from "../properties/PropertyDocumentsDialog";
+import PropertyDocumentsDialog from "../properties/PropertyDocumentsDialog";
 import { useToast } from "@/hooks/use-toast";
 
 interface DeveloperFavoritesTableProps {
@@ -23,116 +11,54 @@ interface DeveloperFavoritesTableProps {
 
 export const DeveloperFavoritesTable = ({ favorites }: DeveloperFavoritesTableProps) => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
-  const [showDocumentsDialog, setShowDocumentsDialog] = useState(false);
+  const [documentsDialogOpen, setDocumentsDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleRemoveFromFavorites = (propertyId: string) => {
-    toast({
-      title: "Retiré des favoris",
-      description: "Le bien a été retiré de vos favoris",
-    });
+  const handlePropertySelect = (property: Property) => {
+    setSelectedProperty(property);
+  };
+
+  const handleDocumentsDialogOpen = () => {
+    setDocumentsDialogOpen(true);
   };
 
   return (
-    <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Numéro TF</TableHead>
-            <TableHead>Localisation</TableHead>
-            <TableHead className="text-right">Superficie</TableHead>
-            <TableHead className="text-right">Prix au m²</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Date d'ajout</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+    <div className="space-y-4">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Propriétaire</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
           {favorites.map((property) => (
-            <TableRow key={property.id}>
-              <TableCell className="font-medium">{property.title}</TableCell>
-              <TableCell>{property.description}</TableCell>
-              <TableCell className="text-right">
-                {property.surface_area.toLocaleString()} m²
-              </TableCell>
-              <TableCell className="text-right">
-                {formatCurrency(property.price)} DHS
-              </TableCell>
-              <TableCell>
-                <Badge
-                  variant={
-                    property.status === "available"
-                      ? "success"
-                      : property.status === "unavailable"
-                      ? "destructive"
-                      : "warning"
-                  }
-                >
-                  {property.status === "available"
-                    ? "Disponible"
-                    : property.status === "unavailable"
-                    ? "Indisponible"
-                    : "En Transaction"}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {new Date(property.created_at).toLocaleDateString()}
-              </TableCell>
-              <TableCell>
-                <div className="flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      setSelectedProperty(property);
-                      setShowDetailsDialog(true);
-                    }}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <PropertyChat
-                    propertyId={property.id}
-                    propertyTitle={property.title}
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      setSelectedProperty(property);
-                      setShowDocumentsDialog(true);
-                    }}
-                  >
-                    <Download className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleRemoveFromFavorites(property.id)}
-                  >
-                    <Star className="h-4 w-4 fill-primary" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
+            <tr key={property.id}>
+              <td className="px-6 py-4 whitespace-nowrap">{property.title}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{property.owner_id}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <button onClick={() => handlePropertySelect(property)}>Détails</button>
+                <button onClick={handleDocumentsDialogOpen}>Documents</button>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
 
       {selectedProperty && (
-        <>
-          <PropertyDetailsDialog
-            property={selectedProperty}
-            open={showDetailsDialog}
-            onOpenChange={setShowDetailsDialog}
-          />
-          <PropertyDocumentsDialog
-            property={selectedProperty}
-            open={showDocumentsDialog}
-            onOpenChange={setShowDocumentsDialog}
-          />
-        </>
+        <PropertyDetailsDialog
+          open={!!selectedProperty}
+          onOpenChange={() => setSelectedProperty(null)}
+          property={selectedProperty}
+        />
       )}
-    </>
+
+      <PropertyDocumentsDialog
+        open={documentsDialogOpen}
+        onOpenChange={setDocumentsDialogOpen}
+        property={selectedProperty!}
+      />
+    </div>
   );
 };
