@@ -6,6 +6,7 @@ import Search from "@/pages/Search";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
+import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 
 // Dashboard Pages
@@ -34,6 +35,7 @@ export const AppRoutes = () => {
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/privacy" element={<Privacy />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       
       {/* Dashboard Routes */}
