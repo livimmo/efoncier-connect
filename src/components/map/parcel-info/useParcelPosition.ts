@@ -28,34 +28,44 @@ export const useParcelPosition = ({
     const rect = containerRef.current.getBoundingClientRect();
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
+    const padding = 20;
     const totalHeight = isMinimized ? 120 : rect.height;
     
     let newX = pos.x;
     let newY = pos.y;
 
+    // Handle fullscreen mode
     const isFullscreen = document.fullscreenElement !== null;
     const fullscreenElement = document.fullscreenElement as HTMLElement | null;
     const containerWidth = isFullscreen && fullscreenElement ? fullscreenElement.offsetWidth : windowWidth;
     const containerHeight = isFullscreen && fullscreenElement ? fullscreenElement.offsetHeight : windowHeight;
 
     if (isMobile) {
+      // Mobile positioning - fixed at bottom
       newX = containerWidth / 2;
-      newY = containerHeight - (isMinimized ? 80 : 20);
+      newY = containerHeight - (isMinimized ? 80 : totalHeight / 2);
     } else {
-      if (newX < rect.width/2) {
-        newX = rect.width/2;
-      } else if (newX + rect.width/2 > containerWidth) {
-        newX = containerWidth - rect.width/2;
+      // Desktop positioning - adjust to prevent overflow
+      const minX = rect.width/2 + padding;
+      const maxX = containerWidth - rect.width/2 - padding;
+      const minY = totalHeight + padding;
+      const maxY = containerHeight - padding;
+
+      // Horizontal adjustment
+      if (newX < minX) newX = minX;
+      if (newX > maxX) newX = maxX;
+
+      // Vertical adjustment
+      if (newY - totalHeight < padding) {
+        // If too close to top, position below the marker
+        newY = markerPosition.y + 50;
+      } else if (newY > maxY) {
+        newY = maxY;
       }
 
-      if (newY - totalHeight < 0) {
-        newY = totalHeight;
-      } else if (newY > containerHeight - 20) {
-        newY = containerHeight - 20;
-      }
-
+      // Additional check for minimized state
       if (!isMinimized || forceUpdate) {
-        const minY = totalHeight + 20;
+        const minY = totalHeight + padding;
         if (newY < minY) {
           newY = minY;
         }
