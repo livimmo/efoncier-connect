@@ -5,29 +5,26 @@ import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
 import { Home, CreditCard, Wallet, Building2, ArrowRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { formatCurrency } from "@/utils/format";
+import { PaymentSummary } from "@/components/payment/PaymentSummary";
 import { CardPaymentForm } from "@/components/payment/CardPaymentForm";
 import { BankTransferInfo } from "@/components/payment/BankTransferInfo";
 import { MobilePayment } from "@/components/payment/MobilePayment";
-import type { PaymentDetails, PaymentProps } from "@/components/payment/types";
+import type { PaymentProps } from "@/components/payment/types";
 
-const Payment = ({ parcelId, hideHeader }: PaymentProps & { hideHeader?: boolean }) => {
+const Payment = ({ parcelId, hideHeader }: PaymentProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
-  // Mock payment data - à remplacer par les vraies données
-  const paymentData: PaymentDetails = {
-    id: "TF#123456",
+  // Mock payment data - to be replaced with real data
+  const paymentData = {
+    id: parcelId || "TF#123456",
     location: "Casablanca, Maarif",
     area: 500,
     type: "E4",
     amount: 15000,
     dueDate: "2024-06-30",
-    status: "unpaid"
+    status: "unpaid" as const
   };
 
   const handlePayment = async (e: React.FormEvent) => {
@@ -35,7 +32,7 @@ const Payment = ({ parcelId, hideHeader }: PaymentProps & { hideHeader?: boolean
     setLoading(true);
     
     try {
-      // Simuler le traitement du paiement
+      // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       toast({
@@ -62,7 +59,7 @@ const Payment = ({ parcelId, hideHeader }: PaymentProps & { hideHeader?: boolean
         <>
           <Header />
           <main className="container mx-auto p-6 max-w-5xl space-y-8">
-            {/* Fil d'Ariane */}
+            {/* Breadcrumb */}
             <Breadcrumb>
               <BreadcrumbItem>
                 <BreadcrumbLink href="/">
@@ -74,11 +71,11 @@ const Payment = ({ parcelId, hideHeader }: PaymentProps & { hideHeader?: boolean
               </BreadcrumbItem>
             </Breadcrumb>
 
-            {/* En-tête */}
+            {/* Header */}
             <div className="text-center space-y-2">
               <h1 className="text-3xl font-bold">Effectuer un Paiement</h1>
               <p className="text-muted-foreground">
-                Régularisez vos paiements en toute simplicité et sécurité
+                Réglez vos taxes en toute simplicité et sécurité
               </p>
             </div>
           </main>
@@ -86,59 +83,10 @@ const Payment = ({ parcelId, hideHeader }: PaymentProps & { hideHeader?: boolean
       )}
 
       <div className={hideHeader ? "" : "container mx-auto p-6 max-w-5xl space-y-8"}>
-        {/* Récapitulatif du bien */}
-        <Card className="p-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Détails du Bien</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">N° Titre Foncier</span>
-                    <span className="font-medium">{paymentData.id}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Localisation</span>
-                    <span className="font-medium">{paymentData.location}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Superficie</span>
-                    <span className="font-medium">{paymentData.area} m²</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Type</span>
-                    <span className="font-medium">{paymentData.type}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Paiement</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Montant à payer</span>
-                    <span className="text-xl font-bold">
-                      {formatCurrency(paymentData.amount)} MAD
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Date limite</span>
-                    <span className="font-medium">{new Date(paymentData.dueDate).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Statut</span>
-                    <Badge variant={paymentData.status === "paid" ? "success" : "destructive"}>
-                      {paymentData.status === "paid" ? "Payé" : "Impayé"}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
+        {/* Payment Summary */}
+        <PaymentSummary payment={paymentData} />
         
-        {/* Options de paiement */}
+        {/* Payment Options */}
         <Tabs defaultValue="card" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="card" className="space-x-2">
@@ -172,22 +120,22 @@ const Payment = ({ parcelId, hideHeader }: PaymentProps & { hideHeader?: boolean
           </TabsContent>
         </Tabs>
 
-        {/* Actions rapides */}
+        {/* Quick Actions */}
         <div className="flex justify-end space-x-4">
-          <Button 
-            variant="outline" 
+          <button 
+            className="text-sm text-muted-foreground hover:text-foreground"
             onClick={() => navigate(-1)}
           >
             Annuler
-          </Button>
+          </button>
           {!hideHeader && (
-            <Button 
+            <button 
+              className="inline-flex items-center space-x-2 text-sm text-primary hover:text-primary/80"
               onClick={() => navigate("/dashboard")}
-              className="gap-2"
             >
-              Retour au tableau de bord
+              <span>Retour au tableau de bord</span>
               <ArrowRight className="h-4 w-4" />
-            </Button>
+            </button>
           )}
         </div>
       </div>
