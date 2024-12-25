@@ -100,6 +100,24 @@ export const MapFilters = ({
             onChange={(value) => handleFilterChange('status', value)}
           />
 
+          <div className="space-y-2">
+            <Label>Statut TNB</Label>
+            <Select 
+              value={filters.tnbStatus}
+              onValueChange={(value) => handleFilterChange('tnbStatus', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionner un statut" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Tous</SelectItem>
+                <SelectItem value="PAID">TNB payée</SelectItem>
+                <SelectItem value="OVERDUE">TNB en retard</SelectItem>
+                <SelectItem value="PENDING">TNB en traitement</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <LocationFilter
             region={filters.region}
             city={filters.commune}

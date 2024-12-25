@@ -1,14 +1,16 @@
 import { Badge } from "@/components/ui/badge";
-import { Check, AlertTriangle, X } from "lucide-react";
+import { Check, AlertTriangle, X, DollarSign } from "lucide-react";
 
 interface PropertyStatusIndicatorProps {
   status: string;
+  tnbStatus?: string;
   showIcon?: boolean;
   size?: "sm" | "default";
 }
 
 export const PropertyStatusIndicator = ({ 
   status, 
+  tnbStatus,
   showIcon = true,
   size = "default" 
 }: PropertyStatusIndicatorProps) => {
@@ -41,7 +43,30 @@ export const PropertyStatusIndicator = ({
     }
   };
 
+  const getTNBStatusConfig = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return {
+          icon: DollarSign,
+          color: "text-green-500"
+        };
+      case 'OVERDUE':
+        return {
+          icon: AlertTriangle,
+          color: "text-red-500"
+        };
+      case 'PENDING':
+        return {
+          icon: AlertTriangle,
+          color: "text-orange-500"
+        };
+      default:
+        return null;
+    }
+  };
+
   const config = getStatusConfig(status);
+  const tnbConfig = tnbStatus ? getTNBStatusConfig(tnbStatus) : null;
   const Icon = config.icon;
 
   return (
@@ -51,6 +76,11 @@ export const PropertyStatusIndicator = ({
     >
       {showIcon && <Icon className="w-3 h-3 mr-1" />}
       {config.label}
+      {tnbConfig && (
+        <span className={`ml-1 ${tnbConfig.color}`}>
+          <tnbConfig.icon className="w-3 h-3 inline-block" />
+        </span>
+      )}
     </Badge>
   );
 };
