@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Home, Map, MessageSquare, Settings } from "lucide-react";
+import { Home, Map, MessageSquare, LifeBuoy } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useAuth } from "./auth/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -17,7 +17,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
   const { toast } = useToast();
 
   const handleNavigation = (href: string) => {
-    if (!profile && (href === "/messages" || href === "/settings")) {
+    if (!profile && (href === "/messages")) {
       toast({
         title: "Connexion requise",
         description: "Veuillez vous connecter pour accéder à cette page",
@@ -45,13 +45,13 @@ export function MainNav({ className, ...props }: MainNavProps) {
         href: "/messages",
         label: "Messagerie",
         icon: MessageSquare
-      },
-      {
-        href: "/settings",
-        label: "Paramètres",
-        icon: Settings
       }
-    ] : [])
+    ] : []),
+    {
+      href: "/support",
+      label: "Support",
+      icon: LifeBuoy
+    }
   ];
 
   return (
