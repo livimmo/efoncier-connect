@@ -1,6 +1,5 @@
-import { PropertyType, ZoneType } from '../types';
+import { PropertyType, ZoneType, Parcel } from '../types';
 import { createParcelWithTNB } from '../generators/parcelGenerator';
-import { createBaseParcel } from '../generators/baseParcelTemplate';
 
 const createResidentialParcel = (
   id: string,
@@ -13,24 +12,27 @@ const createResidentialParcel = (
   location: { lat: number; lng: number },
   titleDeedNumber: string,
   ownerName: string
-) => {
-  return createParcelWithTNB(
-    createBaseParcel({
-      id,
-      title,
-      address,
-      city: 'casablanca',
-      surface,
-      type: 'RESIDENTIAL',
-      zone,
-      taxStatus,
-      status: 'AVAILABLE',
-      owner,
-      location,
-      titleDeedNumber,
-      ownerName
-    })
-  );
+): Parcel => {
+  return createParcelWithTNB({
+    id,
+    title,
+    titleDeedNumber,
+    address,
+    city: 'casablanca',
+    surface,
+    type: 'RESIDENTIAL',
+    zone,
+    taxStatus,
+    status: 'AVAILABLE',
+    owner,
+    location,
+    ownerName,
+    description: '',
+    phone: undefined,
+    email: undefined,
+    price: undefined,
+    isFavorite: false
+  });
 };
 
 export const residentialParcels = [

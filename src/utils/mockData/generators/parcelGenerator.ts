@@ -1,9 +1,7 @@
 import { Parcel, PropertyType, FiscalStatus } from '../types';
 import { generateTNBInfo } from './tnbGenerator';
 
-type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'> & {
-  taxStatus: string;
-};
+export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'>;
 
 const getFiscalStatus = (taxStatus: string): FiscalStatus => {
   switch (taxStatus) {
@@ -19,5 +17,5 @@ const getFiscalStatus = (taxStatus: string): FiscalStatus => {
 export const createParcelWithTNB = (data: ParcelInput): Parcel => ({
   ...data,
   fiscalStatus: getFiscalStatus(data.taxStatus),
-  tnbInfo: generateTNBInfo(data.surface, data.type)
+  tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
 });
