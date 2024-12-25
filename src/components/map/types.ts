@@ -1,13 +1,21 @@
 import { Dispatch, SetStateAction } from "react";
 import { UserRole } from "@/types/auth";
 
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+}
+
 export interface MapFilters {
-  searchTerm: string;
-  location: string;
-  priceRange: [number, number];
+  region: string;
+  commune: string;
   propertyType: string;
-  bedrooms: number;
-  bathrooms: number;
+  zoneType: string;
+  size: [number, number];
+  status: 'PAID' | 'PENDING' | 'OVERDUE' | '';
+  ownerName: string;
+  titleDeedNumber: string;
+  lastPaymentDate: string | null;
 }
 
 export interface MapFiltersProps {
@@ -22,4 +30,13 @@ export interface MobileFiltersSheetProps {
   setFilters: Dispatch<SetStateAction<MapFilters>>;
   filteredParcelsCount: number;
   userRole?: UserRole;
+}
+
+export interface MapMobileControlsProps {
+  settings: MapSettings;
+  onSettingChange: (setting: keyof MapSettings, value: string) => void;
+  onFilterClick?: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onLocateMe?: () => void;
 }
