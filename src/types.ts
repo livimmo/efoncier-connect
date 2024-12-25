@@ -64,14 +64,16 @@ export interface Property extends ParcelInput {
   address: string;
   city: string;
   zone: string;
-  type: string;
+  type: PropertyType;
   surface: number;
   taxStatus: TaxStatus;
   tnbInfo: TNBInfo;
+  phone?: string;
+  email?: string;
 }
 
 export interface Parcel extends Property {
-  description?: string;
+  isFavorite?: boolean;
 }
 
 // Export all types from this file
