@@ -1,103 +1,94 @@
-import { useRef, useState } from 'react';
-import { ParcelInfo } from './ParcelInfo';
-import { Parcel } from '@/utils/mockData/types';
+import { useState, useEffect } from "react";
+import { MinimizedParcelInfo } from "./parcel-info/MinimizedParcelInfo";
+import { ParcelInfo } from "./ParcelInfo";
 import { cn } from "@/lib/utils";
-import { ParcelInfoHeader } from './parcel-info/ParcelInfoHeader';
-import { MinimizedParcelInfo } from './parcel-info/MinimizedParcelInfo';
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { useParcelPosition } from './parcel-info/useParcelPosition';
-import { UserRole } from '@/types/auth';
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Parcel } from "@/utils/mockData/types";
 
 interface DraggableParcelInfoProps {
   parcel: Parcel;
-  onClose: () => void;
-  markerPosition: { x: number; y: number };
+  onClose?: () => void;
   className?: string;
-  userRole?: UserRole;
 }
 
 export const DraggableParcelInfo = ({ 
-  parcel, 
-  onClose, 
-  markerPosition,
-  className,
-  userRole
+  parcel,
+  onClose,
+  className 
 }: DraggableParcelInfoProps) => {
-  const [isMinimized, setIsMinimized] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const [isDragging, setIsDragging] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [position, setPosition] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const isMobile = useIsMobile();
 
-  const { position, isDragging, handleMouseDown } = useParcelPosition({
-    markerPosition,
-    isMinimized,
-    containerRef,
-  });
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const deltaX = e.clientX - dragStart.x;
+        const deltaY = e.clientY - dragStart.y;
+        setPosition(prev => ({
+          x: prev.x + deltaX,
+          y: prev.y + deltaY
+        }));
+        setDragStart({ x: e.clientX, y: e.clientY });
+      }
+    };
 
-  const handleClose = () => {
-    if (onClose) {
-      onClose();
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragStart]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!isMobile) {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX, y: e.clientY });
     }
   };
 
   return (
     <div
-      ref={containerRef}
+      onMouseDown={handleMouseDown}
       className={cn(
         "fixed transition-all duration-300 ease-out",
         isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
         "hover:shadow-lg will-change-transform",
         isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-24" : "w-[400px]",
         !isMobile && "absolute",
-        isMinimized ? "z-[40]" : "z-[100]", // Ajustement du z-index selon l'état
+        isMinimized ? "z-[40]" : "z-[100]",
         className
       )}
       style={!isMobile ? {
         left: `${position.x}px`,
-        top: isMinimized ? `${position.y + 60}px` : `${position.y}px`, // Décalage vers le bas en mode minimisé
+        top: isMinimized ? `${position.y + 60}px` : `${position.y}px`,
         transform: isMinimized 
           ? 'translate(-50%, -50%)'
           : 'translate(-50%, -50%)',
-        maxHeight: isMinimized ? 'auto' : '80vh',
-        overflow: isMinimized ? 'visible' : 'auto'
       } : undefined}
     >
-      <ParcelInfoHeader
-        title={parcel.title}
-        ownerName={parcel.ownerName}
-        isMinimized={isMinimized}
-        isDragging={isDragging}
-        onToggleMinimize={() => setIsMinimized(!isMinimized)}
-        onClose={handleClose}
-        onMouseDown={handleMouseDown}
-      />
-
-      {!isMobile && (
-        <div 
-          className={cn(
-            "absolute left-1/2 bottom-0 w-px h-4 bg-primary/50",
-            "transform translate-x-[-50%] translate-y-[100%]",
-            "transition-opacity duration-300",
-            isMinimized ? "opacity-0" : "opacity-100"
-          )}
+      {isMinimized ? (
+        <MinimizedParcelInfo 
+          parcel={parcel}
+          onClose={onClose}
         />
-      )}
-
-      <div className={cn(
-        "transform-gpu transition-all duration-300 ease-in-out origin-top",
-        "bg-background/95 backdrop-blur-sm",
-        "border border-border/50 border-t-0",
-        "rounded-b-lg shadow-lg",
-        isMinimized ? "scale-y-0 h-0" : "scale-y-100"
-      )}>
+      ) : (
         <ParcelInfo 
           parcel={parcel}
-          onClose={handleClose}
-          className="rounded-t-none border-t-0"
-          userRole={userRole}
+          onClose={onClose}
+          onMinimize={() => setIsMinimized(true)}
         />
-      </div>
-
-      {isMinimized && <MinimizedParcelInfo parcel={parcel} />}
+      )}
     </div>
   );
 };

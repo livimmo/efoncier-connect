@@ -12,6 +12,26 @@ export type NotificationType =
 export type NotificationPriority = "HIGH" | "MEDIUM" | "LOW";
 export type NotificationStatus = "READ" | "UNREAD";
 
+export interface NotificationMetadata {
+  propertyId?: string;
+  documentId?: string;
+  paymentId?: string;
+  amount?: number;
+  dueDate?: string;
+  location?: string;
+  titleDeedNumber?: string;
+  documentType?: string;
+  documentUrl?: string;
+  surface?: number;
+  price?: number;
+}
+
+export interface NotificationAction {
+  label: string;
+  icon?: React.ReactNode;
+  action: () => void;
+}
+
 export interface Notification {
   id: string;
   type: NotificationType;
@@ -21,28 +41,10 @@ export interface Notification {
   message: string;
   date: string;
   read: boolean;
-  metadata?: {
-    propertyId?: string;
-    documentId?: string;
-    paymentId?: string;
-    amount?: number;
-    dueDate?: string;
-    location?: string;
-    titleDeedNumber?: string;
-    documentType?: string;
-    documentUrl?: string;
-  };
+  metadata?: NotificationMetadata;
   actions?: {
-    primary?: {
-      label: string;
-      icon?: React.ReactNode;
-      action: () => void;
-    };
-    secondary?: {
-      label: string;
-      icon?: React.ReactNode;
-      action: () => void;
-    };
+    primary?: NotificationAction;
+    secondary?: NotificationAction;
   };
 }
 

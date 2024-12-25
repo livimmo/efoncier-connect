@@ -16,8 +16,9 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
   const getDeveloperNotifications = (): Notification[] => [
     {
       id: "1",
-      type: "new_property",
-      priority: "high",
+      type: "NEW_PROPERTY",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Nouveau bien disponible",
       message: "Un nouveau bien correspondant à vos critères est disponible",
       date: new Date().toISOString(),
@@ -28,8 +29,9 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
     },
     {
       id: "2",
-      type: "property_update",
-      priority: "medium",
+      type: "PROPERTY_UPDATE",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour de prix",
       message: "Le prix d'un bien que vous suivez a été mis à jour",
       date: new Date(Date.now() - 86400000).toISOString(),
@@ -43,8 +45,9 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
   const getOwnerNotifications = (): Notification[] => [
     {
       id: "1",
-      type: "payment",
-      priority: "high",
+      type: "PAYMENT_DUE",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Paiement TNB en attente",
       message: "Votre TNB pour le bien TF-12345 est due avant le 30 juin 2024",
       date: new Date().toISOString(),
@@ -57,8 +60,9 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
     },
     {
       id: "2",
-      type: "fiscal_status",
-      priority: "medium",
+      type: "FISCAL_STATUS",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour du statut fiscal",
       message: "Le statut fiscal du bien TF-67890 est passé à 'Payé'",
       date: new Date(Date.now() - 86400000).toISOString(),
@@ -85,7 +89,7 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
   const filteredNotifications = notifications.filter((notification) => {
     if (filters.type !== "all" && notification.type !== filters.type) return false;
     if (filters.status !== "all" && 
-        (filters.status === "unread" ? notification.read : !notification.read)) return false;
+        (filters.status === "UNREAD" ? notification.read : !notification.read)) return false;
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       return (
