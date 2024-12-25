@@ -8,7 +8,9 @@ export const generateTNBInfo = (surface: number, type: PropertyType): TNBInfo =>
     'INDUSTRIAL': 10,
     'AGRICULTURAL': 5,
     'MIXED': 13,
-    'SEASIDE': 20
+    'SEASIDE': 20,
+    'HOUSE': 12,
+    'APARTMENT': 14
   };
 
   const basePrice = basePrices[type] || 10;

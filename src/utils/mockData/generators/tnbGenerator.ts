@@ -6,7 +6,9 @@ const BASE_PRICES: Record<PropertyType, number> = {
   'INDUSTRIAL': 10,
   'AGRICULTURAL': 5,
   'MIXED': 13,
-  'SEASIDE': 20
+  'SEASIDE': 20,
+  'HOUSE': 12,
+  'APARTMENT': 14
 };
 
 export const generateTNBInfo = (surface: number, type: PropertyType): TNBInfo => {

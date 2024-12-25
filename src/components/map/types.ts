@@ -22,3 +22,9 @@ export interface MapFilters {
 }
 
 export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICULTURAL' | 'MIXED' | 'SEASIDE' | 'HOUSE' | 'APARTMENT';
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
+}

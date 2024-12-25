@@ -21,6 +21,10 @@ const PropertiesPage = () => {
   const [settings] = useState<MapSettings>({
     theme: 'light',
     unit: 'metric',
+    showLabels: true,
+    showBoundaries: true,
+    showTerrain: false,
+    show3D: false
   });
 
   // Transform mockParcels to match Property type
