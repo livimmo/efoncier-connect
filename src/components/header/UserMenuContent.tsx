@@ -1,4 +1,4 @@
-import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut, Star } from "lucide-react";
+import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut, Star, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -95,6 +95,10 @@ export const UserMenuContent = () => {
       <DropdownMenuItem onClick={() => navigate("/notifications")}>
         <Bell className="mr-2 h-4 w-4" />
         <span>Notifications</span>
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={() => navigate("/history")}>
+        <History className="mr-2 h-4 w-4" />
+        <span>Historique</span>
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => navigate("/settings")}>
         <Settings className="mr-2 h-4 w-4" />
