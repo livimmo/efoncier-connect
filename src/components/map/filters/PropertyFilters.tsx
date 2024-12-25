@@ -5,9 +5,37 @@ import { MapFilters } from "../types";
 import { ZONING_OPTIONS, PAYMENT_STATUS_OPTIONS } from "./filterConstants";
 import { PropertyFiltersProps } from "./types";
 
+const PROPERTY_STATUS_OPTIONS = [
+  { value: "AVAILABLE", label: "Disponible" },
+  { value: "SOLD", label: "Vendu" },
+  { value: "IN_TRANSACTION", label: "En Transaction" },
+];
+
 export const PropertyFilters = ({ filters, setFilters, onFilterChange }: PropertyFiltersProps) => {
   return (
     <>
+      <div className="space-y-2">
+        <Label>Statut du bien</Label>
+        <Select
+          value={filters.propertyStatus}
+          onValueChange={(value) => {
+            setFilters({ ...filters, propertyStatus: value });
+            onFilterChange('propertyStatus', value);
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Sélectionner un statut" />
+          </SelectTrigger>
+          <SelectContent>
+            {PROPERTY_STATUS_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="space-y-2">
         <Label>Type de propriété</Label>
         <Select

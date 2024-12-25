@@ -69,19 +69,6 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
     }
   };
 
-  const handleDetailsClick = () => {
-    if (!profile) {
-      setRegisterOpen(true);
-      return;
-    }
-    setDialogOpen(true);
-  };
-
-  // Fonction pour masquer partiellement le texte
-  const maskText = (text: string) => {
-    return 'XX-XXXXX';
-  };
-
   return (
     <>
       <PropertyPopup 
@@ -112,22 +99,15 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
           <div className="flex justify-between items-start gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex flex-col">
-                {parcel.status === 'AVAILABLE' && (
-                  <Badge variant="success" className="w-fit mb-2">
-                    🟢 Disponible
-                  </Badge>
-                )}
                 <div className="text-xs text-muted-foreground flex items-center gap-1">
                   <span>{parcel.surface} m² •</span>
                   <span>Zone {parcel.zone}</span>
                 </div>
-                <div className="text-xs font-medium text-red-600 dark:text-red-500">
-                  {profile ? (
-                    `${formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²`
-                  ) : (
-                    'Prix TNB masqué (Connectez-vous pour voir)'
-                  )}
-                </div>
+                {profile && (
+                  <div className="text-xs font-medium text-red-600 dark:text-red-500">
+                    {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
+                  </div>
+                )}
                 <div className="text-xs text-muted-foreground mt-1">
                   {profile ? (
                     `TF: ${parcel.titleDeedNumber}`
