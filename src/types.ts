@@ -18,7 +18,9 @@ export type PropertyStatus =
   | "PENDING"
   | "APPROVED"
   | "REJECTED"
-  | "ARCHIVED";
+  | "ARCHIVED"
+  | "DISPUTED"
+  | "UNAVAILABLE";
 
 export type TaxStatus = 
   | "PAID"
@@ -45,7 +47,8 @@ export type ZoneType =
   | "E3"
   | "E4"
   | "BT2"
-  | "I2S12";
+  | "I2S12"
+  | "PROTECTED";
 
 export interface TNBInfo {
   pricePerMeter: number;
