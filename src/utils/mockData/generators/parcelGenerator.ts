@@ -20,7 +20,8 @@ export interface ParcelGeneratorInput {
   email?: string;
 }
 
-export const createParcelWithTNB = (input: ParcelGeneratorInput): Property => {
+// Renamed from createParcelWithTNB to generateParcel for consistency
+export const generateParcel = (input: ParcelGeneratorInput): Property => {
   const tnbInfo: TNBInfo = {
     pricePerMeter: Math.floor(Math.random() * 100) + 50,
     totalAmount: input.surface * (Math.floor(Math.random() * 100) + 50),

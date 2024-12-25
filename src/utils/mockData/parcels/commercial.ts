@@ -30,7 +30,7 @@ export const commercialParcels = [
     zone: 'COMMERCIAL',
     ownerName: 'Fatima Zahra',
     location: { lat: 33.5735, lng: -7.5890 },
-    description: 'Bureau moderne dans un quartier d’affaires',
+    description: 'Bureau moderne dans un quartier d'affaires',
     price: 1500000
   }),
   generateParcel({
