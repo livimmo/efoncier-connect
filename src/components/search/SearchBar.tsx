@@ -12,6 +12,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 export const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState([]);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
   const [filters, setFilters] = useState({
@@ -25,7 +27,12 @@ export const SearchBar = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching with query:", query, "and filters:", filters);
+    setIsLoading(true);
+    // Simulate search
+    setTimeout(() => {
+      setResults([]);
+      setIsLoading(false);
+    }, 1000);
   };
 
   const clearSearch = () => {
@@ -113,7 +120,14 @@ export const SearchBar = () => {
         </Button>
       )}
 
-      {query && <SearchResults query={query} filters={filters} />}
+      {query && (
+        <SearchResults 
+          query={query} 
+          filters={filters} 
+          results={results}
+          isLoading={isLoading}
+        />
+      )}
     </div>
   );
 };

@@ -13,6 +13,8 @@ interface SearchModalProps {
 export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState([]);
   const [filters, setFilters] = useState({
     minSurface: 0,
     maxSurface: 10000,
@@ -24,7 +26,12 @@ export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching with query:", query, "and filters:", filters);
+    setIsLoading(true);
+    // Simulate search
+    setTimeout(() => {
+      setResults([]);
+      setIsLoading(false);
+    }, 1000);
   };
 
   const placeholders = [
@@ -71,7 +78,14 @@ export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
             <SearchFilters filters={filters} setFilters={setFilters} />
           )}
 
-          {query && <SearchResults query={query} filters={filters} />}
+          {query && (
+            <SearchResults 
+              query={query} 
+              filters={filters} 
+              results={results}
+              isLoading={isLoading}
+            />
+          )}
         </div>
       </DialogContent>
     </Dialog>
