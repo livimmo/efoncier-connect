@@ -1,50 +1,48 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState } from "react";
+import { Dialog } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Property } from "@/types";
-import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
+import { convertFiscalStatus } from "@/utils/conversions";
 
 interface PropertyDocumentsDialogProps {
-  property: Property | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  property: Property;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export const PropertyDocumentsDialog = ({
-  property,
-  open,
-  onOpenChange,
-}: PropertyDocumentsDialogProps) => {
-  if (!property) return null;
+const PropertyDocumentsDialog = ({ property, isOpen, onClose }: PropertyDocumentsDialogProps) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleDownload = async () => {
+    setLoading(true);
+    try {
+      // Logic to download property documents
+    } catch (error) {
+      console.error("Error downloading documents:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Documents du bien {property.title}</DialogTitle>
-        </DialogHeader>
-        <PropertyDocuments parcel={{
-          id: property.id,
-          title: property.title,
-          titleDeedNumber: property.title,
-          address: property.description,
-          city: "Ville",
-          surface: property.surface_area,
-          type: property.property_type as any,
-          zone: "URBAN",
-          taxStatus: "PAID",
-          ownerName: "Propriétaire",
-          owner: property.owner_id,
-          location: property.location,
-          tnbInfo: {
-            pricePerMeter: property.price,
-            totalAmount: property.price * property.surface_area,
-            lastUpdate: property.updated_at,
-            status: "LOW"
-          },
-          price: property.price,
-          status: "AVAILABLE",
-          fiscalStatus: property.fiscal_status
-        }} />
-      </DialogContent>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog.Overlay />
+      <Dialog.Content>
+        <Dialog.Title>Documents pour {property.title}</Dialog.Title>
+        <Dialog.Description>
+          Statut fiscal: {convertFiscalStatus(property.fiscal_status)}
+        </Dialog.Description>
+        <div className="mt-4">
+          <Button onClick={handleDownload} disabled={loading}>
+            {loading ? "Téléchargement..." : "Télécharger les documents"}
+          </Button>
+        </div>
+        <Button variant="outline" onClick={onClose} className="mt-4">
+          Fermer
+        </Button>
+      </Dialog.Content>
     </Dialog>
   );
 };
+
+export default PropertyDocumentsDialog;

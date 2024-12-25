@@ -9,7 +9,7 @@ export type MapSettings = {
 
 export interface MapContainerProps {
   userRole: UserRole;
-  onParcelSelect?: (parcelId: string) => void;
+  onParcelSelect: (parcelId: string) => void;
 }
 
 export interface ParcelInfoProps {
