@@ -36,14 +36,11 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
         <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
           <div className="space-y-4">
             <div className="space-y-2">
-              <div className="flex items-start justify-between">
-                <h3 className="text-lg font-semibold">{parcel.title}</h3>
-                <ParcelStatusBadges 
-                  status={parcel.status}
-                  fiscalStatus={parcel.fiscalStatus}
-                  taxStatus={parcel.taxStatus}
-                />
-              </div>
+              <h3 className="text-lg font-semibold">{parcel.title}</h3>
+              <ParcelStatusBadges 
+                status={parcel.status}
+                taxStatus={parcel.taxStatus}
+              />
               <p className="text-sm text-muted-foreground relative">
                 {isAuthenticated ? (
                   `Référence: ${parcel.titleDeedNumber}`
