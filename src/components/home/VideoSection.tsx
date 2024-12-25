@@ -19,9 +19,9 @@ export const VideoSection = () => {
 
         <div className="relative max-w-4xl mx-auto aspect-video bg-muted rounded-lg overflow-hidden group cursor-pointer"
              onClick={() => setIsOpen(true)}>
-          {/* Placeholder image - replace src with actual video thumbnail */}
+          {/* Thumbnail from YouTube */}
           <img 
-            src="/placeholder.svg" 
+            src="https://i3.ytimg.com/vi/6VO7nSkYBJU/maxresdefault.jpg" 
             alt="Video thumbnail" 
             className="w-full h-full object-cover"
           />
@@ -39,11 +39,10 @@ export const VideoSection = () => {
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogContent className="max-w-4xl p-0">
             <div className="aspect-video">
-              {/* Replace with actual video embed */}
               <iframe
                 width="100%"
                 height="100%"
-                src="about:blank" // Replace with actual video URL
+                src="https://www.youtube.com/embed/6VO7nSkYBJU"
                 title="eFoncier Présentation"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
