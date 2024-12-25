@@ -7,7 +7,6 @@ import { PaymentDialog } from "./dialogs/PaymentDialog";
 import { ReceiptDialog } from "./dialogs/ReceiptDialog";
 import { ParcelStatusInfo } from "./ParcelStatusInfo";
 import { RegisterDialog } from "@/components/auth/RegisterDialog";
-import { LoginDialog } from "@/components/auth/LoginDialog";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Badge } from "@/components/ui/badge";
 import { UserPlus } from "lucide-react";
@@ -22,7 +21,6 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
   const { profile } = useAuth();
 
   const getPaymentStatusInfo = (status: string) => {
@@ -96,11 +94,6 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
         onOpenChange={setRegisterOpen}
       />
 
-      <LoginDialog
-        open={loginOpen}
-        onOpenChange={setLoginOpen}
-      />
-
       <div className="bg-background/95 backdrop-blur-sm p-4 rounded-b-lg border border-t-0 border-border/50 min-w-[300px]">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-start gap-4">
@@ -124,12 +117,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                   {profile ? (
                     `TF: ${parcel.titleDeedNumber}`
                   ) : (
-                    <button 
-                      onClick={() => setLoginOpen(true)}
-                      className="text-primary hover:underline"
-                    >
-                      TF: XX-XXXXX (Connectez-vous pour voir)
-                    </button>
+                    'TF: XX-XXXXX (Connectez-vous pour voir)'
                   )}
                 </div>
                 <div className="mt-1">
@@ -146,24 +134,14 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                 {profile ? (
                   `${formatCurrency(parcel.tnbInfo.totalAmount)} DHS`
                 ) : (
-                  <button 
-                    onClick={() => setLoginOpen(true)}
-                    className="text-primary hover:underline"
-                  >
-                    Montant TNB masqué (Connectez-vous pour voir)
-                  </button>
+                  'Montant TNB masqué'
                 )}
               </div>
               <div className="text-xs font-medium whitespace-nowrap text-muted-foreground">
                 {profile ? (
                   parcel.ownerName
                 ) : (
-                  <button 
-                    onClick={() => setLoginOpen(true)}
-                    className="text-primary hover:underline"
-                  >
-                    Propriétaire (Connectez-vous pour voir)
-                  </button>
+                  'Propriétaire (Connectez-vous pour voir)'
                 )}
               </div>
               <div className="flex flex-col gap-2 mt-2">
