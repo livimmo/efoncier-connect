@@ -15,10 +15,15 @@ export const DeveloperPropertiesMap = ({ properties }: DeveloperPropertiesMapPro
     console.log('Marker clicked:', parcel, position);
   };
 
+  const handleMapClick = (e: google.maps.MapMouseEvent) => {
+    console.log('Map clicked:', e);
+  };
+
   return (
     <div className="h-[600px] relative rounded-lg overflow-hidden">
       <GoogleMap
         onMarkerClick={handleMarkerClick}
+        onMapClick={handleMapClick}
         parcels={properties.map(property => ({
           id: property.id,
           title: property.title,

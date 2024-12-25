@@ -16,6 +16,10 @@ export const DeveloperFavoritesMap = ({ favorites }: DeveloperFavoritesMapProps)
     console.log('Marker clicked:', parcel, position);
   };
 
+  const handleMapClick = (e: google.maps.MapMouseEvent) => {
+    console.log('Map clicked:', e);
+  };
+
   const convertToParcel = (property: Property): Parcel => ({
     id: property.id,
     title: property.title,
@@ -43,6 +47,7 @@ export const DeveloperFavoritesMap = ({ favorites }: DeveloperFavoritesMapProps)
     <div className="h-[600px] relative rounded-lg overflow-hidden">
       <GoogleMap
         onMarkerClick={handleMarkerClick}
+        onMapClick={handleMapClick}
         parcels={favorites.map(convertToParcel)}
         theme={theme as 'light' | 'dark'}
         setMapInstance={setMapInstance}

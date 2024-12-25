@@ -29,8 +29,8 @@ export const MapView = ({
   const { toast } = useToast();
 
   const handleMapClick = useCallback((e: google.maps.MapMouseEvent) => {
-    // Si le clic n'est pas sur un marqueur, fermer la fenêtre d'info
-    if (e.placeId === undefined) {
+    // Close parcel info when clicking on the map (not on a marker)
+    if (!e.latLng) {
       onParcelSelect(null);
     }
   }, [onParcelSelect]);

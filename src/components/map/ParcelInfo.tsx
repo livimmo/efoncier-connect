@@ -13,16 +13,16 @@ interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
   className?: string;
+  isDragging?: boolean;
 }
 
-export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
+export const ParcelInfo = ({ parcel, onClose, className, isDragging = false }: ParcelInfoProps) => {
   const [contactOpen, setContactOpen] = useState(false);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [receiptOpen, setReceiptOpen] = useState(false);
   const { isMinimized, toggleMinimize } = useParcelMinimize();
 
-  // Mock receipt data based on parcel info
   const receiptData = {
     referenceNumber: `TNB-${parcel.id}`,
     date: new Date().toISOString(),
@@ -60,6 +60,7 @@ export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
             title={parcel.title}
             ownerName={parcel.ownerName}
             isMinimized={isMinimized}
+            isDragging={isDragging}
             onToggleMinimize={toggleMinimize}
             onClose={onClose}
           />
