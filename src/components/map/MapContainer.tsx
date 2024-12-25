@@ -36,7 +36,9 @@ export const MapContainer = ({ userRole, onParcelSelect }: MapContainerProps) =>
     status: '',
     ownerName: '',
     titleDeedNumber: '',
-    lastPaymentDate: null
+    lastPaymentDate: null,
+    fiscalStatus: '',
+    maxPrice: 0
   });
 
   const filteredParcels = useMemo(() => {
@@ -86,6 +88,15 @@ export const MapContainer = ({ userRole, onParcelSelect }: MapContainerProps) =>
     setIsFiltersCollapsed(!isFiltersCollapsed);
   };
 
+  const settings: MapSettings = {
+    showLabels: true,
+    showBoundaries: true,
+    showTerrain: false,
+    show3D: false,
+    theme: 'light',
+    unit: 'metric'
+  };
+
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col bg-background">
       <WelcomeDialog />
@@ -97,6 +108,12 @@ export const MapContainer = ({ userRole, onParcelSelect }: MapContainerProps) =>
             setFilters={setFilters}
             filteredParcelsCount={filteredParcels.length}
             userRole={userRole}
+            onApplyFilters={() => {
+              toast({
+                title: "Filtres appliqués",
+                description: `${filteredParcels.length} parcelles trouvées`,
+              });
+            }}
           />
         ) : (
           <>
@@ -143,7 +160,7 @@ export const MapContainer = ({ userRole, onParcelSelect }: MapContainerProps) =>
             markerPosition={markerPosition}
             onParcelSelect={handleParcelSelect}
             filteredParcels={filteredParcels}
-            settings={{ theme: 'light', unit: 'metric' }}
+            settings={settings}
             mapInstance={mapInstance}
             setMapInstance={setMapInstance}
             userRole={userRole}

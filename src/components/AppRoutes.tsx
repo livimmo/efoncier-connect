@@ -28,7 +28,7 @@ export const AppRoutes = () => {
       <Route
         path="/developer/dashboard"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
             <DeveloperDashboard />
           </PrivateRoute>
         }
@@ -36,7 +36,7 @@ export const AppRoutes = () => {
       <Route
         path="/developer/properties"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
             <DeveloperProperties />
           </PrivateRoute>
         }
@@ -44,7 +44,7 @@ export const AppRoutes = () => {
       <Route
         path="/developer/favorites"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
             <DeveloperFavorites />
           </PrivateRoute>
         }
@@ -54,7 +54,7 @@ export const AppRoutes = () => {
       <Route
         path="/commune/dashboard"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["commune"] as UserRole[]}>
             <CommuneDashboard />
           </PrivateRoute>
         }
@@ -64,7 +64,7 @@ export const AppRoutes = () => {
       <Route
         path="/owner/dashboard"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
             <OwnerDashboard />
           </PrivateRoute>
         }
@@ -72,7 +72,7 @@ export const AppRoutes = () => {
       <Route
         path="/owner/properties"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
             <OwnerProperties />
           </PrivateRoute>
         }
@@ -82,7 +82,7 @@ export const AppRoutes = () => {
       <Route
         path="/admin/dashboard"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["admin"] as UserRole[]}>
             <AdminDashboard />
           </PrivateRoute>
         }
@@ -92,7 +92,7 @@ export const AppRoutes = () => {
       <Route
         path="/profile"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <Profile />
           </PrivateRoute>
         }
@@ -100,7 +100,7 @@ export const AppRoutes = () => {
       <Route
         path="/settings"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <Settings />
           </PrivateRoute>
         }
@@ -108,7 +108,7 @@ export const AppRoutes = () => {
       <Route
         path="/notifications"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <Notifications />
           </PrivateRoute>
         }
@@ -116,7 +116,7 @@ export const AppRoutes = () => {
       <Route
         path="/messages"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <Messages />
           </PrivateRoute>
         }
@@ -124,7 +124,7 @@ export const AppRoutes = () => {
       <Route
         path="/support"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <Support />
           </PrivateRoute>
         }
@@ -132,7 +132,7 @@ export const AppRoutes = () => {
       <Route
         path="/payment"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner", "developer", "commune"] as UserRole[]}>
             <Payment />
           </PrivateRoute>
         }
@@ -140,7 +140,7 @@ export const AppRoutes = () => {
       <Route
         path="/history"
         element={
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <History />
           </PrivateRoute>
         }
