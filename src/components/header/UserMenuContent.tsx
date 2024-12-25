@@ -9,6 +9,13 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
+const roleLabels = {
+  owner: "Propriétaire",
+  developer: "Promoteur",
+  commune: "Commune",
+  admin: "Administrateur"
+};
+
 export const UserMenuContent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -40,6 +47,9 @@ export const UserMenuContent = () => {
           </p>
           <p className="text-xs leading-none text-muted-foreground">
             {profile?.email}
+          </p>
+          <p className="text-xs font-medium text-primary">
+            {profile?.role ? roleLabels[profile.role] : ''}
           </p>
         </div>
       </DropdownMenuLabel>
