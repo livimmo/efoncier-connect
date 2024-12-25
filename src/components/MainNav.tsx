@@ -50,13 +50,13 @@ export function MainNav({ className, ...props }: MainNavProps) {
         href: "/messages",
         label: "Messagerie",
         icon: MessageSquare
+      },
+      {
+        href: "/support",
+        label: "Support",
+        icon: LifeBuoy
       }
-    ] : []),
-    {
-      href: "/support",
-      label: "Support",
-      icon: LifeBuoy
-    }
+    ] : [])
   ];
 
   return (
