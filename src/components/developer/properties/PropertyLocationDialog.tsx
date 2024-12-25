@@ -1,93 +1,74 @@
 import { useEffect, useState } from "react";
 import { Property } from "@/types";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
-import { PropertyType, TNBStatus } from "@/utils/mockData/types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface PropertyLocationDialogProps {
   property: Property;
-  onClose: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const PropertyLocationDialog = ({ property, onClose }: PropertyLocationDialogProps) => {
+const PropertyLocationDialog = ({ property, open, onOpenChange }: PropertyLocationDialogProps) => {
   const [location, setLocation] = useState(property.location);
-  const [propertyType, setPropertyType] = useState(convertPropertyType(property.property_type));
-  const [tnbStatus, setTnbStatus] = useState(convertTNBStatus(property.tnbInfo.status));
+  const [propertyType, setPropertyType] = useState(property.property_type);
+  const [tnbStatus, setTnbStatus] = useState(property.tnbInfo?.status || "LOW");
 
   const handleSave = () => {
     // Save logic here
-    onClose();
-  };
-
-  const convertPropertyType = (type: string): PropertyType => {
-    return type.toUpperCase() as PropertyType;
-  };
-
-  const convertTNBStatus = (status: string): TNBStatus => {
-    switch (status) {
-      case "PAID":
-        return "PAID";
-      case "LOW":
-        return "LOW";
-      case "AVERAGE":
-        return "AVERAGE";
-      case "HIGH":
-        return "HIGH";
-      default:
-        return "LOW";
-    }
+    onOpenChange(false);
   };
 
   useEffect(() => {
     setLocation(property.location);
-    setPropertyType(convertPropertyType(property.property_type));
-    setTnbStatus(convertTNBStatus(property.tnbInfo.status));
+    setPropertyType(property.property_type);
+    setTnbStatus(property.tnbInfo?.status || "LOW");
   }, [property]);
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <Dialog.Content>
-        <Dialog.Title>Modifier la localisation</Dialog.Title>
-        <Dialog.Description>
-          <div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogTitle>Modifier la localisation</DialogTitle>
+        <DialogDescription>
+          <div className="space-y-4">
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Localisation"
             />
             <Select value={propertyType} onValueChange={setPropertyType}>
-              <Select.Trigger>
-                <Select.Value placeholder="Type de propriété" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="RESIDENTIAL">Résidentiel</Select.Item>
-                <Select.Item value="COMMERCIAL">Commercial</Select.Item>
-                <Select.Item value="INDUSTRIAL">Industriel</Select.Item>
-                <Select.Item value="AGRICULTURAL">Agricole</Select.Item>
-                <Select.Item value="MIXED">Mixte</Select.Item>
-                <Select.Item value="SEASIDE">Bord de mer</Select.Item>
-              </Select.Content>
+              <SelectTrigger>
+                <SelectValue placeholder="Type de propriété" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="RESIDENTIAL">Résidentiel</SelectItem>
+                <SelectItem value="COMMERCIAL">Commercial</SelectItem>
+                <SelectItem value="INDUSTRIAL">Industriel</SelectItem>
+                <SelectItem value="AGRICULTURAL">Agricole</SelectItem>
+                <SelectItem value="MIXED">Mixte</SelectItem>
+                <SelectItem value="SEASIDE">Bord de mer</SelectItem>
+              </SelectContent>
             </Select>
             <Select value={tnbStatus} onValueChange={setTnbStatus}>
-              <Select.Trigger>
-                <Select.Value placeholder="Statut TNB" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="PAID">Payé</Select.Item>
-                <Select.Item value="LOW">Bas</Select.Item>
-                <Select.Item value="AVERAGE">Moyen</Select.Item>
-                <Select.Item value="HIGH">Élevé</Select.Item>
-              </Select.Content>
+              <SelectTrigger>
+                <SelectValue placeholder="Statut TNB" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="PAID">Payé</SelectItem>
+                <SelectItem value="LOW">Bas</SelectItem>
+                <SelectItem value="AVERAGE">Moyen</SelectItem>
+                <SelectItem value="HIGH">Élevé</SelectItem>
+              </SelectContent>
             </Select>
           </div>
-        </Dialog.Description>
-        <Dialog.Actions>
-          <Button onClick={onClose}>Annuler</Button>
+        </DialogDescription>
+        <DialogFooter>
+          <Button onClick={() => onOpenChange(false)} variant="outline">Annuler</Button>
           <Button onClick={handleSave}>Enregistrer</Button>
-        </Dialog.Actions>
-      </Dialog.Content>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 };

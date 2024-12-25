@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogOverlay } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Property } from "@/types";
 import { convertFiscalStatus } from "@/utils/conversions";
 
 interface PropertyDocumentsDialogProps {
   property: Property;
-  isOpen: boolean;
-  onClose: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const PropertyDocumentsDialog = ({ property, isOpen, onClose }: PropertyDocumentsDialogProps) => {
+const PropertyDocumentsDialog = ({ property, open, onOpenChange }: PropertyDocumentsDialogProps) => {
   const [loading, setLoading] = useState(false);
 
   const handleDownload = async () => {
@@ -25,22 +25,22 @@ const PropertyDocumentsDialog = ({ property, isOpen, onClose }: PropertyDocument
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <Dialog.Overlay />
-      <Dialog.Content>
-        <Dialog.Title>Documents pour {property.title}</Dialog.Title>
-        <Dialog.Description>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogOverlay />
+      <DialogContent>
+        <DialogTitle>Documents pour {property.title}</DialogTitle>
+        <DialogDescription>
           Statut fiscal: {convertFiscalStatus(property.fiscal_status)}
-        </Dialog.Description>
+        </DialogDescription>
         <div className="mt-4">
           <Button onClick={handleDownload} disabled={loading}>
             {loading ? "Téléchargement..." : "Télécharger les documents"}
           </Button>
         </div>
-        <Button variant="outline" onClick={onClose} className="mt-4">
+        <Button variant="outline" onClick={() => onOpenChange(false)} className="mt-4">
           Fermer
         </Button>
-      </Dialog.Content>
+      </DialogContent>
     </Dialog>
   );
 };
