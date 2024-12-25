@@ -10,7 +10,7 @@ interface NotificationActionsProps {
 export const NotificationActions = ({ notification, onActionClick }: NotificationActionsProps) => {
   const getDefaultActions = () => {
     switch (notification.type) {
-      case "payment":
+      case "PAYMENT":
         return {
           primary: {
             label: "Payer maintenant",
@@ -23,7 +23,7 @@ export const NotificationActions = ({ notification, onActionClick }: Notificatio
             action: () => onActionClick("payment_details"),
           },
         };
-      case "document":
+      case "DOCUMENT":
         return {
           primary: {
             label: "Télécharger",
@@ -36,7 +36,7 @@ export const NotificationActions = ({ notification, onActionClick }: Notificatio
             action: () => onActionClick("document"),
           },
         };
-      case "message":
+      case "MESSAGE":
         return {
           primary: {
             label: "Répondre",

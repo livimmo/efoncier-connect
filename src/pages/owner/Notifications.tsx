@@ -12,6 +12,7 @@ const Notifications = () => {
     location: "all",
     search: "",
     titleDeedNumber: "",
+    priority: "all"
   });
 
   return (

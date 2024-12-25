@@ -15,6 +15,7 @@ const CommuneNotifications = () => {
     date: null,
     location: "all",
     search: "",
+    priority: "all"
   });
   
   const isMobile = useIsMobile();
@@ -24,8 +25,9 @@ const CommuneNotifications = () => {
   const notifications: Notification[] = [
     {
       id: "1",
-      type: "payment",
-      priority: "high",
+      type: "PAYMENT",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Retards de Paiement TNB",
       message: "20 biens dans le quartier Ain Sebaa ont dépassé la date limite de paiement de la TNB.",
       date: new Date().toISOString(),
@@ -56,8 +58,9 @@ const CommuneNotifications = () => {
     },
     {
       id: "2",
-      type: "fiscal_status",
-      priority: "medium",
+      type: "FISCAL_STATUS",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour de statut fiscal",
       message: "Le bien TF-12345 a été régularisé avec succès.",
       date: new Date(Date.now() - 86400000).toISOString(),
@@ -68,8 +71,9 @@ const CommuneNotifications = () => {
     },
     {
       id: "3",
-      type: "message",
-      priority: "low",
+      type: "MESSAGE",
+      priority: "LOW",
+      status: "UNREAD",
       title: "Nouvelle demande d'information",
       message: "Un propriétaire a envoyé une demande d'informations sur la régularisation du bien TF-33445.",
       date: new Date(Date.now() - 172800000).toISOString(),
@@ -91,8 +95,9 @@ const CommuneNotifications = () => {
     },
     {
       id: "4",
-      type: "report",
-      priority: "medium",
+      type: "REPORT",
+      priority: "MEDIUM",
+      status: "UNREAD",
       title: "Nouveau rapport disponible",
       message: "Le rapport mensuel sur les statuts fiscaux est prêt à être consulté.",
       date: new Date(Date.now() - 259200000).toISOString(),

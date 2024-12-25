@@ -15,6 +15,7 @@ const Notifications = () => {
     date: null,
     location: "all",
     search: "",
+    priority: "all"
   });
   
   const isMobile = useIsMobile();
@@ -24,16 +25,15 @@ const Notifications = () => {
   const notifications: Notification[] = [
     {
       id: "1",
-      type: "new_property",
-      priority: "high",
+      type: "NEW_PROPERTY",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Nouveau bien disponible à Ain Sebaa",
       message: "Un nouveau bien est disponible dans le quartier Ain Sebaa, Casablanca (TF-12345).",
       date: new Date().toISOString(),
       read: false,
       metadata: {
         titleDeedNumber: "TF-12345",
-        surface: 1200,
-        price: 2500000,
       },
       location: {
         city: "Casablanca",
@@ -62,8 +62,9 @@ const Notifications = () => {
     },
     {
       id: "2",
-      type: "property_update",
-      priority: "medium",
+      type: "PROPERTY_UPDATE",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour de statut",
       message: "Le prix du bien TF-56789 a été ajusté à la baisse.",
       date: new Date(Date.now() - 86400000).toISOString(),
@@ -74,8 +75,9 @@ const Notifications = () => {
     },
     {
       id: "3",
-      type: "message",
-      priority: "low",
+      type: "MESSAGE",
+      priority: "LOW",
+      status: "UNREAD",
       title: "Nouveau message du propriétaire",
       message: "Le propriétaire du bien TF-11223 a répondu à votre demande d'information.",
       date: new Date(Date.now() - 172800000).toISOString(),
@@ -97,8 +99,9 @@ const Notifications = () => {
     },
     {
       id: "4",
-      type: "document",
-      priority: "medium",
+      type: "DOCUMENT",
+      priority: "MEDIUM",
+      status: "UNREAD",
       title: "Nouveau document disponible",
       message: "Un nouveau plan cadastral a été ajouté pour le bien TF-99876.",
       date: new Date(Date.now() - 259200000).toISOString(),
@@ -196,7 +199,7 @@ const Notifications = () => {
                 {filteredNotifications.map((notification) => (
                   <NotificationCard 
                     key={notification.id}
-                    {...notification}
+                    notification={notification}
                   />
                 ))}
                 {filteredNotifications.length === 0 && (

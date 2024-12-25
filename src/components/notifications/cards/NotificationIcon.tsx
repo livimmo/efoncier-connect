@@ -10,13 +10,13 @@ interface NotificationIconProps {
 export const NotificationIcon = ({ type, priority }: NotificationIconProps) => {
   const getIcon = () => {
     switch (type) {
-      case "payment":
+      case "PAYMENT":
         return <CreditCard className="h-5 w-5" />;
-      case "fiscal_status":
+      case "FISCAL_STATUS":
         return <Shield className="h-5 w-5" />;
-      case "message":
+      case "MESSAGE":
         return <MessageCircle className="h-5 w-5" />;
-      case "document":
+      case "DOCUMENT":
         return <FileText className="h-5 w-5" />;
       default:
         return <AlertTriangle className="h-5 w-5" />;
@@ -25,11 +25,11 @@ export const NotificationIcon = ({ type, priority }: NotificationIconProps) => {
 
   const getPriorityColor = () => {
     switch (priority) {
-      case "high":
+      case "HIGH":
         return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300";
-      case "medium":
+      case "MEDIUM":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300";
-      case "low":
+      case "LOW":
         return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300";
     }
   };
