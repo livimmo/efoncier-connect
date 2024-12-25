@@ -12,9 +12,9 @@ export const RoleSelection = ({ selectedRole, onRoleChange }: RoleSelectionProps
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card 
         className={`cursor-pointer transition-colors ${
-          selectedRole === "taxpayer" ? "border-primary" : ""
+          selectedRole === "owner" ? "border-primary" : ""
         }`}
-        onClick={() => onRoleChange("taxpayer")}
+        onClick={() => onRoleChange("owner")}
       >
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
