@@ -1,39 +1,14 @@
 export type NotificationType = 
-  | "payment"
-  | "fiscal_status"
-  | "message"
-  | "document"
-  | "property_update"
-  | "urgent"
-  | "property"
-  | "report"
-  | "property_update"
-  | "new_property";
+  | "PAYMENT_DUE"
+  | "PAYMENT_RECEIVED"
+  | "DOCUMENT_UPLOADED"
+  | "STATUS_CHANGE"
+  | "MESSAGE_RECEIVED"
+  | "SYSTEM";
 
-export type NotificationPriority = "high" | "medium" | "low";
+export type NotificationPriority = "LOW" | "MEDIUM" | "HIGH";
 
-export type NotificationStatus = "read" | "unread";
-
-export interface NotificationMetadata {
-  titleDeedNumber?: string;
-  surface?: number;
-  price?: number;
-  documentUrl?: string;
-  documentType?: string;
-  dueDate?: string;
-  amount?: number;
-  paymentStatus?: string;
-  location?: {
-    city: string;
-    district: string;
-  };
-}
-
-export interface NotificationAction {
-  label: string;
-  action: () => void;
-  icon?: React.ReactNode;
-}
+export type NotificationStatus = "PENDING" | "COMPLETED" | "CANCELLED";
 
 export interface Notification {
   id: string;
@@ -43,18 +18,10 @@ export interface Notification {
   title: string;
   message: string;
   date: string;
-  metadata?: NotificationMetadata;
-  actions?: {
-    primary?: NotificationAction;
-    secondary?: NotificationAction;
-  };
+  link?: string;
+  read: boolean;
 }
 
-export interface NotificationFilter {
-  type: string;
-  status: string;
-  date: string | null;
-  location: string;
-  search: string;
-  titleDeedNumber: string;
+export interface NotificationCardProps extends Notification {
+  onClick: () => void;
 }
