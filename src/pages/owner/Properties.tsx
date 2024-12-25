@@ -35,30 +35,21 @@ const PropertiesPage = () => {
   const properties: Property[] = mockParcels.map(parcel => ({
     id: parcel.id,
     title: parcel.title,
-    description: parcel.description || '',
-    property_type: parcel.type,
+    description: parcel.address,
+    property_type: parcel.type.toLowerCase(),
     surface_area: parcel.surface,
     location: parcel.location,
-    fiscal_status: parcel.fiscalStatus,
-    status: parcel.status,
+    fiscal_status: "under_review",
+    status: "pending",
     is_for_sale: false,
     price: parcel.price || 0,
-    owner_id: parcel.owner || '',
+    owner_id: parcel.owner,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    titleDeedNumber: parcel.titleDeedNumber,
-    ownerName: parcel.ownerName,
-    address: parcel.address,
-    city: parcel.city,
-    zone: parcel.zone,
-    type: parcel.type,
-    surface: parcel.surface,
-    taxStatus: parcel.taxStatus,
-    tnbInfo: parcel.tnbInfo
+    updated_at: new Date().toISOString()
   }));
 
   const selectedParcel = selectedParcelId 
-    ? properties.find(p => p.id === selectedParcelId) 
+    ? mockParcels.find(p => p.id === selectedParcelId) 
     : null;
 
   const handleParcelSelect = (parcelId: string | null, position?: { x: number; y: number }) => {
@@ -106,7 +97,7 @@ const PropertiesPage = () => {
                   handleParcelSelect(null);
                 }
               }}
-              filteredParcels={properties}
+              filteredParcels={mockParcels}
               settings={settings}
               mapInstance={mapInstance}
               setMapInstance={setMapInstance}

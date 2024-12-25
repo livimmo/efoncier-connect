@@ -40,7 +40,14 @@ const Map = () => {
   });
 
   const handleParcelSelect = (parcelId: string) => {
-    // Ne rien faire ici, la logique est gérée dans MapContainer
+    if (!profile) {
+      toast({
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour accéder à plus de détails.",
+        variant: "destructive",
+      });
+      return;
+    }
   };
 
   const handleRegionChange = (regionId: string) => {
@@ -71,7 +78,10 @@ const Map = () => {
   };
 
   const handleApplyFilters = () => {
-    // Filter logic here
+    toast({
+      title: "Filtres appliqués",
+      description: "Les résultats ont été mis à jour selon vos critères.",
+    });
   };
 
   return (

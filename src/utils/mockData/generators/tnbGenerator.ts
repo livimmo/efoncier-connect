@@ -1,25 +1,26 @@
-import { PropertyType, TNBInfo, TaxStatus } from '../../../types';
+import { PropertyType, TNBInfo } from '../types';
 
-const BASE_RATES: Record<PropertyType, number> = {
-  'RESIDENTIAL': 1000,
-  'COMMERCIAL': 2000,
-  'INDUSTRIAL': 1500,
-  'AGRICULTURAL': 500,
-  'MIXED': 1200,
-  'SEASIDE': 2500
+const baseRates: Record<PropertyType, number> = {
+  'RESIDENTIAL': 4,
+  'COMMERCIAL': 8,
+  'INDUSTRIAL': 6,
+  'AGRICULTURAL': 2,
+  'MIXED': 5,
+  'SEASIDE': 10,
+  'HOUSE': 4,
+  'APARTMENT': 4
 };
 
 export const generateTNBInfo = (surface: number, type: PropertyType): TNBInfo => {
-  const baseRate = BASE_RATES[type] || BASE_RATES.RESIDENTIAL;
-  const pricePerMeter = baseRate;
+  const pricePerMeter = baseRates[type] || 4; // Default to 4 DH/m² if type not found
   const totalAmount = surface * pricePerMeter;
-
-  const status: TaxStatus = Math.random() > 0.5 ? 'PAID' : 'PENDING';
-
+  
   return {
     pricePerMeter,
     totalAmount,
-    lastUpdate: new Date().toISOString(),
-    status
+    status: totalAmount < 500000 ? 'LOW' : 
+            totalAmount < 1000000 ? 'AVERAGE' : 
+            'HIGH',
+    lastUpdate: new Date().toISOString()
   };
 };

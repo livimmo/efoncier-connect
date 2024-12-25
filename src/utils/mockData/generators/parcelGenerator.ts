@@ -1,45 +1,21 @@
-import { Property, ParcelInput, FiscalStatus, TaxStatus, PropertyType, ZoneType } from '../../../types';
+import { Parcel, PropertyType, FiscalStatus } from '../types';
 import { generateTNBInfo } from './tnbGenerator';
 
-const getFiscalStatus = (taxStatus: TaxStatus): FiscalStatus => {
-  if (taxStatus === 'PAID') {
-    return 'compliant';
-  } else if (taxStatus === 'PENDING') {
-    return 'under_review';
+export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'>;
+
+const getFiscalStatus = (taxStatus: string): FiscalStatus => {
+  switch (taxStatus) {
+    case 'PAID':
+      return 'COMPLIANT';
+    case 'OVERDUE':
+      return 'NON_COMPLIANT';
+    default:
+      return 'UNDER_REVIEW';
   }
-  return 'non_compliant';
 };
 
-export const createParcelWithTNB = (input: Partial<Property>): Property => {
-  const taxStatus: TaxStatus = input.taxStatus || 'PENDING';
-  const fiscal_status = getFiscalStatus(taxStatus);
-  const surface_area = input.surface || 0;
-  const property_type = input.type || 'RESIDENTIAL';
-  
-  const baseParcel: Property = {
-    id: input.id || crypto.randomUUID(),
-    title: input.title || '',
-    description: input.description || '',
-    property_type,
-    surface_area,
-    location: input.location || { lat: 0, lng: 0 },
-    fiscal_status,
-    status: input.status || 'AVAILABLE',
-    is_for_sale: false,
-    price: input.price || 0,
-    owner_id: input.owner_id || '',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    titleDeedNumber: input.titleDeedNumber || '',
-    ownerName: input.ownerName || '',
-    address: input.address || '',
-    city: input.city || '',
-    zone: input.zone || 'RESIDENTIAL_ZONE',
-    type: property_type,
-    surface: surface_area,
-    taxStatus,
-    tnbInfo: generateTNBInfo(surface_area, property_type)
-  };
-
-  return baseParcel;
-};
+export const createParcelWithTNB = (data: ParcelInput): Parcel => ({
+  ...data,
+  fiscalStatus: getFiscalStatus(data.taxStatus),
+  tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
+});
