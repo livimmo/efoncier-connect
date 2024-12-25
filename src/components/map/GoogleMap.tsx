@@ -34,6 +34,19 @@ export const GoogleMap = ({
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
 
+  const defaultMarkerColor = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return '#10B981'; // Green for paid
+      case 'PENDING':
+        return '#F59E0B'; // Orange for pending
+      case 'OVERDUE':
+        return '#EF4444'; // Red for overdue
+      default:
+        return '#6B7280'; // Gray default
+    }
+  };
+
   useEffect(() => {
     const initMap = async () => {
       const loader = new Loader({
@@ -88,19 +101,6 @@ export const GoogleMap = ({
     initMap();
   }, [center, zoom, parcels]);
 
-  const defaultMarkerColor = (status: string) => {
-    switch (status) {
-      case 'AVAILABLE':
-        return '#10B981';
-      case 'UNAVAILABLE':
-        return '#EF4444';
-      case 'IN_TRANSACTION':
-        return '#F59E0B';
-      default:
-        return '#6B7280';
-    }
-  };
-
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
     markers.forEach(marker => marker.setMap(null));
     
@@ -112,7 +112,7 @@ export const GoogleMap = ({
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor ? getMarkerColor(parcel.status) : defaultMarkerColor(parcel.status),
+          fillColor: getMarkerColor ? getMarkerColor(parcel.taxStatus) : defaultMarkerColor(parcel.taxStatus),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
