@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatCurrency } from "@/utils/format";
 import { MapPin, User, Ruler, CreditCard, FileText, Building } from "lucide-react";
@@ -10,6 +9,7 @@ import { Parcel } from '@/utils/mockData/types';
 import { UserRole } from '@/types/auth';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ParcelStatusBadges } from "./parcel-info/ParcelStatusBadges";
+import { FavoriteButton } from "./parcel-info/FavoriteButton";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -23,6 +23,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
   const [loginOpen, setLoginOpen] = useState(false);
   const isAuthenticated = !!profile;
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const showFavoriteButton = userRole === "developer" || userRole === "owner";
 
   const handleLoginClick = () => {
     setLoginOpen(true);
@@ -36,7 +37,12 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
         <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
           <div className="space-y-4">
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">{parcel.title}</h3>
+              <div className="flex justify-between items-start">
+                <h3 className="text-lg font-semibold">{parcel.title}</h3>
+                {showFavoriteButton && (
+                  <FavoriteButton parcelId={parcel.id} />
+                )}
+              </div>
               <ParcelStatusBadges 
                 status={parcel.status}
                 taxStatus={parcel.taxStatus}
