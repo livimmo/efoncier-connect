@@ -9,4 +9,5 @@ export interface RegisterFormData {
   firstName: string;
   lastName: string;
   city: string;
+  acceptTerms: boolean;
 }

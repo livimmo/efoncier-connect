@@ -23,6 +23,9 @@ const formSchema = z.object({
   role: z.enum(["taxpayer", "developer", "commune"]),
   firstName: z.string().min(2, "Le prénom est requis"),
   lastName: z.string().min(2, "Le nom est requis"),
+  acceptTerms: z.boolean().refine((val) => val === true, {
+    message: "Vous devez accepter les conditions d'utilisation",
+  }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"],
@@ -45,6 +48,7 @@ export const RegisterForm = () => {
       role: "taxpayer",
       firstName: "",
       lastName: "",
+      acceptTerms: false,
     },
   });
 

@@ -1,22 +1,18 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { RegisterFormData } from "@/types/auth";
-import { AccountTypeSelect } from "./AccountTypeSelect";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Mail, Lock, Smartphone, MapPin, User } from "lucide-react";
 
 interface RegisterFormFieldsProps {
   form: UseFormReturn<RegisterFormData>;
 }
 
-export function RegisterFormFields({ form }: RegisterFormFieldsProps) {
+export const RegisterFormFields = ({ form }: RegisterFormFieldsProps) => {
   return (
     <>
-      <AccountTypeSelect 
-        form={form} 
-        onRoleChange={(role) => form.setValue("role", role as RegisterFormData["role"])} 
-      />
-
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           control={form.control}
           name="firstName"
@@ -24,7 +20,10 @@ export function RegisterFormFields({ form }: RegisterFormFieldsProps) {
             <FormItem>
               <FormLabel>Prénom</FormLabel>
               <FormControl>
-                <Input placeholder="Votre prénom" {...field} />
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input className="pl-9" placeholder="Votre prénom" {...field} />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -38,7 +37,82 @@ export function RegisterFormFields({ form }: RegisterFormFieldsProps) {
             <FormItem>
               <FormLabel>Nom</FormLabel>
               <FormControl>
-                <Input placeholder="Votre nom" {...field} />
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input className="pl-9" placeholder="Votre nom" {...field} />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input className="pl-9" placeholder="votre@email.com" type="email" {...field} />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Téléphone</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Smartphone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input className="pl-9" placeholder="+212 6XX XXX XXX" {...field} />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mot de passe</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input className="pl-9" type="password" {...field} />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirmer le mot de passe</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input className="pl-9" type="password" {...field} />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -48,12 +122,15 @@ export function RegisterFormFields({ form }: RegisterFormFieldsProps) {
 
       <FormField
         control={form.control}
-        name="email"
+        name="city"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>Ville</FormLabel>
             <FormControl>
-              <Input type="email" placeholder="votre@email.com" {...field} />
+              <div className="relative">
+                <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input className="pl-9" placeholder="Votre ville" {...field} />
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -62,45 +139,30 @@ export function RegisterFormFields({ form }: RegisterFormFieldsProps) {
 
       <FormField
         control={form.control}
-        name="phone"
+        name="acceptTerms"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>Téléphone</FormLabel>
+          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
             <FormControl>
-              <Input placeholder="+212 6XX XXX XXX" {...field} />
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
             </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="password"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Mot de passe</FormLabel>
-            <FormControl>
-              <Input type="password" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="confirmPassword"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Confirmer le mot de passe</FormLabel>
-            <FormControl>
-              <Input type="password" {...field} />
-            </FormControl>
-            <FormMessage />
+            <div className="space-y-1 leading-none">
+              <FormLabel>
+                J'accepte les{" "}
+                <a href="/terms" className="text-primary hover:underline">
+                  Conditions Générales d'Utilisation
+                </a>{" "}
+                et la{" "}
+                <a href="/privacy" className="text-primary hover:underline">
+                  Politique de Confidentialité
+                </a>
+              </FormLabel>
+            </div>
           </FormItem>
         )}
       />
     </>
   );
-}
+};
