@@ -1,5 +1,4 @@
-import { Parcel } from "@/utils/mockData/types";
-import { UserRole } from "@/types/auth";
+import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +7,9 @@ import { formatCurrency } from "@/utils/format";
 import { MapPin, User, Ruler, CreditCard, FileText, Building, Lock } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LoginDialog } from "@/components/auth/LoginDialog";
-import { useState } from "react";
+import { Parcel } from '@/utils/mockData/types';
+import { UserRole } from '@/types/auth';
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -21,10 +22,11 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
   const { profile } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const isAuthenticated = !!profile;
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleLoginClick = () => {
     setLoginOpen(true);
-    onClose(); // Ferme la fenêtre d'info quand on ouvre la connexion
+    onClose();
   };
 
   const getStatusBadge = (status: string) => {
@@ -57,7 +59,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
     <>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
       <Card className={`overflow-hidden animate-fade-in ${className}`}>
-        <ScrollArea className="h-[calc(100vh-200px)] px-6 py-4">
+        <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
           <div className="space-y-4">
             {/* En-tête */}
             <div className="space-y-2">
