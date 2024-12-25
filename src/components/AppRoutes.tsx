@@ -3,6 +3,7 @@ import { PrivateRoute } from "./auth/PrivateRoute";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Map from "@/components/Map";
+import Dashboard from "@/pages/Dashboard";
 import DeveloperDashboard from "@/pages/developer/Dashboard";
 import DeveloperProperties from "@/pages/developer/Properties";
 import DeveloperFavorites from "@/pages/developer/Favorites";
@@ -27,6 +28,16 @@ export const AppRoutes = () => {
       <Route path="/about" element={<About />} />
       <Route path="/map" element={<Map />} />
       
+      {/* Common Dashboard Route - Will redirect to role-specific dashboard */}
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
+
       {/* Developer Routes */}
       <Route
         path="/developer/dashboard"

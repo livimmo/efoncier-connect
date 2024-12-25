@@ -1,35 +1,44 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { Header } from "@/components/Header";
-import { DashboardTab } from "@/components/profile/tabs/DashboardTab";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { profile, loading } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!loading && profile) {
-      switch (profile.role) {
-        case "owner":
-          navigate("/owner/dashboard", { replace: true });
-          break;
-        case "developer":
-          navigate("/developer/dashboard", { replace: true });
-          break;
-        case "commune":
-          navigate("/commune/dashboard", { replace: true });
-          break;
-        case "admin":
-          navigate("/admin/dashboard", { replace: true });
-          break;
-        default:
-          break;
+    if (!loading) {
+      if (profile) {
+        const dashboardRoutes = {
+          owner: "/owner/dashboard",
+          developer: "/developer/dashboard",
+          commune: "/commune/dashboard",
+          admin: "/admin/dashboard"
+        };
+
+        const route = dashboardRoutes[profile.role];
+        if (route) {
+          navigate(route, { replace: true });
+        } else {
+          toast({
+            title: "Erreur",
+            description: "Type d'utilisateur non reconnu",
+            variant: "destructive",
+          });
+          navigate("/");
+        }
+      } else {
+        toast({
+          title: "Accès refusé",
+          description: "Veuillez vous connecter pour accéder à votre tableau de bord",
+          variant: "destructive",
+        });
+        navigate("/login");
       }
-    } else if (!loading && !profile) {
-      navigate("/login", { replace: true });
     }
-  }, [profile, loading, navigate]);
+  }, [profile, loading, navigate, toast]);
 
   if (loading) {
     return (
