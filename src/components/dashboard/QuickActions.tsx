@@ -87,7 +87,7 @@ export const QuickActions = () => {
           <Button
             variant="outline"
             className="flex flex-col items-center gap-2 h-auto py-4"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/owner/properties")}
           >
             <MapPin className="h-5 w-5" />
             <span>Carte Interactive</span>
