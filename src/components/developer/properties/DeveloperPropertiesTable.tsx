@@ -1,11 +1,12 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FileText, MapPin, Download } from "lucide-react";
+import { FileText, MapPin, Download, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GoogleMap } from "@/components/map/GoogleMap";
 import type { Parcel } from "@/utils/mockData/types";
 import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
+import { ContactDialog } from "@/components/map/contact/ContactDialog";
 
 interface DeveloperPropertiesTableProps {
   data: Parcel[];
@@ -14,6 +15,7 @@ interface DeveloperPropertiesTableProps {
 export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showDocuments, setShowDocuments] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
   const handleLocationClick = (location: { lat: number; lng: number }) => {
@@ -23,6 +25,22 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const handleDocumentsClick = (parcel: Parcel) => {
     setSelectedParcel(parcel);
     setShowDocuments(true);
+  };
+
+  const handleContactClick = (parcel: Parcel) => {
+    setSelectedParcel(parcel);
+    setShowContact(true);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return <span className="text-green-600">🟢 Disponible</span>;
+      case 'UNAVAILABLE':
+        return <span className="text-red-600">🔴 Indisponible</span>;
+      default:
+        return <span className="text-orange-600">🟡 En Transaction</span>;
+    }
   };
 
   return (
@@ -45,9 +63,17 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
               <TableCell>{parcel.address}</TableCell>
               <TableCell>{parcel.surface}</TableCell>
               <TableCell>{parcel.type}</TableCell>
-              <TableCell>{parcel.status}</TableCell>
+              <TableCell>{getStatusBadge(parcel.status)}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDocumentsClick(parcel)}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Documents
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -59,10 +85,10 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleDocumentsClick(parcel)}
+                    onClick={() => handleContactClick(parcel)}
                   >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Documents
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Contact
                   </Button>
                 </div>
               </TableCell>
@@ -101,6 +127,15 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
           {selectedParcel && <PropertyDocuments parcel={selectedParcel} />}
         </DialogContent>
       </Dialog>
+
+      {/* Dialog pour le contact */}
+      {selectedParcel && (
+        <ContactDialog
+          parcel={selectedParcel}
+          open={showContact}
+          onOpenChange={setShowContact}
+        />
+      )}
     </>
   );
 };

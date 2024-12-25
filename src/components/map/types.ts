@@ -1,5 +1,11 @@
-import { UserRole } from "@/types/auth";
-import { Parcel } from "@/utils/mockData/types";
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+  showLabels: boolean;
+  showBoundaries: boolean;
+  showTerrain: boolean;
+  show3D: boolean;
+}
 
 export interface MapFilters {
   region: string;
@@ -15,23 +21,4 @@ export interface MapFilters {
   maxPrice: number;
 }
 
-export interface MapSettings {
-  showLabels: boolean;
-  showBoundaries: boolean;
-  showTerrain: boolean;
-  show3D: boolean;
-  theme: 'light' | 'dark';
-  unit: 'metric' | 'imperial';
-}
-
-export interface MapMobileControlsProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onLocate: () => void;
-}
-
-export interface MapProps {
-  parcels?: Parcel[];
-  userRole?: UserRole;
-  onParcelSelect?: (parcel: Parcel) => void;
-}
+export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICULTURAL' | 'MIXED' | 'SEASIDE' | 'HOUSE' | 'APARTMENT';
