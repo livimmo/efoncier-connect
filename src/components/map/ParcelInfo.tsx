@@ -24,6 +24,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
 
   const handleLoginClick = () => {
     setLoginOpen(true);
+    onClose(); // Ferme la fenêtre d'info quand on ouvre la connexion
   };
 
   const getStatusBadge = (status: string) => {
@@ -57,7 +58,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
       <Card className={`overflow-hidden animate-fade-in ${className}`}>
         <ScrollArea className="h-[calc(100vh-200px)] px-6 py-4">
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* En-tête */}
             <div className="space-y-2">
               <div className="flex items-start justify-between">
@@ -155,28 +156,8 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
             </div>
 
             {/* Actions */}
-            <div className="space-y-3 pt-4 border-t">
-              {userRole === "owner" && (
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => console.log("Contact Owner")}
-                >
-                  Contacter le Propriétaire
-                </Button>
-              )}
-              
-              {userRole === "developer" && (
-                <Button 
-                  variant="default"
-                  className="w-full"
-                  onClick={() => console.log("View Details")}
-                >
-                  Voir les détails complets
-                </Button>
-              )}
-
-              {!isAuthenticated && (
+            {!isAuthenticated && (
+              <div className="pt-4 border-t">
                 <Button
                   variant="default"
                   className="w-full"
@@ -184,8 +165,32 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
                 >
                   Se connecter pour voir plus de détails
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
+
+            {isAuthenticated && (
+              <div className="space-y-3 pt-4 border-t">
+                {userRole === "owner" && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => console.log("Contact Owner")}
+                  >
+                    Contacter le Propriétaire
+                  </Button>
+                )}
+                
+                {userRole === "developer" && (
+                  <Button 
+                    variant="default"
+                    className="w-full"
+                    onClick={() => console.log("View Details")}
+                  >
+                    Voir les détails complets
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </ScrollArea>
       </Card>
