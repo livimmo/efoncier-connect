@@ -27,17 +27,25 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
   };
 
   const handleSuccess = () => {
+    toast({
+      title: "Compte créé avec succès !",
+      description: "Un email de confirmation vous a été envoyé.",
+    });
     onOpenChange(false);
     navigate("/dashboard");
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Inscription à eFoncier</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">
+            Créer un Compte sur eFoncier
+          </DialogTitle>
           <DialogDescription>
-            Créez votre compte pour accéder à tous nos services
+            Inscrivez-vous pour accéder à vos fonctionnalités personnalisées.
+            <br />
+            Veuillez choisir votre profil utilisateur pour continuer.
           </DialogDescription>
         </DialogHeader>
 
