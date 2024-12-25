@@ -1,3 +1,5 @@
+export type UserRole = "taxpayer" | "developer" | "commune";
+
 export interface RegisterFormData {
   email: string;
   password: string;
@@ -6,6 +8,6 @@ export interface RegisterFormData {
   lastName: string;
   phone: string;
   city: string;
-  role: "taxpayer" | "developer" | "commune";
+  role: UserRole;
   acceptTerms: boolean;
 }
