@@ -5,16 +5,14 @@ import { useState } from "react";
 import { ParcelDetails } from "./parcel-info/ParcelDetails";
 import { ParcelActions } from "./parcel-info/ParcelActions";
 import { ParcelDialogs } from "./parcel-info/ParcelDialogs";
-import { UserRole } from "@/types/auth";
 
 interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
   className?: string;
-  userRole?: UserRole;
 }
 
-export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoProps) => {
+export const ParcelInfo = ({ parcel, onClose, className }: ParcelInfoProps) => {
   const [contactOpen, setContactOpen] = useState(false);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);

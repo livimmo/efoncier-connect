@@ -28,21 +28,19 @@ export const Footer = () => {
             <h3 className="font-semibold mb-4">Liens Utiles</h3>
             <ul className="space-y-2">
               <li><Link to="/about" className="hover:text-primary transition-colors">À Propos de eFoncier</Link></li>
-              <li>
-                <Link to="/contact" className="hover:text-primary transition-colors flex items-center gap-2">
-                  <Contact className="h-4 w-4" />
-                  Contact
-                </Link>
-              </li>
-              <li><Link to="/terms" className="hover:text-primary transition-colors">Conditions d'Utilisation</Link></li>
+              <li><Link to="/contact" className="hover:text-primary transition-colors flex items-center gap-2">
+                <Contact className="h-4 w-4" />
+                Contact
+              </Link></li>
               <li><Link to="/privacy" className="hover:text-primary transition-colors">Politique de Confidentialité</Link></li>
+              <li><Link to="/terms" className="hover:text-primary transition-colors">Conditions d'Utilisation</Link></li>
               <li><Link to="/legal" className="hover:text-primary transition-colors">Mentions Légales</Link></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold mb-4">Coordonnées</h3>
+            <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm">
               <li>Rue Al Mouqawama, Casablanca</li>
               <li>Email: support@efoncier.ma</li>

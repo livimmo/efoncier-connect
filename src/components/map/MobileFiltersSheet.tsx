@@ -2,14 +2,19 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { MapFilters } from './MapFilters';
-import { MobileFiltersSheetProps } from './types';
+import { MapFilters as MapFiltersType } from './types';
 import { useToast } from "@/hooks/use-toast";
+
+interface MobileFiltersSheetProps {
+  filters: MapFiltersType;
+  setFilters: (filters: MapFiltersType) => void;
+  filteredParcelsCount: number;
+}
 
 export const MobileFiltersSheet = ({ 
   filters, 
   setFilters, 
-  filteredParcelsCount,
-  userRole 
+  filteredParcelsCount 
 }: MobileFiltersSheetProps) => {
   const { toast } = useToast();
 
@@ -26,7 +31,6 @@ export const MobileFiltersSheet = ({
           <MapFilters 
             filters={filters}
             setFilters={setFilters}
-            userRole={userRole}
             onApplyFilters={() => {
               toast({
                 title: "Filtres appliqués",
