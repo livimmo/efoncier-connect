@@ -7,12 +7,26 @@ interface UseMapCenterProps {
 
 export const useMapCenter = ({ map, mapCenter }: UseMapCenterProps) => {
   useEffect(() => {
-    if (map && mapCenter) {
-      map.panTo({ 
-        lat: mapCenter.lat || 33.5731, 
-        lng: mapCenter.lng || -7.5898 
-      });
-      map.setZoom(mapCenter.zoom || 10);
+    if (!map || !mapCenter) {
+      console.log('Map or center coordinates not ready');
+      return;
+    }
+
+    const { lat, lng, zoom } = mapCenter;
+    
+    // Validate coordinates
+    if (typeof lat !== 'number' || typeof lng !== 'number') {
+      console.log('Invalid coordinates:', { lat, lng });
+      return;
+    }
+
+    try {
+      map.panTo({ lat, lng });
+      if (typeof zoom === 'number') {
+        map.setZoom(zoom);
+      }
+    } catch (error) {
+      console.error('Error updating map center:', error);
     }
   }, [mapCenter, map]);
 };

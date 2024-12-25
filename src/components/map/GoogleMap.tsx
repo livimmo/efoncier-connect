@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import type { Parcel } from '@/utils/mockData/types';
 import { useMapInitialization } from './hooks/useMapInitialization';
 import { useMapMarkers } from './hooks/useMapMarkers';
