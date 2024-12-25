@@ -84,31 +84,18 @@ export const GoogleMap = ({
     };
 
     initMap();
-  }, [center, zoom]);
+  }, [center, zoom, parcels]);
 
-  const getMarkerColor = (parcel: Parcel, userRole?: UserRole) => {
-    if (userRole === 'commune' || userRole === 'owner') {
-      switch (parcel.taxStatus) {
-        case 'PAID':
-          return '#006233'; // Vert foncé
-        case 'PENDING':
-          return '#FFA500'; // Orange
-        case 'OVERDUE':
-          return '#C1272D'; // Rouge foncé
-        default:
-          return '#808080'; // Gris par défaut
-      }
-    } else {
-      switch (parcel.status) {
-        case 'AVAILABLE':
-          return '#006233'; // Vert foncé
-        case 'IN_TRANSACTION':
-          return '#FFA500'; // Orange
-        case 'SOLD':
-          return '#C1272D'; // Rouge foncé
-        default:
-          return '#808080'; // Gris par défaut
-      }
+  const getMarkerColor = (parcel: Parcel) => {
+    switch (parcel.taxStatus) {
+      case 'PAID':
+        return '#006233'; // Vert foncé
+      case 'PENDING':
+        return '#FFA500'; // Orange
+      case 'OVERDUE':
+        return '#C1272D'; // Rouge foncé
+      default:
+        return '#808080'; // Gris par défaut
     }
   };
 
@@ -123,7 +110,7 @@ export const GoogleMap = ({
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor(parcel, userRole),
+          fillColor: getMarkerColor(parcel),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
