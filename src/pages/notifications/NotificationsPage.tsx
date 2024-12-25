@@ -6,8 +6,8 @@ import type { NotificationFilter } from "@/types/notifications";
 
 const NotificationsPage = () => {
   const [filters, setFilters] = useState<NotificationFilter>({
-    type: "all",
     status: "all",
+    type: "all",
     priority: "all",
     date: null,
     location: "all",

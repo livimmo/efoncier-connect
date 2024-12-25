@@ -1,78 +1,13 @@
-import { ReactNode, useState } from "react";
-import { MapFilters } from "./MapFilters";
-import { cn } from "@/lib/utils";
-import { MapFilters as MapFiltersType } from "./types";
-import { useAuth } from "@/components/auth/AuthProvider";
+import React from "react";
 
-interface MapLayoutProps {
-  children: ReactNode;
-  className?: string;
-  showFilters?: boolean;
+export interface MapLayoutProps {
+  children?: React.ReactNode;
 }
 
-export const MapLayout = ({
-  children,
-  className,
-  showFilters = true,
-}: MapLayoutProps) => {
-  const { profile } = useAuth();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [filters, setFilters] = useState<MapFiltersType>({
-    region: '',
-    commune: '',
-    propertyType: '',
-    zoneType: '',
-    size: [0, 15000],
-    status: '',
-    ownerName: '',
-    titleDeedNumber: '',
-    lastPaymentDate: null,
-    fiscalStatus: '',
-    maxPrice: 20000000,
-    minPrice: 0,
-    tnbReference: '',
-    searchQuery: '',
-    zoning: '',
-    paymentStatus: '',
-    tnbStatus: '',
-    propertyStatus: ''
-  });
-
-  const handleRegionChange = (regionId: string) => {
-    console.log("Region changed:", regionId);
-  };
-
-  const handleCityChange = (cityName: string) => {
-    console.log("City changed:", cityName);
-  };
-
-  const handleDistrictChange = (districtName: string) => {
-    console.log("District changed:", districtName);
-  };
-
+export const MapLayout = ({ children }: MapLayoutProps) => {
   return (
-    <div className={cn("flex h-full", className)}>
-      {showFilters && profile?.role && (
-        <div className="w-80 border-r">
-          <MapFilters 
-            filters={filters}
-            setFilters={setFilters}
-            onApplyFilters={() => {
-              console.log("Filters applied:", filters);
-            }}
-            userRole={profile.role}
-            onRegionChange={handleRegionChange}
-            onCityChange={handleCityChange}
-            onDistrictChange={handleDistrictChange}
-            mapInstance={null}
-            isCollapsed={isCollapsed}
-            onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
-          />
-        </div>
-      )}
-      <div className="flex-1 relative">
-        {children}
-      </div>
+    <div className="h-screen w-full">
+      {children}
     </div>
   );
 };

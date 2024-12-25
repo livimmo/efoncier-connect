@@ -24,7 +24,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "PAYMENT",
           createdAt: new Date().toISOString(),
           read: false,
-          location: "Casablanca",
+          location: { city: "Casablanca", district: "Centre" },
           metadata: {
             titleDeedNumber: "TF-12345",
             dueDate: "2024-06-30"
@@ -40,7 +40,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "DOCUMENT",
           createdAt: new Date(Date.now() - 86400000).toISOString(),
           read: false,
-          location: "Rabat",
+          location: { city: "Rabat", district: "Centre" },
           metadata: {
             titleDeedNumber: "TF-67890"
           }
@@ -55,7 +55,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "PROPERTY",
           createdAt: new Date(Date.now() - 172800000).toISOString(),
           read: false,
-          location: "Tanger",
+          location: { city: "Tanger", district: "Centre" },
           metadata: {
             titleDeedNumber: "TF-11223"
           }
@@ -70,7 +70,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "DOCUMENT",
           createdAt: new Date(Date.now() - 259200000).toISOString(),
           read: true,
-          location: "Marrakech",
+          location: { city: "Marrakech", district: "Centre" },
           metadata: {
             titleDeedNumber: "TF-33445"
           }
@@ -85,7 +85,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "PROPERTY",
           createdAt: new Date(Date.now() - 345600000).toISOString(),
           read: false,
-          location: "Agadir",
+          location: { city: "Agadir", district: "Centre" },
           metadata: {
             titleDeedNumber: "TF-55678"
           }
@@ -100,7 +100,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "SYSTEM",
           createdAt: new Date(Date.now() - 432000000).toISOString(),
           read: true,
-          location: "Fès"
+          location: { city: "Fès", district: "Centre" }
         },
         {
           id: "7",
@@ -112,7 +112,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "MESSAGE",
           createdAt: new Date(Date.now() - 518400000).toISOString(),
           read: false,
-          location: "Meknès"
+          location: { city: "Meknès", district: "Centre" }
         },
         {
           id: "8",
@@ -124,7 +124,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "SYSTEM",
           createdAt: new Date(Date.now() - 604800000).toISOString(),
           read: true,
-          location: "Oujda"
+          location: { city: "Oujda", district: "Centre" }
         },
         {
           id: "9",
@@ -136,7 +136,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "PAYMENT",
           createdAt: new Date(Date.now() - 691200000).toISOString(),
           read: true,
-          location: "Tétouan"
+          location: { city: "Tétouan", district: "Centre" }
         },
         {
           id: "10",
@@ -148,7 +148,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           type: "SYSTEM",
           createdAt: new Date(Date.now() - 777600000).toISOString(),
           read: false,
-          location: "Kénitra"
+          location: { city: "Kénitra", district: "Centre" }
         }
       ];
     case "developer":
@@ -156,8 +156,8 @@ const getNotificationsByRole = (role?: string): Notification[] => {
         {
           id: "1",
           type: "NEW_PROPERTY",
-          priority: "HIGH",
-          status: "UNREAD",
+          priority: "high",
+          status: "unread",
           title: "Nouveau bien disponible",
           message: "Un nouveau terrain est disponible dans votre région cible",
           date: new Date().toISOString(),
@@ -169,8 +169,8 @@ const getNotificationsByRole = (role?: string): Notification[] => {
         {
           id: "2",
           type: "DOCUMENT_RECEIVED",
-          priority: "MEDIUM",
-          status: "READ",
+          priority: "medium",
+          status: "read",
           title: "Nouveau document disponible",
           message: "Le plan cadastral du bien TF-89012 est maintenant disponible",
           date: new Date(Date.now() - 86400000).toISOString(),
@@ -186,8 +186,8 @@ const getNotificationsByRole = (role?: string): Notification[] => {
         {
           id: "1",
           type: "PAYMENT",
-          priority: "HIGH",
-          status: "UNREAD",
+          priority: "high",
+          status: "unread",
           title: "Alertes de non-paiement",
           message: "15 propriétaires n'ont pas payé leur taxe TNB cette année",
           date: new Date().toISOString(),
@@ -196,8 +196,8 @@ const getNotificationsByRole = (role?: string): Notification[] => {
         {
           id: "2",
           type: "REPORT",
-          priority: "MEDIUM",
-          status: "READ",
+          priority: "medium",
+          status: "read",
           title: "Rapport mensuel disponible",
           message: "Le rapport mensuel des statuts fiscaux est prêt à être consulté",
           date: new Date(Date.now() - 86400000).toISOString(),

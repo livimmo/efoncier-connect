@@ -1,12 +1,11 @@
-export type MessageAction = {
-  label: string;
-  action: string;
-  data?: any;
-};
+export type MessageStatus = "read" | "unread";
 
-export type Message = {
-  id?: string;
-  content: string;
-  type: "user" | "bot";
-  actions?: MessageAction[];
-};
+export interface Message {
+  id: string;
+  subject: string;
+  participant: string;
+  type: string;
+  location: string;
+  status: MessageStatus;
+  lastMessage: string;
+}
