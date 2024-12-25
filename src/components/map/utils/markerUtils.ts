@@ -66,23 +66,27 @@ export const createMarkers = (
   // Clear existing markers
   existingMarkers.forEach(marker => marker.setMap(null));
   
-  if (!map || !parcels || parcels.length === 0) {
-    console.log('No parcels to display or map not initialized');
+  if (!map || !parcels || !Array.isArray(parcels) || parcels.length === 0) {
+    console.log('No valid parcels to display or map not initialized');
     return [];
   }
   
   const bounds = new google.maps.LatLngBounds();
+  const newMarkers: google.maps.Marker[] = [];
   
-  const newMarkers = parcels.reduce<google.maps.Marker[]>((acc, parcel) => {
-    if (!parcel?.location) {
-      console.log('Parcel missing location:', parcel);
-      return acc;
+  parcels.forEach(parcel => {
+    if (!parcel?.location?.lat || !parcel?.location?.lng) {
+      console.log('Parcel missing valid location:', parcel);
+      return;
     }
 
     const marker = new google.maps.Marker({
-      position: parcel.location,
+      position: {
+        lat: parcel.location.lat,
+        lng: parcel.location.lng
+      },
       map: map,
-      title: parcel.title,
+      title: parcel.title || '',
       optimized: true,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
@@ -99,9 +103,9 @@ export const createMarkers = (
       onMarkerClick(parcel, position);
     });
 
-    bounds.extend(parcel.location);
-    return [...acc, marker];
-  }, []);
+    bounds.extend(marker.getPosition() as google.maps.LatLng);
+    newMarkers.push(marker);
+  });
 
   return newMarkers;
 };

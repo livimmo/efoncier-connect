@@ -19,7 +19,7 @@ interface GoogleMapProps {
 export const GoogleMap = ({ 
   onMarkerClick, 
   onMapClick,
-  parcels, 
+  parcels = [], // Provide default empty array
   theme, 
   setMapInstance,
   mapCenter 
@@ -46,8 +46,11 @@ export const GoogleMap = ({
         const google = await loader.load();
         
         const mapInstance = new google.maps.Map(mapRef.current, {
-          center: { lat: mapCenter.lat, lng: mapCenter.lng },
-          zoom: mapCenter.zoom,
+          center: { 
+            lat: mapCenter?.lat || 33.5731, 
+            lng: mapCenter?.lng || -7.5898 
+          },
+          zoom: mapCenter?.zoom || 10,
           styles: getMapStyles(theme),
           mapTypeControl: true,
           streetViewControl: true,
@@ -64,8 +67,9 @@ export const GoogleMap = ({
         setMap(mapInstance);
         setMapInstance(mapInstance);
         
-        // Create initial markers
+        // Create initial markers only if parcels exist
         if (parcels && parcels.length > 0) {
+          console.log('Creating initial markers for', parcels.length, 'parcels');
           markersRef.current = createMarkers(parcels, mapInstance, onMarkerClick, []);
         }
       } catch (error) {
@@ -90,14 +94,18 @@ export const GoogleMap = ({
   // Update map center when it changes
   useEffect(() => {
     if (map && mapCenter) {
-      map.panTo({ lat: mapCenter.lat, lng: mapCenter.lng });
-      map.setZoom(mapCenter.zoom);
+      map.panTo({ 
+        lat: mapCenter.lat || 33.5731, 
+        lng: mapCenter.lng || -7.5898 
+      });
+      map.setZoom(mapCenter.zoom || 10);
     }
   }, [mapCenter]);
 
   // Update markers when parcels change
   useEffect(() => {
     if (map && Array.isArray(parcels)) {
+      console.log('Updating markers for', parcels.length, 'parcels');
       markersRef.current = createMarkers(parcels, map, onMarkerClick, markersRef.current);
     }
   }, [parcels]);
