@@ -24,33 +24,18 @@ export const NotificationFilters = ({ filters, onChange }: NotificationFiltersPr
         />
       </FilterSection>
 
-      <FilterSection title="Catégorie">
+      <FilterSection title="Type">
         <SelectFilter
           value={filters.type}
           onChange={(value) => handleFilterChange("type", value)}
           options={[
-            { value: "all", label: "Toutes les catégories" },
-            { value: "payment", label: "💳 Paiements TNB" },
-            { value: "fiscal_status", label: "🛡️ Statut Fiscal" },
-            { value: "message", label: "💬 Messages" },
-            { value: "document", label: "📁 Documents" },
+            { value: "all", label: "Tous les types" },
+            { value: "PAYMENT", label: "💳 Paiements" },
+            { value: "DOCUMENT", label: "📑 Documents" },
+            { value: "MESSAGE", label: "💬 Messages" },
+            { value: "PROPERTY", label: "🏢 Propriétés" },
           ]}
-          placeholder="Sélectionner une catégorie"
-        />
-      </FilterSection>
-
-      <FilterSection title="Localisation">
-        <SelectFilter
-          value={filters.location}
-          onChange={(value) => handleFilterChange("location", value)}
-          options={[
-            { value: "all", label: "Toutes les zones" },
-            { value: "casablanca", label: "Casablanca" },
-            { value: "rabat", label: "Rabat" },
-            { value: "tanger", label: "Tanger" },
-            { value: "marrakech", label: "Marrakech" },
-          ]}
-          placeholder="Sélectionner une zone"
+          placeholder="Sélectionner un type"
         />
       </FilterSection>
 
@@ -64,6 +49,20 @@ export const NotificationFilters = ({ filters, onChange }: NotificationFiltersPr
             { value: "read", label: "Lus" },
           ]}
           placeholder="Sélectionner un statut"
+        />
+      </FilterSection>
+
+      <FilterSection title="Priorité">
+        <SelectFilter
+          value={filters.priority}
+          onChange={(value) => handleFilterChange("priority", value)}
+          options={[
+            { value: "all", label: "Toutes" },
+            { value: "high", label: "⚠️ Haute" },
+            { value: "medium", label: "📢 Moyenne" },
+            { value: "low", label: "ℹ️ Basse" },
+          ]}
+          placeholder="Sélectionner une priorité"
         />
       </FilterSection>
 

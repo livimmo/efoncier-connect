@@ -21,8 +21,14 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           priority: "high",
           category: "payment",
+          type: "PAYMENT",
           createdAt: new Date().toISOString(),
-          location: "Casablanca"
+          read: false,
+          location: "Casablanca",
+          metadata: {
+            titleDeedNumber: "TF-12345",
+            dueDate: "2024-06-30"
+          }
         },
         {
           id: "2",
@@ -31,8 +37,13 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           priority: "medium",
           category: "document",
+          type: "DOCUMENT",
           createdAt: new Date(Date.now() - 86400000).toISOString(),
-          location: "Rabat"
+          read: false,
+          location: "Rabat",
+          metadata: {
+            titleDeedNumber: "TF-67890"
+          }
         },
         {
           id: "3",
@@ -41,8 +52,13 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           priority: "medium",
           category: "property",
+          type: "PROPERTY",
           createdAt: new Date(Date.now() - 172800000).toISOString(),
-          location: "Tanger"
+          read: false,
+          location: "Tanger",
+          metadata: {
+            titleDeedNumber: "TF-11223"
+          }
         },
         {
           id: "4",
@@ -51,8 +67,13 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "read",
           priority: "low",
           category: "document",
+          type: "DOCUMENT",
           createdAt: new Date(Date.now() - 259200000).toISOString(),
-          location: "Marrakech"
+          read: true,
+          location: "Marrakech",
+          metadata: {
+            titleDeedNumber: "TF-33445"
+          }
         },
         {
           id: "5",
@@ -61,8 +82,13 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           priority: "high",
           category: "property",
+          type: "PROPERTY",
           createdAt: new Date(Date.now() - 345600000).toISOString(),
-          location: "Agadir"
+          read: false,
+          location: "Agadir",
+          metadata: {
+            titleDeedNumber: "TF-55678"
+          }
         },
         {
           id: "6",
@@ -71,7 +97,9 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "read",
           priority: "low",
           category: "system",
+          type: "SYSTEM",
           createdAt: new Date(Date.now() - 432000000).toISOString(),
+          read: true,
           location: "Fès"
         },
         {
@@ -81,7 +109,9 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           priority: "medium",
           category: "message",
+          type: "MESSAGE",
           createdAt: new Date(Date.now() - 518400000).toISOString(),
+          read: false,
           location: "Meknès"
         },
         {
@@ -91,7 +121,9 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "read",
           priority: "medium",
           category: "system",
+          type: "SYSTEM",
           createdAt: new Date(Date.now() - 604800000).toISOString(),
+          read: true,
           location: "Oujda"
         },
         {
@@ -101,7 +133,9 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "read",
           priority: "low",
           category: "payment",
+          type: "PAYMENT",
           createdAt: new Date(Date.now() - 691200000).toISOString(),
+          read: true,
           location: "Tétouan"
         },
         {
@@ -111,7 +145,9 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           priority: "high",
           category: "system",
+          type: "SYSTEM",
           createdAt: new Date(Date.now() - 777600000).toISOString(),
+          read: false,
           location: "Kénitra"
         }
       ];

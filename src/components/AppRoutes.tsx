@@ -27,7 +27,7 @@ export const AppRoutes = () => {
     );
   }
 
-  const getNotificationsComponent = () => {
+  const NotificationsComponent = () => {
     switch (profile?.role) {
       case "commune":
         return <CommuneNotifications />;
@@ -48,7 +48,7 @@ export const AppRoutes = () => {
       <Route path="/payments" element={<Payments />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/messages" element={<Messages />} />
-      <Route path="/notifications" element={getNotificationsComponent()} />
+      <Route path="/notifications" element={<NotificationsComponent />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
