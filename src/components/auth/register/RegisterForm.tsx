@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
@@ -7,22 +6,18 @@ import { RegisterFormFields } from "./RegisterFormFields";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { RegisterFormData } from "@/types/auth";
 
 const formSchema = z.object({
-  email: z.string().email("Adresse email invalide"),
-  password: z
-    .string()
-    .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-      "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
-    ),
+  email: z.string().email("Email invalide"),
+  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
   confirmPassword: z.string(),
-  phone: z.string().min(10, "Numéro de téléphone invalide"),
-  city: z.string().min(1, "Veuillez sélectionner une ville"),
+  firstName: z.string().min(1, "Le prénom est requis"),
+  lastName: z.string().min(1, "Le nom est requis"),
+  phone: z.string().min(1, "Le numéro de téléphone est requis"),
+  city: z.string().min(1, "La ville est requise"),
   role: z.enum(["taxpayer", "developer", "commune"]),
-  firstName: z.string().min(2, "Le prénom est requis"),
-  lastName: z.string().min(2, "Le nom est requis"),
   acceptTerms: z.boolean().refine((val) => val === true, {
     message: "Vous devez accepter les conditions d'utilisation",
   }),
@@ -30,8 +25,6 @@ const formSchema = z.object({
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"],
 });
-
-export type RegisterFormData = z.infer<typeof formSchema>;
 
 export const RegisterForm = () => {
   const { toast } = useToast();
@@ -43,52 +36,47 @@ export const RegisterForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      firstName: "",
+      lastName: "",
       phone: "",
       city: "",
       role: "taxpayer",
-      firstName: "",
-      lastName: "",
       acceptTerms: false,
     },
   });
 
-  const onSubmit = async (values: RegisterFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     try {
-      console.log("Submitting registration form with values:", values);
-
-      const { data, error } = await supabase.auth.signUp({
-        email: values.email.trim(),
-        password: values.password,
+      console.log("Form data:", data);
+      
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
         options: {
           data: {
-            role: values.role,
-            first_name: values.firstName.trim(),
-            last_name: values.lastName.trim(),
-            phone: values.phone.trim(),
-            city: values.city.trim(),
-          }
-        }
+            first_name: data.firstName,
+            last_name: data.lastName,
+            phone: data.phone,
+            city: data.city,
+            role: data.role,
+          },
+        },
       });
 
-      if (error) {
-        console.error("Registration error:", error);
-        throw error;
-      }
+      if (signUpError) throw signUpError;
 
-      if (data.user) {
-        console.log("Registration successful:", data);
-        toast({
-          title: "Compte créé avec succès !",
-          description: "Veuillez vérifier votre boîte email pour activer votre compte.",
-        });
-        navigate("/dashboard");
-      }
-    } catch (error: any) {
+      toast({
+        title: "Compte créé avec succès",
+        description: "Veuillez vérifier votre email pour confirmer votre compte.",
+      });
+
+      navigate("/login");
+    } catch (error) {
       console.error("Registration error:", error);
       toast({
-        variant: "destructive",
         title: "Erreur lors de l'inscription",
-        description: error.message || "Une erreur est survenue. Veuillez réessayer.",
+        description: "Une erreur est survenue lors de la création de votre compte.",
+        variant: "destructive",
       });
     }
   };
@@ -97,18 +85,9 @@ export const RegisterForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <RegisterFormFields form={form} />
-        
-        <div className="flex flex-col gap-4">
-          <Button type="submit">
-            Créer mon compte
-          </Button>
-          <p className="text-center text-sm text-muted-foreground">
-            Vous avez déjà un compte ?{" "}
-            <a href="/login" className="text-primary hover:underline">
-              Connectez-vous ici
-            </a>
-          </p>
-        </div>
+        <Button type="submit" className="w-full">
+          Créer mon compte
+        </Button>
       </form>
     </Form>
   );
