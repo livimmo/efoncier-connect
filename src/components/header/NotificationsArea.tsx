@@ -30,21 +30,29 @@ const mockMessages = [
 const mockNotifications: Notification[] = [
   {
     id: "1",
-    type: "payment",
-    priority: "high",
+    type: "PAYMENT_DUE",
+    priority: "HIGH",
+    status: "UNREAD",
     title: "Paiement en attente",
     message: "Vous avez une taxe foncière en attente de paiement",
     date: new Date().toISOString(),
     read: false,
+    metadata: {
+      titleDeedNumber: "TF-12345"
+    }
   },
   {
     id: "2",
-    type: "property",
-    priority: "medium",
+    type: "STATUS_UPDATE",
+    priority: "MEDIUM",
+    status: "READ",
     title: "Mise à jour de statut",
     message: "Le statut de votre parcelle a été mis à jour",
     date: new Date(Date.now() - 86400000).toISOString(),
     read: true,
+    metadata: {
+      titleDeedNumber: "TF-56789"
+    }
   },
 ];
 

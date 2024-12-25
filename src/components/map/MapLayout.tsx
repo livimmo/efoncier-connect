@@ -16,7 +16,7 @@ export const MapLayout = ({
   showFilters = true,
 }: MapLayoutProps) => {
   const { profile } = useAuth();
-  const [filters, setFilters] = useState<MapFiltersType>({
+  const [filters, setFilters] = useState<MapFilters>({
     region: '',
     commune: '',
     propertyType: '',
@@ -31,7 +31,8 @@ export const MapLayout = ({
     tnbReference: '',
     searchQuery: '',
     zoning: '',
-    paymentStatus: ''
+    paymentStatus: '',
+    tnbStatus: ''
   });
 
   return (
