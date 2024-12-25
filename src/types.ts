@@ -63,7 +63,7 @@ export interface Property extends ParcelInput {
   ownerName: string;
   address: string;
   city: string;
-  zone: string;
+  zone: ZoneType;
   type: PropertyType;
   surface: number;
   taxStatus: TaxStatus;

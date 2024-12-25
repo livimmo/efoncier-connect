@@ -1,4 +1,4 @@
-import { Property, ParcelInput, FiscalStatus, TaxStatus } from '../../../types';
+import { Property, ParcelInput, FiscalStatus, TaxStatus, PropertyType, ZoneType } from '../../../types';
 import { generateTNBInfo } from './tnbGenerator';
 
 const getFiscalStatus = (taxStatus: TaxStatus): FiscalStatus => {

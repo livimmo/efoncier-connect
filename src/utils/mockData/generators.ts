@@ -7,9 +7,7 @@ export const baseRates: Record<PropertyType, number> = {
   'INDUSTRIAL': 1500,
   'AGRICULTURAL': 500,
   'MIXED': 1200,
-  'SEASIDE': 2500,
-  'HOUSE': 1800,
-  'APARTMENT': 1600
+  'SEASIDE': 2500
 };
 
 // Function to calculate property price based on type and area
@@ -26,9 +24,7 @@ export const getRandomPropertyType = (): PropertyType => {
     'INDUSTRIAL',
     'AGRICULTURAL',
     'MIXED',
-    'SEASIDE',
-    'HOUSE',
-    'APARTMENT'
+    'SEASIDE'
   ];
   const randomIndex = Math.floor(Math.random() * types.length);
   return types[randomIndex];
