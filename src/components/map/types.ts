@@ -1,7 +1,6 @@
 import { Parcel } from "@/utils/mockData/types";
 import { Property } from "@/types";
-
-export type UserRole = "admin" | "developer" | "owner" | "commune";
+import { UserRole } from "@/types/auth";
 
 export type MapSettings = {
   theme: "light" | "dark";
@@ -9,7 +8,7 @@ export type MapSettings = {
 };
 
 export interface MapContainerProps {
-  userRole?: UserRole;
+  userRole: UserRole;
   onParcelSelect?: (parcelId: string) => void;
 }
 
@@ -53,6 +52,10 @@ export interface MobileFiltersSheetProps {
   onOpenChange?: (open: boolean) => void;
 }
 
+export interface DraggableParcelInfoProps extends ParcelInfoProps {
+  markerPosition?: { x: number; y: number };
+}
+
 export interface MapMobileControlsProps {
   settings: MapSettings;
   onSettingChange: (setting: keyof MapSettings, value: string) => void;
@@ -60,10 +63,6 @@ export interface MapMobileControlsProps {
   onZoomIn?: () => void;
   onZoomOut?: () => void;
   onLocateMe?: () => void;
-}
-
-export interface DraggableParcelInfoProps extends ParcelInfoProps {
-  markerPosition?: { x: number; y: number };
 }
 
 export type ParcelToPropertyMapper = (parcel: Parcel) => Property;

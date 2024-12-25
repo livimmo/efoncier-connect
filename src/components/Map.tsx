@@ -23,7 +23,7 @@ const Map = () => {
       <Header />
       <div className="flex-1">
         <MapContainer 
-          userRole={profile?.role} 
+          userRole={profile?.role || 'developer'} 
           onParcelSelect={handleParcelSelect}
         />
       </div>

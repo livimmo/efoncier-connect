@@ -2,6 +2,7 @@ import { GoogleMap } from '@/components/map/GoogleMap';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Property } from '@/types';
+import { Parcel } from '@/utils/mockData/types';
 
 interface DeveloperFavoritesMapProps {
   favorites: Property[];
@@ -11,32 +12,38 @@ export const DeveloperFavoritesMap = ({ favorites }: DeveloperFavoritesMapProps)
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const { theme } = useTheme();
 
-  const handleMarkerClick = (property: Property, position: any) => {
-    console.log('Marker clicked:', property, position);
+  const handleMarkerClick = (parcel: Parcel, position: { x: number; y: number }) => {
+    console.log('Marker clicked:', parcel, position);
   };
+
+  const convertToParcel = (property: Property): Parcel => ({
+    id: property.id,
+    title: property.title,
+    titleDeedNumber: property.title,
+    address: property.description,
+    city: '',
+    surface: property.surface_area,
+    type: property.property_type as any,
+    zone: 'URBAN',
+    taxStatus: property.fiscal_status === "compliant" ? "PAID" : "UNPAID",
+    ownerName: '',
+    owner: property.owner_id,
+    location: property.location,
+    tnbInfo: {
+      pricePerMeter: property.price,
+      totalAmount: property.price,
+      lastUpdate: property.updated_at,
+      status: "LOW"
+    },
+    status: property.status as any,
+    fiscalStatus: property.fiscal_status === "compliant" ? "COMPLIANT" : "NON_COMPLIANT"
+  });
 
   return (
     <div className="h-[600px] relative rounded-lg overflow-hidden">
       <GoogleMap
         onMarkerClick={handleMarkerClick}
-        parcels={favorites.map(favorite => ({
-          id: favorite.id,
-          title: favorite.title,
-          location: favorite.location,
-          status: favorite.status.toUpperCase(),
-          taxStatus: favorite.fiscal_status === "compliant" ? "PAID" : "UNPAID",
-          type: favorite.property_type.toUpperCase(),
-          surface: favorite.surface_area,
-          price: favorite.price,
-          owner: favorite.owner_id,
-          address: favorite.description,
-          titleDeedNumber: favorite.title,
-          tnbInfo: {
-            pricePerMeter: favorite.price,
-            lastPaymentDate: new Date(),
-            status: "PAID"
-          }
-        }))}
+        parcels={favorites.map(convertToParcel)}
         theme={theme as 'light' | 'dark'}
         setMapInstance={setMapInstance}
       />
