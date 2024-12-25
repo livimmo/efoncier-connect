@@ -18,18 +18,10 @@ export const useLogin = () => {
     console.error("Login error:", error);
     let errorMessage = "Une erreur est survenue lors de la connexion.";
 
-    switch (error.message) {
-      case "Invalid login credentials":
-        errorMessage = "Email ou mot de passe incorrect.";
-        break;
-      case "Email not confirmed":
-        errorMessage = "Veuillez vérifier votre email pour confirmer votre compte.";
-        break;
-      case "Invalid email":
-        errorMessage = "L'adresse email n'est pas valide.";
-        break;
-      default:
-        errorMessage = "Une erreur est survenue lors de la connexion.";
+    if (error.message.includes("Invalid login credentials")) {
+      errorMessage = "Email ou mot de passe incorrect.";
+    } else if (error.message.includes("Email not confirmed")) {
+      errorMessage = "Veuillez vérifier votre email pour confirmer votre compte.";
     }
 
     toast({
@@ -39,13 +31,27 @@ export const useLogin = () => {
     });
   };
 
-  const login = async (credentials: LoginCredentials) => {
+  const login = async ({ email, password, role }: LoginCredentials) => {
+    if (!email || !password) {
+      toast({
+        variant: "destructive",
+        title: "Erreur de connexion",
+        description: "Veuillez remplir tous les champs.",
+      });
+      return false;
+    }
+
     try {
       setIsLoading(true);
 
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: credentials.email.trim(),
-        password: credentials.password,
+        email: email.trim(),
+        password,
+        options: {
+          data: {
+            role
+          }
+        }
       });
 
       if (error) {
