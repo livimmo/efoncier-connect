@@ -8,6 +8,16 @@ export interface User {
   last_name: string;
   phone?: string;
   city?: string;
+  // Champs propriétaire
+  cin?: string;
+  address?: string;
+  // Champs promoteur
+  companyName?: string;
+  ice?: string;
+  rc?: string;
+  companyAddress?: string;
+  // Champs commune
+  communeName?: string;
 }
 
 export interface RegisterFormData {
@@ -20,4 +30,14 @@ export interface RegisterFormData {
   city: string;
   role: UserRole;
   acceptTerms: boolean;
+  // Champs propriétaire
+  cin?: string;
+  address?: string;
+  // Champs promoteur
+  companyName?: string;
+  ice?: string;
+  rc?: string;
+  companyAddress?: string;
+  // Champs commune
+  communeName?: string;
 }

@@ -2,17 +2,19 @@ import { UseFormReturn } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, Lock, Smartphone, MapPin, User } from "lucide-react";
-import type { RegisterFormData } from "@/types/auth";
+import { Mail, Lock, Smartphone, MapPin, User, Building2, FileText, Landmark } from "lucide-react";
+import type { RegisterFormData, UserRole } from "@/types/auth";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface RegisterFormFieldsProps {
   form: UseFormReturn<RegisterFormData>;
+  selectedRole: UserRole;
 }
 
-export const RegisterFormFields = ({ form }: RegisterFormFieldsProps) => {
+export const RegisterFormFields = ({ form, selectedRole }: RegisterFormFieldsProps) => {
   return (
     <div className="space-y-4">
+      {/* Champs communs */}
       <div className="grid gap-4 md:grid-cols-2">
         <FormField
           control={form.control}
@@ -138,28 +140,141 @@ export const RegisterFormFields = ({ form }: RegisterFormFieldsProps) => {
         />
       </div>
 
-      <FormField
-        control={form.control}
-        name="role"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Type de compte</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez votre type de compte" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="taxpayer">Contribuable</SelectItem>
-                <SelectItem value="developer">Promoteur</SelectItem>
-                <SelectItem value="commune">Commune</SelectItem>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      {/* Champs spécifiques au propriétaire */}
+      {selectedRole === "owner" && (
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="cin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CIN</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="AB123456" {...field} />
+                    <FileText className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Adresse complète</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="123 Rue Example" {...field} />
+                    <MapPin className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
+
+      {/* Champs spécifiques au promoteur */}
+      {selectedRole === "developer" && (
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="companyName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom de la société</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="Société Example SARL" {...field} />
+                    <Building2 className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="ice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ICE</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input placeholder="000000000000000" {...field} />
+                      <FileText className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="rc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>RC</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input placeholder="123456" {...field} />
+                      <FileText className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormField
+            control={form.control}
+            name="companyAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Adresse du siège social</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="123 Zone Industrielle" {...field} />
+                    <MapPin className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
+
+      {/* Champs spécifiques à la commune */}
+      {selectedRole === "commune" && (
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="communeName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom de la commune</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input placeholder="Commune Example" {...field} />
+                    <Landmark className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
 
       <FormField
         control={form.control}
