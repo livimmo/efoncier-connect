@@ -8,4 +8,5 @@ export interface RegisterFormData {
   role: UserRole;
   firstName: string;
   lastName: string;
+  city: string;
 }

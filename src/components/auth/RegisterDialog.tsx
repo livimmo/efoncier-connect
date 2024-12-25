@@ -28,6 +28,7 @@ const formSchema = z.object({
   role: z.enum(["taxpayer", "developer", "commune"] as const),
   firstName: z.string().min(2, "Le prénom est requis"),
   lastName: z.string().min(2, "Le nom est requis"),
+  city: z.string().min(2, "La ville est requise"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"],
@@ -51,12 +52,14 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
       role: "taxpayer",
       firstName: "",
       lastName: "",
+      city: "",
     },
   });
 
   const onSubmit = async (values: RegisterFormData) => {
     const success = await register(values);
     if (success) {
+      form.reset();
       onOpenChange(false);
     }
   };
