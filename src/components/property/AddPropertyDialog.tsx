@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PROPERTY_TYPES, ZONE_TYPES } from "@/components/map/filters/constants";
 import { REGIONS } from "@/utils/mockData/locations";
 import { Upload, Save, Eye, RotateCcw, MapPin, X } from "lucide-react";
+import { AddressSearchField } from "./AddressSearchField";
 
 const propertyFormSchema = z.object({
   titleDeedNumber: z.string().min(1, "Le numéro de titre foncier est requis"),
@@ -20,6 +21,10 @@ const propertyFormSchema = z.object({
   region: z.string().min(1, "La région est requise"),
   commune: z.string().min(1, "La commune est requise"),
   address: z.string().min(1, "L'adresse est requise"),
+  location: z.object({
+    lat: z.number(),
+    lng: z.number()
+  }).optional(),
   surface: z.string().min(1, "La superficie est requise"),
   status: z.string().min(1, "Le statut est requis"),
   description: z.string().max(500, "La description ne doit pas dépasser 500 caractères"),
@@ -170,46 +175,9 @@ export function AddPropertyDialog({ open, onOpenChange }: AddPropertyDialogProps
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Adresse Précise</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <AddressSearchField form={form} />
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="type"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Type de Terrain</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez un type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(PROPERTY_TYPES).map(([key, value]) => (
-                            <SelectItem key={key} value={key}>
-                              {value}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <FormField
                   control={form.control}
                   name="surface"
