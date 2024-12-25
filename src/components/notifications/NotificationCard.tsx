@@ -8,7 +8,10 @@ import {
   Download,
   MessageSquare,
   Shield,
-  DollarSign
+  DollarSign,
+  Building,
+  FileBarChart,
+  Home
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +72,14 @@ export const NotificationCard = ({
         return <FileText className="h-5 w-5" />;
       case "urgent":
         return <AlertTriangle className="h-5 w-5" />;
+      case "property":
+        return <Building className="h-5 w-5" />;
+      case "report":
+        return <FileBarChart className="h-5 w-5" />;
+      case "property_update":
+        return <Home className="h-5 w-5" />;
+      case "new_property":
+        return <Building className="h-5 w-5" />;
       default:
         return <AlertTriangle className="h-5 w-5" />;
     }

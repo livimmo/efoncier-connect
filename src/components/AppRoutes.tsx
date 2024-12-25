@@ -7,6 +7,7 @@ import DeveloperDashboard from "@/pages/developer/Dashboard";
 import DeveloperProperties from "@/pages/developer/Properties";
 import DeveloperFavorites from "@/pages/developer/Favorites";
 import CommuneDashboard from "@/pages/commune/Dashboard";
+import CommuneNotifications from "@/pages/commune/Notifications";
 import OwnerDashboard from "@/pages/owner/Dashboard";
 import OwnerProperties from "@/pages/owner/Properties";
 import AdminDashboard from "@/pages/admin/Dashboard";
@@ -58,6 +59,14 @@ export const AppRoutes = () => {
         element={
           <PrivateRoute allowedRoles={["commune"] as UserRole[]}>
             <CommuneDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/commune/notifications"
+        element={
+          <PrivateRoute allowedRoles={["commune"] as UserRole[]}>
+            <CommuneNotifications />
           </PrivateRoute>
         }
       />

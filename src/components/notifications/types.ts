@@ -1,10 +1,14 @@
 export type NotificationType = 
   | "payment"        // Paiements TNB
   | "fiscal_status"  // Statut fiscal
-  | "message"        // Messages des promoteurs
+  | "message"        // Messages des promoteurs/propriétaires
   | "document"       // Documents disponibles
   | "system"         // Notifications système
-  | "urgent";        // Notifications urgentes
+  | "urgent"         // Notifications urgentes
+  | "property"       // Notifications liées aux biens
+  | "report"         // Rapports et statistiques
+  | "property_update" // Mises à jour des biens
+  | "new_property";   // Nouveaux biens disponibles
 
 export type NotificationPriority = "high" | "medium" | "low";
 
