@@ -36,6 +36,18 @@ export const MapLayout = ({
     propertyStatus: ''
   });
 
+  const handleRegionChange = (regionId: string) => {
+    console.log("Region changed:", regionId);
+  };
+
+  const handleCityChange = (cityName: string) => {
+    console.log("City changed:", cityName);
+  };
+
+  const handleDistrictChange = (districtName: string) => {
+    console.log("District changed:", districtName);
+  };
+
   return (
     <div className={cn("flex h-full", className)}>
       {showFilters && profile?.role && (
@@ -47,6 +59,10 @@ export const MapLayout = ({
               console.log("Filters applied:", filters);
             }}
             userRole={profile.role}
+            onRegionChange={handleRegionChange}
+            onCityChange={handleCityChange}
+            onDistrictChange={handleDistrictChange}
+            mapInstance={null}
           />
         </div>
       )}

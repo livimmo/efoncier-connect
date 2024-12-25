@@ -1,4 +1,13 @@
-import { Role } from "@/types";
+import { UserRole } from "@/types/auth";
+
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+  showLabels: boolean;
+  showBoundaries: boolean;
+  showTerrain: boolean;
+  show3D: boolean;
+}
 
 export interface MapFilters {
   region: string;
@@ -27,8 +36,14 @@ export interface MapFiltersProps {
   filters: MapFilters;
   setFilters: (filters: MapFilters) => void;
   onApplyFilters?: () => void;
-  userRole?: Role;
+  userRole?: UserRole;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
   mapInstance: google.maps.Map | null;
+}
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
 }
