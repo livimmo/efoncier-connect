@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogOverlay } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Property } from "@/types";
-import { convertFiscalStatus } from "@/utils/conversions";
+import { useState } from "react";
 
 interface PropertyDocumentsDialogProps {
   property: Property;
@@ -10,39 +9,27 @@ interface PropertyDocumentsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const PropertyDocumentsDialog = ({ property, open, onOpenChange }: PropertyDocumentsDialogProps) => {
-  const [loading, setLoading] = useState(false);
-
-  const handleDownload = async () => {
-    setLoading(true);
-    try {
-      // Logic to download property documents
-    } catch (error) {
-      console.error("Error downloading documents:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function PropertyDocumentsDialog({ property, open, onOpenChange }: PropertyDocumentsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogOverlay />
-      <DialogContent>
-        <DialogTitle>Documents pour {property.title}</DialogTitle>
-        <DialogDescription>
-          Statut fiscal: {convertFiscalStatus(property.fiscal_status)}
-        </DialogDescription>
-        <div className="mt-4">
-          <Button onClick={handleDownload} disabled={loading}>
-            {loading ? "Téléchargement..." : "Télécharger les documents"}
-          </Button>
+      <Dialog.Content>
+        <Dialog.Header>
+          <Dialog.Title>Documents du bien</Dialog.Title>
+          <Dialog.Description>
+            Liste des documents associés au bien
+          </Dialog.Description>
+        </Dialog.Header>
+
+        <div className="grid gap-4 py-4">
+          <p>Documents en cours de chargement...</p>
         </div>
-        <Button variant="outline" onClick={() => onOpenChange(false)} className="mt-4">
-          Fermer
-        </Button>
-      </DialogContent>
+
+        <Dialog.Footer>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Fermer
+          </Button>
+        </Dialog.Footer>
+      </Dialog.Content>
     </Dialog>
   );
-};
-
-export default PropertyDocumentsDialog;
+}

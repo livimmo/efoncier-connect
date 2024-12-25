@@ -29,7 +29,7 @@ export const DeveloperFavoritesMap = ({ favorites }: DeveloperFavoritesMapProps)
     ownerName: '',
     owner: property.owner_id,
     location: property.location,
-    tnbInfo: {
+    tnbInfo: property.tnbInfo || {
       pricePerMeter: property.price,
       totalAmount: property.price,
       lastUpdate: property.updated_at,
@@ -46,6 +46,7 @@ export const DeveloperFavoritesMap = ({ favorites }: DeveloperFavoritesMapProps)
         parcels={favorites.map(convertToParcel)}
         theme={theme as 'light' | 'dark'}
         setMapInstance={setMapInstance}
+        mapCenter={{ lat: 33.5731, lng: -7.5898, zoom: 10 }}
       />
     </div>
   );

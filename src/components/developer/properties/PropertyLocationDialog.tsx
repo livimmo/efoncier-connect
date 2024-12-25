@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { Property } from "@/types";
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Dialog } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Property } from "@/types";
+import { useState } from "react";
 
 interface PropertyLocationDialogProps {
   property: Property;
@@ -11,36 +10,29 @@ interface PropertyLocationDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const PropertyLocationDialog = ({ property, open, onOpenChange }: PropertyLocationDialogProps) => {
-  const [location, setLocation] = useState(property.location);
+export default function PropertyLocationDialog({ property, open, onOpenChange }: PropertyLocationDialogProps) {
   const [propertyType, setPropertyType] = useState(property.property_type);
   const [tnbStatus, setTnbStatus] = useState(property.tnbInfo?.status || "LOW");
 
-  const handleSave = () => {
-    // Save logic here
-    onOpenChange(false);
-  };
-
-  useEffect(() => {
-    setLocation(property.location);
-    setPropertyType(property.property_type);
-    setTnbStatus(property.tnbInfo?.status || "LOW");
-  }, [property]);
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogTitle>Modifier la localisation</DialogTitle>
-        <DialogDescription>
-          <div className="space-y-4">
-            <Input
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Localisation"
-            />
-            <Select value={propertyType} onValueChange={setPropertyType}>
+      <Dialog.Content>
+        <Dialog.Header>
+          <Dialog.Title>Localisation du bien</Dialog.Title>
+          <Dialog.Description>
+            Détails de localisation et informations sur le bien
+          </Dialog.Description>
+        </Dialog.Header>
+
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <label>Type de bien</label>
+            <Select 
+              value={propertyType} 
+              onValueChange={(value: string) => setPropertyType(value)}
+            >
               <SelectTrigger>
-                <SelectValue placeholder="Type de propriété" />
+                <SelectValue placeholder="Sélectionner un type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="RESIDENTIAL">Résidentiel</SelectItem>
@@ -51,9 +43,16 @@ const PropertyLocationDialog = ({ property, open, onOpenChange }: PropertyLocati
                 <SelectItem value="SEASIDE">Bord de mer</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={tnbStatus} onValueChange={setTnbStatus}>
+          </div>
+
+          <div className="grid gap-2">
+            <label>Statut TNB</label>
+            <Select 
+              value={tnbStatus} 
+              onValueChange={(value: string) => setTnbStatus(value as "PAID" | "LOW" | "AVERAGE" | "HIGH")}
+            >
               <SelectTrigger>
-                <SelectValue placeholder="Statut TNB" />
+                <SelectValue placeholder="Sélectionner un statut" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="PAID">Payé</SelectItem>
@@ -63,14 +62,14 @@ const PropertyLocationDialog = ({ property, open, onOpenChange }: PropertyLocati
               </SelectContent>
             </Select>
           </div>
-        </DialogDescription>
-        <DialogFooter>
-          <Button onClick={() => onOpenChange(false)} variant="outline">Annuler</Button>
-          <Button onClick={handleSave}>Enregistrer</Button>
-        </DialogFooter>
-      </DialogContent>
+        </div>
+
+        <Dialog.Footer>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Fermer
+          </Button>
+        </Dialog.Footer>
+      </Dialog.Content>
     </Dialog>
   );
-};
-
-export default PropertyLocationDialog;
+}

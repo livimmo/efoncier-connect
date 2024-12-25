@@ -32,7 +32,7 @@ export const DeveloperPropertiesMap = ({ properties }: DeveloperPropertiesMapPro
           ownerName: '',
           owner: property.owner_id,
           location: property.location,
-          tnbInfo: {
+          tnbInfo: property.tnbInfo || {
             pricePerMeter: property.price,
             totalAmount: property.price,
             lastUpdate: property.updated_at,
@@ -43,6 +43,7 @@ export const DeveloperPropertiesMap = ({ properties }: DeveloperPropertiesMapPro
         }))}
         theme={theme as 'light' | 'dark'}
         setMapInstance={setMapInstance}
+        mapCenter={{ lat: 33.5731, lng: -7.5898, zoom: 10 }}
       />
     </div>
   );
