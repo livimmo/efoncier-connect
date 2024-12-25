@@ -18,28 +18,28 @@ export const MobileFiltersSheet = ({
 }: MobileFiltersSheetProps) => {
   const { toast } = useToast();
 
+  const handleApplyFilters = () => {
+    toast({
+      title: "Filtres appliqués",
+      description: `${filteredParcelsCount} parcelles trouvées`,
+    });
+  };
+
   return (
-    <div className="absolute top-4 left-4 z-10">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="secondary" size="sm" className="shadow-lg">
-            <Filter className="h-4 w-4 mr-2" />
-            Filtres
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-[85vw] sm:w-[385px] p-4">
-          <MapFilters 
-            filters={filters}
-            setFilters={setFilters}
-            onApplyFilters={() => {
-              toast({
-                title: "Filtres appliqués",
-                description: `${filteredParcelsCount} parcelles trouvées`,
-              });
-            }}
-          />
-        </SheetContent>
-      </Sheet>
-    </div>
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="secondary" size="sm" className="shadow-lg">
+          <Filter className="h-4 w-4 mr-2" />
+          Filtres
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-[85vw] sm:w-[385px] p-4">
+        <MapFilters 
+          filters={filters}
+          setFilters={setFilters}
+          onApplyFilters={handleApplyFilters}
+        />
+      </SheetContent>
+    </Sheet>
   );
 };
