@@ -1,25 +1,28 @@
-import { PropertyType } from '../types';
+import { PropertyType, TNBInfo } from '../types';
 
-// TNB rates per square meter for different property types
-export const tnbRates: Record<PropertyType, number> = {
-  'RESIDENTIAL': 15,
-  'COMMERCIAL': 25,
-  'INDUSTRIAL': 20,
-  'AGRICULTURAL': 8,
-  'MIXED': 18,
-  'SEASIDE': 30,
-  'HOUSE': 20,
-  'APARTMENT': 18
+const BASE_PRICES: Record<PropertyType, number> = {
+  'RESIDENTIAL': 100,
+  'COMMERCIAL': 150,
+  'INDUSTRIAL': 200,
+  'AGRICULTURAL': 50,
+  'MIXED': 125,
+  'SEASIDE': 175
 };
 
-// Function to calculate TNB based on property type and surface area
-export const calculateTNB = (propertyType: PropertyType, surfaceArea: number): number => {
-  const rate = tnbRates[propertyType];
-  return rate * surfaceArea;
-};
+export const generateTNBInfo = (surface: number, type: PropertyType): TNBInfo => {
+  const basePrice = BASE_PRICES[type];
+  const pricePerMeter = basePrice * (1 + Math.random() * 0.2);
+  const totalAmount = surface * pricePerMeter;
+  
+  let status: 'LOW' | 'AVERAGE' | 'HIGH';
+  if (totalAmount < 10000) status = 'LOW';
+  else if (totalAmount < 50000) status = 'AVERAGE';
+  else status = 'HIGH';
 
-// Example usage
-const examplePropertyType: PropertyType = 'RESIDENTIAL';
-const exampleSurfaceArea = 100; // in square meters
-const tnbAmount = calculateTNB(examplePropertyType, exampleSurfaceArea);
-console.log(`The TNB for a ${examplePropertyType} property with a surface area of ${exampleSurfaceArea} m² is: ${tnbAmount}`);
+  return {
+    pricePerMeter,
+    totalAmount,
+    status,
+    lastUpdate: new Date().toISOString()
+  };
+};
