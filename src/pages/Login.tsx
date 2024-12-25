@@ -18,45 +18,51 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorCount, setErrorCount] = useState(0);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (errorCount >= 3) {
-      toast({
-        title: "Trop de tentatives",
-        description: "Veuillez réessayer dans quelques minutes",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsLoading(true);
 
     try {
+      // Tentative de connexion avec Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        setErrorCount(prev => prev + 1);
+        // Gestion spécifique des erreurs d'authentification
+        if (error.message.includes("Invalid login credentials")) {
+          throw new Error("Email ou mot de passe incorrect");
+        }
         throw error;
       }
 
       if (data.user) {
+        // Stockage des informations utilisateur
+        const user = {
+          id: data.user.id,
+          email: data.user.email,
+          role: "owner", // Par défaut, on met le rôle "owner"
+          first_name: data.user.user_metadata?.first_name || "Utilisateur",
+          last_name: data.user.user_metadata?.last_name || "",
+        };
+
+        localStorage.setItem("user", JSON.stringify(user));
+
         toast({
           title: "Connexion réussie",
           description: "Bienvenue sur eFoncier !",
         });
+
+        // Redirection vers le tableau de bord
         navigate("/dashboard");
       }
     } catch (error: any) {
       console.error("Login error:", error);
       toast({
         title: "Erreur de connexion",
-        description: "Identifiants incorrects. Veuillez réessayer.",
+        description: error.message || "Une erreur est survenue lors de la connexion",
         variant: "destructive",
       });
     } finally {
