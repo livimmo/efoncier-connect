@@ -12,6 +12,7 @@ import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
+import { MapHeader } from './map/MapHeader';
 
 const Map = () => {
   const { profile } = useAuth();
