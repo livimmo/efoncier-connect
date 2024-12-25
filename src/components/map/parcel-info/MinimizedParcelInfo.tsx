@@ -4,6 +4,10 @@ import { Card } from "@/components/ui/card";
 import { PropertyStatusIndicator } from "../filters/PropertyStatusIndicator";
 import { useNavigate } from "react-router-dom";
 import { Building2, MapPin, Scale, FileCheck } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
+import { ZONING_TYPES } from "../filters/constants";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -11,6 +15,8 @@ interface MinimizedParcelInfoProps {
 
 export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
   const navigate = useNavigate();
+  const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const maxPrice = 1000000; // Prix maximum en DH
 
   return (
     <Card className="p-4 space-y-4 bg-background/95 backdrop-blur-sm">
@@ -28,11 +34,37 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
             </div>
           </div>
 
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">Fourchette de prix (DH)</p>
+            <Slider
+              value={priceRange}
+              onValueChange={(value) => setPriceRange(value as [number, number])}
+              max={maxPrice}
+              step={50000}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>{priceRange[0].toLocaleString()} DH</span>
+              <span>{priceRange[1].toLocaleString()} DH</span>
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
             <Building2 className="w-4 h-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-medium">{parcel.zone}</p>
-              <p className="text-xs text-muted-foreground">Zonage</p>
+            <div className="w-full">
+              <Select value={parcel.zone} disabled>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Sélectionner un zonage" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(ZONING_TYPES).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">Zonage</p>
             </div>
           </div>
 
