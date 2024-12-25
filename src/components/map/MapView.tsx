@@ -3,6 +3,7 @@ import { DraggableParcelInfo } from './DraggableParcelInfo';
 import type { Parcel } from '@/utils/mockData/types';
 import type { MapSettings } from './types';
 import { useToast } from "@/hooks/use-toast";
+import { useCallback } from 'react';
 
 interface MapViewProps {
   selectedParcel: Parcel | null;
@@ -27,11 +28,19 @@ export const MapView = ({
 }: MapViewProps) => {
   const { toast } = useToast();
 
+  const handleMapClick = useCallback((e: google.maps.MapMouseEvent) => {
+    // Si le clic n'est pas sur un marqueur, fermer la fenêtre d'info
+    if (e.placeId === undefined) {
+      onParcelSelect(null);
+    }
+  }, [onParcelSelect]);
+
   return (
     <div className="relative flex-1 h-full">
       <div className="absolute inset-0">
         <GoogleMap 
           onMarkerClick={(parcel, position) => onParcelSelect(parcel, position)}
+          onMapClick={handleMapClick}
           parcels={filteredParcels}
           theme={settings.theme}
           setMapInstance={setMapInstance}

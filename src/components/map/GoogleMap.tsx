@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
 import type { Parcel } from '@/utils/mockData/types';
-import { UserRole } from '@/types/auth';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 
 interface GoogleMapProps {
   onMarkerClick: (parcel: Parcel, position: { x: number, y: number }) => void;
+  onMapClick: (e: google.maps.MapMouseEvent) => void;
   parcels: Parcel[];
   theme: 'light' | 'dark';
   setMapInstance: (map: google.maps.Map) => void;
@@ -16,6 +16,7 @@ interface GoogleMapProps {
 
 export const GoogleMap = ({ 
   onMarkerClick, 
+  onMapClick,
   parcels, 
   theme, 
   setMapInstance,
@@ -162,6 +163,11 @@ export const GoogleMap = ({
           gestureHandling: "greedy",
           minZoom: 5,
           maxZoom: 18,
+        });
+
+        // Ajouter l'écouteur de clic sur la carte
+        mapInstance.addListener('click', (e: google.maps.MapMouseEvent) => {
+          onMapClick(e);
         });
 
         setMap(mapInstance);
