@@ -5,17 +5,20 @@ import { useAuth } from './auth/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
 import { DeveloperPropertiesTable } from './developer/properties/DeveloperPropertiesTable';
 import { Button } from './ui/button';
-import { Map as MapIcon, List } from 'lucide-react';
+import { Map as MapIcon, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { MapFilters } from './map/MapFilters';
 import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 const Map = () => {
   const { profile } = useAuth();
   const { toast } = useToast();
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
     commune: '',
@@ -103,16 +106,39 @@ const Map = () => {
         
         <div className="flex-1 p-4">
           {viewMode === 'map' ? (
-            <div className="grid lg:grid-cols-[300px,1fr] gap-4 h-full">
-              <MapFilters 
-                onRegionChange={handleRegionChange}
-                onCityChange={handleCityChange}
-                onDistrictChange={handleDistrictChange}
-                filters={filters}
-                setFilters={setFilters}
-                onApplyFilters={handleApplyFilters}
-                userRole={profile?.role}
-              />
+            <div className="grid lg:grid-cols-[300px,1fr] gap-4 h-full relative">
+              {isMobile && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute top-2 left-2 z-10 bg-background/95 backdrop-blur-sm"
+                  onClick={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
+                >
+                  {isFiltersCollapsed ? (
+                    <ChevronRight className="h-4 w-4" />
+                  ) : (
+                    <ChevronLeft className="h-4 w-4" />
+                  )}
+                </Button>
+              )}
+              <div className={cn(
+                "absolute lg:relative z-[5] bg-background/95 backdrop-blur-sm lg:backdrop-blur-none transition-all duration-300 ease-in-out",
+                isMobile ? (
+                  isFiltersCollapsed 
+                    ? "-translate-x-full opacity-0" 
+                    : "translate-x-0 opacity-100"
+                ) : ""
+              )}>
+                <MapFilters 
+                  onRegionChange={handleRegionChange}
+                  onCityChange={handleCityChange}
+                  onDistrictChange={handleDistrictChange}
+                  filters={filters}
+                  setFilters={setFilters}
+                  onApplyFilters={handleApplyFilters}
+                  userRole={profile?.role}
+                />
+              </div>
               <div className="h-[600px] relative">
                 <MapContainer 
                   userRole={profile?.role} 
