@@ -86,6 +86,32 @@ export const GoogleMap = ({
     initMap();
   }, [center, zoom]);
 
+  const getMarkerColor = (parcel: Parcel, userRole?: UserRole) => {
+    if (userRole === 'commune' || userRole === 'owner') {
+      switch (parcel.taxStatus) {
+        case 'PAID':
+          return '#006233'; // Vert foncé
+        case 'PENDING':
+          return '#FFA500'; // Orange
+        case 'OVERDUE':
+          return '#C1272D'; // Rouge foncé
+        default:
+          return '#808080'; // Gris par défaut
+      }
+    } else {
+      switch (parcel.status) {
+        case 'AVAILABLE':
+          return '#006233'; // Vert foncé
+        case 'IN_TRANSACTION':
+          return '#FFA500'; // Orange
+        case 'SOLD':
+          return '#C1272D'; // Rouge foncé
+        default:
+          return '#808080'; // Gris par défaut
+      }
+    }
+  };
+
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
     markers.forEach(marker => marker.setMap(null));
     
@@ -144,30 +170,6 @@ export const GoogleMap = ({
     }
     
     return { x: 0, y: 0 };
-  };
-
-  const getMarkerColor = (parcel: Parcel, userRole?: UserRole) => {
-    if (userRole === 'commune' || userRole === 'owner') {
-      switch (parcel.taxStatus) {
-        case 'PAID':
-          return '#006233'; // Vert
-        case 'OVERDUE':
-          return '#C1272D'; // Rouge
-        default:
-          return '#FFA500'; // Orange pour "en attente"
-      }
-    } else {
-      switch (parcel.status) {
-        case 'AVAILABLE':
-          return '#006233'; // Vert
-        case 'IN_TRANSACTION':
-          return '#FFA500'; // Orange
-        case 'SOLD':
-          return '#C1272D'; // Rouge
-        default:
-          return '#808080'; // Gris pour autres statuts
-      }
-    }
   };
 
   return (
