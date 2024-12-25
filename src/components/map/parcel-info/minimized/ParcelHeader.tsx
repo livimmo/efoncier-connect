@@ -16,8 +16,8 @@ export const ParcelHeader = ({ parcel, userRole, onLoginClick }: ParcelHeaderPro
     <div className="flex justify-between items-start gap-4">
       <div className="flex-1 min-w-0">
         <div className="flex flex-col">
-          <div className="text-xs text-muted-foreground flex items-center gap-1">
-            <span>{parcel.surface} m² •</span>
+          <div className="text-xs text-muted-foreground flex flex-col">
+            <span>{parcel.surface} m²</span>
             <span>Zone {parcel.zone}</span>
           </div>
           <div className="text-sm font-medium text-green-600 mt-1">
