@@ -1,6 +1,28 @@
-import { PropertyType, ZoneType, TaxStatus, PropertyStatus, FiscalStatus, Location, TNBInfo } from '../../types';
+import { 
+  PropertyType, 
+  ZoneType, 
+  TaxStatus, 
+  PropertyStatus, 
+  FiscalStatus, 
+  Location, 
+  TNBInfo,
+  Parcel,
+  Property,
+  ParcelInput 
+} from '../../types';
 
-export type { PropertyType, ZoneType, TaxStatus, PropertyStatus, FiscalStatus, Location, TNBInfo };
+export type { 
+  PropertyType, 
+  ZoneType, 
+  TaxStatus, 
+  PropertyStatus, 
+  FiscalStatus, 
+  Location, 
+  TNBInfo,
+  Parcel,
+  Property,
+  ParcelInput 
+};
 
 export type TransactionType = "SALE" | "RENT" | "TAX_PAYMENT";
 

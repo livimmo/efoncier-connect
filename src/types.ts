@@ -26,36 +26,20 @@ export type FiscalStatus =
   | "non_compliant"
   | "under_review";
 
+export type ZoneType =
+  | "RESIDENTIAL"
+  | "COMMERCIAL"
+  | "INDUSTRIAL"
+  | "AGRICULTURAL"
+  | "MIXED_USE"
+  | "PROTECTED"
+  | "CONSTRUCTIBLE";
+
 export interface TNBInfo {
   pricePerMeter: number;
   totalAmount: number;
   lastUpdate: string;
   status: TaxStatus;
-}
-
-export interface Property {
-  id: string;
-  title: string;
-  description: string;
-  property_type: PropertyType;
-  surface_area: number;
-  location: Location;
-  fiscal_status: FiscalStatus;
-  status: PropertyStatus;
-  is_for_sale: boolean;
-  price: number;
-  owner_id: string;
-  created_at: string;
-  updated_at: string;
-  titleDeedNumber: string;
-  ownerName: string;
-  address: string;
-  city: string;
-  zone: string;
-  type: string;
-  surface: number;
-  taxStatus: TaxStatus;
-  tnbInfo: TNBInfo;
 }
 
 export interface ParcelInput {
@@ -74,8 +58,7 @@ export interface ParcelInput {
   updated_at: string;
 }
 
-export interface Parcel extends ParcelInput {
-  description?: string;
+export interface Property extends ParcelInput {
   titleDeedNumber: string;
   ownerName: string;
   address: string;
@@ -86,3 +69,10 @@ export interface Parcel extends ParcelInput {
   taxStatus: TaxStatus;
   tnbInfo: TNBInfo;
 }
+
+export interface Parcel extends Property {
+  description?: string;
+}
+
+// Export all types from this file
+export * from './types';
