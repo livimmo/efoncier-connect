@@ -35,10 +35,6 @@ const Notifications = () => {
         titleDeedNumber: "TF-12345",
         surface: 1200,
         price: 2500000,
-      },
-      location: {
-        city: "Casablanca",
-        district: "Ain Sebaa"
       }
     },
     {
@@ -58,6 +54,7 @@ const Notifications = () => {
       id: "3",
       type: "MESSAGE",
       priority: "LOW",
+      status: "UNREAD",
       title: "Nouveau message du propriétaire",
       message: "Le propriétaire du bien TF-11223 a répondu à votre demande d'information.",
       date: new Date(Date.now() - 172800000).toISOString(),
@@ -81,6 +78,7 @@ const Notifications = () => {
       id: "4",
       type: "DOCUMENT",
       priority: "MEDIUM",
+      status: "UNREAD",
       title: "Nouveau document disponible",
       message: "Un nouveau plan cadastral a été ajouté pour le bien TF-99876.",
       date: new Date(Date.now() - 259200000).toISOString(),
@@ -134,23 +132,6 @@ const Notifications = () => {
     });
   };
 
-  const filteredNotifications = notifications.filter(notification => {
-    if (activeFilters.type !== "all" && notification.type !== activeFilters.type) return false;
-    if (activeFilters.status === "unread" && notification.read) return false;
-    if (activeFilters.status === "read" && !notification.read) return false;
-    if (activeFilters.location !== "all" && notification.location?.city?.toLowerCase() !== activeFilters.location) return false;
-    if (activeFilters.search) {
-      const searchLower = activeFilters.search.toLowerCase();
-      return (
-        notification.title.toLowerCase().includes(searchLower) ||
-        notification.message.toLowerCase().includes(searchLower) ||
-        notification.metadata?.titleDeedNumber?.toLowerCase().includes(searchLower) ||
-        notification.location?.city?.toLowerCase().includes(searchLower)
-      );
-    }
-    return true;
-  });
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -174,19 +155,10 @@ const Notifications = () => {
             )}
             
             <ScrollArea className="h-[calc(100vh-300px)]">
-              <div className="space-y-4">
-                {filteredNotifications.map((notification) => (
-                  <NotificationCard 
-                    key={notification.id}
-                    {...notification}
-                  />
-                ))}
-                {filteredNotifications.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    Aucune notification ne correspond à vos critères.
-                  </div>
-                )}
-              </div>
+              <NotificationList 
+                notifications={notifications}
+                filters={activeFilters}
+              />
             </ScrollArea>
           </div>
         </div>

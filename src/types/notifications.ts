@@ -1,6 +1,6 @@
 export type NotificationType = 
-  | "PAYMENT_DUE" 
-  | "DOCUMENT_RECEIVED" 
+  | "PAYMENT" 
+  | "DOCUMENT" 
   | "MESSAGE" 
   | "STATUS_UPDATE" 
   | "PROPERTY_UPDATE" 
@@ -8,8 +8,7 @@ export type NotificationType =
   | "FISCAL_STATUS" 
   | "REPORT" 
   | "URGENT"
-  | "PAYMENT"
-  | "DOCUMENT";
+  | "PROPERTY";
 
 export type NotificationPriority = "HIGH" | "MEDIUM" | "LOW";
 export type NotificationStatus = "READ" | "UNREAD";
@@ -47,10 +46,6 @@ export interface Notification {
   date: string;
   read: boolean;
   metadata?: NotificationMetadata;
-  location?: {
-    city: string;
-    district?: string;
-  };
   actions?: {
     primary?: NotificationAction;
     secondary?: NotificationAction;
@@ -65,23 +60,4 @@ export interface NotificationFilter {
   date: Date | null;
   location: string;
   titleDeedNumber?: string;
-}
-
-export interface MapFilters {
-  region: string;
-  commune: string;
-  propertyType: string;
-  zoneType: string;
-  size: [number, number];
-  status: string;
-  ownerName: string;
-  titleDeedNumber: string;
-  lastPaymentDate: Date | null;
-  fiscalStatus: string;
-  maxPrice: number;
-  tnbReference: string;
-  searchQuery: string;
-  zoning: string;
-  paymentStatus: string;
-  tnbStatus: string;
 }
