@@ -1,40 +1,16 @@
 export type NotificationType = 
-  | "PAYMENT" 
-  | "DOCUMENT" 
+  | "PAYMENT_DUE" 
+  | "DOCUMENT_RECEIVED" 
   | "MESSAGE" 
   | "STATUS_UPDATE" 
   | "PROPERTY_UPDATE" 
   | "NEW_PROPERTY" 
   | "FISCAL_STATUS" 
   | "REPORT" 
-  | "URGENT"
-  | "PROPERTY";
+  | "URGENT";
 
 export type NotificationPriority = "HIGH" | "MEDIUM" | "LOW";
 export type NotificationStatus = "READ" | "UNREAD";
-
-export interface NotificationMetadata {
-  propertyId?: string;
-  documentId?: string;
-  paymentId?: string;
-  amount?: number;
-  dueDate?: string;
-  location?: {
-    city?: string;
-    district?: string;
-  };
-  titleDeedNumber?: string;
-  documentType?: string;
-  documentUrl?: string;
-  surface?: number;
-  price?: number;
-}
-
-export interface NotificationAction {
-  label: string;
-  icon?: React.ReactNode;
-  action: () => void;
-}
 
 export interface Notification {
   id: string;
@@ -45,10 +21,28 @@ export interface Notification {
   message: string;
   date: string;
   read: boolean;
-  metadata?: NotificationMetadata;
+  metadata?: {
+    propertyId?: string;
+    documentId?: string;
+    paymentId?: string;
+    amount?: number;
+    dueDate?: string;
+    location?: string;
+    titleDeedNumber?: string;
+    documentType?: string;
+    documentUrl?: string;
+  };
   actions?: {
-    primary?: NotificationAction;
-    secondary?: NotificationAction;
+    primary?: {
+      label: string;
+      icon?: React.ReactNode;
+      action: () => void;
+    };
+    secondary?: {
+      label: string;
+      icon?: React.ReactNode;
+      action: () => void;
+    };
   };
 }
 
@@ -60,4 +54,23 @@ export interface NotificationFilter {
   date: Date | null;
   location: string;
   titleDeedNumber?: string;
+}
+
+export interface MapFilters {
+  region: string;
+  commune: string;
+  propertyType: string;
+  zoneType: string;
+  size: [number, number];
+  status: string;
+  ownerName: string;
+  titleDeedNumber: string;
+  lastPaymentDate: Date | null;
+  fiscalStatus: string;
+  maxPrice: number;
+  tnbReference: string;
+  searchQuery: string;
+  zoning: string;
+  paymentStatus: string;
+  tnbStatus: string;
 }

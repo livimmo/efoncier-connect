@@ -8,7 +8,6 @@ const Notifications = () => {
   const [filters, setFilters] = useState<NotificationFilter>({
     type: "all",
     status: "all",
-    priority: "all",
     date: null,
     location: "all",
     search: "",
