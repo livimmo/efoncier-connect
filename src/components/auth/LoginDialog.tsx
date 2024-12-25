@@ -47,6 +47,11 @@ export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
     setSelectedRole(role);
   };
 
+  const handleWhatsAppLogin = () => {
+    // Implémentation à venir
+    console.log("WhatsApp login clicked");
+  };
+
   const verifyOTP = () => {
     if (otp.length === 6) {
       setTimeout(() => {
@@ -87,7 +92,10 @@ export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
               />
             </TabsContent>
             <TabsContent value="social">
-              <SocialLoginButtons />
+              <SocialLoginButtons 
+                isLoading={isLoading}
+                onWhatsAppLogin={handleWhatsAppLogin}
+              />
             </TabsContent>
           </Tabs>
         )}
