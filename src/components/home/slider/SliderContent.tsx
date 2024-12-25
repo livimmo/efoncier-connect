@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface Slide {
   type: "ad" | "news" | "flash" | "event";
@@ -18,6 +19,12 @@ interface SliderContentProps {
 }
 
 export const SliderContent = ({ slides, currentSlide, isMobile }: SliderContentProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = (link: string) => {
+    navigate(link);
+  };
+
   return (
     <>
       {slides.map((slide, index) => (
@@ -52,11 +59,12 @@ export const SliderContent = ({ slides, currentSlide, isMobile }: SliderContentP
             </h2>
             
             <Button
-              asChild
+              variant="default"
               size={isMobile ? "default" : "lg"}
-              className="animate-fade-in"
+              className="animate-fade-in hover:scale-105 transition-transform"
+              onClick={() => handleClick(slide.cta.link)}
             >
-              <a href={slide.cta.link}>{slide.cta.text}</a>
+              {slide.cta.text}
             </Button>
           </div>
         </div>
