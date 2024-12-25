@@ -30,13 +30,13 @@ export const GoogleMap = ({
   getMarkerColor = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return '#10B981'; // Green for available
+        return '#10B981'; // Vert pour disponible
       case 'IN_TRANSACTION':
-        return '#F97316'; // Orange for in transaction
+        return '#F97316'; // Orange pour en transaction
       case 'SOLD':
-        return '#8B5CF6'; // Purple for sold
+        return '#EF4444'; // Rouge pour vendu
       default:
-        return '#6B7280'; // Gray for unknown status
+        return '#6B7280'; // Gris par défaut
     }
   }
 }: GoogleMapProps) => {
@@ -100,6 +100,7 @@ export const GoogleMap = ({
   }, [center, zoom, parcels]);
 
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
+    // Supprimer les marqueurs existants
     markers.forEach(marker => marker.setMap(null));
     
     const newMarkers = parcels.map(parcel => {
@@ -118,7 +119,7 @@ export const GoogleMap = ({
         },
       });
 
-      // Add hover effect
+      // Effet de survol
       marker.addListener('mouseover', () => {
         marker.setIcon({
           ...marker.getIcon() as google.maps.Symbol,
