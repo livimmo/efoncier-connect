@@ -2,16 +2,17 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { NotificationFilters } from "@/components/notifications/NotificationFilters";
 import { NotificationHeader } from "@/components/notifications/NotificationHeader";
-import { NotificationCard } from "@/components/notifications/NotificationCard";
+import { NotificationList } from "@/components/notifications/NotificationList";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Notification, NotificationFilter } from "@/types/notifications";
+import type { NotificationFilter, Notification } from "@/types/notifications";
 
 const Notifications = () => {
   const [activeFilters, setActiveFilters] = useState<NotificationFilter>({
     type: "all",
     status: "all",
+    priority: "all",
     date: null,
     location: "all",
     search: "",
@@ -20,12 +21,12 @@ const Notifications = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  // Mock notifications - à remplacer par des données réelles
   const notifications: Notification[] = [
     {
       id: "1",
-      type: "new_property",
-      priority: "high",
+      type: "NEW_PROPERTY",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Nouveau bien disponible à Ain Sebaa",
       message: "Un nouveau bien est disponible dans le quartier Ain Sebaa, Casablanca (TF-12345).",
       date: new Date().toISOString(),
@@ -38,44 +39,25 @@ const Notifications = () => {
       location: {
         city: "Casablanca",
         district: "Ain Sebaa"
-      },
-      actions: {
-        primary: {
-          label: "Voir les détails",
-          action: () => {
-            toast({
-              title: "Redirection",
-              description: "Redirection vers la page du bien...",
-            });
-          },
-        },
-        secondary: {
-          label: "Voir sur la carte",
-          action: () => {
-            toast({
-              title: "Carte",
-              description: "Ouverture de la carte...",
-            });
-          },
-        },
-      },
+      }
     },
     {
       id: "2",
-      type: "property_update",
-      priority: "medium",
+      type: "PROPERTY_UPDATE",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour de statut",
       message: "Le prix du bien TF-56789 a été ajusté à la baisse.",
       date: new Date(Date.now() - 86400000).toISOString(),
       read: true,
       metadata: {
         titleDeedNumber: "TF-56789",
-      },
+      }
     },
     {
       id: "3",
-      type: "message",
-      priority: "low",
+      type: "MESSAGE",
+      priority: "LOW",
       title: "Nouveau message du propriétaire",
       message: "Le propriétaire du bien TF-11223 a répondu à votre demande d'information.",
       date: new Date(Date.now() - 172800000).toISOString(),
@@ -97,8 +79,8 @@ const Notifications = () => {
     },
     {
       id: "4",
-      type: "document",
-      priority: "medium",
+      type: "DOCUMENT",
+      priority: "MEDIUM",
       title: "Nouveau document disponible",
       message: "Un nouveau plan cadastral a été ajouté pour le bien TF-99876.",
       date: new Date(Date.now() - 259200000).toISOString(),

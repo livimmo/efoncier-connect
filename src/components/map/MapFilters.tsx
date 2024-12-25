@@ -40,7 +40,8 @@ export const MapFilters = ({
         tnbReference: '',
         searchQuery: '',
         zoning: '',
-        paymentStatus: ''
+        paymentStatus: '',
+        tnbStatus: ''
       });
     }
     onApplyFilters?.();
