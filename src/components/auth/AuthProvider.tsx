@@ -2,11 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
+export type UserRole = "taxpayer" | "developer" | "commune" | "admin";
+
 interface User {
   email: string;
-  role: string;
+  role: UserRole;
   first_name: string;
   last_name: string;
+  id?: string;
 }
 
 interface AuthContextType {
@@ -30,16 +33,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Vérifier le localStorage pour les données utilisateur
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      // S'assurer que l'utilisateur a toutes les propriétés nécessaires
       if (!parsedUser.first_name) {
         parsedUser.first_name = parsedUser.firstName || 'Utilisateur';
       }
       if (!parsedUser.last_name) {
         parsedUser.last_name = parsedUser.lastName || '';
+      }
+      if (!parsedUser.id) {
+        parsedUser.id = crypto.randomUUID();
       }
       setUser(parsedUser);
     }

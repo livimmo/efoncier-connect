@@ -1,29 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "./use-toast";
+import { UserRole } from "@/components/auth/AuthProvider";
+
+interface LoginCredentials {
+  email: string;
+  password: string;
+  role: UserRole;
+}
 
 export const useLogin = () => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const login = async (email: string, password: string, role: string) => {
-    setLoading(true);
+  const login = async (credentials: LoginCredentials): Promise<boolean> => {
+    setIsLoading(true);
     try {
-      // Simuler une vérification des identifiants
-      if (password !== "password123") {
+      if (credentials.password !== "password123") {
         throw new Error("Identifiants invalides");
       }
 
-      // Créer un utilisateur simulé
       const user = {
-        email,
-        role,
+        email: credentials.email,
+        role: credentials.role,
         first_name: "Test",
         last_name: "User",
+        id: crypto.randomUUID(),
       };
 
-      // Stocker l'utilisateur dans le localStorage
       localStorage.setItem("user", JSON.stringify(user));
 
       toast({
@@ -31,14 +36,15 @@ export const useLogin = () => {
         description: "Bienvenue sur votre espace personnel",
       });
 
-      // Rediriger vers le tableau de bord approprié
-      if (role === "developer") {
+      if (credentials.role === "developer") {
         navigate("/developer/dashboard");
-      } else if (role === "admin") {
+      } else if (credentials.role === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/dashboard");
       }
+
+      return true;
     } catch (error: any) {
       console.error("Login error:", error);
       toast({
@@ -46,10 +52,11 @@ export const useLogin = () => {
         description: error.message || "Une erreur est survenue",
         variant: "destructive",
       });
+      return false;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  return { login, loading };
+  return { login, isLoading };
 };

@@ -13,6 +13,7 @@ import { OTPInput } from "./OTPInput";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { useLogin } from "@/hooks/useLogin";
+import { UserRole } from "./AuthProvider";
 
 interface LoginDialogProps {
   open: boolean;
@@ -24,7 +25,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const { login, isLoading } = useLogin();
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOTP] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("taxpayer");
 
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,7 +54,6 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
 
   const verifyOTP = () => {
     if (otp.length === 6) {
-      // Simulate OTP verification
       setTimeout(() => {
         onOpenChange(false);
         navigate("/dashboard");
