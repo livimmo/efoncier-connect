@@ -26,6 +26,7 @@ export const PropertyDetailsDialog = ({
     { label: "Superficie", value: `${property.surface_area.toLocaleString()} m²` },
     { label: "Type de bien", value: property.property_type },
     { label: "Prix au m²", value: `${formatCurrency(property.price)} DHS` },
+    { label: "Zoning", value: property.zoning || "Non défini" },
   ];
 
   return (
