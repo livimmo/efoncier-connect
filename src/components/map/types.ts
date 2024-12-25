@@ -20,14 +20,14 @@ export interface MapFilters {
 
 export interface MapFiltersProps {
   filters: MapFilters;
-  setFilters: Dispatch<SetStateAction<MapFilters>>;
+  setFilters: (filters: MapFilters) => void;
   onApplyFilters: () => void;
   userRole?: UserRole;
 }
 
 export interface MobileFiltersSheetProps {
   filters: MapFilters;
-  setFilters: Dispatch<SetStateAction<MapFilters>>;
+  setFilters: (filters: MapFilters) => void;
   filteredParcelsCount: number;
   userRole?: UserRole;
 }
