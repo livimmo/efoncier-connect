@@ -4,12 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NotificationList } from "@/components/notifications/NotificationList";
 import type { Notification } from "@/components/notifications/types";
+import { useToast } from "@/hooks/use-toast";
 
 const Notifications = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "unread" | "important">("all");
+  const { toast } = useToast();
 
-  // Mock notifications data
+  // Données de démonstration pour les notifications
   const notifications: Notification[] = [
     {
       id: "1",
@@ -17,12 +19,17 @@ const Notifications = () => {
       priority: "high",
       title: "Paiement en attente",
       message: "Vous avez une taxe foncière en attente de paiement pour la parcelle #12345",
-      date: "2024-02-20",
+      date: new Date().toISOString(),
       read: false,
       actions: {
         primary: {
           label: "Payer maintenant",
-          action: () => console.log("Redirect to payment"),
+          action: () => {
+            toast({
+              title: "Redirection",
+              description: "Redirection vers la page de paiement...",
+            });
+          },
         },
       },
     },
@@ -32,7 +39,7 @@ const Notifications = () => {
       priority: "medium",
       title: "Mise à jour de statut",
       message: "Le statut de votre parcelle à Ain Sebaa a été mis à jour",
-      date: "2024-02-19",
+      date: new Date(Date.now() - 86400000).toISOString(), // Hier
       read: true,
     },
     {
@@ -41,12 +48,17 @@ const Notifications = () => {
       priority: "low",
       title: "Nouveau message",
       message: "Vous avez reçu un nouveau message concernant votre demande d'information",
-      date: "2024-02-18",
+      date: new Date(Date.now() - 172800000).toISOString(), // Avant-hier
       read: false,
       actions: {
         primary: {
           label: "Lire le message",
-          action: () => console.log("Open message"),
+          action: () => {
+            toast({
+              title: "Message",
+              description: "Ouverture du message...",
+            });
+          },
         },
       },
     },
@@ -69,9 +81,11 @@ const Notifications = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto px-4 py-6 mt-16 md:mt-20">
+      <main className="container mx-auto px-4 py-6">
         <div className="max-w-3xl mx-auto">
-          {/* Search Input */}
+          <h1 className="text-2xl font-bold mb-6">Notifications</h1>
+          
+          {/* Barre de recherche */}
           <div className="mb-6">
             <Input
               placeholder="Rechercher dans les notifications..."
@@ -81,9 +95,9 @@ const Notifications = () => {
             />
           </div>
 
-          {/* Tabs */}
+          {/* Onglets */}
           <Tabs defaultValue="all" className="w-full" onValueChange={(value) => setActiveFilter(value as typeof activeFilter)}>
-            <TabsList className="w-full justify-start mb-6 overflow-x-auto">
+            <TabsList className="w-full justify-start mb-6">
               <TabsTrigger value="all">Toutes</TabsTrigger>
               <TabsTrigger value="unread">Non lues</TabsTrigger>
               <TabsTrigger value="important">Importantes</TabsTrigger>

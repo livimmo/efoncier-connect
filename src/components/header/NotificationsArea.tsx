@@ -2,15 +2,9 @@ import { Bell, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock data for demonstration
+// Mock data pour la démonstration
 const mockMessages = [
   {
     id: "1",
@@ -32,20 +26,20 @@ export const NotificationsArea = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleMessageClick = (messageId: string) => {
-    navigate(`/messages?message=${messageId}`);
+  const handleMessageClick = () => {
+    navigate("/messages");
     toast({
-      title: "Redirection vers le message",
-      description: "Chargement de la conversation...",
+      title: "Messages",
+      description: "Redirection vers vos messages...",
     });
   };
 
   const handleNotificationsClick = () => {
     navigate("/notifications");
-  };
-
-  const handleMessagesClick = () => {
-    navigate("/messages");
+    toast({
+      title: "Notifications",
+      description: "Redirection vers vos notifications...",
+    });
   };
 
   return (
@@ -54,7 +48,7 @@ export const NotificationsArea = () => {
         variant="ghost"
         size="icon"
         className="relative"
-        onClick={handleMessagesClick}
+        onClick={handleMessageClick}
       >
         <MessageSquare className="h-5 w-5" />
         <Badge 
