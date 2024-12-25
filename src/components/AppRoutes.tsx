@@ -16,6 +16,7 @@ import OwnerProperties from "@/pages/owner/Properties";
 import DeveloperDashboard from "@/pages/developer/Dashboard";
 import DeveloperProperties from "@/pages/developer/Properties";
 import { PrivateRoute } from "@/components/auth/PrivateRoute";
+import { AddPropertyForm } from "@/components/property/AddPropertyForm";
 
 export const AppRoutes = () => {
   return (
@@ -41,6 +42,9 @@ export const AppRoutes = () => {
         <Route path="profile" element={<PrivateRoute><OwnerProfile /></PrivateRoute>} />
         <Route path="properties" element={<PrivateRoute><OwnerProperties /></PrivateRoute>} />
       </Route>
+
+      {/* Route pour ajouter un bien */}
+      <Route path="/property/add" element={<PrivateRoute><AddPropertyForm /></PrivateRoute>} />
 
       {/* Routes spécifiques aux promoteurs */}
       <Route path="/developer">
