@@ -7,7 +7,9 @@ export type NotificationType =
   | "NEW_PROPERTY" 
   | "FISCAL_STATUS" 
   | "REPORT" 
-  | "URGENT";
+  | "URGENT"
+  | "PAYMENT"
+  | "DOCUMENT";
 
 export type NotificationPriority = "HIGH" | "MEDIUM" | "LOW";
 export type NotificationStatus = "READ" | "UNREAD";
@@ -18,7 +20,10 @@ export interface NotificationMetadata {
   paymentId?: string;
   amount?: number;
   dueDate?: string;
-  location?: string;
+  location?: {
+    city?: string;
+    district?: string;
+  };
   titleDeedNumber?: string;
   documentType?: string;
   documentUrl?: string;
@@ -42,6 +47,10 @@ export interface Notification {
   date: string;
   read: boolean;
   metadata?: NotificationMetadata;
+  location?: {
+    city: string;
+    district?: string;
+  };
   actions?: {
     primary?: NotificationAction;
     secondary?: NotificationAction;

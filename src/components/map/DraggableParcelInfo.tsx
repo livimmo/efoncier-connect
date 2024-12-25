@@ -1,94 +1,68 @@
-import { useState, useEffect } from "react";
-import { MinimizedParcelInfo } from "./parcel-info/MinimizedParcelInfo";
-import { ParcelInfo } from "./ParcelInfo";
-import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Parcel } from "@/utils/mockData/types";
+import { useState } from 'react';
+import { ParcelInfo } from './ParcelInfo';
+import type { Parcel } from '@/utils/mockData/types';
+import { UserRole } from '@/types/auth';
 
-interface DraggableParcelInfoProps {
+export interface DraggableParcelInfoProps {
   parcel: Parcel;
-  onClose?: () => void;
+  onClose: () => void;
+  markerPosition?: { x: number; y: number };
   className?: string;
+  userRole?: UserRole;
+  onMinimize?: () => void;
 }
 
-export const DraggableParcelInfo = ({ 
+export const DraggableParcelInfo = ({
   parcel,
   onClose,
-  className 
+  markerPosition,
+  className,
+  userRole,
+  onMinimize
 }: DraggableParcelInfoProps) => {
+  const [position, setPosition] = useState(markerPosition || { x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [position, setPosition] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const isMobile = useIsMobile();
 
-  useEffect(() => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    const startX = e.pageX - position.x;
+    const startY = e.pageY - position.y;
+
     const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        const deltaX = e.clientX - dragStart.x;
-        const deltaY = e.clientY - dragStart.y;
-        setPosition(prev => ({
-          x: prev.x + deltaX,
-          y: prev.y + deltaY
-        }));
-        setDragStart({ x: e.clientX, y: e.clientY });
-      }
+      setPosition({
+        x: e.pageX - startX,
+        y: e.pageY - startY
+      });
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
-    };
-
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, dragStart]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!isMobile) {
-      setIsDragging(true);
-      setDragStart({ x: e.clientX, y: e.clientY });
-    }
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   return (
     <div
+      style={{
+        position: 'absolute',
+        left: position.x,
+        top: position.y,
+        cursor: isDragging ? 'grabbing' : 'grab',
+        zIndex: isDragging ? 1000 : 100
+      }}
       onMouseDown={handleMouseDown}
-      className={cn(
-        "fixed transition-all duration-300 ease-out",
-        isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
-        "hover:shadow-lg will-change-transform",
-        isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-24" : "w-[400px]",
-        !isMobile && "absolute",
-        isMinimized ? "z-[40]" : "z-[100]",
-        className
-      )}
-      style={!isMobile ? {
-        left: `${position.x}px`,
-        top: isMinimized ? `${position.y + 60}px` : `${position.y}px`,
-        transform: isMinimized 
-          ? 'translate(-50%, -50%)'
-          : 'translate(-50%, -50%)',
-      } : undefined}
+      className={className}
     >
-      {isMinimized ? (
-        <MinimizedParcelInfo 
-          parcel={parcel}
-          onClose={onClose}
-        />
-      ) : (
-        <ParcelInfo 
-          parcel={parcel}
-          onClose={onClose}
-          onMinimize={() => setIsMinimized(true)}
-        />
-      )}
+      <ParcelInfo 
+        parcel={parcel} 
+        onClose={onClose} 
+        onMinimize={onMinimize}
+        userRole={userRole}
+      />
     </div>
   );
 };
