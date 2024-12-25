@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import PrivateRoute from "./auth/PrivateRoute";
+import { PrivateRoute } from "./auth/PrivateRoute";
 import Home from "@/pages/Home";
 import Map from "@/components/Map";
 import DeveloperDashboard from "@/pages/developer/Dashboard";
@@ -19,7 +19,7 @@ import Support from "@/pages/Support";
 import Payment from "@/pages/Payment";
 import History from "@/pages/History";
 
-const AppRoutes = () => {
+export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />

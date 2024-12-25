@@ -1,5 +1,5 @@
 import { UserRole } from "@/types/auth";
-import { PropertyType, ZoneType, Status, FiscalStatus } from "@/utils/mockData/types";
+import { PropertyType, ZoneType } from "@/utils/mockData/types";
 
 export interface MapFilters {
   region: string;
@@ -7,12 +7,17 @@ export interface MapFilters {
   propertyType: PropertyType | "";
   zoneType: ZoneType | "";
   size: [number, number];
-  status: Status | "";
+  status: string;
   ownerName: string;
   titleDeedNumber: string;
   lastPaymentDate: string | null;
-  fiscalStatus: FiscalStatus | "";
+  fiscalStatus: string;
   maxPrice: number;
+}
+
+export interface MapSettings {
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
 }
 
 export interface MapMobileControlsProps {

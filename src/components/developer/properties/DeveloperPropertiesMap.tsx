@@ -2,8 +2,13 @@ import { GoogleMap } from '@/components/map/GoogleMap';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
+import type { Parcel } from '@/utils/mockData/types';
 
-export const DeveloperPropertiesMap = () => {
+interface DeveloperPropertiesMapProps {
+  parcels?: Parcel[];
+}
+
+export const DeveloperPropertiesMap = ({ parcels = mockParcels }: DeveloperPropertiesMapProps) => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const { theme } = useTheme();
 
@@ -15,7 +20,7 @@ export const DeveloperPropertiesMap = () => {
     <div className="h-full relative">
       <GoogleMap
         onMarkerClick={handleMarkerClick}
-        parcels={mockParcels}
+        parcels={parcels}
         theme={theme as 'light' | 'dark'}
         setMapInstance={setMapInstance}
       />
