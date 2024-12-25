@@ -6,12 +6,32 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PaymentDialog } from "../map/parcel-info/dialogs/PaymentDialog";
 import { MessagesContainer } from "../messages/MessagesContainer";
+import { useToast } from "@/hooks/use-toast";
 
 export const QuickActions = () => {
   const navigate = useNavigate();
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [messagesOpen, setMessagesOpen] = useState(false);
   const [reportsOpen, setReportsOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleReportAction = (type: string, action: 'download' | 'print') => {
+    setReportsOpen(false);
+
+    if (action === 'download') {
+      // Simuler le téléchargement
+      toast({
+        title: "Téléchargement du rapport",
+        description: `Le rapport ${type} a été téléchargé au format PDF.`
+      });
+    } else {
+      // Ouvrir la fenêtre d'impression
+      window.print();
+    }
+
+    // Naviguer vers la page des rapports après l'action
+    navigate(`/dashboard?tab=reports&type=${type}`);
+  };
 
   return (
     <>
@@ -42,39 +62,62 @@ export const QuickActions = () => {
             <div className="space-y-4">
               <h4 className="font-medium">Rapports Disponibles</h4>
               <div className="grid grid-cols-1 gap-3">
-                <Button 
-                  variant="outline" 
-                  className="justify-start"
-                  onClick={() => {
-                    setReportsOpen(false);
-                    navigate("/dashboard?tab=reports&type=payment");
-                  }}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Rapport des Paiements
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="justify-start"
-                  onClick={() => {
-                    setReportsOpen(false);
-                    navigate("/dashboard?tab=reports&type=property");
-                  }}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Rapport des Biens
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="justify-start"
-                  onClick={() => {
-                    setReportsOpen(false);
-                    navigate("/dashboard?tab=reports&type=activity");
-                  }}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Rapport d'Activité
-                </Button>
+                <div className="space-y-2">
+                  <Button 
+                    variant="outline" 
+                    className="justify-start w-full"
+                    onClick={() => handleReportAction('payment', 'download')}
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Rapport des Paiements
+                  </Button>
+                  <div className="flex gap-2 pl-6">
+                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('payment', 'download')}>
+                      Télécharger PDF
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('payment', 'print')}>
+                      Imprimer
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Button 
+                    variant="outline"
+                    className="justify-start w-full"
+                    onClick={() => handleReportAction('property', 'download')}
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Rapport des Biens
+                  </Button>
+                  <div className="flex gap-2 pl-6">
+                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('property', 'download')}>
+                      Télécharger PDF
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('property', 'print')}>
+                      Imprimer
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Button 
+                    variant="outline"
+                    className="justify-start w-full"
+                    onClick={() => handleReportAction('activity', 'download')}
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Rapport d'Activité
+                  </Button>
+                  <div className="flex gap-2 pl-6">
+                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('activity', 'download')}>
+                      Télécharger PDF
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => handleReportAction('activity', 'print')}>
+                      Imprimer
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
