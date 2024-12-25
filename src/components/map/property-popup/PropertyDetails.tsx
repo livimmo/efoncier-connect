@@ -2,14 +2,24 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Parcel } from "@/utils/mockData/types";
 import { formatCurrency } from "@/utils/format";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface PropertyDetailsProps {
   parcel: Parcel;
 }
 
 export function PropertyDetails({ parcel }: PropertyDetailsProps) {
+  const { profile } = useAuth();
+
+  const formatTitleDeedNumber = (number: string) => {
+    if (!profile) {
+      return number.replace(/./g, '•');
+    }
+    return number;
+  };
+
   const details = [
-    { label: "Numéro TF", value: parcel.titleDeedNumber },
+    { label: "Numéro TF", value: formatTitleDeedNumber(parcel.titleDeedNumber) },
     { label: "Localisation", value: `${parcel.city}, ${parcel.address}` },
     { label: "Superficie", value: `${parcel.surface.toLocaleString()} m²` },
     { label: "Zone", value: parcel.zone },
@@ -34,15 +44,15 @@ export function PropertyDetails({ parcel }: PropertyDetailsProps) {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Nom</p>
-            <p className="font-medium">{parcel.ownerName}</p>
+            <p className="font-medium">{profile ? parcel.ownerName : '••••••'}</p>
           </div>
-          {parcel.phone && (
+          {profile && parcel.phone && (
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Téléphone</p>
               <p className="font-medium">{parcel.phone}</p>
             </div>
           )}
-          {parcel.email && (
+          {profile && parcel.email && (
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Email</p>
               <p className="font-medium">{parcel.email}</p>

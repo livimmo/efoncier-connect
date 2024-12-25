@@ -6,6 +6,7 @@ import { PropertyPopup } from "../property-popup/PropertyPopup";
 import { PaymentDialog } from "./dialogs/PaymentDialog";
 import { ReceiptDialog } from "./dialogs/ReceiptDialog";
 import { ParcelStatusInfo } from "./ParcelStatusInfo";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -16,6 +17,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const { profile } = useAuth();
 
   const getPaymentStatusInfo = (status: string) => {
     switch (status) {
@@ -63,6 +65,13 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
     }
   };
 
+  const formatTitleDeedNumber = (number: string) => {
+    if (!profile) {
+      return number.replace(/./g, '•');
+    }
+    return number;
+  };
+
   return (
     <>
       <PropertyPopup 
@@ -96,7 +105,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                   {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  TF: {parcel.titleDeedNumber}
+                  TF: {formatTitleDeedNumber(parcel.titleDeedNumber)}
                 </div>
                 <div className="mt-1">
                   <ParcelStatusInfo 
