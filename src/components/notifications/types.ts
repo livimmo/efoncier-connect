@@ -1,8 +1,8 @@
 export type NotificationType = 
-  | "new_property"    // Nouveaux biens disponibles
-  | "property_update" // Mises à jour des biens suivis
-  | "message"        // Messages des propriétaires
-  | "document"       // Nouveaux documents disponibles
+  | "payment"        // Paiements TNB
+  | "fiscal_status"  // Statut fiscal
+  | "message"        // Messages des promoteurs
+  | "document"       // Documents disponibles
   | "system"         // Notifications système
   | "urgent";        // Notifications urgentes
 
@@ -36,6 +36,9 @@ export interface Notification {
     price?: number;
     documentUrl?: string;
     documentType?: string;
+    dueDate?: string;
+    amount?: number;
+    paymentStatus?: string;
   };
   actions?: {
     primary?: {

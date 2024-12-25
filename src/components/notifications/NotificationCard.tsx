@@ -1,12 +1,14 @@
 import { 
-  Building2, 
+  CreditCard, 
   MessageCircle, 
   FileText, 
   AlertTriangle,
   Eye,
   MapPin,
   Download,
-  MessageSquare
+  MessageSquare,
+  Shield,
+  DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +29,9 @@ interface NotificationCardProps {
     price?: number;
     documentUrl?: string;
     documentType?: string;
+    dueDate?: string;
+    amount?: number;
+    paymentStatus?: string;
   };
   actions?: {
     primary?: {
@@ -54,10 +59,10 @@ export const NotificationCard = ({
 }: NotificationCardProps) => {
   const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
-      case "new_property":
-        return <Building2 className="h-5 w-5" />;
-      case "property_update":
-        return <Eye className="h-5 w-5" />;
+      case "payment":
+        return <CreditCard className="h-5 w-5" />;
+      case "fiscal_status":
+        return <Shield className="h-5 w-5" />;
       case "message":
         return <MessageCircle className="h-5 w-5" />;
       case "document":
@@ -82,21 +87,21 @@ export const NotificationCard = ({
 
   const getDefaultActions = (type: NotificationType) => {
     switch (type) {
-      case "new_property":
+      case "payment":
+        return {
+          primary: {
+            label: "Payer maintenant",
+            icon: <DollarSign className="h-4 w-4" />
+          },
+          secondary: {
+            label: "Voir l'historique",
+            icon: <Eye className="h-4 w-4" />
+          }
+        };
+      case "fiscal_status":
         return {
           primary: {
             label: "Voir les détails",
-            icon: <Eye className="h-4 w-4" />
-          },
-          secondary: {
-            label: "Voir sur la carte",
-            icon: <MapPin className="h-4 w-4" />
-          }
-        };
-      case "property_update":
-        return {
-          primary: {
-            label: "Voir les changements",
             icon: <Eye className="h-4 w-4" />
           }
         };
@@ -150,6 +155,12 @@ export const NotificationCard = ({
           {metadata?.titleDeedNumber && (
             <Badge variant="outline" className="mt-2">
               TF: {metadata.titleDeedNumber}
+            </Badge>
+          )}
+
+          {metadata?.dueDate && (
+            <Badge variant="outline" className="mt-2 ml-2">
+              Échéance: {new Date(metadata.dueDate).toLocaleDateString()}
             </Badge>
           )}
           

@@ -18,7 +18,7 @@ export const NotificationFilters = ({ filters, onChange }: NotificationFiltersPr
     <div className="space-y-6">
       <FilterSection title="Recherche">
         <Input
-          placeholder="Rechercher par TF, ville, propriétaire..."
+          placeholder="Rechercher par TF, ville, promoteur..."
           value={filters.search}
           onChange={(e) => handleFilterChange("search", e.target.value)}
         />
@@ -30,8 +30,8 @@ export const NotificationFilters = ({ filters, onChange }: NotificationFiltersPr
           onChange={(value) => handleFilterChange("type", value)}
           options={[
             { value: "all", label: "Toutes les catégories" },
-            { value: "new_property", label: "🆕 Nouveaux biens" },
-            { value: "property_update", label: "📊 Mises à jour" },
+            { value: "payment", label: "💳 Paiements TNB" },
+            { value: "fiscal_status", label: "🛡️ Statut Fiscal" },
             { value: "message", label: "💬 Messages" },
             { value: "document", label: "📁 Documents" },
           ]}

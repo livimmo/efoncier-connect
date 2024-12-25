@@ -21,9 +21,9 @@ export const NotificationHeader = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">🔔 Notifications Promoteur</h1>
+          <h1 className="text-2xl font-bold">🔔 Notifications Propriétaire</h1>
           <p className="text-muted-foreground mt-1">
-            Restez informé des nouveaux biens disponibles, des mises à jour importantes et des échanges avec les propriétaires
+            Restez informé des statuts de vos biens, de vos obligations fiscales et des interactions avec les promoteurs
           </p>
         </div>
         <div className="flex items-center gap-2">
