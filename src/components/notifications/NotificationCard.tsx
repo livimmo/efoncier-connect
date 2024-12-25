@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { NotificationType, NotificationPriority } from "./types";
+import { NotificationType, NotificationPriority } from "@/types/notifications";
 import { cn } from "@/lib/utils";
 
 interface NotificationCardProps {

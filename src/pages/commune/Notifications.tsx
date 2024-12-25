@@ -6,7 +6,7 @@ import { NotificationList } from "@/components/notifications/NotificationList";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Notification, NotificationFilter } from "@/components/notifications/types";
+import type { Notification, NotificationFilter } from "@/types/notifications";
 
 const CommuneNotifications = () => {
   const [activeFilters, setActiveFilters] = useState<NotificationFilter>({

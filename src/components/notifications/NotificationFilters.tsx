@@ -2,7 +2,7 @@ import { DateFilter } from "@/components/map/filters/DateFilter";
 import { SelectFilter } from "@/components/map/filters/SelectFilter";
 import { FilterSection } from "@/components/map/filters/FilterSection";
 import { Input } from "@/components/ui/input";
-import type { NotificationFilter } from "./types";
+import type { NotificationFilter } from "@/types/notifications";
 
 interface NotificationFiltersProps {
   filters: NotificationFilter;

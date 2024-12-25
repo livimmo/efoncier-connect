@@ -1,5 +1,5 @@
 import { NotificationCard } from "./NotificationCard";
-import type { Notification, NotificationFilter } from "./types";
+import type { Notification, NotificationFilter } from "@/types/notifications";
 
 interface NotificationListProps {
   notifications: Notification[];

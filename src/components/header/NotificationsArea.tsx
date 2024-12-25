@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationList } from "@/components/notifications/NotificationList";
-import type { Notification } from "@/components/notifications/types";
+import type { Notification } from "@/types/notifications";
 
 // Mock data pour la démonstration
 const mockMessages = [
