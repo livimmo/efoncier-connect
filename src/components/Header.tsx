@@ -11,10 +11,6 @@ import { UserMenu } from "./header/UserMenu";
 import { AuthButtons } from "./header/AuthButtons";
 import { MobileMenu } from "./header/MobileMenu";
 import { NotificationsArea } from "./header/NotificationsArea";
-import { OwnerActions } from "./header/actions/OwnerActions";
-import { DeveloperActions } from "./header/actions/DeveloperActions";
-import { CommuneActions } from "./header/actions/CommuneActions";
-import { AdminActions } from "./header/actions/AdminActions";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -23,23 +19,6 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
-
-  const getRoleSpecificActions = () => {
-    if (!profile) return null;
-
-    switch (profile.role) {
-      case "owner":
-        return <OwnerActions />;
-      case "developer":
-        return <DeveloperActions />;
-      case "commune":
-        return <CommuneActions />;
-      case "admin":
-        return <AdminActions />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -56,13 +35,7 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {profile && (
-            <>
-              <NotificationsArea />
-              {getRoleSpecificActions()}
-            </>
-          )}
-          
+          {profile && <NotificationsArea />}
           <ModeToggle />
           {profile ? (
             <UserMenu />

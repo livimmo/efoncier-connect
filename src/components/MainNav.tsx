@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Home, Map, LayoutDashboard, FileText, CreditCard, MessageSquare, Settings, HelpCircle, Building2, Users } from "lucide-react";
+import { Home, Map, MessageSquare, Settings, HelpCircle } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useAuth } from "./auth/AuthProvider";
 
@@ -13,23 +13,18 @@ export function MainNav({ className, ...props }: MainNavProps) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { profile } = useAuth();
 
-  const getNavItems = () => {
-    const commonItems = [
-      {
-        href: "/",
-        label: "Accueil",
-        icon: Home
-      },
-      {
-        href: "/map",
-        label: "Carte",
-        icon: Map
-      },
-      {
-        href: "/dashboard",
-        label: "Tableau de Bord",
-        icon: LayoutDashboard
-      },
+  const navItems = [
+    {
+      href: "/",
+      label: "Accueil",
+      icon: Home
+    },
+    {
+      href: "/map",
+      label: "Carte",
+      icon: Map
+    },
+    ...(profile ? [
       {
         href: "/messages",
         label: "Messagerie",
@@ -39,71 +34,14 @@ export function MainNav({ className, ...props }: MainNavProps) {
         href: "/settings",
         label: "Paramètres",
         icon: Settings
-      },
-      {
-        href: "/support",
-        label: "Support",
-        icon: HelpCircle
       }
-    ];
-
-    const roleSpecificItems = {
-      owner: [
-        {
-          href: "/properties",
-          label: "Mes Biens",
-          icon: FileText
-        },
-        {
-          href: "/payment",
-          label: "Paiements",
-          icon: CreditCard
-        }
-      ],
-      developer: [
-        {
-          href: "/available-properties",
-          label: "Biens Disponibles",
-          icon: Building2
-        }
-      ],
-      commune: [
-        {
-          href: "/owners",
-          label: "Propriétaires",
-          icon: Users
-        },
-        {
-          href: "/properties",
-          label: "Gestion des Biens",
-          icon: Building2
-        },
-        {
-          href: "/payment",
-          label: "Paiements",
-          icon: CreditCard
-        }
-      ],
-      admin: [
-        {
-          href: "/users",
-          label: "Utilisateurs",
-          icon: Users
-        },
-        {
-          href: "/properties",
-          label: "Liste des Biens",
-          icon: Building2
-        }
-      ]
-    };
-
-    return profile 
-      ? [...commonItems, ...(roleSpecificItems[profile.role] || [])]
-      : commonItems.filter(item => !["/dashboard", "/messages", "/settings"].includes(item.href));
-  };
-
-  const navItems = getNavItems();
+    ] : []),
+    {
+      href: "/support",
+      label: "Support",
+      icon: HelpCircle
+    }
+  ];
 
   return (
     <nav 
