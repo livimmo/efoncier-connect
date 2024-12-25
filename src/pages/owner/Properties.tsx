@@ -44,10 +44,12 @@ const PropertiesPage = () => {
     ? mockParcels.find(p => p.id === selectedParcelId) 
     : null;
 
-  const handleParcelSelect = (parcelId: string, position?: { x: number; y: number }) => {
+  const handleParcelSelect = (parcelId: string | null, position?: { x: number; y: number }) => {
     setSelectedParcelId(parcelId);
     if (position) {
       setMarkerPosition(position);
+    } else {
+      setMarkerPosition(null);
     }
   };
 
@@ -73,6 +75,8 @@ const PropertiesPage = () => {
               onParcelSelect={(parcel, position) => {
                 if (parcel) {
                   handleParcelSelect(parcel.id, position);
+                } else {
+                  handleParcelSelect(null);
                 }
               }}
               filteredParcels={mockParcels}
