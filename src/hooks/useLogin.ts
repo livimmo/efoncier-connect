@@ -18,9 +18,10 @@ export const useLogin = () => {
     console.error("Login error:", error);
     let errorMessage = "Une erreur est survenue lors de la connexion.";
 
-    if (error.message.includes("Invalid login credentials")) {
+    // Vérification plus précise des erreurs
+    if (error.message?.includes("Invalid login credentials") || error.body?.includes("invalid_credentials")) {
       errorMessage = "Email ou mot de passe incorrect.";
-    } else if (error.message.includes("Email not confirmed")) {
+    } else if (error.message?.includes("Email not confirmed")) {
       errorMessage = "Veuillez vérifier votre email pour confirmer votre compte.";
     }
 
@@ -45,8 +46,9 @@ export const useLogin = () => {
       setIsLoading(true);
       console.log("Attempting login with role:", role);
 
+      // Ajout de trim() pour éviter les espaces
       const { data: { user }, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
+        email: email.trim().toLowerCase(), // Normalisation de l'email
         password,
       });
 
@@ -56,12 +58,23 @@ export const useLogin = () => {
       }
 
       if (user) {
-        // Check if the user's role matches the selected role
-        const { data: profile } = await supabase
+        // Vérification du rôle de l'utilisateur
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', user.id)
           .single();
+
+        if (profileError) {
+          console.error("Error fetching profile:", profileError);
+          toast({
+            variant: "destructive",
+            title: "Erreur de connexion",
+            description: "Impossible de vérifier le profil utilisateur.",
+          });
+          await supabase.auth.signOut();
+          return false;
+        }
 
         if (profile && profile.role !== role) {
           toast({
