@@ -18,7 +18,6 @@ export type PropertyStatus =
 
 export type TaxStatus = 
   | "PAID"
-  | "UNPAID"
   | "PENDING";
 
 export type FiscalStatus = 
@@ -27,13 +26,13 @@ export type FiscalStatus =
   | "under_review";
 
 export type ZoneType =
-  | "RESIDENTIAL"
-  | "COMMERCIAL"
-  | "INDUSTRIAL"
-  | "AGRICULTURAL"
-  | "MIXED_USE"
-  | "PROTECTED"
-  | "CONSTRUCTIBLE";
+  | "RESIDENTIAL_ZONE"
+  | "COMMERCIAL_ZONE"
+  | "INDUSTRIAL_ZONE"
+  | "AGRICULTURAL_ZONE"
+  | "MIXED_USE_ZONE"
+  | "PROTECTED_ZONE"
+  | "CONSTRUCTIBLE_ZONE";
 
 export interface TNBInfo {
   pricePerMeter: number;
@@ -75,6 +74,3 @@ export interface Property extends ParcelInput {
 export interface Parcel extends Property {
   isFavorite?: boolean;
 }
-
-// Export all types from this file
-export * from './types';

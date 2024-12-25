@@ -2,43 +2,44 @@ import { Property, ParcelInput, FiscalStatus, TaxStatus, PropertyType, ZoneType 
 import { generateTNBInfo } from './tnbGenerator';
 
 const getFiscalStatus = (taxStatus: TaxStatus): FiscalStatus => {
-  switch (taxStatus) {
-    case 'PAID':
-      return 'compliant';
-    case 'UNPAID':
-      return 'non_compliant';
-    default:
-      return 'under_review';
+  if (taxStatus === 'PAID') {
+    return 'compliant';
+  } else if (taxStatus === 'PENDING') {
+    return 'under_review';
   }
+  return 'non_compliant';
 };
 
-export const createParcelWithTNB = (data: Partial<Property>): Property => {
-  const baseProperty: Property = {
-    id: data.id || '',
-    title: data.title || '',
-    description: data.description || '',
-    property_type: data.property_type || 'RESIDENTIAL',
-    surface_area: data.surface_area || 0,
-    location: data.location || { lat: 0, lng: 0 },
-    fiscal_status: getFiscalStatus(data.taxStatus || 'PENDING'),
-    status: data.status || 'AVAILABLE',
+export const createParcelWithTNB = (input: Partial<Property>): Property => {
+  const taxStatus: TaxStatus = input.taxStatus || 'PENDING';
+  const fiscal_status = getFiscalStatus(taxStatus);
+  const surface_area = input.surface || 0;
+  const property_type = input.type || 'RESIDENTIAL';
+  
+  const baseParcel: Property = {
+    id: input.id || crypto.randomUUID(),
+    title: input.title || '',
+    description: input.description || '',
+    property_type,
+    surface_area,
+    location: input.location || { lat: 0, lng: 0 },
+    fiscal_status,
+    status: input.status || 'AVAILABLE',
     is_for_sale: false,
-    price: data.price || 0,
-    owner_id: data.owner_id || '',
+    price: input.price || 0,
+    owner_id: input.owner_id || '',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-    titleDeedNumber: data.titleDeedNumber || '',
-    ownerName: data.ownerName || '',
-    address: data.address || '',
-    city: data.city || '',
-    zone: data.zone || 'RESIDENTIAL',
-    type: data.type || 'RESIDENTIAL',
-    surface: data.surface || 0,
-    taxStatus: data.taxStatus || 'PENDING',
-    tnbInfo: data.tnbInfo || generateTNBInfo(data.surface || 0, data.type || 'RESIDENTIAL'),
-    phone: data.phone,
-    email: data.email
+    titleDeedNumber: input.titleDeedNumber || '',
+    ownerName: input.ownerName || '',
+    address: input.address || '',
+    city: input.city || '',
+    zone: input.zone || 'RESIDENTIAL_ZONE',
+    type: property_type,
+    surface: surface_area,
+    taxStatus,
+    tnbInfo: generateTNBInfo(surface_area, property_type)
   };
 
-  return baseProperty;
+  return baseParcel;
 };
