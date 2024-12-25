@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
-import type { Parcel } from '@/utils/mockData/types';
+import type { Property } from '@/types';
 import { UserRole } from '@/types/auth';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
@@ -9,8 +9,8 @@ const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
 const DEFAULT_ZOOM = 12;
 
 interface GoogleMapProps {
-  onMarkerClick: (parcel: Parcel, position: { x: number, y: number }) => void;
-  parcels: Parcel[];
+  onMarkerClick: (parcel: Property, position: { x: number, y: number }) => void;
+  parcels: Property[];
   theme: 'light' | 'dark';
   setMapInstance: (map: google.maps.Map) => void;
   userRole?: UserRole;
@@ -27,25 +27,23 @@ export const GoogleMap = ({
   userRole,
   center,
   zoom = DEFAULT_ZOOM,
-  getMarkerColor
+  getMarkerColor = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return '#10B981'; // Vert pour disponible
+      case 'IN_TRANSACTION':
+        return '#F97316'; // Orange pour en transaction
+      case 'SOLD':
+        return '#EF4444'; // Rouge pour vendu
+      default:
+        return '#6B7280'; // Gris pour statut inconnu
+    }
+  }
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
-
-  const defaultMarkerColor = (status: string) => {
-    switch (status) {
-      case 'PAID':
-        return '#10B981'; // Green for paid
-      case 'PENDING':
-        return '#F59E0B'; // Orange for pending
-      case 'OVERDUE':
-        return '#EF4444'; // Red for overdue
-      default:
-        return '#6B7280'; // Gray default
-    }
-  };
 
   useEffect(() => {
     const initMap = async () => {
@@ -101,23 +99,39 @@ export const GoogleMap = ({
     initMap();
   }, [center, zoom, parcels]);
 
-  const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
+  const createMarkers = (parcels: Property[], map: google.maps.Map) => {
+    // Supprimer les marqueurs existants
     markers.forEach(marker => marker.setMap(null));
     
     const newMarkers = parcels.map(parcel => {
       const marker = new google.maps.Marker({
         position: parcel.location,
         map: map,
-        title: parcel.title,
+        title: `${parcel.title} - ${parcel.status === 'AVAILABLE' ? 'Disponible' : parcel.status === 'IN_TRANSACTION' ? 'En Transaction' : 'Vendu'}`,
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor ? getMarkerColor(parcel.taxStatus) : defaultMarkerColor(parcel.taxStatus),
+          fillColor: getMarkerColor(parcel.status),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
           scale: 8,
         },
+      });
+
+      // Effet de survol
+      marker.addListener('mouseover', () => {
+        marker.setIcon({
+          ...marker.getIcon() as google.maps.Symbol,
+          scale: 10,
+        });
+      });
+
+      marker.addListener('mouseout', () => {
+        marker.setIcon({
+          ...marker.getIcon() as google.maps.Symbol,
+          scale: 8,
+        });
       });
 
       marker.addListener("click", () => {

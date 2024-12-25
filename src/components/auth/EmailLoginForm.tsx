@@ -11,25 +11,18 @@ interface EmailLoginFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   selectedRole: UserRole;
   onRoleChange: (role: UserRole) => void;
-  onSuccess?: () => void;
 }
 
 export const EmailLoginForm = ({ 
   isLoading, 
   onSubmit, 
   selectedRole,
-  onRoleChange,
-  onSuccess 
+  onRoleChange 
 }: EmailLoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    onSubmit(e);
-    onSuccess?.();
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       <div className="grid gap-4">
         <div className="grid gap-2">
           <Label>Type de compte</Label>

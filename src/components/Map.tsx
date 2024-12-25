@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { MapContainer } from './map/MapContainer';
 import { Header } from './Header';
 import { useAuth } from './auth/AuthProvider';
@@ -39,68 +39,8 @@ const Map = () => {
     tnbStatus: ''
   });
 
-  // Filter parcels based on filters
-  const filteredParcels = useMemo(() => {
-    return mockParcels.filter(parcel => {
-      // Region filter
-      if (filters.region && parcel.region !== filters.region) return false;
-
-      // Commune filter
-      if (filters.commune && parcel.city.toLowerCase() !== filters.commune.toLowerCase()) return false;
-
-      // Property type filter
-      if (filters.propertyType && parcel.type !== filters.propertyType) return false;
-
-      // Zone filter
-      if (filters.zoneType && parcel.zone !== filters.zoneType) return false;
-
-      // Surface area filter
-      if (Array.isArray(filters.size) && filters.size.length === 2) {
-        if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
-      }
-
-      // Status filter
-      if (filters.status && parcel.status !== filters.status) return false;
-
-      // Owner name filter
-      if (filters.ownerName && !parcel.ownerName.toLowerCase().includes(filters.ownerName.toLowerCase())) return false;
-
-      // Title deed number filter
-      if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
-
-      // Fiscal status filter
-      if (filters.fiscalStatus && parcel.taxStatus !== filters.fiscalStatus) return false;
-
-      // Payment status filter
-      if (filters.paymentStatus && parcel.taxStatus !== filters.paymentStatus) return false;
-
-      // TNB status filter
-      if (filters.tnbStatus && parcel.tnbInfo?.status !== filters.tnbStatus) return false;
-
-      // Global search filter
-      if (filters.searchQuery) {
-        const searchLower = filters.searchQuery.toLowerCase();
-        return (
-          parcel.titleDeedNumber.toLowerCase().includes(searchLower) ||
-          parcel.ownerName.toLowerCase().includes(searchLower) ||
-          parcel.address.toLowerCase().includes(searchLower) ||
-          parcel.city.toLowerCase().includes(searchLower)
-        );
-      }
-
-      return true;
-    });
-  }, [filters]);
-
   const handleParcelSelect = (parcelId: string) => {
-    if (!profile) {
-      toast({
-        title: "Connexion requise",
-        description: "Veuillez vous connecter pour accéder à plus de détails.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Ne rien faire ici, la logique est gérée dans MapContainer
   };
 
   const handleRegionChange = (regionId: string) => {
@@ -131,7 +71,7 @@ const Map = () => {
   };
 
   const handleApplyFilters = () => {
-    // Function exists to maintain the interface
+    // Filter logic here
   };
 
   return (
@@ -199,12 +139,11 @@ const Map = () => {
                   onParcelSelect={handleParcelSelect}
                   mapInstance={mapInstance}
                   setMapInstance={setMapInstance}
-                  parcels={filteredParcels}
                 />
               </div>
             </div>
           ) : (
-            <DeveloperPropertiesTable data={filteredParcels} />
+            <DeveloperPropertiesTable data={mockParcels} />
           )}
         </div>
       </div>

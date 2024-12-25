@@ -1,138 +1,172 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Eye, MapPin, UserPlus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
-import { RegisterDialog } from "@/components/auth/RegisterDialog";
 import { useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { PropertyStatusIndicator } from "@/components/map/filters/PropertyStatusIndicator";
 import { formatCurrency } from "@/utils/format";
-import type { Parcel } from "@/utils/mockData/types";
+import { Property } from "@/types";
+import { LoginDialog } from "@/components/auth/LoginDialog";
+import { RegisterDialog } from "@/components/auth/RegisterDialog";
+import { Eye, Lock, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
 
 interface DeveloperPropertiesTableProps {
-  data: Parcel[];
+  data: Property[];
 }
 
-export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
+export function DeveloperPropertiesTable({ data }: DeveloperPropertiesTableProps) {
   const { profile } = useAuth();
-  const [registerOpen, setRegisterOpen] = useState(false);
+  const navigate = useNavigate();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [showRegisterDialog, setShowRegisterDialog] = useState(false);
 
-  const handleViewDetails = (parcelId: string) => {
+  const handleViewDetails = (propertyId: string) => {
     if (!profile) {
-      setRegisterOpen(true);
+      setShowLoginDialog(true);
       return;
     }
-    navigate(`/property/${parcelId}`);
+    navigate(`/properties/${propertyId}`);
   };
 
-  const handleViewOnMap = (parcelId: string) => {
+  const maskText = (text: string) => {
     if (!profile) {
-      setRegisterOpen(true);
-      return;
+      return text.slice(0, 3) + "•".repeat(text.length - 3);
     }
-    navigate(`/map?parcel=${parcelId}`);
+    return text;
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'AVAILABLE':
-        return <Badge variant="success" className="whitespace-nowrap">🟢 Disponible</Badge>;
-      case 'UNAVAILABLE':
-        return <Badge variant="destructive" className="whitespace-nowrap">🔴 Indisponible</Badge>;
-      case 'IN_TRANSACTION':
-        return <Badge variant="warning" className="whitespace-nowrap">🟡 En Transaction</Badge>;
-      default:
-        return null;
+  const maskLocation = (city: string, address: string) => {
+    if (!profile) {
+      return `${city} (Localisation exacte masquée)`;
     }
+    return `${city}, ${address}`;
   };
-
-  if (!data) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <>
-      <RegisterDialog open={registerOpen} onOpenChange={setRegisterOpen} />
-      
+      {!profile && (
+        <Card className="p-4 mb-4 bg-primary/5 border-primary/20">
+          <div className="text-center space-y-2">
+            <h3 className="text-lg font-semibold">
+              Liste des Biens Disponibles sur la Carte
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Consultez les biens disponibles, en transaction ou vendus. 
+              Inscrivez-vous pour accéder aux détails complets et à leur localisation exacte.
+            </p>
+            <Button
+              onClick={() => setShowRegisterDialog(true)}
+              className="bg-primary hover:bg-primary/90"
+            >
+              Créer un Compte Promoteur
+            </Button>
+          </div>
+        </Card>
+      )}
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Statut</TableHead>
-              <TableHead>Titre Foncier</TableHead>
-              <TableHead>Localisation</TableHead>
-              <TableHead>Surface</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Prix TNB</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHeader>Titre Foncier</TableHeader>
+              <TableHeader>Localisation</TableHeader>
+              <TableHeader>Surface</TableHeader>
+              <TableHeader>Type</TableHeader>
+              <TableHeader>Statut</TableHeader>
+              <TableHeader>Prix/m²</TableHeader>
+              <TableHeader>Actions</TableHeader>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((parcel) => (
-              <TableRow key={parcel.id}>
-                <TableCell>{getStatusBadge(parcel.status)}</TableCell>
-                <TableCell>
-                  {profile ? parcel.titleDeedNumber : 'XX-XXXXX'}
+            {data.map((property) => (
+              <TableRow key={property.id}>
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-2">
+                    {maskText(property.titleDeedNumber)}
+                    {!profile && <Lock className="h-4 w-4 text-muted-foreground" />}
+                  </div>
                 </TableCell>
                 <TableCell>
-                  {profile ? parcel.address : `${parcel.city} (Connectez-vous pour plus de détails)`}
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    {maskLocation(property.city, property.address)}
+                  </div>
                 </TableCell>
-                <TableCell>{parcel.surface} m²</TableCell>
-                <TableCell>{parcel.type}</TableCell>
-                <TableCell>{formatCurrency(parcel.tnbInfo.totalAmount)} DHS</TableCell>
+                <TableCell>{property.surface_area} m²</TableCell>
+                <TableCell>{property.property_type}</TableCell>
                 <TableCell>
-                  <div className="flex justify-end gap-2">
+                  <PropertyStatusIndicator 
+                    status={property.status} 
+                    tnbStatus={property.taxStatus}
+                  />
+                </TableCell>
+                <TableCell>
+                  {formatCurrency(property.price)} DH/m²
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewDetails(property.id)}
+                    className={cn(
+                      "flex items-center gap-2",
+                      !profile && "text-primary hover:text-primary"
+                    )}
+                  >
                     {profile ? (
                       <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewDetails(parcel.id)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewOnMap(parcel.id)}
-                        >
-                          <MapPin className="h-4 w-4" />
-                        </Button>
+                        <Eye className="h-4 w-4" />
+                        Détails
                       </>
                     ) : (
-                      parcel.status === 'AVAILABLE' && (
-                        <Button
-                          size="sm"
-                          onClick={() => setRegisterOpen(true)}
-                          className="gap-2"
-                        >
-                          <UserPlus className="h-4 w-4" />
-                          Créer un compte promoteur
-                        </Button>
-                      )
+                      <>
+                        <Lock className="h-4 w-4" />
+                        S'inscrire pour voir
+                      </>
                     )}
-                  </div>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
-            {data.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
-                  Aucun bien trouvé
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
+
+        {!profile && (
+          <div className="p-4 bg-primary/5 border-t">
+            <div className="text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Inscrivez-vous en tant que Promoteur pour accéder aux informations complètes
+                et à la localisation exacte des biens.
+              </p>
+              <Button
+                onClick={() => setShowRegisterDialog(true)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Créer un Compte Promoteur
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
+
+      <LoginDialog 
+        open={showLoginDialog} 
+        onOpenChange={setShowLoginDialog} 
+      />
+      
+      <RegisterDialog
+        open={showRegisterDialog}
+        onOpenChange={setShowRegisterDialog}
+      />
     </>
   );
-};
+}

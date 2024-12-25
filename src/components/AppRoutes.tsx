@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./auth/PrivateRoute";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
+import Contact from "@/pages/Contact";
 import Map from "@/components/Map";
 import Dashboard from "@/pages/Dashboard";
 import Register from "@/pages/Register";
@@ -27,9 +28,9 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/map" element={<Map />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/support" element={<Support />} />
       
       {/* Common Dashboard Route - Will redirect to role-specific dashboard */}
       <Route
@@ -143,6 +144,14 @@ export const AppRoutes = () => {
         element={
           <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <Messages />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/support"
+        element={
+          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+            <Support />
           </PrivateRoute>
         }
       />

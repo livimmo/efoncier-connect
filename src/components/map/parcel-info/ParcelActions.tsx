@@ -1,62 +1,86 @@
 import { Button } from "@/components/ui/button";
-import { FileText, MessageSquare, Receipt, Calculator } from "lucide-react";
-import { Parcel } from "@/utils/mockData/types";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { CreditCard, Share2, MessageSquare, Receipt } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { PaymentDialog } from "@/components/notifications/dialogs/PaymentDialog";
+import { LoginDialog } from "@/components/auth/LoginDialog";
+import type { Property } from "@/types";
 
 interface ParcelActionsProps {
-  parcel: Parcel;
-  onPaymentClick: () => void;
-  onReceiptClick: () => void;
-  onContactClick: () => void;
-  onCalculatorClick: () => void;
+  parcel: Property;
+  onContactClick?: () => void;
+  onCalculatorClick?: () => void;
+  onPaymentClick?: () => void;
+  onReceiptClick?: () => void;
+  className?: string;
 }
 
-export const ParcelActions = ({
-  parcel,
-  onPaymentClick,
-  onReceiptClick,
+export function ParcelActions({ 
+  parcel, 
   onContactClick,
   onCalculatorClick,
-}: ParcelActionsProps) => {
+  onPaymentClick,
+  onReceiptClick,
+  className 
+}: ParcelActionsProps) {
+  const [showPayment, setShowPayment] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const { profile } = useAuth();
+
+  const handlePaymentClick = () => {
+    if (profile && profile.role === "owner") {
+      setShowPayment(true);
+    } else {
+      setShowLogin(true);
+    }
+  };
+
   return (
     <>
-      <div className="flex gap-2">
+      <div className={cn("flex flex-wrap gap-2", className)}>
         <Button 
           className="flex-1"
-          onClick={() => parcel.taxStatus === 'PAID' 
-            ? onReceiptClick()
-            : onPaymentClick()
-          }
+          onClick={handlePaymentClick}
         >
           {parcel.taxStatus === 'PAID' ? (
             <>
-              <Receipt className="w-4 h-4 mr-2" />
-              Reçu
+              <Receipt className="mr-2 h-4 w-4" />
+              Télécharger le reçu
             </>
           ) : (
             <>
-              <FileText className="w-4 h-4 mr-2" />
-              Payer
+              <CreditCard className="mr-2 h-4 w-4" />
+              Payer la TNB
             </>
           )}
         </Button>
         <Button 
-          variant="outline"
+          variant="outline" 
           className="flex-1"
           onClick={onContactClick}
         >
-          <MessageSquare className="w-4 h-4 mr-2" />
+          <MessageSquare className="mr-2 h-4 w-4" />
           Contacter
+        </Button>
+        <Button variant="outline" size="icon">
+          <Share2 className="h-4 w-4" />
         </Button>
       </div>
 
-      <Button 
-        variant="secondary"
-        className="w-full"
-        onClick={onCalculatorClick}
-      >
-        <Calculator className="w-4 h-4 mr-2" />
-        Calculateur TNB
-      </Button>
+      {/* Dialog de paiement */}
+      <PaymentDialog
+        open={showPayment}
+        onOpenChange={setShowPayment}
+        titleDeedNumber={parcel.titleDeedNumber}
+        amount={parcel.tnbInfo.totalAmount}
+      />
+
+      {/* Dialog de connexion */}
+      <LoginDialog 
+        open={showLogin} 
+        onOpenChange={setShowLogin}
+      />
     </>
   );
-};
+}
