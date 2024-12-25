@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./auth/PrivateRoute";
 import Home from "@/pages/Home";
+import About from "@/pages/About";
 import Map from "@/components/Map";
 import DeveloperDashboard from "@/pages/developer/Dashboard";
 import DeveloperProperties from "@/pages/developer/Properties";
@@ -22,6 +23,7 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
       <Route path="/map" element={<Map />} />
       
       {/* Developer Routes */}
