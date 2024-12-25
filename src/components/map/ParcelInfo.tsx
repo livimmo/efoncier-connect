@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatCurrency } from "@/utils/format";
 import { MapPin, User, Ruler, CreditCard, FileText, Building, Lock } from "lucide-react";
@@ -10,6 +9,7 @@ import { LoginDialog } from "@/components/auth/LoginDialog";
 import { Parcel } from '@/utils/mockData/types';
 import { UserRole } from '@/types/auth';
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { ParcelStatusBadges } from "./parcel-info/ParcelStatusBadges";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -29,46 +29,20 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
     onClose();
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "AVAILABLE":
-        return <Badge variant="success">Disponible</Badge>;
-      case "SOLD":
-        return <Badge variant="destructive">Vendu</Badge>;
-      case "IN_TRANSACTION":
-        return <Badge variant="warning">En Transaction</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
-
-  const getFiscalStatusBadge = (status: string) => {
-    switch (status) {
-      case "COMPLIANT":
-        return <Badge variant="success">En règle</Badge>;
-      case "NON_COMPLIANT":
-        return <Badge variant="destructive">Non conforme</Badge>;
-      case "UNDER_REVIEW":
-        return <Badge variant="warning">En révision</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
-
   return (
     <>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
       <Card className={`overflow-hidden animate-fade-in ${className}`}>
         <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
           <div className="space-y-4">
-            {/* En-tête */}
             <div className="space-y-2">
               <div className="flex items-start justify-between">
                 <h3 className="text-lg font-semibold">{parcel.title}</h3>
-                <div className="flex gap-2">
-                  {getStatusBadge(parcel.status)}
-                  {getFiscalStatusBadge(parcel.fiscalStatus)}
-                </div>
+                <ParcelStatusBadges 
+                  status={parcel.status}
+                  fiscalStatus={parcel.fiscalStatus}
+                  taxStatus={parcel.taxStatus}
+                />
               </div>
               <p className="text-sm text-muted-foreground relative">
                 {isAuthenticated ? (
@@ -90,7 +64,6 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
               </p>
             </div>
 
-            {/* Informations principales */}
             <div className="grid gap-4">
               <div className="flex items-center gap-2 relative">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
@@ -157,7 +130,6 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
               </div>
             </div>
 
-            {/* Actions */}
             {!isAuthenticated && (
               <div className="pt-4 border-t">
                 <Button
