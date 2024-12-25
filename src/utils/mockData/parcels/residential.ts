@@ -1,4 +1,4 @@
-import { PropertyType, ZoneType, Parcel } from '../types';
+import { PropertyType, ZoneType, Parcel } from '../../../types';
 import { createParcelWithTNB } from '../generators/parcelGenerator';
 
 const createResidentialParcel = (
@@ -6,31 +6,27 @@ const createResidentialParcel = (
   title: string,
   address: string,
   surface: number,
-  zone: ZoneType,
-  taxStatus: 'PAID' | 'PENDING' | 'OVERDUE',
-  owner: string,
+  ownerName: string,
   location: { lat: number; lng: number },
   titleDeedNumber: string,
-  ownerName: string
+  city: string = 'casablanca'
 ): Parcel => {
   return createParcelWithTNB({
     id,
     title,
     titleDeedNumber,
     address,
-    city: 'casablanca',
+    city,
     surface,
     type: 'RESIDENTIAL',
-    zone,
-    taxStatus,
+    taxStatus: 'PAID',
     status: 'AVAILABLE',
-    owner,
-    location,
     ownerName,
+    location,
     description: '',
     phone: undefined,
     email: undefined,
-    price: undefined,
+    price: 0,
     isFavorite: false
   });
 };
@@ -41,191 +37,143 @@ export const residentialParcels = [
     'Villa de Luxe - Californie',
     '15 Boulevard de l\'Océan, Californie',
     450,
-    'E3',
-    'PAID',
-    'Groupe Immobilier Atlas',
+    'Ahmed El Fassi',
     { lat: 33.5731, lng: -7.5898 },
-    'TF123456/C',
-    'Ahmed El Fassi'
+    'TF123456/C'
   ),
   createResidentialParcel(
     '3',
     'Appartement Haut Standing - Gauthier',
     '45 Rue Jean Jaurès, Gauthier',
     180,
-    'E4',
-    'PAID',
     'Karim Benjelloun',
     { lat: 33.5850, lng: -7.6328 },
-    'TF345678/C',
-    'Karim Benjelloun'
+    'TF345678/C'
   ),
   createResidentialParcel(
     '6',
     'Villa Modern - Anfa',
     '23 Boulevard d\'Anfa',
     600,
-    'E4',
-    'PAID',
     'Sofia Alaoui',
     { lat: 33.5932, lng: -7.6353 },
-    'TF234567/C',
-    'Sofia Alaoui'
+    'TF234567/C'
   ),
   createResidentialParcel(
     '8',
     'Riad Traditionnel - Habous',
     '12 Quartier des Habous',
     300,
-    'PROTECTED',
-    'PENDING',
     'Hassan El Mansouri',
     { lat: 33.5892, lng: -7.6194 },
-    'TF345678/C',
-    'Hassan El Mansouri'
+    'TF345678/C'
   ),
   createResidentialParcel(
     '10',
     'Terrain Constructible - Dar Bouazza',
     'Route Côtière, Dar Bouazza',
     1500,
-    'CONSTRUCTIBLE',
-    'PAID',
     'Immobilière Côtière SA',
     { lat: 33.5315, lng: -7.7481 },
-    'TF123789/C',
-    'Immobilière Côtière SA'
+    'TF123789/C'
   ),
   createResidentialParcel(
     '12',
     'Ferme Agricole - Bouskoura',
     'Route de l\'Aéroport, Bouskoura',
     25000,
-    'PROTECTED',
-    'PAID',
     'Coopérative Al Baraka',
     { lat: 33.4989, lng: -7.6417 },
-    'TF567123/C',
-    'Coopérative Al Baraka'
+    'TF567123/C'
   ),
   createResidentialParcel(
     '14',
     'Villa avec Piscine - Ain Diab',
     '34 Corniche, Ain Diab',
     800,
-    'E4',
-    'PAID',
     'Youssef El Alami',
     { lat: 33.5954, lng: -7.6697 },
-    'TF234890/C',
-    'Youssef El Alami'
+    'TF234890/C'
   ),
   createResidentialParcel(
     '16',
     'Appartement Vue Mer - Anfa Place',
     'Boulevard de la Corniche, Anfa Place',
     250,
-    'E4',
-    'PAID',
     'Nadia Benjelloun',
     { lat: 33.5954, lng: -7.6697 },
-    'TF901456/C',
-    'Nadia Benjelloun'
+    'TF901456/C'
   ),
   createResidentialParcel(
     '19',
     'Résidence Sécurisée - Oasis',
     '90 Quartier Oasis',
     4500,
-    'E3',
-    'PAID',
     'Immobilière Prestige',
     { lat: 33.5534, lng: -7.6584 },
-    'TF123567/C',
-    'Immobilière Prestige'
+    'TF123567/C'
   ),
   createResidentialParcel(
     '21',
     'Duplex de Luxe - Racine',
     '67 Rue Jean Jaurès, Racine',
     220,
-    'E4',
-    'PAID',
     'Sarah El Fassi',
     { lat: 33.5892, lng: -7.6353 },
-    'TF234678/C',
-    'Sarah El Fassi'
+    'TF234678/C'
   ),
   createResidentialParcel(
     '23',
     'Terrain Constructible - Bouskoura Golf City',
     'Bouskoura Golf City',
     1000,
-    'CONSTRUCTIBLE',
-    'PAID',
     'Golf Resort Development',
     { lat: 33.4989, lng: -7.6417 },
-    'TF789123/C',
-    'Golf Resort Development'
+    'TF789123/C'
   ),
   createResidentialParcel(
     '25',
     'Penthouse - Twin Center',
     'Boulevard Zerktouni, Twin Center',
     300,
-    'E4',
-    'PAID',
     'Mohammed El Kettani',
     { lat: 33.5876, lng: -7.6331 },
-    'TF345789/C',
-    'Mohammed El Kettani'
+    'TF345789/C'
   ),
   createResidentialParcel(
     '27',
     'Villa Contemporaine - CIL',
     '23 Rue des Orangers, CIL',
     400,
-    'E3',
-    'PENDING',
     'Amina Benjelloun',
     { lat: 33.5731, lng: -7.6353 },
-    'TF123890/C',
-    'Amina Benjelloun'
+    'TF123890/C'
   ),
   createResidentialParcel(
     '28',
     'Complexe Sportif - Californie',
     '456 Boulevard de l\'Atlas, Californie',
     6000,
-    'E4',
-    'PAID',
     'Sport & Loisirs SA',
     { lat: 33.5731, lng: -7.5898 },
-    'TF567123/C',
-    'Sport & Loisirs SA'
+    'TF567123/C'
   ),
   createResidentialParcel(
     '29',
     'Entrepôt Frigorifique - Lissasfa',
     '789 Zone Industrielle, Lissasfa',
     4000,
-    'I2S12',
-    'PAID',
     'Froid Logistique SARL',
     { lat: 33.5315, lng: -7.6584 },
-    'TF890345/C',
-    'Froid Logistique SARL'
+    'TF890345/C'
   ),
   createResidentialParcel(
     '30',
     'Résidence Balnéaire - Dar Bouazza',
     'Route Côtière, Dar Bouazza',
     3500,
-    'CONSTRUCTIBLE',
-    'PENDING',
     'Groupe Immobilier Littoral',
     { lat: 33.5315, lng: -7.7481 },
-    'TF234567/C',
-    'Groupe Immobilier Littoral'
+    'TF234567/C'
   )
 ];

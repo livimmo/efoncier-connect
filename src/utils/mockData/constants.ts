@@ -1,13 +1,12 @@
 import { ZoneType, PropertyType, PropertyStatus, TaxStatus } from '../../types';
 
-export const ZONE_TYPES: Record<string, ZoneType> = {
+export const ZONE_TYPES: Record<PropertyType, ZoneType> = {
   RESIDENTIAL: 'RESIDENTIAL_ZONE',
   COMMERCIAL: 'COMMERCIAL_ZONE',
   INDUSTRIAL: 'INDUSTRIAL_ZONE',
   AGRICULTURAL: 'AGRICULTURAL_ZONE',
   MIXED: 'MIXED_USE_ZONE',
-  PROTECTED: 'PROTECTED_ZONE',
-  CONSTRUCTIBLE: 'CONSTRUCTIBLE_ZONE'
+  SEASIDE: 'CONSTRUCTIBLE_ZONE'
 };
 
 export const PROPERTY_TYPES: PropertyType[] = [
