@@ -1,5 +1,6 @@
 import { Parcel, PropertyType, FiscalStatus } from '../types';
 import { generateTNBInfo } from './tnbGenerator';
+import { getCityRegion } from '../helpers/regionMapper';
 
 export type ParcelInput = Omit<Parcel, 'tnbInfo' | 'fiscalStatus'>;
 
@@ -14,8 +15,13 @@ const getFiscalStatus = (taxStatus: string): FiscalStatus => {
   }
 };
 
-export const createParcelWithTNB = (data: ParcelInput): Parcel => ({
-  ...data,
-  fiscalStatus: getFiscalStatus(data.taxStatus),
-  tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
-});
+export const createParcelWithTNB = (data: Omit<ParcelInput, 'region'>): Parcel => {
+  const region = getCityRegion(data.city);
+  
+  return {
+    ...data,
+    region,
+    fiscalStatus: getFiscalStatus(data.taxStatus),
+    tnbInfo: generateTNBInfo(data.surface, data.type as PropertyType)
+  };
+};
