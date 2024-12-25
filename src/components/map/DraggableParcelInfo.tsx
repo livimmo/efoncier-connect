@@ -46,14 +46,14 @@ export const DraggableParcelInfo = ({
         "fixed transition-all duration-300 ease-out",
         isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
         "hover:shadow-lg will-change-transform",
-        isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-[4.5rem]" : "w-[400px]",
+        isMobile ? "w-[95vw] max-w-[400px] left-1/2 -translate-x-1/2 bottom-24" : "w-[400px]",
         !isMobile && "absolute",
-        "z-[100]",
+        isMinimized ? "z-[40]" : "z-[100]", // Ajustement du z-index selon l'état
         className
       )}
       style={!isMobile ? {
         left: `${position.x}px`,
-        top: `${position.y}px`,
+        top: isMinimized ? `${position.y + 60}px` : `${position.y}px`, // Décalage vers le bas en mode minimisé
         transform: isMinimized 
           ? 'translate(-50%, -50%)'
           : 'translate(-50%, -50%)',
