@@ -1,47 +1,52 @@
-import { Property, TaxStatus, FiscalStatus, PropertyType, ZoneType, PropertyStatus } from '../../../types';
-import { generateTNBInfo } from './tnbGenerator';
-import { ZONE_TYPES } from '../constants';
+import { Property, TNBInfo, Location, PropertyType, ZoneType, TaxStatus, PropertyStatus } from '@/types';
 
-const getFiscalStatus = (taxStatus: TaxStatus): FiscalStatus => {
-  return taxStatus === 'PAID' ? 'compliant' : 'under_review';
-};
+interface ParcelGeneratorInput {
+  id: string;
+  title: string;
+  address: string;
+  city: string;
+  surface: number;
+  type: PropertyType;
+  zone: ZoneType;
+  taxStatus: TaxStatus;
+  status: PropertyStatus;
+  ownerName: string;
+  location: Location;
+  titleDeedNumber: string;
+  description?: string;
+  price?: number;
+}
 
-const getZoneType = (propertyType: PropertyType): ZoneType => {
-  return ZONE_TYPES[propertyType];
-};
-
-export const createParcelWithTNB = (input: Partial<Property>): Property => {
-  const taxStatus: TaxStatus = input.taxStatus || 'PENDING';
-  const fiscal_status = getFiscalStatus(taxStatus);
-  const surface_area = input.surface || 0;
-  const property_type = input.type || 'RESIDENTIAL';
-  const zone = getZoneType(property_type);
-  const status: PropertyStatus = input.status || 'AVAILABLE';
-  
-  const baseParcel: Property = {
-    id: input.id || crypto.randomUUID(),
-    title: input.title || '',
-    description: input.description || '',
-    property_type,
-    surface_area,
-    location: input.location || { lat: 0, lng: 0 },
-    fiscal_status,
-    status,
-    is_for_sale: input.is_for_sale || false,
-    price: input.price || 0,
-    owner_id: input.owner_id || '',
-    created_at: input.created_at || new Date().toISOString(),
-    updated_at: input.updated_at || new Date().toISOString(),
-    titleDeedNumber: input.titleDeedNumber || '',
-    ownerName: input.ownerName || '',
-    address: input.address || '',
-    city: input.city || '',
-    zone,
-    type: property_type,
-    surface: surface_area,
-    taxStatus,
-    tnbInfo: generateTNBInfo(surface_area, property_type)
+export const createParcelWithTNB = (input: ParcelGeneratorInput): Property => {
+  const tnbInfo: TNBInfo = {
+    pricePerMeter: Math.floor(Math.random() * 100) + 50,
+    totalAmount: input.surface * (Math.floor(Math.random() * 100) + 50),
+    lastUpdate: new Date().toISOString(),
+    status: input.taxStatus
   };
 
-  return baseParcel;
+  return {
+    id: input.id,
+    title: input.title,
+    description: input.description || '',
+    property_type: input.type,
+    surface_area: input.surface,
+    location: input.location,
+    fiscal_status: 'compliant',
+    status: input.status,
+    is_for_sale: Math.random() > 0.5,
+    price: input.price || input.surface * 1000,
+    owner_id: `owner-${input.id}`,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    titleDeedNumber: input.titleDeedNumber,
+    ownerName: input.ownerName,
+    address: input.address,
+    city: input.city,
+    zone: input.zone,
+    type: input.type,
+    surface: input.surface,
+    taxStatus: input.taxStatus,
+    tnbInfo: tnbInfo
+  };
 };

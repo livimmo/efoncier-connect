@@ -48,7 +48,8 @@ export type ZoneType =
   | "E4"
   | "BT2"
   | "I2S12"
-  | "PROTECTED";
+  | "PROTECTED"
+  | "CONSTRUCTIBLE";
 
 export interface TNBInfo {
   pricePerMeter: number;
@@ -89,5 +90,4 @@ export interface Property extends ParcelInput {
 
 export interface Parcel extends Property {
   isFavorite?: boolean;
-  owner?: string;
 }
