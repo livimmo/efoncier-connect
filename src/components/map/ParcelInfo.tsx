@@ -13,6 +13,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { ParcelStatusBadges } from "./parcel-info/ParcelStatusBadges";
 import { FavoriteButton } from "./parcel-info/FavoriteButton";
 import { ContactPromoteurDialog } from "./contact/ContactPromoteurDialog";
+import { useToast } from "@/hooks/use-toast";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
@@ -29,6 +30,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
   const isAuthenticated = !!profile;
   const isMobile = useMediaQuery("(max-width: 768px)");
   const showFavoriteButton = userRole === "developer" || userRole === "owner";
+  const { toast } = useToast();
 
   const handleLoginClick = () => {
     setLoginOpen(true);
@@ -41,6 +43,19 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
       return;
     }
     setContactDialogOpen(true);
+  };
+
+  const handlePropertyDetailsClick = () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour voir les détails complets.",
+        variant: "destructive",
+      });
+      setLoginOpen(true);
+      return;
+    }
+    setPropertyPopupOpen(true);
   };
 
   return (
@@ -135,7 +150,7 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
                   <Button 
                     variant="default"
                     className="w-full"
-                    onClick={() => setPropertyPopupOpen(true)}
+                    onClick={handlePropertyDetailsClick}
                   >
                     Voir les détails complets
                   </Button>
