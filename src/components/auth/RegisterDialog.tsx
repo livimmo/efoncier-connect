@@ -7,6 +7,8 @@ import { RoleSelection } from "./register/RoleSelection";
 import { RegisterForm } from "./register/RegisterForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { UserRole } from "@/types/auth";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface RegisterDialogProps {
   open: boolean;
@@ -37,7 +39,15 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 rounded-full hover:bg-slate-100"
+          onClick={() => onOpenChange(false)}
+        >
+          <X className="h-4 w-4" />
+        </Button>
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Créer un Compte sur eFoncier
