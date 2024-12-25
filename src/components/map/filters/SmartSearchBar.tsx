@@ -22,16 +22,16 @@ export const SmartSearchBar = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const { toast } = useToast();
 
-  // Simulated suggestions based on query
   useEffect(() => {
     if (query.length > 2) {
-      // Ajout des suggestions pour TNB et CIN
       const mockSuggestions = [
         `TF-${query}`,
         `TNB-${query}`,
         `CIN-${query}`,
-        `Casablanca - ${query}`,
         `Propriétaire: ${query}`,
+        `Surface: ${query}m²`,
+        `Année: ${query}`,
+        `Statut: ${query}`
       ];
       setSuggestions(mockSuggestions);
     } else {
@@ -49,16 +49,6 @@ export const SmartSearchBar = ({
     }
   };
 
-  const handleReset = () => {
-    setQuery('');
-    setSuggestions([]);
-    onReset();
-    toast({
-      title: "Filtres réinitialisés",
-      description: "Tous les critères de recherche ont été effacés.",
-    });
-  };
-
   return (
     <div className={cn("space-y-2", className)}>
       <div className="relative">
@@ -66,7 +56,7 @@ export const SmartSearchBar = ({
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Recherchez par TF, TNB, CIN, Région, Ville, Propriétaire..."
+          placeholder="Rechercher par TF, TNB, CIN, Surface, Année..."
           className="pl-9 pr-4"
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
@@ -81,6 +71,7 @@ export const SmartSearchBar = ({
               onClick={() => {
                 setQuery(suggestion);
                 setSuggestions([]);
+                handleSearch();
               }}
             >
               {suggestion}
@@ -99,7 +90,7 @@ export const SmartSearchBar = ({
         </Button>
         <Button
           variant="outline"
-          onClick={handleReset}
+          onClick={onReset}
           size="icon"
         >
           <RotateCcw className="h-4 w-4" />

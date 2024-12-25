@@ -107,7 +107,7 @@ const Map = () => {
         
         <div className="flex-1 p-4">
           {viewMode === 'map' ? (
-            <div className="grid lg:grid-cols-[300px,1fr] gap-4 h-full relative">
+            <div className="grid lg:grid-cols-[auto,1fr] gap-4 h-full relative">
               {isMobile && (
                 <Button
                   variant="outline"
@@ -138,6 +138,8 @@ const Map = () => {
                   setFilters={setFilters}
                   onApplyFilters={handleApplyFilters}
                   userRole={profile?.role}
+                  isCollapsed={!isMobile && isFiltersCollapsed}
+                  onToggleCollapse={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
                 />
               </div>
               <div className="h-[600px] relative">

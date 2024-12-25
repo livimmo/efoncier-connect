@@ -34,6 +34,8 @@ export interface MapFiltersProps {
   setFilters?: (filters: MapFilters) => void;
   onApplyFilters?: () => void;
   userRole?: string;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export interface MapMobileControlsProps {
