@@ -8,7 +8,6 @@ interface NotificationListProps {
 }
 
 export const NotificationList = ({ notifications, filters, onClick }: NotificationListProps) => {
-  // Filter notifications based on search and other criteria
   const filteredNotifications = notifications.filter(notification => {
     if (!filters) return true;
     
@@ -27,9 +26,11 @@ export const NotificationList = ({ notifications, filters, onClick }: Notificati
   return (
     <div className="space-y-4">
       {filteredNotifications.map((notification) => (
-        <div key={notification.id} onClick={() => onClick?.(notification)}>
-          <NotificationCard {...notification} />
-        </div>
+        <NotificationCard
+          key={notification.id}
+          notification={notification}
+          onClick={() => onClick?.(notification)}
+        />
       ))}
       {filteredNotifications.length === 0 && (
         <div className="text-center py-8 text-muted-foreground">

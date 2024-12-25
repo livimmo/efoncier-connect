@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { NotificationType, NotificationPriority, Notification } from "@/types/notifications";
 import { cn } from "@/lib/utils";
 
-interface NotificationCardProps {
+export interface NotificationCardProps {
   notification: Notification;
   onClick?: () => void;
 }
@@ -27,6 +27,8 @@ export const NotificationCard = ({
   notification,
   onClick,
 }: NotificationCardProps) => {
+  if (!notification) return null;
+
   const { type, priority, status, title, message, date, metadata, actions } = notification;
 
   const getNotificationIcon = (type: NotificationType) => {
