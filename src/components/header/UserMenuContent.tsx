@@ -1,22 +1,22 @@
-import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut, Star, History, MessageSquare } from "lucide-react";
+import { 
+  Home, 
+  User, 
+  CreditCard, 
+  Building2, 
+  FileText, 
+  Bell, 
+  Settings, 
+  LogOut, 
+  Star, 
+  History, 
+  MessageSquare,
+  MapPin 
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
-import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 
-const roleLabels = {
-  owner: "Propriétaire",
-  developer: "Promoteur",
-  commune: "Commune",
-  admin: "Administrateur"
-};
-
-const getRoleSpecificMenuItems = (role: string) => {
+const getMenuItems = (role: string) => {
   const items = {
     owner: [
       { icon: Building2, label: "Mes Biens", href: "/owner/properties" },
@@ -46,74 +46,84 @@ const getRoleSpecificMenuItems = (role: string) => {
 export const UserMenuContent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signOut, profile } = useAuth();
+  const { profile, signOut } = useAuth();
 
-  const handleLogout = async () => {
+  const handleSignOut = async () => {
     try {
       await signOut();
+      navigate("/");
       toast({
         title: "Déconnexion réussie",
         description: "À bientôt !",
       });
-      navigate("/");
     } catch (error) {
       toast({
-        title: "Erreur lors de la déconnexion",
-        description: "Veuillez réessayer",
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la déconnexion.",
         variant: "destructive",
       });
     }
   };
 
-  const roleSpecificItems = getRoleSpecificMenuItems(profile?.role || 'owner');
+  const menuItems = getMenuItems(profile?.role || "owner");
 
   return (
-    <DropdownMenuContent className="w-56" align="end" forceMount>
-      <DropdownMenuLabel className="font-normal">
-        <div className="flex flex-col space-y-1">
-          <p className="text-sm font-medium leading-none">
-            {profile?.first_name} {profile?.last_name}
-          </p>
-          <p className="text-xs leading-none text-muted-foreground">
-            {profile?.email}
-          </p>
-          <p className="text-xs font-medium text-primary">
-            {profile?.role ? roleLabels[profile.role as keyof typeof roleLabels] : ''}
-          </p>
+    <div className="w-56 space-y-1">
+      <div className="p-2">
+        <div className="flex items-center gap-2 p-2">
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+            <User className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate">
+              {profile?.name || "Utilisateur"}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
+              {profile?.email || "email@example.com"}
+            </p>
+          </div>
         </div>
-      </DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={() => navigate("/dashboard")}>
-        <Home className="mr-2 h-4 w-4" />
-        <span>Tableau de Bord</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/profile")}>
-        <User className="mr-2 h-4 w-4" />
-        <span>Profil</span>
-      </DropdownMenuItem>
-      {roleSpecificItems.map((item) => (
-        <DropdownMenuItem key={item.href} onClick={() => navigate(item.href)}>
-          <item.icon className="mr-2 h-4 w-4" />
-          <span>{item.label}</span>
-        </DropdownMenuItem>
-      ))}
-      <DropdownMenuItem onClick={() => navigate("/notifications")}>
-        <Bell className="mr-2 h-4 w-4" />
-        <span>Notifications</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/history")}>
-        <History className="mr-2 h-4 w-4" />
-        <span>Historique</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/settings")}>
-        <Settings className="mr-2 h-4 w-4" />
-        <span>Paramètres</span>
-      </DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={handleLogout}>
-        <LogOut className="mr-2 h-4 w-4" />
-        <span>Se déconnecter</span>
-      </DropdownMenuItem>
-    </DropdownMenuContent>
+      </div>
+      <div className="border-t" />
+      <div className="p-2">
+        {menuItems.map((item) => (
+          <button
+            key={item.href}
+            className="w-full flex items-center gap-2 p-2 text-sm rounded-md hover:bg-accent"
+            onClick={() => navigate(item.href)}
+          >
+            <item.icon className="w-4 h-4" />
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="border-t" />
+      <div className="p-2">
+        <button
+          className="w-full flex items-center gap-2 p-2 text-sm rounded-md hover:bg-accent"
+          onClick={() => navigate("/notifications")}
+        >
+          <Bell className="w-4 h-4" />
+          Notifications
+        </button>
+        <button
+          className="w-full flex items-center gap-2 p-2 text-sm rounded-md hover:bg-accent"
+          onClick={() => navigate("/settings")}
+        >
+          <Settings className="w-4 h-4" />
+          Paramètres
+        </button>
+      </div>
+      <div className="border-t" />
+      <div className="p-2">
+        <button
+          className="w-full flex items-center gap-2 p-2 text-sm rounded-md hover:bg-accent text-red-500 hover:text-red-500"
+          onClick={handleSignOut}
+        >
+          <LogOut className="w-4 h-4" />
+          Déconnexion
+        </button>
+      </div>
+    </div>
   );
 };

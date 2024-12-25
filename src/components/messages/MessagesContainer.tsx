@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MessagesHeader } from "./MessagesHeader";
 import { MessagesSearch } from "./MessagesSearch";
-import { MessageList } from "./MessageList";
+import { MessageList } from "./MessagesList";
 import { MessageDetail } from "./MessageDetail";
 import { useToast } from "@/hooks/use-toast";
 

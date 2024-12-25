@@ -1,20 +1,19 @@
-export type MessageStatus = "read" | "unread";
-export type MessageType = "user" | "bot";
-
-export interface MessageAction {
-  label: string;
-  action: string;
-  data?: any;
-}
-
 export interface Message {
   id: string;
   subject: string;
   participant: string;
-  type: MessageType;
+  type: string;
   location: string;
-  status: MessageStatus;
+  status: "read" | "unread";
   lastMessage: string;
   content?: string;
-  actions?: MessageAction[];
+  actions?: Array<{
+    label: string;
+    action: string;
+  }>;
+}
+
+export interface MessageAction {
+  label: string;
+  action: string;
 }
