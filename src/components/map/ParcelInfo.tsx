@@ -26,6 +26,32 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
     setLoginOpen(true);
   };
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "AVAILABLE":
+        return <Badge variant="success">Disponible</Badge>;
+      case "SOLD":
+        return <Badge variant="destructive">Vendu</Badge>;
+      case "IN_TRANSACTION":
+        return <Badge variant="warning">En Transaction</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  const getFiscalStatusBadge = (status: string) => {
+    switch (status) {
+      case "COMPLIANT":
+        return <Badge variant="success">En règle</Badge>;
+      case "NON_COMPLIANT":
+        return <Badge variant="destructive">Non conforme</Badge>;
+      case "UNDER_REVIEW":
+        return <Badge variant="warning">En révision</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
   return (
     <>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
@@ -36,9 +62,10 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
             <div className="space-y-2">
               <div className="flex items-start justify-between">
                 <h3 className="text-lg font-semibold">{parcel.title}</h3>
-                <Badge variant="outline" className="ml-2">
-                  {parcel.status}
-                </Badge>
+                <div className="flex gap-2">
+                  {getStatusBadge(parcel.status)}
+                  {getFiscalStatusBadge(parcel.fiscalStatus)}
+                </div>
               </div>
               <p className="text-sm text-muted-foreground relative">
                 {isAuthenticated ? (
