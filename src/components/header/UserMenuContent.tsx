@@ -25,7 +25,6 @@ const getRoleSpecificMenuItems = (role: string) => {
     developer: [
       { icon: Building2, label: "Mes Projets", href: "/developer/properties" },
       { icon: Star, label: "Mes Favoris", href: "/developer/favorites" },
-      { icon: FileText, label: "Documents", href: "/developer/documents" },
     ],
     commune: [
       { icon: Building2, label: "Gestion des Biens", href: "/commune/properties" },
