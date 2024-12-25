@@ -4,9 +4,10 @@ import { CreditCard, Eye, Download, MessageSquare } from "lucide-react";
 
 interface NotificationActionsProps {
   notification: Notification;
+  onActionClick: (actionType: string) => void;
 }
 
-export const NotificationActions = ({ notification }: NotificationActionsProps) => {
+export const NotificationActions = ({ notification, onActionClick }: NotificationActionsProps) => {
   const getDefaultActions = () => {
     switch (notification.type) {
       case "payment":
@@ -14,12 +15,12 @@ export const NotificationActions = ({ notification }: NotificationActionsProps) 
           primary: {
             label: "Payer maintenant",
             icon: <CreditCard className="h-4 w-4" />,
-            action: () => console.log("Payment action"),
+            action: () => onActionClick("payment"),
           },
           secondary: {
             label: "Voir les détails",
             icon: <Eye className="h-4 w-4" />,
-            action: () => console.log("View details action"),
+            action: () => onActionClick("payment_details"),
           },
         };
       case "document":
@@ -27,7 +28,12 @@ export const NotificationActions = ({ notification }: NotificationActionsProps) 
           primary: {
             label: "Télécharger",
             icon: <Download className="h-4 w-4" />,
-            action: () => console.log("Download action"),
+            action: () => onActionClick("document"),
+          },
+          secondary: {
+            label: "Aperçu",
+            icon: <Eye className="h-4 w-4" />,
+            action: () => onActionClick("document"),
           },
         };
       case "message":
@@ -35,7 +41,7 @@ export const NotificationActions = ({ notification }: NotificationActionsProps) 
           primary: {
             label: "Répondre",
             icon: <MessageSquare className="h-4 w-4" />,
-            action: () => console.log("Reply action"),
+            action: () => onActionClick("message"),
           },
         };
       default:

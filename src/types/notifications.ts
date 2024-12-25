@@ -4,7 +4,11 @@ export type NotificationType =
   | "message"
   | "document"
   | "property_update"
-  | "urgent";
+  | "urgent"
+  | "property"
+  | "report"
+  | "property_update"
+  | "new_property";
 
 export type NotificationPriority = "high" | "medium" | "low";
 
