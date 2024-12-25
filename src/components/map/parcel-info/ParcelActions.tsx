@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { CreditCard, Share2, MessageSquare, Receipt } from "lucide-react";
+import { CreditCard, Share2, MessageSquare, Receipt, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { PaymentDialog } from "@/components/notifications/dialogs/PaymentDialog";
@@ -36,25 +36,35 @@ export function ParcelActions({
     }
   };
 
+  const handleReceiptClick = () => {
+    if (profile && profile.role === "owner") {
+      onReceiptClick?.();
+    } else {
+      setShowLogin(true);
+    }
+  };
+
   return (
     <>
       <div className={cn("flex flex-wrap gap-2", className)}>
-        <Button 
-          className="flex-1"
-          onClick={handlePaymentClick}
-        >
-          {parcel.taxStatus === 'PAID' ? (
-            <>
-              <Receipt className="mr-2 h-4 w-4" />
-              Télécharger le reçu
-            </>
-          ) : (
-            <>
-              <CreditCard className="mr-2 h-4 w-4" />
-              Payer la TNB
-            </>
-          )}
-        </Button>
+        {parcel.taxStatus === 'PAID' ? (
+          <Button 
+            className="flex-1"
+            onClick={handleReceiptClick}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Télécharger le reçu
+          </Button>
+        ) : (
+          <Button 
+            className="flex-1"
+            onClick={handlePaymentClick}
+          >
+            <CreditCard className="mr-2 h-4 w-4" />
+            Payer la TNB
+          </Button>
+        )}
+        
         <Button 
           variant="outline" 
           className="flex-1"
@@ -68,7 +78,6 @@ export function ParcelActions({
         </Button>
       </div>
 
-      {/* Dialog de paiement */}
       <PaymentDialog
         open={showPayment}
         onOpenChange={setShowPayment}
@@ -76,7 +85,6 @@ export function ParcelActions({
         amount={parcel.tnbInfo.totalAmount}
       />
 
-      {/* Dialog de connexion */}
       <LoginDialog 
         open={showLogin} 
         onOpenChange={setShowLogin}
