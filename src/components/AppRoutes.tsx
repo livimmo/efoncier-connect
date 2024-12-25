@@ -29,6 +29,7 @@ export const AppRoutes = () => {
       <Route path="/about" element={<About />} />
       <Route path="/map" element={<Map />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/support" element={<Support />} />
       
       {/* Common Dashboard Route - Will redirect to role-specific dashboard */}
       <Route
@@ -142,14 +143,6 @@ export const AppRoutes = () => {
         element={
           <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
             <Messages />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/support"
-        element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
-            <Support />
           </PrivateRoute>
         }
       />
