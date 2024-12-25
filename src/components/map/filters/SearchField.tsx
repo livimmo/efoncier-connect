@@ -1,12 +1,5 @@
-import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown, User, FileText } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { Search } from "lucide-react";
 
 interface SearchFieldProps {
   value: string;
@@ -15,121 +8,16 @@ interface SearchFieldProps {
   placeholder: string;
 }
 
-export const SearchField = ({ value, onChange, type, placeholder }: SearchFieldProps) => {
-  const [open, setOpen] = useState(false);
-  const [suggestions, setSuggestions] = useState<{ value: string; label: string }[]>([]);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (!value || value.length < 2) {
-        setSuggestions([]);
-        return;
-      }
-
-      try {
-        if (type === "owner") {
-          const { data: profiles, error } = await supabase
-            .from('profiles')
-            .select('id, first_name, last_name')
-            .or(`first_name.ilike.%${value}%,last_name.ilike.%${value}%`)
-            .limit(5);
-
-          if (error) throw error;
-
-          if (profiles) {
-            setSuggestions(
-              profiles.map(profile => ({
-                value: `${profile.first_name} ${profile.last_name}`,
-                label: `${profile.first_name} ${profile.last_name}`
-              }))
-            );
-          }
-        } else {
-          const { data: properties, error } = await supabase
-            .from('properties')
-            .select('id, title')
-            .ilike('title', `%${value}%`)
-            .limit(5);
-
-          if (error) throw error;
-
-          if (properties) {
-            setSuggestions(
-              properties.map(property => ({
-                value: property.title,
-                label: property.title
-              }))
-            );
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching suggestions:', error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger les suggestions",
-          variant: "destructive",
-        });
-      }
-    };
-
-    // Debounce the fetch call to avoid too many requests
-    const timeoutId = setTimeout(fetchSuggestions, 300);
-    return () => clearTimeout(timeoutId);
-  }, [value, type, toast]);
-
+export const SearchField = ({ value, onChange, placeholder }: SearchFieldProps) => {
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <div className="relative">
-          <Input
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-            className="pl-8"
-          />
-          {type === "owner" ? (
-            <User className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-500" />
-          ) : (
-            <FileText className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-500" />
-          )}
-          <Button
-            variant="ghost"
-            role="combobox"
-            aria-expanded={open}
-            className="absolute right-0 top-0 h-full px-2"
-            onClick={() => setOpen(!open)}
-          >
-            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </div>
-      </PopoverTrigger>
-      <PopoverContent className="w-full p-0" align="start">
-        <Command>
-          <CommandInput placeholder={`Rechercher un ${type === "owner" ? "propriétaire" : "titre"}...`} />
-          <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
-          <CommandGroup>
-            {suggestions.map((suggestion) => (
-              <CommandItem
-                key={suggestion.value}
-                value={suggestion.value}
-                onSelect={(currentValue) => {
-                  onChange(currentValue);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === suggestion.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {suggestion.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <div className="relative">
+      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+      <Input
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="pl-8"
+      />
+    </div>
   );
 };
