@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Home, Map, MessageSquare, LifeBuoy } from "lucide-react";
+import { Home, Map, MessageSquare, LifeBuoy, Contact } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useAuth } from "./auth/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -34,6 +34,11 @@ export function MainNav({ className, ...props }: MainNavProps) {
       href: "/",
       label: "Accueil",
       icon: Home
+    },
+    {
+      href: "/contact",
+      label: "Contact",
+      icon: Contact
     },
     {
       href: "/map",
