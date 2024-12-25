@@ -108,6 +108,11 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                     {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
                   </div>
                 )}
+                {profile?.role === 'developer' && parcel.price && (
+                  <div className="text-sm font-semibold text-green-600 dark:text-green-500 mt-1">
+                    Prix: {formatCurrency(parcel.price)} DHS
+                  </div>
+                )}
                 <div className="text-xs text-muted-foreground mt-1">
                   {profile ? (
                     `TF: ${parcel.titleDeedNumber}`
