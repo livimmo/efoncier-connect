@@ -8,7 +8,6 @@ import { Button } from './ui/button';
 import { Map as MapIcon, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { MapFilters } from './map/MapFilters';
-import { ListViewFilters } from './map/filters/ListViewFilters';
 import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -117,66 +116,55 @@ const Map = () => {
         </div>
         
         <div className="flex-1 p-4">
-          {viewMode === 'map' ? (
-            <div className="grid lg:grid-cols-[auto,1fr] gap-4 h-full relative">
-              {isMobile && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute top-2 left-2 z-10 bg-background/95 backdrop-blur-sm"
-                  onClick={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
-                >
-                  {isFiltersCollapsed ? (
-                    <ChevronRight className="h-4 w-4" />
-                  ) : (
-                    <ChevronLeft className="h-4 w-4" />
-                  )}
-                </Button>
-              )}
-              <div className={cn(
-                "absolute lg:relative z-[5] bg-background/95 backdrop-blur-sm lg:backdrop-blur-none transition-all duration-300 ease-in-out",
-                isMobile ? (
-                  isFiltersCollapsed 
-                    ? "-translate-x-full opacity-0" 
-                    : "translate-x-0 opacity-100"
-                ) : ""
-              )}>
-                <MapFilters 
-                  onRegionChange={handleRegionChange}
-                  onCityChange={handleCityChange}
-                  onDistrictChange={handleDistrictChange}
-                  filters={filters}
-                  setFilters={setFilters}
-                  onApplyFilters={handleApplyFilters}
-                  userRole={profile?.role}
-                  isCollapsed={!isMobile && isFiltersCollapsed}
-                  onToggleCollapse={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
-                  mapInstance={mapInstance}
-                />
-              </div>
-              <div className="h-[600px] relative">
+          <div className="grid lg:grid-cols-[auto,1fr] gap-4 h-full relative">
+            {isMobile && (
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute top-2 left-2 z-10 bg-background/95 backdrop-blur-sm"
+                onClick={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
+              >
+                {isFiltersCollapsed ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
+              </Button>
+            )}
+            <div className={cn(
+              "absolute lg:relative z-[5] bg-background/95 backdrop-blur-sm lg:backdrop-blur-none transition-all duration-300 ease-in-out",
+              isMobile ? (
+                isFiltersCollapsed 
+                  ? "-translate-x-full opacity-0" 
+                  : "translate-x-0 opacity-100"
+              ) : ""
+            )}>
+              <MapFilters 
+                onRegionChange={handleRegionChange}
+                onCityChange={handleCityChange}
+                onDistrictChange={handleDistrictChange}
+                filters={filters}
+                setFilters={setFilters}
+                onApplyFilters={handleApplyFilters}
+                userRole={profile?.role}
+                isCollapsed={!isMobile && isFiltersCollapsed}
+                onToggleCollapse={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
+                mapInstance={mapInstance}
+              />
+            </div>
+            <div className="h-[600px] relative">
+              {viewMode === 'map' ? (
                 <MapContainer 
                   userRole={profile?.role} 
                   onParcelSelect={handleParcelSelect}
                   mapInstance={mapInstance}
                   setMapInstance={setMapInstance}
                 />
-              </div>
+              ) : (
+                <DeveloperPropertiesTable data={filteredParcels} />
+              )}
             </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="p-4 bg-background rounded-lg shadow">
-                <ListViewFilters
-                  filters={filters}
-                  setFilters={setFilters}
-                  onFilterChange={(type, value) => {
-                    handleApplyFilters();
-                  }}
-                />
-              </div>
-              <DeveloperPropertiesTable data={filteredParcels} />
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
