@@ -42,17 +42,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       });
 
       onOpenChange(false);
-      
-      switch (selectedRole) {
-        case "developer":
-          navigate("/developer/dashboard");
-          break;
-        case "commune":
-          navigate("/commune/dashboard");
-          break;
-        default:
-          navigate("/dashboard");
-      }
+      navigate("/"); // Redirection vers la page d'accueil
     } catch (error) {
       toast({
         title: "Erreur de connexion",
