@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Building, Home, Shield } from "lucide-react";
+import { Building, Home, Landmark } from "lucide-react";
 import { UserRole } from "@/types/auth";
 
 interface RoleSelectionProps {
@@ -9,54 +9,48 @@ interface RoleSelectionProps {
 
 export const RoleSelection = ({ selectedRole, onRoleChange }: RoleSelectionProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
       <Card 
-        className={`cursor-pointer transition-colors ${
+        className={`cursor-pointer transition-colors hover:border-primary ${
           selectedRole === "owner" ? "border-primary" : ""
         }`}
         onClick={() => onRoleChange("owner")}
       >
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Home className="h-5 w-5" />
-            Propriétaire
-          </CardTitle>
-          <CardDescription>
-            Gérez vos biens fonciers et vos paiements
+          <Home className="h-6 w-6 mb-2 text-primary" />
+          <CardTitle className="text-sm">Propriétaire</CardTitle>
+          <CardDescription className="text-xs">
+            Gérez vos biens fonciers
           </CardDescription>
         </CardHeader>
       </Card>
 
       <Card 
-        className={`cursor-pointer transition-colors ${
+        className={`cursor-pointer transition-colors hover:border-primary ${
           selectedRole === "developer" ? "border-primary" : ""
         }`}
         onClick={() => onRoleChange("developer")}
       >
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building className="h-5 w-5" />
-            Promoteur
-          </CardTitle>
-          <CardDescription>
-            Découvrez les meilleures opportunités foncières
+          <Building className="h-6 w-6 mb-2 text-primary" />
+          <CardTitle className="text-sm">Promoteur</CardTitle>
+          <CardDescription className="text-xs">
+            Accédez aux opportunités
           </CardDescription>
         </CardHeader>
       </Card>
 
       <Card 
-        className={`cursor-pointer transition-colors ${
+        className={`cursor-pointer transition-colors hover:border-primary ${
           selectedRole === "commune" ? "border-primary" : ""
         }`}
         onClick={() => onRoleChange("commune")}
       >
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Administrateur
-          </CardTitle>
-          <CardDescription>
-            Accès pour la gestion du système
+          <Landmark className="h-6 w-6 mb-2 text-primary" />
+          <CardTitle className="text-sm">Commune</CardTitle>
+          <CardDescription className="text-xs">
+            Gérez votre territoire
           </CardDescription>
         </CardHeader>
       </Card>

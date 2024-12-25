@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RoleSelection } from "./register/RoleSelection";
+import { RegisterForm } from "./register/RegisterForm";
+import { SocialLoginButtons } from "./SocialLoginButtons";
 import { UserRole } from "@/types/auth";
 
 interface RegisterDialogProps {
@@ -14,45 +14,16 @@ interface RegisterDialogProps {
 }
 
 export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<UserRole>("owner");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<UserRole>("owner");
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      // Simuler une inscription réussie
-      const user = {
-        id: crypto.randomUUID(),
-        email,
-        role,
-        first_name: "John",
-        last_name: "Doe"
-      };
-
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      toast({
-        title: "Inscription réussie",
-        description: "Bienvenue sur eFoncier !",
-      });
-
-      onOpenChange(false);
-      navigate("/dashboard");
-    } catch (error) {
-      toast({
-        title: "Erreur d'inscription",
-        description: "Une erreur est survenue lors de l'inscription",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleWhatsAppLogin = () => {
+    toast({
+      title: "Inscription WhatsApp",
+      description: "Cette fonctionnalité sera bientôt disponible",
+    });
   };
 
   return (
@@ -60,47 +31,52 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Inscription à eFoncier</DialogTitle>
+          <DialogDescription>
+            Créez votre compte pour accéder à tous nos services
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleRegister} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="exemple@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+
+        <RoleSelection 
+          selectedRole={selectedRole}
+          onRoleChange={setSelectedRole}
+        />
+
+        <RegisterForm 
+          role={selectedRole}
+          onSuccess={() => {
+            onOpenChange(false);
+            navigate("/dashboard");
+          }}
+        />
+
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <Separator />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Mot de passe</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Ou inscrivez-vous avec
+            </span>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="role">Type de compte</Label>
-            <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionnez votre rôle" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="owner">Propriétaire</SelectItem>
-                <SelectItem value="developer">Promoteur</SelectItem>
-                <SelectItem value="commune">Commune</SelectItem>
-                <SelectItem value="admin">Administrateur</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Inscription..." : "S'inscrire"}
-          </Button>
-        </form>
+        </div>
+
+        <SocialLoginButtons 
+          isLoading={isLoading}
+          onWhatsAppLogin={handleWhatsAppLogin}
+        />
+
+        <div className="text-center text-sm">
+          Déjà un compte ?{" "}
+          <button
+            onClick={() => {
+              onOpenChange(false);
+              navigate("/login");
+            }}
+            className="text-primary hover:underline"
+          >
+            Se connecter
+          </button>
+        </div>
       </DialogContent>
     </Dialog>
   );

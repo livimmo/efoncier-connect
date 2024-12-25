@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EmailLoginForm } from "./EmailLoginForm";
+import { SocialLoginButtons } from "./SocialLoginButtons";
 import { UserRole } from "@/types/auth";
 
 interface LoginDialogProps {
@@ -14,10 +13,8 @@ interface LoginDialogProps {
 }
 
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<UserRole>("owner");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<UserRole>("owner");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -27,10 +24,13 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
 
     try {
       // Simuler une connexion réussie
+      const formData = new FormData(e.target as HTMLFormElement);
+      const email = formData.get("email") as string;
+      
       const user = {
         id: crypto.randomUUID(),
         email,
-        role,
+        role: selectedRole,
         first_name: "John",
         last_name: "Doe"
       };
@@ -43,7 +43,18 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       });
 
       onOpenChange(false);
-      navigate("/dashboard");
+      
+      // Redirection selon le rôle
+      switch (selectedRole) {
+        case "developer":
+          navigate("/developer/dashboard");
+          break;
+        case "commune":
+          navigate("/commune/dashboard");
+          break;
+        default:
+          navigate("/dashboard");
+      }
     } catch (error) {
       toast({
         title: "Erreur de connexion",
@@ -55,53 +66,59 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     }
   };
 
+  const handleWhatsAppLogin = () => {
+    toast({
+      title: "Connexion WhatsApp",
+      description: "Cette fonctionnalité sera bientôt disponible",
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Connexion à eFoncier</DialogTitle>
+          <DialogDescription>
+            Connectez-vous pour accéder à votre espace personnel
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="exemple@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+
+        <EmailLoginForm 
+          isLoading={isLoading} 
+          onSubmit={handleLogin}
+          selectedRole={selectedRole}
+          onRoleChange={setSelectedRole}
+        />
+
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <Separator />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Mot de passe</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Ou continuez avec
+            </span>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="role">Type de compte</Label>
-            <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionnez votre rôle" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="owner">Propriétaire</SelectItem>
-                <SelectItem value="developer">Promoteur</SelectItem>
-                <SelectItem value="commune">Commune</SelectItem>
-                <SelectItem value="admin">Administrateur</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Connexion..." : "Se connecter"}
-          </Button>
-        </form>
+        </div>
+
+        <SocialLoginButtons 
+          isLoading={isLoading}
+          onWhatsAppLogin={handleWhatsAppLogin}
+        />
+
+        <div className="text-center text-sm">
+          Pas encore de compte ?{" "}
+          <button
+            onClick={() => {
+              onOpenChange(false);
+              navigate("/register");
+            }}
+            className="text-primary hover:underline"
+          >
+            Créer un compte
+          </button>
+        </div>
       </DialogContent>
     </Dialog>
   );
-};
+}
