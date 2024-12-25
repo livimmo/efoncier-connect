@@ -66,7 +66,7 @@ export const ParcelStatusInfo = ({ status, fiscalStatus, taxStatus }: ParcelStat
   const PaymentIcon = paymentInfo.icon;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex gap-2 items-center">
       <Badge 
         variant="secondary"
         className={statusInfo.color}
