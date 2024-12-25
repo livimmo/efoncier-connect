@@ -22,10 +22,7 @@ export const ParcelActions = ({
       <div className="flex gap-2">
         <Button 
           className="flex-1"
-          onClick={() => parcel.taxStatus === 'PAID' 
-            ? onReceiptClick()
-            : onPaymentClick()
-          }
+          onClick={parcel.taxStatus === 'PAID' ? onReceiptClick : onPaymentClick}
         >
           {parcel.taxStatus === 'PAID' ? (
             <>
