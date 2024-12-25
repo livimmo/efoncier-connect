@@ -15,9 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, RotateCcw } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { RotateCcw } from "lucide-react";
 
 interface HistoryFiltersProps {
   filters: {
@@ -64,10 +62,10 @@ export function HistoryFilters({ filters, onChange }: HistoryFiltersProps) {
               <SelectValue placeholder="Sélectionner une période" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">Toutes les périodes</SelectItem>
               <SelectItem value="today">Aujourd'hui</SelectItem>
               <SelectItem value="week">7 derniers jours</SelectItem>
               <SelectItem value="month">Ce mois-ci</SelectItem>
-              <SelectItem value="custom">Personnalisé</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -87,7 +85,6 @@ export function HistoryFilters({ filters, onChange }: HistoryFiltersProps) {
               <SelectItem value="all">Toutes les activités</SelectItem>
               <SelectItem value="payment">Paiements</SelectItem>
               <SelectItem value="message">Messages</SelectItem>
-              <SelectItem value="profile">Modifications Profil</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -107,7 +104,7 @@ export function HistoryFilters({ filters, onChange }: HistoryFiltersProps) {
               <SelectItem value="all">Tous les statuts</SelectItem>
               <SelectItem value="confirmed">Confirmé</SelectItem>
               <SelectItem value="pending">En attente</SelectItem>
-              <SelectItem value="cancelled">Annulé</SelectItem>
+              <SelectItem value="read">Lu</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -132,7 +129,7 @@ export function HistoryFilters({ filters, onChange }: HistoryFiltersProps) {
         <div className="space-y-2">
           <Label>🔍 Référence</Label>
           <Input
-            placeholder="Ex: TX#123456"
+            placeholder="Ex: TX2024-001"
             value={filters.reference}
             onChange={(e) =>
               onChange({ ...filters, reference: e.target.value })

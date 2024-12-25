@@ -46,6 +46,15 @@ export function HistoryTable({ filters }: HistoryTableProps) {
       amount: null,
       status: "read",
     },
+    {
+      id: 3,
+      date: "05/06/2024 - 09h45",
+      reference: "TX2024-002",
+      type: "payment",
+      location: "Tanger, Centre",
+      amount: 15000,
+      status: "pending",
+    },
   ];
 
   const handleViewDetails = (id: number) => {
@@ -60,10 +69,10 @@ export function HistoryTable({ filters }: HistoryTableProps) {
     if (filters.reference && !activity.reference.toLowerCase().includes(filters.reference.toLowerCase())) {
       return false;
     }
-    if (filters.activityType && activity.type !== filters.activityType) {
+    if (filters.activityType !== "all" && activity.type !== filters.activityType) {
       return false;
     }
-    if (filters.status && activity.status !== filters.status) {
+    if (filters.status !== "all" && activity.status !== filters.status) {
       return false;
     }
     if (activity.amount && filters.amount.length === 2) {
@@ -107,6 +116,8 @@ export function HistoryTable({ filters }: HistoryTableProps) {
                       ? "success"
                       : activity.status === "read"
                       ? "secondary"
+                      : activity.status === "pending"
+                      ? "warning"
                       : "default"
                   }
                 >
@@ -114,6 +125,8 @@ export function HistoryTable({ filters }: HistoryTableProps) {
                     ? "Confirmé"
                     : activity.status === "read"
                     ? "Lu"
+                    : activity.status === "pending"
+                    ? "En attente"
                     : activity.status}
                 </Badge>
               </TableCell>

@@ -4,7 +4,7 @@ import { HistoryTable } from "@/components/history/HistoryTable";
 import { HistoryStats } from "@/components/history/HistoryStats";
 import { HistoryCharts } from "@/components/history/HistoryCharts";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
 
 export default function History() {
@@ -25,7 +25,7 @@ export default function History() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <div className="flex-1">
         <div className="container mx-auto py-8 space-y-8">
