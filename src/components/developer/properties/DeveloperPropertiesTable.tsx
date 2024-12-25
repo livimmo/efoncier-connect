@@ -7,6 +7,7 @@ import { GoogleMap } from "@/components/map/GoogleMap";
 import type { Parcel } from "@/utils/mockData/types";
 import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
 import { ContactDialog } from "@/components/map/contact/ContactDialog";
+import { DownloadPropertyDialog } from "./DownloadPropertyDialog";
 
 interface DeveloperPropertiesTableProps {
   data: Parcel[];
@@ -16,6 +17,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showDocuments, setShowDocuments] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
   const handleLocationClick = (location: { lat: number; lng: number }) => {
@@ -30,6 +32,11 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const handleContactClick = (parcel: Parcel) => {
     setSelectedParcel(parcel);
     setShowContact(true);
+  };
+
+  const handleDownloadClick = (parcel: Parcel) => {
+    setSelectedParcel(parcel);
+    setShowDownload(true);
   };
 
   const getStatusBadge = (status: string) => {
@@ -90,6 +97,14 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Contact
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDownloadClick(parcel)}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Télécharger
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
@@ -136,6 +151,13 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
           onOpenChange={setShowContact}
         />
       )}
+
+      {/* Dialog pour le téléchargement */}
+      <DownloadPropertyDialog
+        parcel={selectedParcel}
+        open={showDownload}
+        onOpenChange={setShowDownload}
+      />
     </>
   );
 };
