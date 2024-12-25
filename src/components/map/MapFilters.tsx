@@ -10,8 +10,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { REGIONS } from "@/utils/mockData/locations";
+import { cn } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -27,7 +27,7 @@ export const MapFilters = ({
 }: MapFiltersProps) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const years = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString());
-  const { toast } = useToast();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleSearch = (query: string) => {
     setFilters?.({
@@ -40,7 +40,6 @@ export const MapFilters = ({
   const handleFilterChange = (filterType: string, value: string) => {
     if (!mapInstance) return;
 
-    // Animate map based on filter type
     switch (filterType) {
       case 'region':
         const selectedRegion = REGIONS.find(r => r.id === value);
@@ -65,7 +64,6 @@ export const MapFilters = ({
         break;
     }
 
-    // Update filters
     if (setFilters && filters) {
       setFilters({
         ...filters,
@@ -98,10 +96,9 @@ export const MapFilters = ({
       });
     }
     
-    // Reset map view
     if (mapInstance) {
-      mapInstance.panTo({ lat: 33.5731, lng: -7.5898 }); // Default center
-      mapInstance.setZoom(12); // Default zoom
+      mapInstance.panTo({ lat: 33.5731, lng: -7.5898 });
+      mapInstance.setZoom(12);
     }
     
     onApplyFilters?.();
@@ -123,17 +120,36 @@ export const MapFilters = ({
   if (!filters || !setFilters) return null;
 
   return (
-    <Card className={`h-fit transition-all duration-300 ${isCollapsed ? 'w-[60px]' : 'w-[300px]'}`}>
+    <Card className={cn(
+      "h-fit transition-all duration-300 relative",
+      isCollapsed ? 'w-[60px]' : isMobile ? 'w-full' : 'w-[300px]'
+    )}>
+      <Button
+        variant="default"
+        size="icon"
+        onClick={onToggleCollapse}
+        className={cn(
+          "absolute z-10 transition-all duration-300",
+          isMobile ? (
+            isCollapsed 
+              ? "right-[-40px] top-2 bg-green-500 hover:bg-green-600" 
+              : "right-2 top-2 bg-green-500 hover:bg-green-600"
+          ) : (
+            isCollapsed 
+              ? "right-[-40px] top-2 bg-green-500 hover:bg-green-600" 
+              : "right-2 top-2 bg-green-500 hover:bg-green-600"
+          )
+        )}
+      >
+        {isCollapsed ? (
+          <ChevronRight className="h-4 w-4 text-white" />
+        ) : (
+          <ChevronLeft className="h-4 w-4 text-white" />
+        )}
+      </Button>
+
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         {!isCollapsed && <CardTitle>Filtres</CardTitle>}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggleCollapse}
-          className="ml-auto"
-        >
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
       </CardHeader>
       
       {!isCollapsed && (
