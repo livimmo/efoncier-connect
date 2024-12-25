@@ -48,7 +48,7 @@ export const useLogin = () => {
         email: email.trim(),
         password,
         options: {
-          data: {
+          metadata: {
             role
           }
         }
