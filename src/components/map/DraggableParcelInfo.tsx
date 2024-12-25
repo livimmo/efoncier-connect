@@ -54,7 +54,9 @@ export const DraggableParcelInfo = ({
       style={!isMobile ? {
         left: `${position.x}px`,
         top: `${position.y}px`,
-        transform: `translate(-50%, ${isMinimized ? '-50%' : '-100%'})`,
+        transform: isMinimized 
+          ? `translate(-50%, -50%)`
+          : `translate(-50%, -100%)`,
       } : undefined}
     >
       <ParcelInfoHeader
