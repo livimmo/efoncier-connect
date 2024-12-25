@@ -10,6 +10,7 @@ import { RegisterDialog } from "@/components/auth/RegisterDialog";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { UserPlus } from "lucide-react";
 import { LoginDialog } from "@/components/auth/LoginDialog";
+import { BlurredField } from "./BlurredField";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -47,33 +48,6 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
 
   const paymentStatus = getPaymentStatusInfo(parcel.taxStatus);
 
-  const receiptData = {
-    referenceNumber: `TNB-${parcel.id}`,
-    date: new Date().toISOString(),
-    taxpayer: {
-      name: parcel.ownerName,
-      fiscalId: parcel.titleDeedNumber,
-    },
-    parcel: {
-      id: parcel.id,
-      location: parcel.address,
-      area: parcel.surface,
-      amount: parcel.tnbInfo.totalAmount,
-      transactionRef: `TX-${parcel.id}`,
-    },
-  };
-
-  const handlePaymentClick = () => {
-    if (parcel.taxStatus === 'PAID') {
-      setReceiptOpen(true);
-    } else {
-      setPaymentOpen(true);
-    }
-    if (onClose) {
-      onClose();
-    }
-  };
-
   return (
     <>
       <PropertyPopup 
@@ -91,7 +65,21 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
       <ReceiptDialog
         open={receiptOpen}
         onOpenChange={setReceiptOpen}
-        receiptData={receiptData}
+        receiptData={{
+          referenceNumber: `TNB-${parcel.id}`,
+          date: new Date().toISOString(),
+          taxpayer: {
+            name: parcel.ownerName,
+            fiscalId: parcel.titleDeedNumber,
+          },
+          parcel: {
+            id: parcel.id,
+            location: parcel.address,
+            area: parcel.surface,
+            amount: parcel.tnbInfo.totalAmount,
+            transactionRef: `TX-${parcel.id}`,
+          },
+        }}
       />
 
       <RegisterDialog 
@@ -126,7 +114,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                   )}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  TF: {parcel.titleDeedNumber}
+                  TF: <BlurredField value={parcel.titleDeedNumber} />
                 </div>
                 <div className="mt-1">
                   <ParcelStatusInfo 
@@ -169,7 +157,16 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                     <Button 
                       variant={paymentStatus.buttonVariant}
                       size="sm"
-                      onClick={handlePaymentClick}
+                      onClick={() => {
+                        if (parcel.taxStatus === 'PAID') {
+                          setReceiptOpen(true);
+                        } else {
+                          setPaymentOpen(true);
+                        }
+                        if (onClose) {
+                          onClose();
+                        }
+                      }}
                       className={`w-full ${paymentStatus.buttonClass}`}
                     >
                       {paymentStatus.buttonText}
