@@ -26,8 +26,8 @@ export const roleSpecificItems: MenuItems = {
     { icon: LayoutDashboard, label: "Tableau de Bord", href: "/owner/dashboard" },
     { icon: Plus, label: "Ajouter un Terrain", href: "/owner/property/add" },
     { icon: FileText, label: "Mes Biens", href: "/owner/properties" },
-    { icon: MessageSquare, label: "Messagerie", href: "/messages" },
     { icon: CreditCard, label: "Paiements", href: "/payments" },
+    { icon: MessageSquare, label: "Messagerie", href: "/messages" },
   ],
   developer: [
     { icon: LayoutDashboard, label: "Tableau de Bord", href: "/developer/dashboard" },
