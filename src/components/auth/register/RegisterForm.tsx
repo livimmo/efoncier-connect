@@ -1,22 +1,22 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { RegisterFormFields } from "./RegisterFormFields";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RegisterFormData, UserRole } from "@/types/auth";
+import { RegisterFormFields } from "@/components/auth/RegisterFormFields";
 
 const formSchema = z.object({
   email: z.string().email("Email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères"),
   confirmPassword: z.string(),
-  firstName: z.string().min(1, "Le prénom est requis"),
-  lastName: z.string().min(1, "Le nom est requis"),
-  phone: z.string().min(1, "Le numéro de téléphone est requis"),
-  city: z.string().min(1, "La ville est requise"),
-  role: z.enum(["owner", "developer", "commune", "admin"]),
+  firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
+  lastName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
+  phone: z.string(),
+  city: z.string(),
+  role: z.string(),
   acceptTerms: z.boolean().refine((val) => val === true, {
     message: "Vous devez accepter les conditions d'utilisation",
   }),
@@ -51,19 +51,21 @@ export const RegisterForm = ({ selectedRole, onSuccess }: RegisterFormProps) => 
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      // Simuler l'enregistrement
-      const user = {
+      // Store user data in localStorage
+      const userData = {
         id: crypto.randomUUID(),
         email: data.email,
-        role: data.role,
         first_name: data.firstName,
         last_name: data.lastName,
+        role: data.role,
+        phone: data.phone,
+        city: data.city,
       };
-
-      localStorage.setItem('user', JSON.stringify(user));
+      
+      localStorage.setItem('user', JSON.stringify(userData));
 
       toast({
-        title: "Compte créé avec succès",
+        title: "Inscription réussie",
         description: "Vous pouvez maintenant vous connecter",
       });
 
@@ -71,7 +73,7 @@ export const RegisterForm = ({ selectedRole, onSuccess }: RegisterFormProps) => 
     } catch (error) {
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création du compte",
+        description: "Une erreur est survenue lors de l'inscription",
         variant: "destructive",
       });
     }
@@ -82,7 +84,7 @@ export const RegisterForm = ({ selectedRole, onSuccess }: RegisterFormProps) => 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <RegisterFormFields form={form} />
         <Button type="submit" className="w-full">
-          Créer mon compte
+          S'inscrire
         </Button>
       </form>
     </Form>

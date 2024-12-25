@@ -1,37 +1,19 @@
-import { Header } from "@/components/Header";
-import { RoleSelection } from "@/components/auth/register/RoleSelection";
 import { RegisterForm } from "@/components/auth/register/RegisterForm";
-import { useState } from "react";
 import { UserRole } from "@/types/auth";
+import { useNavigate } from "react-router-dom";
 
-const Register = () => {
-  const [selectedRole, setSelectedRole] = useState<UserRole>("owner");
+export default function Register() {
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background auth-page">
-      <Header />
-      <div className="py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto space-y-8">
-          <div className="text-center">
-            <img src="/logo.svg" alt="eFoncier" className="h-12 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-foreground mb-2">
-              Créez votre compte sur eFoncier
-            </h1>
-            <p className="text-muted-foreground">
-              Inscrivez-vous pour gérer vos terrains, vos paiements fiscaux et accéder aux opportunités foncières.
-            </p>
-          </div>
-
-          <RoleSelection 
-            selectedRole={selectedRole} 
-            onRoleChange={setSelectedRole} 
-          />
-
-          <RegisterForm />
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-md mx-auto">
+        <h1 className="text-2xl font-bold mb-6">Créer un compte</h1>
+        <RegisterForm 
+          selectedRole="owner" 
+          onSuccess={() => navigate("/login")} 
+        />
       </div>
     </div>
   );
-};
-
-export default Register;
+}
