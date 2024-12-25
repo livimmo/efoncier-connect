@@ -14,6 +14,7 @@ interface GoogleMapProps {
   userRole?: UserRole;
   center?: { lat: number; lng: number };
   zoom?: number;
+  getMarkerColor?: (status: string) => string;
 }
 
 const GoogleMap = ({ 
@@ -23,11 +24,8 @@ const GoogleMap = ({
   setMapInstance,
   userRole,
   center = { lat: 33.5731, lng: -7.5898 },
-  zoom = 12
-}: GoogleMapProps) => {
-  const mapRef = useRef<HTMLDivElement>(null);
-
-  const getMarkerColor = (status: string) => {
+  zoom = 12,
+  getMarkerColor = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
         return '#10B981'; // Green
@@ -38,7 +36,9 @@ const GoogleMap = ({
       default:
         return '#6B7280'; // Gray
     }
-  };
+  }
+}: GoogleMapProps) => {
+  const mapRef = useRef<HTMLDivElement>(null);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
