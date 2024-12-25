@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -20,10 +21,12 @@ export const MapFilters = ({
   onApplyFilters,
   userRole,
   isCollapsed,
-  onToggleCollapse
+  onToggleCollapse,
+  mapInstance
 }: MapFiltersProps) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const years = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString());
+  const { toast } = useToast();
 
   const handleSearch = (query: string) => {
     setFilters?.({
@@ -31,6 +34,58 @@ export const MapFilters = ({
       searchQuery: query
     });
     onApplyFilters?.();
+  };
+
+  const handleFilterChange = (filterType: string, value: string) => {
+    if (!mapInstance) return;
+
+    // Animate map based on filter type
+    switch (filterType) {
+      case 'region':
+        const regionCoords = {
+          'casablanca': { lat: 33.5731, lng: -7.5898, zoom: 12 },
+          'rabat': { lat: 34.0209, lng: -6.8416, zoom: 12 },
+          'marrakech': { lat: 31.6295, lng: -7.9811, zoom: 12 }
+        };
+        
+        if (value in regionCoords) {
+          const coords = regionCoords[value as keyof typeof regionCoords];
+          mapInstance.panTo({ lat: coords.lat, lng: coords.lng });
+          mapInstance.setZoom(coords.zoom);
+          toast({
+            title: "Carte mise à jour",
+            description: `Vue centrée sur ${value}`,
+          });
+        }
+        break;
+
+      case 'propertyType':
+        // Zoom out slightly to show all properties of this type
+        mapInstance.setZoom(11);
+        toast({
+          title: "Filtre appliqué",
+          description: `Affichage des propriétés de type: ${value}`,
+        });
+        break;
+
+      case 'status':
+        // Zoom out to show all properties with this status
+        mapInstance.setZoom(10);
+        toast({
+          title: "Filtre appliqué",
+          description: `Affichage des propriétés avec le statut: ${value}`,
+        });
+        break;
+    }
+
+    // Update filters
+    if (setFilters && filters) {
+      setFilters({
+        ...filters,
+        [filterType]: value
+      });
+      onApplyFilters?.();
+    }
   };
 
   const handleReset = () => {
@@ -54,6 +109,17 @@ export const MapFilters = ({
         tnbStatus: ''
       });
     }
+    
+    // Reset map view
+    if (mapInstance) {
+      mapInstance.panTo({ lat: 33.5731, lng: -7.5898 }); // Default center
+      mapInstance.setZoom(12); // Default zoom
+      toast({
+        title: "Filtres réinitialisés",
+        description: "La carte a été réinitialisée",
+      });
+    }
+    
     onApplyFilters?.();
   };
 
@@ -100,10 +166,7 @@ export const MapFilters = ({
               <Label>Année fiscale</Label>
               <Select 
                 value={selectedYear}
-                onValueChange={(value) => {
-                  setSelectedYear(value);
-                  setFilters({ ...filters, fiscalStatus: value });
-                }}
+                onValueChange={(value) => handleFilterChange('fiscalYear', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner une année" />
@@ -120,7 +183,7 @@ export const MapFilters = ({
               <Label>Statut de paiement</Label>
               <Select
                 value={filters.paymentStatus}
-                onValueChange={(value) => setFilters({ ...filters, paymentStatus: value })}
+                onValueChange={(value) => handleFilterChange('paymentStatus', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner un statut" />
@@ -142,20 +205,22 @@ export const MapFilters = ({
 
           <BasicFilters
             filters={filters}
-            onRegionChange={onRegionChange!}
-            onCityChange={onCityChange!}
+            onRegionChange={(value) => handleFilterChange('region', value)}
+            onCityChange={(value) => handleFilterChange('city', value)}
             setFilters={setFilters}
           />
 
           <PropertyFilters
             filters={filters}
             setFilters={setFilters}
+            onFilterChange={handleFilterChange}
           />
 
           <PaymentFilters
             filters={filters}
             setFilters={setFilters}
             userRole={userRole}
+            onFilterChange={handleFilterChange}
           />
 
           {onApplyFilters && (

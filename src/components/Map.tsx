@@ -140,6 +140,7 @@ const Map = () => {
                   userRole={profile?.role}
                   isCollapsed={!isMobile && isFiltersCollapsed}
                   onToggleCollapse={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
+                  mapInstance={mapInstance}
                 />
               </div>
               <div className="h-[600px] relative">

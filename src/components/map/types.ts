@@ -23,7 +23,7 @@ export interface MapFilters {
   searchQuery: string;
   zoning: string;
   paymentStatus: string;
-  tnbStatus: string; // Nouveau champ pour le statut TNB
+  tnbStatus: string;
 }
 
 export interface MapFiltersProps {
@@ -36,6 +36,7 @@ export interface MapFiltersProps {
   userRole?: string;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
+  mapInstance?: google.maps.Map | null;
 }
 
 export interface MapMobileControlsProps {
