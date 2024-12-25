@@ -5,6 +5,8 @@ import type { Parcel } from '@/utils/mockData/types';
 import type { MapSettings } from './types';
 import { useToast } from "@/hooks/use-toast";
 import { UserRole } from '@/types/auth';
+import { useState } from 'react';
+import { LoginDialog } from '../auth/LoginDialog';
 
 interface MapViewProps {
   selectedParcel: Parcel | null;
@@ -28,6 +30,8 @@ export const MapView = ({
   userRole,
 }: MapViewProps) => {
   const { toast } = useToast();
+  const [activeStatus, setActiveStatus] = useState<string | null>(null);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   const getMarkerColor = (status: string) => {
     switch (status) {
@@ -42,12 +46,34 @@ export const MapView = ({
     }
   };
 
+  const handleParcelClick = (parcel: Parcel, position: { x: number; y: number }) => {
+    if (!userRole) {
+      setIsLoginDialogOpen(true);
+    } else {
+      onParcelSelect(parcel, position);
+    }
+  };
+
+  const handleStatusFilter = (status: string | null) => {
+    setActiveStatus(status);
+    if (status) {
+      toast({
+        title: "Filtres appliqués",
+        description: `Affichage des terrains avec le statut : ${status === 'AVAILABLE' ? 'Disponible' : status === 'IN_TRANSACTION' ? 'En Transaction' : 'Vendu'}`,
+      });
+    }
+  };
+
+  const filteredByStatus = activeStatus
+    ? filteredParcels.filter(parcel => parcel.status === activeStatus)
+    : filteredParcels;
+
   return (
     <div className="relative flex-1 h-full">
       <div className="absolute inset-0">
         <GoogleMap 
-          onMarkerClick={(parcel, position) => onParcelSelect(parcel, position)}
-          parcels={filteredParcels}
+          onMarkerClick={handleParcelClick}
+          parcels={filteredByStatus}
           theme={settings.theme}
           setMapInstance={setMapInstance}
           userRole={userRole}
@@ -55,9 +81,13 @@ export const MapView = ({
         />
       </div>
 
-      <MapLegend className="hidden md:block" />
+      <MapLegend 
+        className="hidden md:block" 
+        onStatusFilter={handleStatusFilter}
+        activeStatus={activeStatus}
+      />
 
-      {selectedParcel && markerPosition && (
+      {selectedParcel && markerPosition && !userRole && (
         <DraggableParcelInfo
           parcel={selectedParcel}
           onClose={() => onParcelSelect(null)}
@@ -66,6 +96,11 @@ export const MapView = ({
           userRole={userRole}
         />
       )}
+
+      <LoginDialog 
+        open={isLoginDialogOpen}
+        onOpenChange={setIsLoginDialogOpen}
+      />
     </div>
   );
 };
