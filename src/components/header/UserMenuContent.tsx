@@ -5,6 +5,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
@@ -16,33 +17,32 @@ export const UserMenuContent = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-      navigate("/");
       toast({
         title: "Déconnexion réussie",
         description: "À bientôt !",
       });
+      navigate("/");
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la déconnexion",
+        title: "Erreur lors de la déconnexion",
+        description: "Veuillez réessayer",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <DropdownMenuContent className="w-56" align="end" sideOffset={5}>
-      <div className="flex items-center justify-start gap-2 p-2">
-        <div className="flex flex-col space-y-1 leading-none">
-          <p className="font-medium">
+    <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuLabel className="font-normal">
+        <div className="flex flex-col space-y-1">
+          <p className="text-sm font-medium leading-none">
             {profile?.first_name} {profile?.last_name}
           </p>
-          <p className="text-sm text-muted-foreground">
-            {profile?.role === "owner" ? "Propriétaire" : 
-             profile?.role === "developer" ? "Promoteur" : "Administrateur"}
+          <p className="text-xs leading-none text-muted-foreground">
+            {profile?.email}
           </p>
         </div>
-      </div>
+      </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuItem onClick={() => navigate("/dashboard")}>
         <Home className="mr-2 h-4 w-4" />
@@ -54,16 +54,16 @@ export const UserMenuContent = () => {
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => navigate("/history")}>
         <CreditCard className="mr-2 h-4 w-4" />
-        <span>Historique des Paiements</span>
+        <span>Historique</span>
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/profile?tab=properties")}>
+      <DropdownMenuItem onClick={() => navigate("/support")}>
         <Database className="mr-2 h-4 w-4" />
-        <span>Mes Biens</span>
+        <span>Support</span>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem onClick={handleLogout}>
         <LogOut className="mr-2 h-4 w-4" />
-        <span>Se Déconnecter</span>
+        <span>Se déconnecter</span>
       </DropdownMenuItem>
     </DropdownMenuContent>
   );
