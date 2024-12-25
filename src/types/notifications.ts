@@ -1,16 +1,29 @@
 export type NotificationType = 
+  | "PAYMENT" 
+  | "FISCAL_STATUS" 
+  | "MESSAGE" 
+  | "DOCUMENT" 
+  | "URGENT" 
+  | "PROPERTY" 
+  | "REPORT" 
+  | "PROPERTY_UPDATE" 
+  | "NEW_PROPERTY"
   | "PAYMENT_DUE" 
   | "DOCUMENT_RECEIVED" 
-  | "MESSAGE" 
-  | "STATUS_UPDATE" 
-  | "PROPERTY_UPDATE" 
-  | "NEW_PROPERTY" 
-  | "FISCAL_STATUS" 
-  | "REPORT" 
-  | "URGENT";
+  | "STATUS_UPDATE";
 
 export type NotificationPriority = "HIGH" | "MEDIUM" | "LOW";
 export type NotificationStatus = "READ" | "UNREAD";
+
+export interface NotificationFilter {
+  type: string;
+  status: string;
+  priority: string;
+  date: string | null;
+  location: string;
+  search: string;
+  titleDeedNumber?: string;
+}
 
 export interface Notification {
   id: string;
@@ -44,16 +57,6 @@ export interface Notification {
       action: () => void;
     };
   };
-}
-
-export interface NotificationFilter {
-  type: string;
-  status: string;
-  priority: string;
-  search: string;
-  date: Date | null;
-  location: string;
-  titleDeedNumber?: string;
 }
 
 export interface MapFilters {

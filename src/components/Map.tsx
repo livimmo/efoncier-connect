@@ -32,7 +32,7 @@ const Map = () => {
     searchQuery: '',
     zoning: '',
     paymentStatus: '',
-    tnbStatus: '' // Ajout du nouveau filtre
+    tnbStatus: ''
   });
 
   const handleParcelSelect = (parcelId: string) => {

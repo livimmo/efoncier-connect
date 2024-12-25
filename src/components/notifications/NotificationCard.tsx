@@ -15,71 +15,43 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { NotificationType, NotificationPriority } from "@/types/notifications";
+import { NotificationType, NotificationPriority, Notification } from "@/types/notifications";
 import { cn } from "@/lib/utils";
 
 interface NotificationCardProps {
-  id: string;
-  type: NotificationType;
-  priority: NotificationPriority;
-  title: string;
-  message: string;
-  date: string;
-  read: boolean;
-  metadata?: {
-    titleDeedNumber?: string;
-    surface?: number;
-    price?: number;
-    documentUrl?: string;
-    documentType?: string;
-    dueDate?: string;
-    amount?: number;
-    paymentStatus?: string;
-  };
-  actions?: {
-    primary?: {
-      label: string;
-      action: () => void;
-    };
-    secondary?: {
-      label: string;
-      action: () => void;
-    };
-  };
+  notification: Notification;
   onClick?: () => void;
 }
 
 export const NotificationCard = ({
-  type,
-  priority,
-  title,
-  message,
-  date,
-  read,
-  metadata,
-  actions,
+  notification,
   onClick,
 }: NotificationCardProps) => {
+  const { type, priority, status, title, message, date, metadata, actions } = notification;
+
   const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
-      case "payment":
+      case "PAYMENT":
+      case "PAYMENT_DUE":
         return <CreditCard className="h-5 w-5" />;
-      case "fiscal_status":
+      case "FISCAL_STATUS":
         return <Shield className="h-5 w-5" />;
-      case "message":
+      case "MESSAGE":
         return <MessageCircle className="h-5 w-5" />;
-      case "document":
+      case "DOCUMENT":
+      case "DOCUMENT_RECEIVED":
         return <FileText className="h-5 w-5" />;
-      case "urgent":
+      case "URGENT":
         return <AlertTriangle className="h-5 w-5" />;
-      case "property":
+      case "PROPERTY":
         return <Building className="h-5 w-5" />;
-      case "report":
+      case "REPORT":
         return <FileBarChart className="h-5 w-5" />;
-      case "property_update":
+      case "PROPERTY_UPDATE":
+      case "NEW_PROPERTY":
         return <Home className="h-5 w-5" />;
-      case "new_property":
-        return <Building className="h-5 w-5" />;
+      case "STATUS_UPDATE":
+        return <AlertTriangle className="h-5 w-5" />;
       default:
         return <AlertTriangle className="h-5 w-5" />;
     }
@@ -87,18 +59,19 @@ export const NotificationCard = ({
 
   const getPriorityColor = (priority: NotificationPriority) => {
     switch (priority) {
-      case "high":
+      case "HIGH":
         return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300";
-      case "medium":
+      case "MEDIUM":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300";
-      case "low":
+      case "LOW":
         return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300";
     }
   };
 
   const getDefaultActions = (type: NotificationType) => {
     switch (type) {
-      case "payment":
+      case "PAYMENT":
+      case "PAYMENT_DUE":
         return {
           primary: {
             label: "Payer maintenant",
@@ -109,21 +82,22 @@ export const NotificationCard = ({
             icon: <Eye className="h-4 w-4" />
           }
         };
-      case "fiscal_status":
+      case "FISCAL_STATUS":
         return {
           primary: {
             label: "Voir les détails",
             icon: <Eye className="h-4 w-4" />
           }
         };
-      case "message":
+      case "MESSAGE":
         return {
           primary: {
             label: "Répondre",
             icon: <MessageSquare className="h-4 w-4" />
           }
         };
-      case "document":
+      case "DOCUMENT":
+      case "DOCUMENT_RECEIVED":
         return {
           primary: {
             label: "Télécharger",
@@ -146,7 +120,7 @@ export const NotificationCard = ({
       onClick={onClick}
       className={cn(
         "p-4 rounded-lg border cursor-pointer transition-colors duration-200",
-        read ? "bg-background" : "bg-blue-50 dark:bg-blue-900/20",
+        status === "UNREAD" ? "bg-blue-50/50 dark:bg-blue-950/20" : "bg-background",
         "hover:bg-accent"
       )}
     >
