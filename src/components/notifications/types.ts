@@ -1,4 +1,13 @@
-export type NotificationType = "message" | "payment" | "property" | "document" | "system" | "warning" | "reminder" | "transaction";
+export type NotificationType = 
+  | "fiscal" 
+  | "property" 
+  | "message" 
+  | "document" 
+  | "system" 
+  | "warning" 
+  | "reminder" 
+  | "transaction";
+
 export type NotificationPriority = "high" | "medium" | "low";
 
 export interface NotificationFilter {
@@ -26,4 +35,9 @@ export interface Notification {
       action: () => void;
     };
   };
+}
+
+export interface NotificationGroup {
+  title: string;
+  notifications: Notification[];
 }
