@@ -19,6 +19,9 @@ export interface MapFilters {
   lastPaymentDate: Date | null;
   fiscalStatus: string;
   maxPrice: number;
+  tnbReference: string;
+  searchQuery: string;
+  zoning: string;
 }
 
 export interface MapFiltersProps {

@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FileText, MapPin, Download, MessageSquare } from "lucide-react";
+import { FileText, MapPin, Download, MessageSquare, Search } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GoogleMap } from "@/components/map/GoogleMap";
@@ -8,6 +8,7 @@ import type { Parcel } from "@/utils/mockData/types";
 import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
 import { PropertyChat } from "@/components/chat/PropertyChat";
 import { DownloadPropertyDialog } from "./DownloadPropertyDialog";
+import { Input } from "@/components/ui/input";
 
 interface DeveloperPropertiesTableProps {
   data: Parcel[];
@@ -18,6 +19,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const [showDocuments, setShowDocuments] = useState(false);
   const [showDownload, setShowDownload] = useState(false);
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleLocationClick = (location: { lat: number; lng: number }) => {
     setSelectedLocation(location);
@@ -44,63 +46,85 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
     }
   };
 
+  const filteredData = data.filter(parcel => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      parcel.titleDeedNumber.toLowerCase().includes(searchLower) ||
+      parcel.address.toLowerCase().includes(searchLower) ||
+      parcel.type.toLowerCase().includes(searchLower) ||
+      parcel.status.toLowerCase().includes(searchLower)
+    );
+  });
+
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Titre Foncier</TableHead>
-            <TableHead>Localisation</TableHead>
-            <TableHead>Surface (m²)</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((parcel) => (
-            <TableRow key={parcel.id}>
-              <TableCell>{parcel.titleDeedNumber}</TableCell>
-              <TableCell>{parcel.address}</TableCell>
-              <TableCell>{parcel.surface}</TableCell>
-              <TableCell>{parcel.type}</TableCell>
-              <TableCell>{getStatusBadge(parcel.status)}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDocumentsClick(parcel)}
-                  >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Documents
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleLocationClick(parcel.location)}
-                  >
-                    <MapPin className="h-4 w-4 mr-2" />
-                    Localisation
-                  </Button>
-                  <PropertyChat 
-                    propertyId={parcel.id}
-                    propertyTitle={parcel.title}
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDownloadClick(parcel)}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Télécharger
-                  </Button>
-                </div>
-              </TableCell>
+      <div className="space-y-4">
+        <div className="relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Rechercher par titre foncier, adresse, type..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Titre Foncier</TableHead>
+              <TableHead>Localisation</TableHead>
+              <TableHead>Surface (m²)</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Statut</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredData.map((parcel) => (
+              <TableRow key={parcel.id}>
+                <TableCell>{parcel.titleDeedNumber}</TableCell>
+                <TableCell>{parcel.address}</TableCell>
+                <TableCell>{parcel.surface}</TableCell>
+                <TableCell>{parcel.type}</TableCell>
+                <TableCell>{getStatusBadge(parcel.status)}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDocumentsClick(parcel)}
+                    >
+                      <FileText className="h-4 w-4 mr-2" />
+                      Documents
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleLocationClick(parcel.location)}
+                    >
+                      <MapPin className="h-4 w-4 mr-2" />
+                      Localisation
+                    </Button>
+                    <PropertyChat 
+                      propertyId={parcel.id}
+                      propertyTitle={parcel.title}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownloadClick(parcel)}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Télécharger
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       {/* Dialog pour la carte */}
       <Dialog open={!!selectedLocation} onOpenChange={() => setSelectedLocation(null)}>
