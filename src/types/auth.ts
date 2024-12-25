@@ -1,4 +1,14 @@
-export type UserRole = "taxpayer" | "developer" | "commune";
+export type UserRole = "owner" | "developer" | "commune" | "admin";
+
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+  city?: string;
+}
 
 export interface RegisterFormData {
   email: string;
