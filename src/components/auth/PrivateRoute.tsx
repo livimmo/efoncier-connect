@@ -1,7 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
+import { ReactNode } from "react";
+import { UserRole } from "@/types/auth";
 
-export const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+interface PrivateRouteProps {
+  children: ReactNode;
+  allowedRoles?: UserRole[];
+}
+
+export const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
   const { profile, loading } = useAuth();
 
   if (loading) {
@@ -10,6 +17,10 @@ export const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (!profile) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(profile.role)) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

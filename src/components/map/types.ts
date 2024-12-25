@@ -8,11 +8,11 @@ export interface MapFilters {
   zoneType: string;
   size: [number, number];
   status: string;
-  fiscalStatus: string;
-  maxPrice: number;
   ownerName: string;
   titleDeedNumber: string;
   lastPaymentDate: Date | null;
+  fiscalStatus: string;
+  maxPrice: number;
 }
 
 export interface MapSettings {
@@ -20,25 +20,18 @@ export interface MapSettings {
   showBoundaries: boolean;
   showTerrain: boolean;
   show3D: boolean;
+  theme: 'light' | 'dark';
+  unit: 'metric' | 'imperial';
+}
+
+export interface MapMobileControlsProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onLocate: () => void;
 }
 
 export interface MapProps {
   parcels?: Parcel[];
   userRole?: UserRole;
   onParcelSelect?: (parcel: Parcel) => void;
-}
-
-export interface MobileFiltersSheetProps {
-  filters: MapFilters;
-  setFilters: React.Dispatch<React.SetStateAction<MapFilters>>;
-  filteredParcelsCount: number;
-  userRole: UserRole;
-  onApplyFilters: () => void;
-}
-
-export interface MapMobileControlsProps {
-  settings: MapSettings;
-  onSettingChange: (key: keyof MapSettings) => void;
-  onFilterClick: () => void;
-  onLocateMe: () => void;
 }
