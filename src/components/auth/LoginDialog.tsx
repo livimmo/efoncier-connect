@@ -87,7 +87,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
           isLoading={isLoading} 
           onSubmit={handleLogin}
           selectedRole={selectedRole}
-          onRoleChange={setSelectedRole}
+          onRoleChange={(role: UserRole) => setSelectedRole(role)}
         />
 
         <div className="relative my-4">

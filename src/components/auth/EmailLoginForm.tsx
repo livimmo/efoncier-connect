@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { UserRole } from "@/types/auth";
 
 interface EmailLoginFormProps {
   isLoading: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  selectedRole: string;
-  onRoleChange: (role: string) => void;
+  selectedRole: UserRole;
+  onRoleChange: (role: UserRole) => void;
 }
 
 export const EmailLoginForm = ({ 

@@ -26,6 +26,11 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
     });
   };
 
+  const handleSuccess = () => {
+    onOpenChange(false);
+    navigate("/dashboard");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -42,11 +47,8 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
         />
 
         <RegisterForm 
-          role={selectedRole}
-          onSuccess={() => {
-            onOpenChange(false);
-            navigate("/dashboard");
-          }}
+          selectedRole={selectedRole}
+          onSuccess={handleSuccess}
         />
 
         <div className="relative my-4">
