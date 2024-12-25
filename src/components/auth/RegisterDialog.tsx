@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserRole } from "@/types/auth";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RegisterDialogProps {
   open: boolean;
@@ -26,28 +27,45 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
     setIsLoading(true);
 
     try {
-      // Simuler une inscription réussie
-      const user = {
-        id: crypto.randomUUID(),
+      // Créer un compte avec Supabase
+      const { data, error } = await supabase.auth.signUp({
         email,
-        role,
-        first_name: "John",
-        last_name: "Doe"
-      };
-
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      toast({
-        title: "Inscription réussie",
-        description: "Bienvenue sur eFoncier !",
+        password,
+        options: {
+          data: {
+            role,
+            first_name: "John",
+            last_name: "Doe"
+          }
+        }
       });
 
-      onOpenChange(false);
-      navigate("/dashboard");
-    } catch (error) {
+      if (error) throw error;
+
+      if (data.user) {
+        const user = {
+          id: data.user.id,
+          email: data.user.email,
+          role,
+          first_name: data.user.user_metadata?.first_name || "John",
+          last_name: data.user.user_metadata?.last_name || "Doe"
+        };
+
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        toast({
+          title: "Inscription réussie",
+          description: "Bienvenue sur eFoncier !",
+        });
+
+        onOpenChange(false);
+        navigate("/dashboard");
+      }
+    } catch (error: any) {
+      console.error("Register error:", error);
       toast({
         title: "Erreur d'inscription",
-        description: "Une erreur est survenue lors de l'inscription",
+        description: error.message || "Une erreur est survenue lors de l'inscription",
         variant: "destructive",
       });
     } finally {
