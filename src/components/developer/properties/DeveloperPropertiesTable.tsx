@@ -115,7 +115,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                           className="gap-2"
                         >
                           <UserPlus className="h-4 w-4" />
-                          Créer un compte promoteur
+                          Créer un compte investisseur
                         </Button>
                       )
                     )}

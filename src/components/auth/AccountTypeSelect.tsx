@@ -33,7 +33,7 @@ export function AccountTypeSelect({ form, onRoleChange }: AccountTypeSelectProps
                 </SelectItem>
                 <SelectItem value="developer" className="flex items-center gap-2">
                   <Building className="w-4 h-4" />
-                  <span>Promoteur</span>
+                  <span>Investisseur</span>
                 </SelectItem>
                 <SelectItem value="commune" className="flex items-center gap-2">
                   <Building2 className="w-4 h-4" />
