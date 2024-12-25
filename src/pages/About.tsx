@@ -50,21 +50,6 @@ const About = () => {
             </Card>
           </div>
 
-          <Card className="p-8">
-            <h2 className="text-2xl font-semibold mb-4">Nos Partenaires</h2>
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                • Ministère de l'Intérieur
-              </p>
-              <p className="text-gray-600">
-                • Direction Générale des Impôts
-              </p>
-              <p className="text-gray-600">
-                • Agence Nationale de la Conservation Foncière
-              </p>
-            </div>
-          </Card>
-
           <div className="mt-12">
             <PartnersCarousel />
           </div>
