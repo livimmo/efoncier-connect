@@ -1,28 +1,26 @@
 import { PropertyType, TNBInfo } from '../types';
 
-const BASE_PRICES: Record<PropertyType, number> = {
-  'RESIDENTIAL': 100,
-  'COMMERCIAL': 150,
-  'INDUSTRIAL': 200,
-  'AGRICULTURAL': 50,
-  'MIXED': 125,
-  'SEASIDE': 175
+const baseRates: Record<PropertyType, number> = {
+  'RESIDENTIAL': 1000,
+  'COMMERCIAL': 2000,
+  'INDUSTRIAL': 1500,
+  'AGRICULTURAL': 500,
+  'MIXED': 1200,
+  'SEASIDE': 2500,
+  'HOUSE': 1800,
+  'APARTMENT': 1600
 };
 
 export const generateTNBInfo = (surface: number, type: PropertyType): TNBInfo => {
-  const basePrice = BASE_PRICES[type];
-  const pricePerMeter = basePrice * (1 + Math.random() * 0.2);
+  const pricePerMeter = baseRates[type] || 1000;
   const totalAmount = surface * pricePerMeter;
   
-  let status: 'LOW' | 'AVERAGE' | 'HIGH';
-  if (totalAmount < 10000) status = 'LOW';
-  else if (totalAmount < 50000) status = 'AVERAGE';
-  else status = 'HIGH';
-
   return {
     pricePerMeter,
     totalAmount,
-    status,
+    status: totalAmount < 500000 ? 'LOW' : 
+            totalAmount < 1000000 ? 'AVERAGE' : 
+            'HIGH',
     lastUpdate: new Date().toISOString()
   };
 };

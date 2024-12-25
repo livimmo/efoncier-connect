@@ -1,4 +1,4 @@
-import { PropertyType, ZoneType, TaxStatus, PropertyStatus, Location } from '../types';
+import { PropertyType, ZoneType, TaxStatus, PropertyStatus, Location, Parcel } from '../types';
 
 export interface BaseParcelData {
   id: string;
@@ -16,9 +16,12 @@ export interface BaseParcelData {
   ownerName: string;
 }
 
-export const createBaseParcel = (data: BaseParcelData) => ({
+export const createBaseParcel = (data: BaseParcelData): Partial<Parcel> => ({
   ...data,
   phone: undefined,
   email: undefined,
-  price: undefined
+  price: undefined,
+  fiscalStatus: data.taxStatus === 'PAID' ? 'COMPLIANT' : 
+                data.taxStatus === 'OVERDUE' ? 'NON_COMPLIANT' : 
+                'UNDER_REVIEW'
 });
