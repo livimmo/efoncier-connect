@@ -1,12 +1,13 @@
 import { NotificationCard } from "./NotificationCard";
-import type { Notification } from "./types";
+import type { Notification, NotificationFilter } from "./types";
 
 interface NotificationListProps {
   notifications: Notification[];
+  filters?: NotificationFilter;
   onClick?: () => void;
 }
 
-export const NotificationList = ({ notifications, onClick }: NotificationListProps) => {
+export const NotificationList = ({ notifications, filters, onClick }: NotificationListProps) => {
   return (
     <div className="space-y-4">
       {notifications.map((notification) => (

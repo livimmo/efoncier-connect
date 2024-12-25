@@ -1,4 +1,4 @@
-export type NotificationType = "message" | "payment" | "property" | "document" | "system";
+export type NotificationType = "message" | "payment" | "property" | "document" | "system" | "warning" | "reminder" | "transaction";
 export type NotificationPriority = "high" | "medium" | "low";
 
 export interface NotificationFilter {
