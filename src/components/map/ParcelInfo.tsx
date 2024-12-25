@@ -127,18 +127,6 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
               </div>
             </div>
 
-            {!isAuthenticated && (
-              <div className="pt-4 border-t">
-                <Button
-                  variant="default"
-                  className="w-full"
-                  onClick={handleLoginClick}
-                >
-                  Se connecter pour voir plus de détails
-                </Button>
-              </div>
-            )}
-
             {isAuthenticated && (
               <div className="space-y-3 pt-4 border-t">
                 {userRole === "owner" && (
