@@ -12,12 +12,12 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
   const { toast } = useToast();
   const { profile } = useAuth();
 
-  // Mock notifications spécifiques au rôle
   const getDeveloperNotifications = (): Notification[] => [
     {
       id: "1",
-      type: "new_property",
-      priority: "high",
+      type: "NEW_PROPERTY",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Nouveau bien disponible",
       message: "Un nouveau bien correspondant à vos critères est disponible",
       date: new Date().toISOString(),
@@ -28,8 +28,9 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
     },
     {
       id: "2",
-      type: "property_update",
-      priority: "medium",
+      type: "PROPERTY_UPDATE",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour de prix",
       message: "Le prix d'un bien que vous suivez a été mis à jour",
       date: new Date(Date.now() - 86400000).toISOString(),
@@ -43,8 +44,9 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
   const getOwnerNotifications = (): Notification[] => [
     {
       id: "1",
-      type: "payment",
-      priority: "high",
+      type: "PAYMENT",
+      priority: "HIGH",
+      status: "UNREAD",
       title: "Paiement TNB en attente",
       message: "Votre TNB pour le bien TF-12345 est due avant le 30 juin 2024",
       date: new Date().toISOString(),
@@ -57,8 +59,9 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
     },
     {
       id: "2",
-      type: "fiscal_status",
-      priority: "medium",
+      type: "FISCAL_STATUS",
+      priority: "MEDIUM",
+      status: "READ",
       title: "Mise à jour du statut fiscal",
       message: "Le statut fiscal du bien TF-67890 est passé à 'Payé'",
       date: new Date(Date.now() - 86400000).toISOString(),
@@ -110,7 +113,7 @@ export const NotificationsList = ({ filters }: NotificationsListProps) => {
         {filteredNotifications.map((notification) => (
           <NotificationCard
             key={notification.id}
-            {...notification}
+            notification={notification}
             onClick={() => handleNotificationClick(notification)}
           />
         ))}

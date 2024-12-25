@@ -1,14 +1,24 @@
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { NotificationIcon } from "./NotificationIcon";
-import { NotificationActions } from "./NotificationActions";
-import { PaymentDialog } from "../dialogs/PaymentDialog";
-import { DocumentDialog } from "../dialogs/DocumentDialog";
-import { MessageDialog } from "../dialogs/MessageDialog";
+import { 
+  CreditCard, 
+  MessageCircle, 
+  FileText, 
+  AlertTriangle,
+  Eye,
+  MapPin,
+  Download,
+  MessageSquare,
+  Shield,
+  DollarSign,
+  Building,
+  FileBarChart,
+  Home
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Notification } from "@/types/notifications";
+import { NotificationType, NotificationPriority, Notification } from "@/types/notifications";
+import { cn } from "@/lib/utils";
 
-interface NotificationCardProps {
+export interface NotificationCardProps {
   notification: Notification;
   onClick?: () => void;
 }
@@ -17,83 +27,110 @@ export const NotificationCard = ({
   notification,
   onClick,
 }: NotificationCardProps) => {
-  const { type, priority, status, title, message, date, metadata } = notification;
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const [isDocumentOpen, setIsDocumentOpen] = useState(false);
-  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  if (!notification) return null;
 
-  const handleActionClick = (actionType: string) => {
-    switch (actionType) {
-      case "payment":
-        setIsPaymentOpen(true);
-        break;
-      case "document":
-        setIsDocumentOpen(true);
-        break;
-      case "message":
-        setIsMessageOpen(true);
-        break;
+  const { type, priority, status, title, message, date, metadata, actions } = notification;
+
+  const getNotificationIcon = (type: NotificationType) => {
+    switch (type) {
+      case "PAYMENT":
+      case "PAYMENT_DUE":
+        return <CreditCard className="h-5 w-5" />;
+      case "FISCAL_STATUS":
+        return <Shield className="h-5 w-5" />;
+      case "MESSAGE":
+        return <MessageCircle className="h-5 w-5" />;
+      case "DOCUMENT":
+      case "DOCUMENT_RECEIVED":
+        return <FileText className="h-5 w-5" />;
+      case "URGENT":
+        return <AlertTriangle className="h-5 w-5" />;
+      case "PROPERTY":
+        return <Building className="h-5 w-5" />;
+      case "REPORT":
+        return <FileBarChart className="h-5 w-5" />;
+      case "PROPERTY_UPDATE":
+      case "NEW_PROPERTY":
+        return <Home className="h-5 w-5" />;
+      case "STATUS_UPDATE":
+        return <AlertTriangle className="h-5 w-5" />;
+      default:
+        return <AlertTriangle className="h-5 w-5" />;
+    }
+  };
+
+  const getPriorityColor = (priority: NotificationPriority) => {
+    switch (priority) {
+      case "HIGH":
+        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300";
+      case "MEDIUM":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300";
+      case "LOW":
+        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300";
     }
   };
 
   return (
-    <>
-      <div
-        onClick={onClick}
-        className={cn(
-          "p-4 rounded-lg border cursor-pointer transition-colors duration-200",
-          status === "unread" ? "bg-blue-50/50 dark:bg-blue-950/20" : "bg-background",
-          "hover:bg-accent"
-        )}
-      >
-        <div className="flex items-start gap-4">
-          <NotificationIcon type={type} priority={priority} />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-2 flex-wrap">
-              <h3 className="font-semibold">{title}</h3>
-              <span className="text-sm text-muted-foreground whitespace-nowrap">
-                {new Date(date).toLocaleDateString()}
-              </span>
-            </div>
-            
-            <p className="text-sm text-muted-foreground mt-1 break-words">
-              {message}
-            </p>
-            
-            {metadata?.titleDeedNumber && (
-              <Badge variant="outline" className="mt-2">
-                TF: {metadata.titleDeedNumber}
-              </Badge>
-            )}
+    <div
+      onClick={onClick}
+      className={cn(
+        "p-4 rounded-lg border cursor-pointer transition-colors duration-200",
+        status === "UNREAD" ? "bg-blue-50/50 dark:bg-blue-950/20" : "bg-background",
+        "hover:bg-accent"
+      )}
+    >
+      <div className="flex items-start gap-4">
+        <div className={cn("p-2 rounded-full", getPriorityColor(priority))}>
+          {getNotificationIcon(type)}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <h3 className="font-semibold">{title}</h3>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">
+              {new Date(date).toLocaleDateString()}
+            </span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1 break-words">{message}</p>
+          
+          {metadata?.titleDeedNumber && (
+            <Badge variant="outline" className="mt-2">
+              TF: {metadata.titleDeedNumber}
+            </Badge>
+          )}
 
-            <NotificationActions 
-              notification={notification} 
-              onActionClick={handleActionClick}
-            />
+          {metadata?.dueDate && (
+            <Badge variant="outline" className="mt-2 ml-2">
+              Échéance: {new Date(metadata.dueDate).toLocaleDateString()}
+            </Badge>
+          )}
+          
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {actions?.primary && (
+              <Button size="sm" onClick={(e) => {
+                e.stopPropagation();
+                actions.primary?.action();
+              }}>
+                {actions.primary.icon}
+                <span className="ml-2">{actions.primary.label}</span>
+              </Button>
+            )}
+            
+            {actions?.secondary && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  actions.secondary?.action();
+                }}
+              >
+                {actions.secondary.icon}
+                <span className="ml-2">{actions.secondary.label}</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
-
-      <PaymentDialog
-        open={isPaymentOpen}
-        onOpenChange={setIsPaymentOpen}
-        titleDeedNumber={metadata?.titleDeedNumber}
-        amount={metadata?.amount}
-      />
-
-      <DocumentDialog
-        open={isDocumentOpen}
-        onOpenChange={setIsDocumentOpen}
-        titleDeedNumber={metadata?.titleDeedNumber}
-        documentType={metadata?.documentType}
-        documentUrl={metadata?.documentUrl}
-      />
-
-      <MessageDialog
-        open={isMessageOpen}
-        onOpenChange={setIsMessageOpen}
-        title={title}
-      />
-    </>
+    </div>
   );
 };
