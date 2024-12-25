@@ -14,10 +14,10 @@ export interface MapFilters {
   type: string[];
   ownerName: string;
   titleDeedNumber: string;
-  lastPaymentDate: string | null;
+  lastPaymentDate: Date | null;
   priceRange: [number, number];
   surfaceRange: [number, number];
-  date?: string;
+  date?: Date;
 }
 
 export interface MapMobileControlsProps {
@@ -33,8 +33,8 @@ export interface MobileFiltersSheetProps {
   filters: MapFilters;
   setFilters: (filters: MapFilters) => void;
   filteredParcelsCount: number;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export interface MapViewProps {

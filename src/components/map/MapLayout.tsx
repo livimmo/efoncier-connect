@@ -28,7 +28,7 @@ export const MapLayout = ({
     lastPaymentDate: null,
     priceRange: [0, 10000],
     surfaceRange: [0, 10000],
-    date: undefined,
+    date: undefined
   });
 
   return (
