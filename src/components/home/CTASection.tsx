@@ -26,7 +26,7 @@ export const CTASection = () => {
             asChild
             size="lg"
             variant="outline"
-            className="group hover:scale-105 transition-transform"
+            className="group hover:scale-105 transition-transform bg-white text-primary hover:bg-gray-100 hover:text-primary border-primary"
           >
             <Link to="/contact">
               <MessageSquare className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
