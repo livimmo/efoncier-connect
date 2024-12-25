@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { REGIONS } from "@/utils/mockData/locations";
+import { useToast } from "@/hooks/use-toast";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -26,6 +26,7 @@ export const MapFilters = ({
 }: MapFiltersProps) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const years = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString());
+  const { toast } = useToast();
 
   const handleSearch = (query: string) => {
     setFilters?.({
@@ -41,25 +42,39 @@ export const MapFilters = ({
     // Animate map based on filter type
     switch (filterType) {
       case 'region':
-        const selectedRegion = REGIONS.find(r => r.id === value);
-        if (selectedRegion) {
-          mapInstance.panTo({ lat: selectedRegion.center.lat, lng: selectedRegion.center.lng });
-          mapInstance.setZoom(10);
+        const regionCoords = {
+          'casablanca': { lat: 33.5731, lng: -7.5898, zoom: 12 },
+          'rabat': { lat: 34.0209, lng: -6.8416, zoom: 12 },
+          'marrakech': { lat: 31.6295, lng: -7.9811, zoom: 12 }
+        };
+        
+        if (value in regionCoords) {
+          const coords = regionCoords[value as keyof typeof regionCoords];
+          mapInstance.panTo({ lat: coords.lat, lng: coords.lng });
+          mapInstance.setZoom(coords.zoom);
+          toast({
+            title: "Carte mise à jour",
+            description: `Vue centrée sur ${value}`,
+          });
         }
         break;
 
-      case 'city':
-        const cityCoordinates = {
-          'Casablanca': { lat: 33.5731, lng: -7.5898, zoom: 12 },
-          'Rabat': { lat: 34.0209, lng: -6.8416, zoom: 12 },
-          'Marrakech': { lat: 31.6295, lng: -7.9811, zoom: 12 }
-        };
-        
-        if (value in cityCoordinates) {
-          const coords = cityCoordinates[value as keyof typeof cityCoordinates];
-          mapInstance.panTo({ lat: coords.lat, lng: coords.lng });
-          mapInstance.setZoom(coords.zoom);
-        }
+      case 'propertyType':
+        // Zoom out slightly to show all properties of this type
+        mapInstance.setZoom(11);
+        toast({
+          title: "Filtre appliqué",
+          description: `Affichage des propriétés de type: ${value}`,
+        });
+        break;
+
+      case 'status':
+        // Zoom out to show all properties with this status
+        mapInstance.setZoom(10);
+        toast({
+          title: "Filtre appliqué",
+          description: `Affichage des propriétés avec le statut: ${value}`,
+        });
         break;
     }
 
@@ -99,6 +114,10 @@ export const MapFilters = ({
     if (mapInstance) {
       mapInstance.panTo({ lat: 33.5731, lng: -7.5898 }); // Default center
       mapInstance.setZoom(12); // Default zoom
+      toast({
+        title: "Filtres réinitialisés",
+        description: "La carte a été réinitialisée",
+      });
     }
     
     onApplyFilters?.();
