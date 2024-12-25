@@ -85,6 +85,15 @@ const Map = () => {
     });
   };
 
+  // Filtrer les parcelles en fonction du profil utilisateur
+  const filteredParcels = mockParcels.filter(parcel => {
+    if (!profile) {
+      // Mode visiteur : uniquement les parcelles disponibles
+      return parcel.status === 'AVAILABLE';
+    }
+    return true;
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -151,11 +160,12 @@ const Map = () => {
                   onParcelSelect={handleParcelSelect}
                   mapInstance={mapInstance}
                   setMapInstance={setMapInstance}
+                  parcels={filteredParcels}
                 />
               </div>
             </div>
           ) : (
-            <DeveloperPropertiesTable data={mockParcels} />
+            <DeveloperPropertiesTable data={filteredParcels} />
           )}
         </div>
       </div>

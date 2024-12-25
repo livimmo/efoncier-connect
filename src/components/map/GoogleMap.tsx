@@ -16,7 +16,6 @@ interface GoogleMapProps {
   userRole?: UserRole;
   center?: { lat: number; lng: number };
   zoom?: number;
-  getMarkerColor?: (status: string) => string;
 }
 
 export const GoogleMap = ({ 
@@ -25,25 +24,24 @@ export const GoogleMap = ({
   theme, 
   setMapInstance, 
   userRole,
-  center,
+  center = DEFAULT_CENTER,
   zoom = DEFAULT_ZOOM,
-  getMarkerColor
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const { toast } = useToast();
 
-  const defaultMarkerColor = (status: string) => {
+  const getMarkerColor = (status: string) => {
     switch (status) {
-      case 'PAID':
-        return '#10B981'; // Green for paid
-      case 'PENDING':
-        return '#F59E0B'; // Orange for pending
-      case 'OVERDUE':
-        return '#EF4444'; // Red for overdue
+      case 'AVAILABLE':
+        return '#10B981'; // Vert pour disponible
+      case 'IN_TRANSACTION':
+        return '#F97316'; // Orange pour en transaction
+      case 'SOLD':
+        return '#ea384c'; // Rouge pour vendu
       default:
-        return '#6B7280'; // Gray default
+        return '#6B7280'; // Gris par défaut
     }
   };
 
@@ -112,7 +110,7 @@ export const GoogleMap = ({
         animation: google.maps.Animation.DROP,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor ? getMarkerColor(parcel.taxStatus) : defaultMarkerColor(parcel.taxStatus),
+          fillColor: getMarkerColor(parcel.status),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
