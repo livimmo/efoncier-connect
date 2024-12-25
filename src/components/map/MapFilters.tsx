@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SmartSearchBar } from "./filters/SmartSearchBar";
 import { BasicFilters } from "./filters/BasicFilters";
 import { PropertyFilters } from "./filters/PropertyFilters";
 import { PaymentFilters } from "./filters/PaymentFilters";
 import { MapFiltersProps } from "./types";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { FilterHeader } from "./filters/FilterHeader";
+import { REGIONS } from "@/utils/mockData/locations";
 
 export const MapFilters = ({ 
   onRegionChange, 
@@ -124,33 +125,11 @@ export const MapFilters = ({
       "h-fit transition-all duration-300 relative",
       isCollapsed ? 'w-[60px]' : isMobile ? 'w-full' : 'w-[300px]'
     )}>
-      <Button
-        variant="default"
-        size="icon"
-        onClick={onToggleCollapse}
-        className={cn(
-          "absolute z-10 transition-all duration-300",
-          isMobile ? (
-            isCollapsed 
-              ? "right-[-40px] top-2 bg-green-500 hover:bg-green-600" 
-              : "right-2 top-2 bg-green-500 hover:bg-green-600"
-          ) : (
-            isCollapsed 
-              ? "right-[-40px] top-2 bg-green-500 hover:bg-green-600" 
-              : "right-2 top-2 bg-green-500 hover:bg-green-600"
-          )
-        )}
-      >
-        {isCollapsed ? (
-          <ChevronRight className="h-4 w-4 text-white" />
-        ) : (
-          <ChevronLeft className="h-4 w-4 text-white" />
-        )}
-      </Button>
-
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        {!isCollapsed && <CardTitle>Filtres</CardTitle>}
-      </CardHeader>
+      <FilterHeader 
+        isCollapsed={isCollapsed}
+        onToggleCollapse={onToggleCollapse}
+        isMobile={isMobile}
+      />
       
       {!isCollapsed && (
         <CardContent className="space-y-6">

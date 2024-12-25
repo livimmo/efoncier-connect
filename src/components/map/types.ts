@@ -1,12 +1,17 @@
-import { UserRole } from "@/types/auth";
-
-export interface MapSettings {
-  theme: 'light' | 'dark';
-  unit: 'metric' | 'imperial';
-  showLabels: boolean;
-  showBoundaries: boolean;
-  showTerrain: boolean;
-  show3D: boolean;
+export interface Property {
+  created_at: string;
+  description: string;
+  fiscal_status: "compliant" | "non_compliant" | "under_review";
+  id: string;
+  is_for_sale: boolean;
+  location: any;
+  owner_id: string;
+  price: number;
+  property_type: string;
+  status: string;
+  surface_area: number;
+  title: string;
+  updated_at: string;
 }
 
 export interface MapFilters {
@@ -18,7 +23,7 @@ export interface MapFilters {
   status: string;
   ownerName: string;
   titleDeedNumber: string;
-  lastPaymentDate: Date | null;
+  lastPaymentDate: string | null;
   fiscalStatus: string;
   maxPrice: number;
   tnbReference: string;
@@ -36,14 +41,8 @@ export interface MapFiltersProps {
   filters: MapFilters;
   setFilters: (filters: MapFilters) => void;
   onApplyFilters?: () => void;
-  userRole?: UserRole;
-  isCollapsed?: boolean;
-  onToggleCollapse?: () => void;
+  userRole?: string;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
   mapInstance: google.maps.Map | null;
-}
-
-export interface MapMobileControlsProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onLocate: () => void;
 }
