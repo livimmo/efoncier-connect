@@ -1,4 +1,5 @@
-export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICULTURAL' | 'MIXED' | 'SEASIDE';
+export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICULTURAL' | 'MIXED' | 'SEASIDE' | 'house' | 'apartment';
+
 export type ZoneType = 'URBAN' | 'SUBURBAN' | 'RURAL' | 'E3' | 'E4' | 'I2S12' | 'BT2' | 'PROTECTED' | 'CONSTRUCTIBLE';
 export type TaxStatus = 'PAID' | 'PENDING' | 'OVERDUE';
 export type TNBStatus = 'LOW' | 'AVERAGE' | 'HIGH';
@@ -36,6 +37,7 @@ export interface Parcel {
   price?: number;
   status: PropertyStatus;
   fiscalStatus: FiscalStatus;
+  isFavorite?: boolean;
 }
 
 export interface Transaction {

@@ -6,15 +6,18 @@ import { DeveloperPropertiesTable } from "./DeveloperPropertiesTable";
 import { DeveloperPropertiesMap } from "./DeveloperPropertiesMap";
 import { DeveloperPropertiesFilters } from "./DeveloperPropertiesFilters";
 import { mockParcels } from "@/utils/mockData/parcels";
+import type { Parcel } from "@/utils/mockData/types";
 
 interface DeveloperPropertiesViewProps {
   viewMode: "map" | "table";
   onViewModeChange: (mode: "map" | "table") => void;
+  data?: Parcel[];
 }
 
 export const DeveloperPropertiesView = ({
   viewMode,
   onViewModeChange,
+  data = mockParcels,
 }: DeveloperPropertiesViewProps) => {
   return (
     <div className="grid lg:grid-cols-[300px,1fr] gap-6">
@@ -41,10 +44,10 @@ export const DeveloperPropertiesView = ({
         </div>
 
         {viewMode === "table" ? (
-          <DeveloperPropertiesTable data={mockParcels} />
+          <DeveloperPropertiesTable data={data} />
         ) : (
           <Card className="h-[600px]">
-            <DeveloperPropertiesMap />
+            <DeveloperPropertiesMap parcels={data} />
           </Card>
         )}
       </div>

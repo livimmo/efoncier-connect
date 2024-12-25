@@ -1,4 +1,5 @@
 import { UserRole } from "@/types/auth";
+import { PropertyType, ZoneType, Status, FiscalStatus } from "@/utils/mockData/types";
 
 export interface MapFilters {
   region: string;
@@ -14,18 +15,15 @@ export interface MapFilters {
   maxPrice: number;
 }
 
-export type PropertyType = "RESIDENTIAL" | "COMMERCIAL" | "INDUSTRIAL" | "AGRICULTURAL" | "SEASIDE";
-export type ZoneType = "URBAN" | "RURAL" | "INDUSTRIAL" | "COMMERCIAL";
-export type Status = "PAID" | "PENDING" | "OVERDUE";
-export type FiscalStatus = "compliant" | "non_compliant";
-
-export interface MapSettings {
-  theme: 'light' | 'dark';
-  unit: 'metric' | 'imperial';
-}
-
 export interface MapMobileControlsProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onLocate: () => void;
+}
+
+export interface MapFiltersProps {
+  filters: MapFilters;
+  setFilters: React.Dispatch<React.SetStateAction<MapFilters>>;
+  onApplyFilters: () => void;
+  userRole: UserRole;
 }
