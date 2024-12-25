@@ -5,6 +5,7 @@ export interface BaseParcelData {
   title: string;
   address: string;
   city: string;
+  region: string; // Added this property
   surface: number;
   type: PropertyType;
   zone: ZoneType;

@@ -50,6 +50,7 @@ export interface Parcel {
   titleDeedNumber: string;
   address: string;
   city: string;
+  region: string; // Added this property
   description?: string;
   surface: number;
   type: PropertyType;
