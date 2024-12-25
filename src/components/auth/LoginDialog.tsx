@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
+import { RegisterDialog } from "./RegisterDialog";
 import { UserRole } from "@/types/auth";
 
 interface LoginDialogProps {
@@ -15,6 +16,7 @@ interface LoginDialogProps {
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<UserRole>("owner");
+  const [showRegister, setShowRegister] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -43,7 +45,6 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
 
       onOpenChange(false);
       
-      // Rafraîchir la page après une courte pause pour laisser le toast s'afficher
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -66,52 +67,61 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     });
   };
 
+  const handleRegisterClick = () => {
+    onOpenChange(false);
+    setShowRegister(true);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Connexion à eFoncier</DialogTitle>
-          <DialogDescription>
-            Connectez-vous pour accéder à votre espace personnel
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Connexion à eFoncier</DialogTitle>
+            <DialogDescription>
+              Connectez-vous pour accéder à votre espace personnel
+            </DialogDescription>
+          </DialogHeader>
 
-        <EmailLoginForm 
-          isLoading={isLoading} 
-          onSubmit={handleLogin}
-          selectedRole={selectedRole}
-          onRoleChange={(role: UserRole) => setSelectedRole(role)}
-        />
+          <EmailLoginForm 
+            isLoading={isLoading} 
+            onSubmit={handleLogin}
+            selectedRole={selectedRole}
+            onRoleChange={(role: UserRole) => setSelectedRole(role)}
+          />
 
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <Separator />
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <Separator />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Ou continuez avec
+              </span>
+            </div>
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              Ou continuez avec
-            </span>
+
+          <SocialLoginButtons 
+            isLoading={isLoading}
+            onWhatsAppLogin={handleWhatsAppLogin}
+          />
+
+          <div className="text-center text-sm">
+            Pas encore de compte ?{" "}
+            <button
+              onClick={handleRegisterClick}
+              className="text-primary hover:underline"
+            >
+              Créer un compte
+            </button>
           </div>
-        </div>
+        </DialogContent>
+      </Dialog>
 
-        <SocialLoginButtons 
-          isLoading={isLoading}
-          onWhatsAppLogin={handleWhatsAppLogin}
-        />
-
-        <div className="text-center text-sm">
-          Pas encore de compte ?{" "}
-          <button
-            onClick={() => {
-              onOpenChange(false);
-              navigate("/register");
-            }}
-            className="text-primary hover:underline"
-          >
-            Créer un compte
-          </button>
-        </div>
-      </DialogContent>
-    </Dialog>
+      <RegisterDialog 
+        open={showRegister} 
+        onOpenChange={setShowRegister}
+      />
+    </>
   );
 }
