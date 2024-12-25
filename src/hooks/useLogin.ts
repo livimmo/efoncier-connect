@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 interface LoginCredentials {
   email: string;
@@ -9,28 +8,28 @@ interface LoginCredentials {
   role: string;
 }
 
+// Simulated users for testing
+const TEST_USERS = [
+  {
+    email: "test@example.com",
+    password: "password123",
+    role: "taxpayer",
+    firstName: "John",
+    lastName: "Doe"
+  },
+  {
+    email: "developer@example.com",
+    password: "password123",
+    role: "developer",
+    firstName: "Jane",
+    lastName: "Smith"
+  }
+];
+
 export const useLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleAuthError = (error: any) => {
-    console.error("Login error:", error);
-    let errorMessage = "Une erreur est survenue lors de la connexion.";
-
-    // Vérification plus précise des erreurs
-    if (error.message?.includes("Invalid login credentials") || error.body?.includes("invalid_credentials")) {
-      errorMessage = "Email ou mot de passe incorrect.";
-    } else if (error.message?.includes("Email not confirmed")) {
-      errorMessage = "Veuillez vérifier votre email pour confirmer votre compte.";
-    }
-
-    toast({
-      variant: "destructive",
-      title: "Erreur de connexion",
-      description: errorMessage,
-    });
-  };
 
   const login = async ({ email, password, role }: LoginCredentials): Promise<boolean> => {
     if (!email || !password || !role) {
@@ -46,56 +45,41 @@ export const useLogin = () => {
       setIsLoading(true);
       console.log("Attempting login with role:", role);
 
-      // Ajout de trim() pour éviter les espaces
-      const { data: { user }, error } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(), // Normalisation de l'email
-        password,
-      });
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      if (error) {
-        handleAuthError(error);
+      // Find matching test user
+      const user = TEST_USERS.find(u => 
+        u.email.toLowerCase() === email.toLowerCase() && 
+        u.password === password &&
+        u.role === role
+      );
+
+      if (!user) {
+        toast({
+          variant: "destructive",
+          title: "Erreur de connexion",
+          description: "Email ou mot de passe incorrect.",
+        });
         return false;
       }
 
-      if (user) {
-        // Vérification du rôle de l'utilisateur
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
+      // Store user info in localStorage for persistence
+      localStorage.setItem('user', JSON.stringify(user));
 
-        if (profileError) {
-          console.error("Error fetching profile:", profileError);
-          toast({
-            variant: "destructive",
-            title: "Erreur de connexion",
-            description: "Impossible de vérifier le profil utilisateur.",
-          });
-          await supabase.auth.signOut();
-          return false;
-        }
+      toast({
+        title: "Connexion réussie",
+        description: "Bienvenue sur eFoncier !",
+      });
 
-        if (profile && profile.role !== role) {
-          toast({
-            variant: "destructive",
-            title: "Erreur de connexion",
-            description: "Le type de compte sélectionné ne correspond pas à votre profil.",
-          });
-          await supabase.auth.signOut();
-          return false;
-        }
-
-        toast({
-          title: "Connexion réussie",
-          description: "Bienvenue sur eFoncier !",
-        });
-        return true;
-      }
-
-      return false;
+      return true;
     } catch (error: any) {
-      handleAuthError(error);
+      console.error("Login error:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur de connexion",
+        description: "Une erreur est survenue lors de la connexion.",
+      });
       return false;
     } finally {
       setIsLoading(false);
