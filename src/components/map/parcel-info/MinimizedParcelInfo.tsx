@@ -8,9 +8,9 @@ import { ReceiptDialog } from "./dialogs/ReceiptDialog";
 import { ParcelStatusInfo } from "./ParcelStatusInfo";
 import { RegisterDialog } from "@/components/auth/RegisterDialog";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { Badge } from "@/components/ui/badge";
 import { UserPlus } from "lucide-react";
 import { LoginDialog } from "@/components/auth/LoginDialog";
+import { BlurredField } from "../minimized/BlurredField";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -24,6 +24,10 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const { profile } = useAuth();
+
+  const handleLoginClick = () => {
+    setLoginOpen(true);
+  };
 
   const getPaymentStatusInfo = (status: string) => {
     switch (status) {
@@ -114,34 +118,19 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                   <span>{parcel.surface} m² •</span>
                   <span>Zone {parcel.zone}</span>
                 </div>
-                {profile ? (
-                  <div className="text-xs font-medium text-red-600 dark:text-red-500">
-                    {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
-                  </div>
-                ) : (
-                  <div 
-                    className="text-xs font-medium blur-sm select-none cursor-pointer"
-                    onClick={handleBlurredClick}
-                  >
-                    {formatCurrency(parcel.tnbInfo.pricePerMeter)} DHS/m²
-                  </div>
-                )}
-                {profile?.role === 'developer' && parcel.price && (
-                  <div className="text-sm font-semibold text-green-600 dark:text-green-500 mt-1">
-                    Prix: {formatCurrency(parcel.price)} DHS
-                  </div>
+                {parcel.price && (
+                  <BlurredField
+                    value={`${formatCurrency(parcel.price)} DHS`}
+                    onBlurredClick={handleLoginClick}
+                    className="text-sm font-medium text-green-600"
+                  />
                 )}
                 <div className="text-xs text-muted-foreground mt-1">
-                  {profile ? (
-                    `TF: ${parcel.titleDeedNumber}`
-                  ) : (
-                    <span 
-                      className="blur-sm select-none cursor-pointer"
-                      onClick={handleBlurredClick}
-                    >
-                      TF: {parcel.titleDeedNumber}
-                    </span>
-                  )}
+                  <BlurredField
+                    value={`TF: ${parcel.titleDeedNumber}`}
+                    onBlurredClick={handleLoginClick}
+                    className="text-xs"
+                  />
                 </div>
                 <div className="mt-1">
                   <ParcelStatusInfo 
@@ -152,6 +141,7 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
                 </div>
               </div>
             </div>
+
             <div className="text-right shrink-0">
               <div className="text-sm font-semibold whitespace-nowrap">
                 {profile ? (
