@@ -7,19 +7,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { OTPInput } from "./OTPInput";
 import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { useLogin } from "@/hooks/useLogin";
-import { UserRole } from "@/types";
+import { UserRole } from "./AuthProvider";
 
 interface LoginDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
+export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const navigate = useNavigate();
   const { login, isLoading } = useLogin();
   const [showOTP, setShowOTP] = useState(false);
@@ -29,8 +30,12 @@ export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    if (!email || !password || !selectedRole) {
+      return;
+    }
 
     const success = await login({
       email,
@@ -43,13 +48,8 @@ export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
     }
   };
 
-  const handleRoleChange = (role: UserRole) => {
-    setSelectedRole(role);
-  };
-
   const handleWhatsAppLogin = () => {
-    // Implémentation à venir
-    console.log("WhatsApp login clicked");
+    setShowOTP(true);
   };
 
   const verifyOTP = () => {
@@ -65,41 +65,69 @@ export const LoginDialog = ({ open, onOpenChange }: LoginDialogProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Connexion</DialogTitle>
+          <DialogTitle>Bienvenue sur eFoncier</DialogTitle>
           <DialogDescription>
-            Connectez-vous à votre compte pour accéder à votre espace personnel
+            Choisissez votre méthode de connexion préférée
           </DialogDescription>
         </DialogHeader>
-
-        {showOTP ? (
-          <OTPInput
-            value={otp}
-            onChange={setOTP}
-            onComplete={verifyOTP}
-          />
-        ) : (
-          <Tabs defaultValue="email" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="email">Email</TabsTrigger>
-              <TabsTrigger value="social">Social</TabsTrigger>
-            </TabsList>
-            <TabsContent value="email">
-              <EmailLoginForm
-                isLoading={isLoading}
+        <div className="grid gap-6">
+          {showOTP ? (
+            <div className="grid gap-4">
+              <Label>Entrez le code reçu sur WhatsApp</Label>
+              <OTPInput
+                value={otp}
+                onChange={setOTP}
+                onComplete={verifyOTP}
+              />
+              <div className="text-center text-sm">
+                <Button
+                  variant="link"
+                  className="p-0"
+                  onClick={() => setShowOTP(false)}
+                >
+                  Retour aux options de connexion
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <EmailLoginForm 
+                isLoading={isLoading} 
                 onSubmit={handleEmailLogin}
                 selectedRole={selectedRole}
-                onRoleChange={handleRoleChange}
+                onRoleChange={setSelectedRole}
               />
-            </TabsContent>
-            <TabsContent value="social">
-              <SocialLoginButtons 
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Ou continuer avec
+                  </span>
+                </div>
+              </div>
+              <SocialLoginButtons
                 isLoading={isLoading}
                 onWhatsAppLogin={handleWhatsAppLogin}
               />
-            </TabsContent>
-          </Tabs>
-        )}
+              <div className="text-center text-sm">
+                Vous n'avez pas de compte ?{" "}
+                <Button
+                  variant="link"
+                  className="p-0"
+                  onClick={() => {
+                    onOpenChange(false);
+                    navigate("/register");
+                  }}
+                >
+                  Inscrivez-vous ici
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
-};
+}

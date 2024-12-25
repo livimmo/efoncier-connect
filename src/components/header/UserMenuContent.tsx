@@ -7,14 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { UserRole } from "@/types";
-
-const roleLabels: Record<UserRole, string> = {
-  taxpayer: "Propriétaire",
-  developer: "Promoteur",
-  commune: "Commune",
-  admin: "Administrateur"
-};
 
 export const UserMenuContent = () => {
   const navigate = useNavigate();
@@ -38,17 +30,16 @@ export const UserMenuContent = () => {
     }
   };
 
-  if (!profile) return null;
-
   return (
     <DropdownMenuContent className="w-56" align="end" sideOffset={5}>
       <div className="flex items-center justify-start gap-2 p-2">
         <div className="flex flex-col space-y-1 leading-none">
           <p className="font-medium">
-            {profile.first_name} {profile.last_name}
+            {profile?.first_name} {profile?.last_name}
           </p>
           <p className="text-sm text-muted-foreground">
-            {roleLabels[profile.role]}
+            {profile?.role === "owner" ? "Propriétaire" : 
+             profile?.role === "developer" ? "Promoteur" : "Administrateur"}
           </p>
         </div>
       </div>
@@ -65,12 +56,10 @@ export const UserMenuContent = () => {
         <CreditCard className="mr-2 h-4 w-4" />
         <span>Historique des Paiements</span>
       </DropdownMenuItem>
-      {profile.role === "taxpayer" && (
-        <DropdownMenuItem onClick={() => navigate("/profile?tab=properties")}>
-          <Database className="mr-2 h-4 w-4" />
-          <span>Mes Biens</span>
-        </DropdownMenuItem>
-      )}
+      <DropdownMenuItem onClick={() => navigate("/profile?tab=properties")}>
+        <Database className="mr-2 h-4 w-4" />
+        <span>Mes Biens</span>
+      </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem onClick={handleLogout}>
         <LogOut className="mr-2 h-4 w-4" />
