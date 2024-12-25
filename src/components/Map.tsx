@@ -129,10 +129,7 @@ const Map = () => {
   };
 
   const handleApplyFilters = () => {
-    toast({
-      title: "Filtres appliqués",
-      description: `${filteredParcels.length} résultats trouvés`,
-    });
+    // Removed toast notification, function now just exists to maintain the interface
   };
 
   return (
