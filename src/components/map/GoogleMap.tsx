@@ -24,7 +24,7 @@ const GoogleMap = ({ onMarkerClick, parcels, theme, setMapInstance, userRole, ge
 
     loader.load().then(() => {
       const googleMap = new google.maps.Map(mapRef.current!, {
-        center: { lat: 33.5731, lng: -7.5898 }, // Default center
+        center: { lat: 33.5731, lng: -7.5898 },
         zoom: 8,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         styles: theme === 'dark' ? [{ elementType: 'geometry', stylers: [{ color: '#212121' }] }] : [],

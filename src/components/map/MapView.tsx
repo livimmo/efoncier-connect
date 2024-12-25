@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GoogleMap } from "./GoogleMap";
+import GoogleMap from "./GoogleMap";
 import { DraggableParcelInfo } from "./DraggableParcelInfo";
 import { Parcel } from "@/utils/mockData/types";
 import { UserRole } from "@/types/auth";
@@ -30,13 +30,13 @@ export const MapView = ({
   const getMarkerColor = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return '#10B981'; // Vert pour disponible
+        return '#10B981';
       case 'SOLD':
-        return '#ea384c'; // Rouge pour vendu
+        return '#ea384c';
       case 'IN_TRANSACTION':
-        return '#F59E0B'; // Orange pour en transaction
+        return '#F59E0B';
       default:
-        return '#6B7280'; // Gris par défaut
+        return '#6B7280';
     }
   };
 

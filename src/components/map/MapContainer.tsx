@@ -104,11 +104,12 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
           selectedParcel={selectedParcel}
           markerPosition={markerPosition}
           onParcelSelect={handleParcelSelect}
-          filteredParcels={parcels}
+          filteredParcels={filteredParcels}
           settings={settings}
           mapInstance={mapInstance}
           setMapInstance={setMapInstance}
           userRole={userRole}
+          onMarkerClick={(parcel, position) => handleParcelSelect(parcel, position)}
         />
       </div>
 
