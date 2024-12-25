@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
 import type { Parcel } from '@/utils/mockData/types';
+import { UserRole } from '@/types/auth';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 
@@ -22,7 +23,7 @@ export const GoogleMap = ({
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
+  const markersRef = useRef<google.maps.Marker[]>([]);
   const { toast } = useToast();
 
   const getMarkerPixelPosition = (marker: google.maps.Marker, map: google.maps.Map) => {
@@ -55,42 +56,35 @@ export const GoogleMap = ({
     return { x: 0, y: 0 };
   };
 
-  const getMarkerColor = (parcel: Parcel, userRole?: UserRole) => {
-    if (userRole === 'commune' || userRole === 'owner') {
-      switch (parcel.taxStatus) {
-        case 'PAID':
-          return '#006233'; // Vert
-        case 'OVERDUE':
-          return '#C1272D'; // Rouge
-        default:
-          return '#FFA500'; // Orange pour "en attente"
-      }
-    } else {
-      switch (parcel.status) {
-        case 'AVAILABLE':
-          return '#006233'; // Vert
-        case 'IN_TRANSACTION':
-          return '#FFA500'; // Orange
-        case 'SOLD':
-          return '#C1272D'; // Rouge
-        default:
-          return '#808080'; // Gris pour autres statuts
-      }
+  const getMarkerColor = (parcel: Parcel) => {
+    switch (parcel.status) {
+      case 'AVAILABLE':
+        return '#006233'; // Vert
+      case 'IN_TRANSACTION':
+        return '#FFA500'; // Orange
+      case 'SOLD':
+        return '#C1272D'; // Rouge
+      default:
+        return '#808080'; // Gris pour autres statuts
     }
   };
 
   const createMarkers = (parcels: Parcel[], map: google.maps.Map) => {
-    markers.forEach(marker => marker.setMap(null));
+    // Clear existing markers
+    markersRef.current.forEach(marker => marker.setMap(null));
+    markersRef.current = [];
+    
+    const bounds = new google.maps.LatLngBounds();
     
     const newMarkers = parcels.map(parcel => {
       const marker = new google.maps.Marker({
         position: parcel.location,
         map: map,
         title: parcel.title,
-        animation: google.maps.Animation.DROP,
+        optimized: true,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: getMarkerColor(parcel, userRole),
+          fillColor: getMarkerColor(parcel),
           fillOpacity: 1,
           strokeWeight: 1,
           strokeColor: '#FFFFFF',
@@ -103,10 +97,16 @@ export const GoogleMap = ({
         onMarkerClick(parcel, position);
       });
 
+      bounds.extend(parcel.location);
       return marker;
     });
 
-    setMarkers(newMarkers);
+    markersRef.current = newMarkers;
+
+    // Only fit bounds if there are markers and it's the initial load
+    if (newMarkers.length > 0 && !mapCenter) {
+      map.fitBounds(bounds);
+    }
   };
 
   useEffect(() => {
@@ -135,6 +135,14 @@ export const GoogleMap = ({
             streetViewControl: true,
             fullscreenControl: true,
             gestureHandling: "greedy",
+            minZoom: 5,
+            maxZoom: 18,
+          });
+
+          // Add smooth pan/zoom animations
+          mapInstance.setOptions({
+            zoomAnimation: true,
+            panAnimation: true,
           });
 
           setMap(mapInstance);
@@ -155,8 +163,8 @@ export const GoogleMap = ({
   }, []);
 
   useEffect(() => {
-    if (map) {
-      map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
+    if (map && mapCenter) {
+      map.panTo({ lat: mapCenter.lat, lng: mapCenter.lng });
       map.setZoom(mapCenter.zoom);
     }
   }, [mapCenter]);
@@ -165,7 +173,7 @@ export const GoogleMap = ({
     if (map) {
       createMarkers(parcels, map);
     }
-  }, [parcels, map]);
+  }, [parcels]);
 
   return (
     <div 
