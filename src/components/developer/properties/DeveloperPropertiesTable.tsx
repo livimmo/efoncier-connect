@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { PropertyLocationDialog } from "./PropertyLocationDialog";
 import { PropertyDocumentsDialog } from "./PropertyDocumentsDialog";
+import { PropertyDetailsDialog } from "./PropertyDetailsDialog";
 import { Property } from "@/types";
 
 interface DeveloperPropertiesTableProps {
@@ -27,6 +28,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [showLocationDialog, setShowLocationDialog] = useState(false);
   const [showDocumentsDialog, setShowDocumentsDialog] = useState(false);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
 
   const toggleFavorite = (parcelId: string) => {
     setFavorites(prev => {
@@ -45,11 +47,9 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
     });
   };
 
-  const showDetails = (parcelId: string) => {
-    toast({
-      title: "Détails du bien",
-      description: "Affichage des détails en cours...",
-    });
+  const showDetails = (property: Property) => {
+    setSelectedProperty(property);
+    setShowDetailsDialog(true);
   };
 
   const showHistory = (parcelId: string) => {
@@ -133,7 +133,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => showDetails(property.id)}>
+                    <Button variant="outline" size="icon" onClick={() => showDetails(property)}>
                       <Eye className="h-4 w-4" />
                     </Button>
                     <PropertyChat propertyId={property.id} propertyTitle={property.title} />
@@ -174,6 +174,11 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
             property={selectedProperty}
             open={showDocumentsDialog}
             onOpenChange={setShowDocumentsDialog}
+          />
+          <PropertyDetailsDialog
+            property={selectedProperty}
+            open={showDetailsDialog}
+            onOpenChange={setShowDetailsDialog}
           />
         </>
       )}
