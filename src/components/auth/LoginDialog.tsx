@@ -23,7 +23,6 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     setIsLoading(true);
 
     try {
-      // Simuler une connexion réussie
       const formData = new FormData(e.target as HTMLFormElement);
       const email = formData.get("email") as string;
       
@@ -44,7 +43,6 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
 
       onOpenChange(false);
       
-      // Redirection selon le rôle
       switch (selectedRole) {
         case "developer":
           navigate("/developer/dashboard");
