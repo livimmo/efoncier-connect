@@ -160,7 +160,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           title: "Nouveau bien disponible",
           message: "Un nouveau terrain est disponible dans votre région cible",
-          date: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
           read: false,
           metadata: {
             titleDeedNumber: "TF-45678"
@@ -173,7 +173,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "read",
           title: "Nouveau document disponible",
           message: "Le plan cadastral du bien TF-89012 est maintenant disponible",
-          date: new Date(Date.now() - 86400000).toISOString(),
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
           read: true,
           metadata: {
             titleDeedNumber: "TF-89012",
@@ -190,7 +190,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "unread",
           title: "Alertes de non-paiement",
           message: "15 propriétaires n'ont pas payé leur taxe TNB cette année",
-          date: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
           read: false
         },
         {
@@ -200,7 +200,7 @@ const getNotificationsByRole = (role?: string): Notification[] => {
           status: "read",
           title: "Rapport mensuel disponible",
           message: "Le rapport mensuel des statuts fiscaux est prêt à être consulté",
-          date: new Date(Date.now() - 86400000).toISOString(),
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
           read: true
         }
       ];

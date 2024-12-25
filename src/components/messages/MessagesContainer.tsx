@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MessagesHeader } from "./MessagesHeader";
 import { MessagesSearch } from "./MessagesSearch";
-import { MessagesList } from "./MessagesList";
+import { MessageList } from "./MessageList";
 import { MessageDetail } from "./MessageDetail";
 import { useToast } from "@/hooks/use-toast";
 
@@ -25,8 +25,8 @@ export const MessagesContainer = () => {
       </div>
       <div className="mt-6 flex gap-6">
         <div className={`${selectedConversation ? 'hidden md:block w-1/3' : 'w-full'}`}>
-          <MessagesList 
-            onSelectConversation={handleSelectConversation}
+          <MessageList 
+            onMessageSelect={handleSelectConversation}
             selectedConversationId={selectedConversation}
           />
         </div>
