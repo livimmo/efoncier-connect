@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import type { Parcel } from '@/utils/mockData/types';
 import { UserRole } from '@/types/auth';
+import { Check, AlertTriangle, X } from 'lucide-react';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
 
@@ -21,7 +22,7 @@ const GoogleMap = ({
   theme, 
   setMapInstance,
   userRole,
-  center = { lat: 33.5731, lng: -7.5898 }, // Casablanca as default
+  center = { lat: 33.5731, lng: -7.5898 },
   zoom = 12
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -36,6 +37,19 @@ const GoogleMap = ({
         return '#EF4444'; // Red
       default:
         return '#6B7280'; // Gray
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return Check;
+      case 'IN_TRANSACTION':
+        return AlertTriangle;
+      case 'SOLD':
+        return X;
+      default:
+        return AlertTriangle;
     }
   };
 
@@ -80,7 +94,7 @@ const GoogleMap = ({
               },
             });
 
-            // Add hover effect
+            // Add hover effect with info window
             const infoWindow = new google.maps.InfoWindow({
               content: `
                 <div class="p-2">
