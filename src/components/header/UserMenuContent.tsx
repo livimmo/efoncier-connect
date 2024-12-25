@@ -1,4 +1,4 @@
-import { Home, Settings, CreditCard, Database, LogOut } from "lucide-react";
+import { Home, CreditCard, Database, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -7,11 +7,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const UserMenuContent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signOut, profile } = useAuth();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleLogout = async () => {
     try {
@@ -48,10 +50,12 @@ export const UserMenuContent = () => {
         <Home className="mr-2 h-4 w-4" />
         <span>Tableau de Bord</span>
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigate("/profile?tab=settings")}>
-        <Settings className="mr-2 h-4 w-4" />
-        <span>Paramètres</span>
-      </DropdownMenuItem>
+      {isMobile && (
+        <DropdownMenuItem onClick={() => navigate("/profile?tab=settings")}>
+          <Settings className="mr-2 h-4 w-4" />
+          <span>Paramètres</span>
+        </DropdownMenuItem>
+      )}
       <DropdownMenuItem onClick={() => navigate("/history")}>
         <CreditCard className="mr-2 h-4 w-4" />
         <span>Historique des Paiements</span>
