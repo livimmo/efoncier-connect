@@ -6,7 +6,6 @@ import type { MapSettings } from './types';
 import { useToast } from "@/hooks/use-toast";
 import { UserRole } from '@/types/auth';
 import { useState } from 'react';
-import { LoginDialog } from '../auth/LoginDialog';
 
 interface MapViewProps {
   selectedParcel: Parcel | null;
@@ -31,27 +30,22 @@ export const MapView = ({
 }: MapViewProps) => {
   const { toast } = useToast();
   const [activeStatus, setActiveStatus] = useState<string | null>(null);
-  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   const getMarkerColor = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return '#10B981'; // Green for available
+        return '#10B981';
       case 'IN_TRANSACTION':
-        return '#F59E0B'; // Orange for in transaction
+        return '#F59E0B';
       case 'SOLD':
-        return '#EF4444'; // Red for sold
+        return '#EF4444';
       default:
-        return '#6B7280'; // Gray default
+        return '#6B7280';
     }
   };
 
   const handleParcelClick = (parcel: Parcel, position: { x: number; y: number }) => {
-    if (!userRole) {
-      setIsLoginDialogOpen(true);
-    } else {
-      onParcelSelect(parcel, position);
-    }
+    onParcelSelect(parcel, position);
   };
 
   const handleStatusFilter = (status: string | null) => {
@@ -87,7 +81,7 @@ export const MapView = ({
         activeStatus={activeStatus}
       />
 
-      {selectedParcel && markerPosition && !userRole && (
+      {selectedParcel && markerPosition && (
         <DraggableParcelInfo
           parcel={selectedParcel}
           onClose={() => onParcelSelect(null)}
@@ -96,11 +90,6 @@ export const MapView = ({
           userRole={userRole}
         />
       )}
-
-      <LoginDialog 
-        open={isLoginDialogOpen}
-        onOpenChange={setIsLoginDialogOpen}
-      />
     </div>
   );
 };

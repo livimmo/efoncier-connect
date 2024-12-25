@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PropertyStatusIndicator } from "../filters/PropertyStatusIndicator";
 import { useNavigate } from "react-router-dom";
-import { Building2, MapPin, Scale } from "lucide-react";
+import { Building2, MapPin, Scale, FileCheck } from "lucide-react";
 
 interface MinimizedParcelInfoProps {
   parcel: Parcel;
@@ -45,10 +45,10 @@ export const MinimizedParcelInfo = ({ parcel }: MinimizedParcelInfoProps) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${parcel.taxStatus === 'PAID' ? 'bg-green-500' : parcel.taxStatus === 'PENDING' ? 'bg-yellow-500' : 'bg-red-500'}`} />
+            <FileCheck className="w-4 h-4 text-muted-foreground" />
             <div>
               <p className="text-sm font-medium">
-                {parcel.taxStatus === 'PAID' ? 'TNB Payée' : parcel.taxStatus === 'PENDING' ? 'TNB En attente' : 'TNB Non payée'}
+                {parcel.tnbInfo.status === 'LOW' ? 'TNB à jour' : parcel.tnbInfo.status === 'AVERAGE' ? 'TNB en attente' : 'TNB non payée'}
               </p>
               <p className="text-xs text-muted-foreground">Statut fiscal</p>
             </div>
