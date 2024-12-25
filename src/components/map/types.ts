@@ -1,6 +1,5 @@
 import { Parcel } from "@/utils/mockData/types";
 import { Property } from "@/types";
-import { UserRole } from "@/types/auth";
 
 export type MapSettings = {
   theme: "light" | "dark";
@@ -8,7 +7,7 @@ export type MapSettings = {
 };
 
 export interface MapContainerProps {
-  userRole: UserRole;
+  userRole: string;
   onParcelSelect: (parcelId: string) => void;
 }
 
@@ -16,7 +15,6 @@ export interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
   className?: string;
-  userRole?: UserRole;
 }
 
 export interface MapFilters {
@@ -40,14 +38,12 @@ export interface MapFiltersProps {
   filters: MapFilters;
   setFilters: (filters: MapFilters) => void;
   onApplyFilters: () => void;
-  userRole?: UserRole;
 }
 
 export interface MobileFiltersSheetProps {
   filters: MapFilters;
   setFilters: (filters: MapFilters) => void;
   filteredParcelsCount: number;
-  userRole?: UserRole;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }

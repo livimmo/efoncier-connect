@@ -3,20 +3,23 @@ import { MapView } from "./MapView";
 import { MapFilters } from "./MapFilters";
 import { MobileFiltersSheet } from "./MobileFiltersSheet";
 import { Button } from "@/components/ui/button";
-import { Filter } from "lucide-react";
+import { Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { mockParcels } from "@/utils/mockData/parcels";
-import { MapSettings, MapFilters as MapFiltersType, UserRole } from "./types";
+import { MapSettings, MapFilters as MapFiltersType } from "./types";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils";
 
 interface MapContainerProps {
-  userRole: UserRole;
+  userRole: string;
+  onParcelSelect: (parcelId: string) => void;
 }
 
-export const MapContainer = ({ userRole }: MapContainerProps) => {
+export const MapContainer = ({ userRole, onParcelSelect }: MapContainerProps) => {
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [isFiltersPanelCollapsed, setIsFiltersPanelCollapsed] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const [settings] = useState<MapSettings>({
@@ -80,7 +83,6 @@ export const MapContainer = ({ userRole }: MapContainerProps) => {
         filters={filters}
         setFilters={setFilters}
         filteredParcelsCount={filteredParcels.length}
-        userRole={userRole}
         open={showMobileFilters}
         onOpenChange={setShowMobileFilters}
       />
@@ -96,13 +98,34 @@ export const MapContainer = ({ userRole }: MapContainerProps) => {
           Filtres
         </Button>
       ) : (
-        <div className="absolute top-4 left-4 z-10 w-[300px]">
-          <MapFilters
-            filters={filters}
-            setFilters={setFilters}
-            onApplyFilters={() => {}}
-            userRole={userRole}
-          />
+        <div className={cn(
+          "absolute top-4 left-4 z-10 transition-all duration-300",
+          isFiltersPanelCollapsed ? "w-12" : "w-[300px]"
+        )}>
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setIsFiltersPanelCollapsed(!isFiltersPanelCollapsed)}
+              className="absolute -right-4 top-2 z-20 rounded-full shadow-lg"
+            >
+              {isFiltersPanelCollapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+            <div className={cn(
+              "transition-all duration-300 overflow-hidden",
+              isFiltersPanelCollapsed ? "w-0" : "w-[300px]"
+            )}>
+              <MapFilters
+                filters={filters}
+                setFilters={setFilters}
+                onApplyFilters={() => {}}
+              />
+            </div>
+          </div>
         </div>
       )}
 
@@ -120,7 +143,6 @@ export const MapContainer = ({ userRole }: MapContainerProps) => {
         settings={settings}
         mapInstance={mapInstance}
         setMapInstance={setMapInstance}
-        userRole={userRole}
       />
     </div>
   );
