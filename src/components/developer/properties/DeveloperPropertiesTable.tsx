@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { GoogleMap } from "@/components/map/GoogleMap";
 import type { Parcel } from "@/utils/mockData/types";
 import { PropertyDocuments } from "@/components/map/property-popup/PropertyDocuments";
-import { ContactDialog } from "@/components/map/contact/ContactDialog";
+import { PropertyChat } from "@/components/chat/PropertyChat";
 import { DownloadPropertyDialog } from "./DownloadPropertyDialog";
 
 interface DeveloperPropertiesTableProps {
@@ -16,7 +16,6 @@ interface DeveloperPropertiesTableProps {
 export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showDocuments, setShowDocuments] = useState(false);
-  const [showContact, setShowContact] = useState(false);
   const [showDownload, setShowDownload] = useState(false);
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
@@ -27,11 +26,6 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const handleDocumentsClick = (parcel: Parcel) => {
     setSelectedParcel(parcel);
     setShowDocuments(true);
-  };
-
-  const handleContactClick = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-    setShowContact(true);
   };
 
   const handleDownloadClick = (parcel: Parcel) => {
@@ -89,14 +83,10 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                     <MapPin className="h-4 w-4 mr-2" />
                     Localisation
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleContactClick(parcel)}
-                  >
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Contact
-                  </Button>
+                  <PropertyChat 
+                    propertyId={parcel.id}
+                    propertyTitle={parcel.title}
+                  />
                   <Button
                     variant="outline"
                     size="sm"
@@ -142,15 +132,6 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
           {selectedParcel && <PropertyDocuments parcel={selectedParcel} />}
         </DialogContent>
       </Dialog>
-
-      {/* Dialog pour le contact */}
-      {selectedParcel && (
-        <ContactDialog
-          parcel={selectedParcel}
-          open={showContact}
-          onOpenChange={setShowContact}
-        />
-      )}
 
       {/* Dialog pour le téléchargement */}
       <DownloadPropertyDialog
