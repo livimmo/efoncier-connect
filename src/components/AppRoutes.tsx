@@ -9,12 +9,14 @@ import Privacy from "@/pages/Privacy";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 
-// Pages (temporarily unprotected)
+// Dashboard Pages
 import Dashboard from "@/pages/Dashboard";
 import OwnerDashboard from "@/pages/owner/Dashboard";
-import Properties from "@/pages/owner/Properties";
 import DeveloperDashboard from "@/pages/developer/Dashboard";
+import CommuneDashboard from "@/pages/commune/Dashboard";
 import AdminDashboard from "@/pages/admin/Dashboard";
+
+// Common Pages
 import Notifications from "@/pages/Notifications";
 import Payment from "@/pages/Payment";
 import Directory from "@/pages/Directory";
@@ -36,18 +38,20 @@ export const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       
-      {/* Temporarily Unprotected Routes */}
+      {/* Dashboard Routes */}
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/owner/*" element={<OwnerDashboard />} />
+      <Route path="/developer/*" element={<DeveloperDashboard />} />
+      <Route path="/commune/*" element={<CommuneDashboard />} />
+      <Route path="/admin/*" element={<AdminDashboard />} />
+
+      {/* Common Routes */}
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/directory" element={<Directory />} />
       <Route path="/messages" element={<Messages />} />
       <Route path="/support" element={<Support />} />
       <Route path="/history" element={<History />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/owner/*" element={<OwnerDashboard />} />
-      <Route path="/owner/properties" element={<Properties />} />
-      <Route path="/developer/*" element={<DeveloperDashboard />} />
-      <Route path="/admin/*" element={<AdminDashboard />} />
 
       {/* Catch all route - redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
