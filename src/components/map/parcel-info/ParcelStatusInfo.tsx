@@ -66,19 +66,19 @@ export const ParcelStatusInfo = ({ status, fiscalStatus, taxStatus }: ParcelStat
   const PaymentIcon = paymentInfo.icon;
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex flex-wrap gap-2 items-center">
       <Badge 
         variant="secondary"
-        className={statusInfo.color}
+        className={`${statusInfo.color} whitespace-nowrap inline-flex items-center`}
       >
-        <StatusIcon className="w-3 h-3 mr-1" />
+        <StatusIcon className="w-3 h-3 mr-1 shrink-0" />
         {statusInfo.text}
       </Badge>
       <Badge 
         variant="secondary" 
-        className={paymentInfo.color}
+        className={`${paymentInfo.color} whitespace-nowrap inline-flex items-center`}
       >
-        <PaymentIcon className="w-3 h-3 mr-1" />
+        <PaymentIcon className="w-3 h-3 mr-1 shrink-0" />
         {paymentInfo.text}
       </Badge>
     </div>
