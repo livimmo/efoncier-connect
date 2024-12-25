@@ -1,66 +1,57 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Form } from "@/components/ui/form";
-import { RegisterFormFields } from "./RegisterFormFields";
-import { RegisterFormData } from "@/types/auth";
-import { useRegister } from "@/hooks/useRegister";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { UserRole } from "@/types/auth";
 
-const formSchema = z.object({
-  email: z.string().email("Adresse email invalide"),
-  password: z
-    .string()
-    .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-      "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
-    ),
-  confirmPassword: z.string(),
-  phone: z.string().min(10, "Numéro de téléphone invalide"),
-  role: z.enum(["owner", "developer", "commune", "admin"] as const),
-  firstName: z.string().min(2, "Le prénom est requis"),
-  lastName: z.string().min(2, "Le nom est requis"),
-  city: z.string().min(2, "La ville est requise"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Les mots de passe ne correspondent pas",
-  path: ["confirmPassword"],
-});
-
-interface RegisterDialogProps {
+interface LoginDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
-  const { register, isLoading } = useRegister();
+export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole>("owner");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const form = useForm<RegisterFormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phone: "",
-      role: "owner",
-      firstName: "",
-      lastName: "",
-      city: "",
-    },
-  });
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-  const onSubmit = async (values: RegisterFormData) => {
-    const success = await register(values);
-    if (success) {
-      form.reset();
+    try {
+      // Simuler une connexion réussie
+      const user = {
+        id: crypto.randomUUID(),
+        email,
+        role,
+        first_name: "John",
+        last_name: "Doe"
+      };
+
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      toast({
+        title: "Connexion réussie",
+        description: "Bienvenue sur eFoncier !",
+      });
+
       onOpenChange(false);
+      navigate("/dashboard");
+    } catch (error) {
+      toast({
+        title: "Erreur de connexion",
+        description: "Identifiants incorrects",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,30 +59,48 @@ export function RegisterDialog({ open, onOpenChange }: RegisterDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Créer votre compte eFoncier</DialogTitle>
-          <DialogDescription>
-            Inscrivez-vous pour accéder à toutes les fonctionnalités
-          </DialogDescription>
+          <DialogTitle>Connexion à eFoncier</DialogTitle>
         </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <RegisterFormFields form={form} />
-
-            <div className="flex flex-col gap-4 pt-4">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Création en cours..." : "Créer mon compte"}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
-                Annuler
-              </Button>
-            </div>
-          </form>
-        </Form>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="exemple@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Mot de passe</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="role">Type de compte</Label>
+            <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sélectionnez votre rôle" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="owner">Propriétaire</SelectItem>
+                <SelectItem value="developer">Promoteur</SelectItem>
+                <SelectItem value="commune">Commune</SelectItem>
+                <SelectItem value="admin">Administrateur</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Connexion..." : "Se connecter"}
+          </Button>
+        </form>
       </DialogContent>
     </Dialog>
   );

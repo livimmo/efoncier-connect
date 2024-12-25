@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { RegisterFormFields } from "./RegisterFormFields";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RegisterFormData } from "@/types/auth";
 
@@ -47,35 +46,27 @@ export const RegisterForm = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      console.log("Form data:", data);
-      
-      const { error: signUpError } = await supabase.auth.signUp({
+      // Simuler l'enregistrement
+      const user = {
+        id: crypto.randomUUID(),
         email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            first_name: data.firstName,
-            last_name: data.lastName,
-            phone: data.phone,
-            city: data.city,
-            role: data.role,
-          },
-        },
-      });
+        role: data.role,
+        first_name: data.firstName,
+        last_name: data.lastName,
+      };
 
-      if (signUpError) throw signUpError;
+      localStorage.setItem('user', JSON.stringify(user));
 
       toast({
         title: "Compte créé avec succès",
-        description: "Veuillez vérifier votre email pour confirmer votre compte.",
+        description: "Vous pouvez maintenant vous connecter",
       });
 
       navigate("/login");
     } catch (error) {
-      console.error("Registration error:", error);
       toast({
-        title: "Erreur lors de l'inscription",
-        description: "Une erreur est survenue lors de la création de votre compte.",
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la création du compte",
         variant: "destructive",
       });
     }

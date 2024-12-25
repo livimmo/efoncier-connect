@@ -27,7 +27,7 @@ export function AccountTypeSelect({ form, onRoleChange }: AccountTypeSelectProps
                 <SelectValue placeholder="Sélectionnez votre type de compte" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="taxpayer" className="flex items-center gap-2">
+                <SelectItem value="owner" className="flex items-center gap-2">
                   <Home className="w-4 h-4" />
                   <span>Propriétaire</span>
                 </SelectItem>
