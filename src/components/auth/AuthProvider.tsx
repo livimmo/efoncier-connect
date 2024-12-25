@@ -8,6 +8,7 @@ interface AuthContextType {
   profile: User | null;
   signOut: () => Promise<void>;
   loading: boolean;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   signOut: async () => {},
   loading: true,
+  isAuthenticated: false,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -61,7 +63,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile: user, signOut, loading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      profile: user, 
+      signOut, 
+      loading,
+      isAuthenticated: !!user 
+    }}>
       {children}
     </AuthContext.Provider>
   );
