@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Pause, Play, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SliderContent } from "./slider/SliderContent";
 import { SliderControls } from "./slider/SliderControls";
@@ -109,6 +108,8 @@ export const HeroSlider = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
+      onMouseEnter={() => setIsPlaying(false)}
+      onMouseLeave={() => setIsPlaying(true)}
       tabIndex={0}
       role="region"
       aria-label="Carrousel de contenu"
@@ -122,8 +123,6 @@ export const HeroSlider = () => {
       <SliderControls
         onPrev={prevSlide}
         onNext={nextSlide}
-        isPlaying={isPlaying}
-        onPlayPause={() => setIsPlaying(!isPlaying)}
       />
       
       <SliderProgress isPlaying={isPlaying} />
