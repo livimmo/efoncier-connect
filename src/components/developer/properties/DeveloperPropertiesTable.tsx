@@ -1,14 +1,14 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, MapPin, UserPlus } from "lucide-react";
+import { Eye, MapPin, MessageSquare, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
-import { RegisterDialog } from "@/components/auth/RegisterDialog";
 import { useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { formatCurrency } from "@/utils/format";
+import { PropertyChat } from "@/components/chat/PropertyChat";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Parcel } from "@/utils/mockData/types";
 
 interface DeveloperPropertiesTableProps {
@@ -19,49 +19,68 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const navigate = useNavigate();
   const { toast } = useToast();
   const { profile } = useAuth();
-  const [registerOpen, setRegisterOpen] = useState(false);
+  const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const handleViewDetails = (parcelId: string) => {
-    if (!profile) {
-      setRegisterOpen(true);
-      return;
-    }
     navigate(`/property/${parcelId}`);
   };
 
   const handleViewOnMap = (parcelId: string) => {
-    if (!profile) {
-      setRegisterOpen(true);
-      return;
-    }
     navigate(`/map?parcel=${parcelId}`);
+  };
+
+  const handleOpenChat = (parcel: Parcel) => {
+    setSelectedParcel(parcel);
+    setChatOpen(true);
+  };
+
+  const handleViewDocuments = (parcel: Parcel) => {
+    toast({
+      title: "Documents disponibles",
+      description: "Ouverture de la fenêtre des documents...",
+    });
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return <Badge variant="success" className="whitespace-nowrap">🟢 Disponible</Badge>;
+        return <Badge variant="success">🟢 Disponible</Badge>;
       case 'UNAVAILABLE':
-        return <Badge variant="destructive" className="whitespace-nowrap">🔴 Indisponible</Badge>;
+        return <Badge variant="destructive">🔴 Indisponible</Badge>;
       case 'IN_TRANSACTION':
-        return <Badge variant="warning" className="whitespace-nowrap">🟡 En Transaction</Badge>;
+        return <Badge variant="warning">🟡 En Transaction</Badge>;
       default:
         return null;
     }
   };
 
-  if (!data) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
+  const getFiscalStatusBadge = (status: string) => {
+    switch (status) {
+      case 'COMPLIANT':
+        return <Badge variant="outline" className="bg-green-500/10 text-green-500">✅ Payé</Badge>;
+      case 'NON_COMPLIANT':
+        return <Badge variant="outline" className="bg-red-500/10 text-red-500">❌ Impayé</Badge>;
+      case 'UNDER_REVIEW':
+        return <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500">⏳ En révision</Badge>;
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
-      <RegisterDialog open={registerOpen} onOpenChange={setRegisterOpen} />
-      
+      <Dialog open={chatOpen} onOpenChange={setChatOpen}>
+        <DialogContent className="max-w-md">
+          {selectedParcel && (
+            <PropertyChat
+              propertyId={selectedParcel.id}
+              propertyTitle={selectedParcel.title}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -72,6 +91,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
               <TableHead>Surface</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Prix TNB</TableHead>
+              <TableHead>Statut Fiscal</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -79,57 +99,48 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
             {data.map((parcel) => (
               <TableRow key={parcel.id}>
                 <TableCell>{getStatusBadge(parcel.status)}</TableCell>
+                <TableCell>{parcel.titleDeedNumber}</TableCell>
                 <TableCell>
-                  {profile ? parcel.titleDeedNumber : 'XX-XXXXX'}
-                </TableCell>
-                <TableCell>
-                  {profile ? parcel.address : `${parcel.city} (Connectez-vous pour plus de détails)`}
+                  {parcel.city}, {parcel.address}
                 </TableCell>
                 <TableCell>{parcel.surface} m²</TableCell>
                 <TableCell>{parcel.type}</TableCell>
                 <TableCell>{formatCurrency(parcel.tnbInfo.totalAmount)} DHS</TableCell>
+                <TableCell>{getFiscalStatusBadge(parcel.fiscalStatus)}</TableCell>
                 <TableCell>
                   <div className="flex justify-end gap-2">
-                    {profile ? (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewDetails(parcel.id)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewOnMap(parcel.id)}
-                        >
-                          <MapPin className="h-4 w-4" />
-                        </Button>
-                      </>
-                    ) : (
-                      parcel.status === 'AVAILABLE' && (
-                        <Button
-                          size="sm"
-                          onClick={() => setRegisterOpen(true)}
-                          className="gap-2"
-                        >
-                          <UserPlus className="h-4 w-4" />
-                          Créer un compte investisseur
-                        </Button>
-                      )
-                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewDetails(parcel.id)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewOnMap(parcel.id)}
+                    >
+                      <MapPin className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewDocuments(parcel)}
+                    >
+                      <FileText className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenChat(parcel)}
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
             ))}
-            {data.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
-                  Aucun bien trouvé
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </div>

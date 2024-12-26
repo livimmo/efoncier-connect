@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { DeveloperPropertiesHeader } from "@/components/developer/properties/DeveloperPropertiesHeader";
 import { DeveloperPropertiesView } from "@/components/developer/properties/DeveloperPropertiesView";
-import { Property } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 
 const DeveloperProperties = () => {
