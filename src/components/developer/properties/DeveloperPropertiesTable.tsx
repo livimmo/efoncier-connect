@@ -9,6 +9,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { formatCurrency } from "@/utils/format";
 import { PropertyChat } from "@/components/chat/PropertyChat";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { DocumentsDialog } from "./DocumentsDialog";
 import type { Parcel } from "@/utils/mockData/types";
 
 interface DeveloperPropertiesTableProps {
@@ -21,6 +22,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const { profile } = useAuth();
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [documentsOpen, setDocumentsOpen] = useState(false);
 
   const handleViewDetails = (parcelId: string) => {
     navigate(`/property/${parcelId}`);
@@ -36,10 +38,8 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   };
 
   const handleViewDocuments = (parcel: Parcel) => {
-    toast({
-      title: "Documents disponibles",
-      description: "Ouverture de la fenêtre des documents...",
-    });
+    setSelectedParcel(parcel);
+    setDocumentsOpen(true);
   };
 
   const getStatusBadge = (status: string) => {
@@ -81,6 +81,14 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
         </DialogContent>
       </Dialog>
 
+      {selectedParcel && (
+        <DocumentsDialog
+          open={documentsOpen}
+          onOpenChange={setDocumentsOpen}
+          parcelId={selectedParcel.id}
+        />
+      )}
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -111,28 +119,28 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                   <div className="flex justify-end gap-2">
                     <Button
                       variant="outline"
-                      size="sm"
+                      size="icon"
                       onClick={() => handleViewDetails(parcel.id)}
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
-                      size="sm"
+                      size="icon"
                       onClick={() => handleViewOnMap(parcel.id)}
                     >
                       <MapPin className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
-                      size="sm"
+                      size="icon"
                       onClick={() => handleViewDocuments(parcel)}
                     >
                       <FileText className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
-                      size="sm"
+                      size="icon"
                       onClick={() => handleOpenChat(parcel)}
                     >
                       <MessageSquare className="h-4 w-4" />
