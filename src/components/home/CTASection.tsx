@@ -1,8 +1,12 @@
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { ChatBubble } from "@/components/chat/ChatBubble";
 
 export const CTASection = () => {
+  const [showChat, setShowChat] = useState(false);
+
   return (
     <section className="py-24 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 text-center">
@@ -23,15 +27,13 @@ export const CTASection = () => {
           </Button>
           
           <Button
-            asChild
             size="lg"
             variant="outline"
             className="group hover:scale-105 transition-transform bg-white text-primary hover:bg-gray-100 hover:text-primary border-primary"
+            onClick={() => setShowChat(true)}
           >
-            <Link to="/contact">
-              <MessageSquare className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
-              Parler à un Conseiller
-            </Link>
+            <MessageSquare className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
+            Parler à un Conseiller
           </Button>
         </div>
       </div>
