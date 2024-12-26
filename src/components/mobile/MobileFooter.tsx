@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, MapPin, CreditCard, Bell, MessageCircle } from "lucide-react";
+import { Home, MapPin, CreditCard, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MobileFooterMenu } from "./MobileFooterMenu";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -18,18 +18,6 @@ export const MobileFooter = () => {
 
   if (!isMobile) return null;
 
-  const handleChatClick = () => {
-    if (!profile) {
-      toast({
-        title: "Connexion requise",
-        description: "Veuillez vous connecter pour accéder à la messagerie",
-        variant: "destructive",
-      });
-      return;
-    }
-    navigate("/messages");
-  };
-
   const menuItems = [
     {
       icon: Home,
@@ -40,13 +28,6 @@ export const MobileFooter = () => {
       icon: MapPin,
       label: "Carte",
       path: "/map",
-    },
-    {
-      icon: MessageCircle,
-      label: "Messages",
-      onClick: handleChatClick,
-      path: "/messages",
-      badge: true,
     },
     {
       icon: Bell,
