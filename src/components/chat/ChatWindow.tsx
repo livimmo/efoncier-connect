@@ -7,7 +7,11 @@ import { MessageList } from "./MessageList";
 import { useChat } from "@/hooks/useChat";
 import { useToast } from "@/hooks/use-toast";
 
-export const ChatWindow = () => {
+interface ChatWindowProps {
+  onClose?: () => void;
+}
+
+export const ChatWindow = ({ onClose }: ChatWindowProps) => {
   const [message, setMessage] = useState("");
   const { messages, sendMessage, isLoading, handleUserAction } = useChat();
   const { toast } = useToast();
@@ -39,7 +43,8 @@ export const ChatWindow = () => {
       <div className="flex-1 overflow-y-auto p-4">
         <MessageList 
           messages={messages} 
-          onActionClick={handleUserAction}
+          onActionClick={(action, data) => handleUserAction(action, data, onClose)}
+          onClose={onClose}
         />
         {messages.length === 0 && <QuickSuggestions onSelect={sendMessage} />}
       </div>

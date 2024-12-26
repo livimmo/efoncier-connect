@@ -7,14 +7,18 @@ import { useToast } from "@/hooks/use-toast";
 interface MessageListProps {
   messages: Message[];
   onActionClick?: (action: string, data?: any) => void;
+  onClose?: () => void;
 }
 
-export const MessageList = ({ messages, onActionClick }: MessageListProps) => {
+export const MessageList = ({ messages, onActionClick, onClose }: MessageListProps) => {
   const { toast } = useToast();
 
   const handleActionClick = (action: string, data?: any) => {
     if (onActionClick) {
       onActionClick(action, data);
+      if (onClose) {
+        onClose();
+      }
     } else {
       toast({
         title: "Action en cours",

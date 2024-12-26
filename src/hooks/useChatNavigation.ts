@@ -5,7 +5,12 @@ export const useChatNavigation = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleUserAction = (action: string, data?: any) => {
+  const handleUserAction = (action: string, data?: any, closeChat?: () => void) => {
+    // Fermer le chat si la fonction est fournie
+    if (closeChat) {
+      closeChat();
+    }
+
     switch (action) {
       case "view_documents":
         navigate("/documents");
