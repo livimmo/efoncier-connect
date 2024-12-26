@@ -93,6 +93,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
               <TableHead>Surface</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Prix TNB</TableHead>
+              <TableHead>Prix du bien</TableHead>
               <TableHead>Statut Fiscal</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -108,6 +109,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                 <TableCell>{parcel.surface} m²</TableCell>
                 <TableCell>{parcel.type}</TableCell>
                 <TableCell>{formatCurrency(parcel.tnbInfo.totalAmount)} DHS</TableCell>
+                <TableCell>{formatCurrency(parcel.price)} DHS</TableCell>
                 <TableCell>{getFiscalStatusBadge(parcel.fiscalStatus)}</TableCell>
                 <TableCell>
                   <div className="flex justify-end gap-2">

@@ -21,6 +21,9 @@ export const DeveloperPropertiesView = ({
   data = mockParcels,
 }: DeveloperPropertiesViewProps) => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [surfaceRange, setSurfaceRange] = useState<[number, number]>([0, 15000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 20000000]);
+  const [filteredData, setFilteredData] = useState(data);
 
   const handleRegionChange = (regionId: string) => {
     const selectedRegion = REGIONS.find(r => r.id === regionId);
@@ -30,9 +33,35 @@ export const DeveloperPropertiesView = ({
     }
   };
 
+  const handleSurfaceChange = (range: [number, number]) => {
+    setSurfaceRange(range);
+    filterData(range, priceRange);
+  };
+
+  const handlePriceChange = (range: [number, number]) => {
+    setPriceRange(range);
+    filterData(surfaceRange, range);
+  };
+
+  const filterData = (surface: [number, number], price: [number, number]) => {
+    const filtered = data.filter(parcel => 
+      parcel.surface >= surface[0] && 
+      parcel.surface <= surface[1] &&
+      parcel.price >= price[0] &&
+      parcel.price <= price[1]
+    );
+    setFilteredData(filtered);
+  };
+
   return (
     <div className="grid lg:grid-cols-[300px,1fr] gap-6">
-      <DeveloperPropertiesFilters onRegionChange={handleRegionChange} />
+      <DeveloperPropertiesFilters 
+        onRegionChange={handleRegionChange}
+        onSurfaceChange={handleSurfaceChange}
+        onPriceChange={handlePriceChange}
+        surfaceRange={surfaceRange}
+        priceRange={priceRange}
+      />
       
       <div className="space-y-4">
         <div className="flex justify-end gap-2">
@@ -55,11 +84,11 @@ export const DeveloperPropertiesView = ({
         </div>
 
         {viewMode === "table" ? (
-          <DeveloperPropertiesTable data={data} />
+          <DeveloperPropertiesTable data={filteredData} />
         ) : (
           <Card className="h-[600px]">
             <DeveloperPropertiesMap 
-              parcels={data} 
+              parcels={filteredData} 
               onMapLoad={setMapInstance}
             />
           </Card>

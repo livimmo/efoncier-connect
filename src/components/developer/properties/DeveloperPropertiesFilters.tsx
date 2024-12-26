@@ -1,15 +1,24 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { REGIONS } from "@/utils/mockData/locations";
+import { RangeFilter } from "@/components/map/filters/RangeFilter";
 
 interface DeveloperPropertiesFiltersProps {
   onRegionChange?: (regionId: string) => void;
+  onSurfaceChange?: (value: [number, number]) => void;
+  onPriceChange?: (value: [number, number]) => void;
+  surfaceRange: [number, number];
+  priceRange: [number, number];
 }
 
-export const DeveloperPropertiesFilters = ({ onRegionChange }: DeveloperPropertiesFiltersProps) => {
+export const DeveloperPropertiesFilters = ({ 
+  onRegionChange,
+  onSurfaceChange,
+  onPriceChange,
+  surfaceRange,
+  priceRange
+}: DeveloperPropertiesFiltersProps) => {
   return (
     <Card className="h-fit">
       <CardHeader>
@@ -34,7 +43,16 @@ export const DeveloperPropertiesFilters = ({ onRegionChange }: DeveloperProperti
 
         <div className="space-y-2">
           <Label>Numéro TF</Label>
-          <Input placeholder="Entrez le numéro TF" />
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner un statut" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="available">Disponible</SelectItem>
+              <SelectItem value="unavailable">Indisponible</SelectItem>
+              <SelectItem value="in_transaction">En Transaction</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">
@@ -67,16 +85,26 @@ export const DeveloperPropertiesFilters = ({ onRegionChange }: DeveloperProperti
 
         <div className="space-y-4">
           <Label>Superficie (m²)</Label>
-          <Slider
-            defaultValue={[0, 15000]}
+          <RangeFilter
+            value={surfaceRange}
+            onChange={onSurfaceChange || (() => {})}
+            min={0}
             max={15000}
             step={100}
-            className="mt-2"
+            unit="m²"
           />
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>0 m²</span>
-            <span>15 000 m²</span>
-          </div>
+        </div>
+
+        <div className="space-y-4">
+          <Label>Prix (DHS)</Label>
+          <RangeFilter
+            value={priceRange}
+            onChange={onPriceChange || (() => {})}
+            min={0}
+            max={20000000}
+            step={100000}
+            unit="DHS"
+          />
         </div>
 
         <div className="space-y-2">
