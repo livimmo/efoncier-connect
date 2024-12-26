@@ -20,12 +20,16 @@ export const MobileFooter = () => {
 
   if (!isMobile) return null;
 
-  const handleProfileClick = () => {
-    if (profile) {
-      navigate("/profile");
-    } else {
+  const handlePaymentClick = () => {
+    if (!profile) {
       setShowLoginDialog(true);
+      return;
     }
+    navigate("/payment");
+    toast({
+      title: "Redirection",
+      description: "Chargement de la page de paiement...",
+    });
   };
 
   const menuItems = [
@@ -38,6 +42,12 @@ export const MobileFooter = () => {
       icon: MapPin,
       label: "Carte",
       path: "/map",
+    },
+    {
+      icon: CreditCard,
+      label: "Paiements",
+      path: "/payment",
+      onClick: handlePaymentClick,
     },
     {
       icon: Bell,
@@ -57,15 +67,16 @@ export const MobileFooter = () => {
       },
     },
     {
-      icon: CreditCard,
-      label: "Paiements",
-      path: "/payment",
-    },
-    {
       icon: User,
       label: "Profil",
       path: "/profile",
-      onClick: handleProfileClick,
+      onClick: () => {
+        if (profile) {
+          navigate("/profile");
+        } else {
+          setShowLoginDialog(true);
+        }
+      },
     },
   ];
 
