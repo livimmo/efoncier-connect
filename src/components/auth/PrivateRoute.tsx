@@ -1,26 +1,15 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "./AuthProvider";
 import { ReactNode } from "react";
-import { UserRole } from "@/types/auth";
 
 interface PrivateRouteProps {
   children: ReactNode;
-  allowedRoles?: UserRole[];
 }
 
-export const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
-  const { profile, loading } = useAuth();
+export const PrivateRoute = ({ children }: PrivateRouteProps) => {
+  const isAuthenticated = localStorage.getItem("isPrivateAuthenticated") === "true";
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Chargement...</div>;
-  }
-
-  if (!profile) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(profile.role)) {
-    return <Navigate to="/" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/private-login" replace />;
   }
 
   return <>{children}</>;

@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./auth/PrivateRoute";
+import PrivateLogin from "@/pages/PrivateLogin";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Map from "@/components/Map";
@@ -29,21 +30,24 @@ import { UserRole } from "@/types/auth";
 export const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/map" element={<Map />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/support" element={<Support />} />
-      <Route path="/guest-payment" element={<GuestPayment />} />
-      <Route path="/privacy" element={<Privacy />} />
-      <Route path="/terms" element={<Terms />} />
-      <Route path="/legal" element={<Legal />} />
+      <Route path="/private-login" element={<PrivateLogin />} />
+      
+      {/* Protected Routes */}
+      <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+      <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
+      <Route path="/map" element={<PrivateRoute><Map /></PrivateRoute>} />
+      <Route path="/register" element={<PrivateRoute><Register /></PrivateRoute>} />
+      <Route path="/support" element={<PrivateRoute><Support /></PrivateRoute>} />
+      <Route path="/guest-payment" element={<PrivateRoute><GuestPayment /></PrivateRoute>} />
+      <Route path="/privacy" element={<PrivateRoute><Privacy /></PrivateRoute>} />
+      <Route path="/terms" element={<PrivateRoute><Terms /></PrivateRoute>} />
+      <Route path="/legal" element={<PrivateRoute><Legal /></PrivateRoute>} />
       
       {/* Common Dashboard Route - Will redirect to role-specific dashboard */}
       <Route
         path="/dashboard"
         element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+          <PrivateRoute>
             <Dashboard />
           </PrivateRoute>
         }
@@ -53,7 +57,7 @@ export const AppRoutes = () => {
       <Route
         path="/developer/dashboard"
         element={
-          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
+          <PrivateRoute>
             <DeveloperDashboard />
           </PrivateRoute>
         }
@@ -61,7 +65,7 @@ export const AppRoutes = () => {
       <Route
         path="/developer/properties"
         element={
-          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
+          <PrivateRoute>
             <DeveloperProperties />
           </PrivateRoute>
         }
@@ -69,7 +73,7 @@ export const AppRoutes = () => {
       <Route
         path="/developer/favorites"
         element={
-          <PrivateRoute allowedRoles={["developer"] as UserRole[]}>
+          <PrivateRoute>
             <DeveloperFavorites />
           </PrivateRoute>
         }
@@ -79,7 +83,7 @@ export const AppRoutes = () => {
       <Route
         path="/commune/dashboard"
         element={
-          <PrivateRoute allowedRoles={["commune"] as UserRole[]}>
+          <PrivateRoute>
             <CommuneDashboard />
           </PrivateRoute>
         }
@@ -87,7 +91,7 @@ export const AppRoutes = () => {
       <Route
         path="/commune/notifications"
         element={
-          <PrivateRoute allowedRoles={["commune"] as UserRole[]}>
+          <PrivateRoute>
             <CommuneNotifications />
           </PrivateRoute>
         }
@@ -97,7 +101,7 @@ export const AppRoutes = () => {
       <Route
         path="/owner/dashboard"
         element={
-          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
+          <PrivateRoute>
             <OwnerDashboard />
           </PrivateRoute>
         }
@@ -105,7 +109,7 @@ export const AppRoutes = () => {
       <Route
         path="/owner/properties"
         element={
-          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
+          <PrivateRoute>
             <OwnerProperties />
           </PrivateRoute>
         }
@@ -113,7 +117,7 @@ export const AppRoutes = () => {
       <Route
         path="/owner/payment"
         element={
-          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
+          <PrivateRoute>
             <Payment />
           </PrivateRoute>
         }
@@ -123,7 +127,7 @@ export const AppRoutes = () => {
       <Route
         path="/admin/dashboard"
         element={
-          <PrivateRoute allowedRoles={["admin"] as UserRole[]}>
+          <PrivateRoute>
             <AdminDashboard />
           </PrivateRoute>
         }
@@ -133,7 +137,7 @@ export const AppRoutes = () => {
       <Route
         path="/profile"
         element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+          <PrivateRoute>
             <Profile />
           </PrivateRoute>
         }
@@ -141,7 +145,7 @@ export const AppRoutes = () => {
       <Route
         path="/settings"
         element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+          <PrivateRoute>
             <Settings />
           </PrivateRoute>
         }
@@ -149,7 +153,7 @@ export const AppRoutes = () => {
       <Route
         path="/notifications"
         element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+          <PrivateRoute>
             <Notifications />
           </PrivateRoute>
         }
@@ -157,7 +161,7 @@ export const AppRoutes = () => {
       <Route
         path="/messages"
         element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+          <PrivateRoute>
             <Messages />
           </PrivateRoute>
         }
@@ -165,7 +169,7 @@ export const AppRoutes = () => {
       <Route
         path="/payment"
         element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune"] as UserRole[]}>
+          <PrivateRoute>
             <Payment />
           </PrivateRoute>
         }
@@ -173,7 +177,7 @@ export const AppRoutes = () => {
       <Route
         path="/history"
         element={
-          <PrivateRoute allowedRoles={["owner", "developer", "commune", "admin"] as UserRole[]}>
+          <PrivateRoute>
             <History />
           </PrivateRoute>
         }
