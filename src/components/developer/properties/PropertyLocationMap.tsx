@@ -13,13 +13,14 @@ export function PropertyLocationMap({ parcel }: PropertyLocationMapProps) {
 
   useEffect(() => {
     const initMap = async () => {
-      const loader = new google.maps.Loader({
+      const { Loader } = await import('@googlemaps/js-api-loader');
+      const loader = new Loader({
         apiKey: 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8',
         version: 'weekly',
       });
 
       try {
-        const google = await loader.load();
+        await loader.load();
         if (mapRef.current) {
           const map = new google.maps.Map(mapRef.current, {
             center: parcel.location,
