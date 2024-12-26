@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { ChatBubble } from "@/components/chat/ChatBubble";
 import { MobileFooter } from "@/components/mobile/MobileFooter";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { AppRoutes } from "@/components/AppRoutes";
@@ -23,7 +22,6 @@ const App = () => {
           <AuthProvider>
             <TooltipProvider>
               <AppRoutes />
-              <ChatBubble />
               {!isMobile && <CallCenterButton />}
               <MobileFooter />
               <Toaster />
