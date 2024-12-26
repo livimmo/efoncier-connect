@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Home, Map, MessageSquare, LifeBuoy, Contact } from "lucide-react";
+import { Home, Map, MessageSquare, Contact } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useAuth } from "./auth/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -51,12 +51,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
         label: "Messagerie",
         icon: MessageSquare
       }
-    ] : []),
-    {
-      href: "/support",
-      label: "Support",
-      icon: LifeBuoy
-    }
+    ] : [])
   ];
 
   return (
