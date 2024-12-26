@@ -53,7 +53,7 @@ export const Header = () => {
           </Button>
           
           {profile && !isMobile && <NotificationsArea />}
-          <CallCenterButton variant="header" />
+          {profile && <CallCenterButton variant="header" />}
           <ModeToggle />
           {profile ? (
             <UserMenu />
