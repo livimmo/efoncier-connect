@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { ChatWindow } from "../chat/ChatWindow";
-import { AgentContactButton } from "./AgentContactButton";
 
 interface CallCenterButtonProps {
   variant?: "header" | "floating";
@@ -23,9 +22,32 @@ interface CallCenterButtonProps {
 
 export const CallCenterButton = ({ variant = "floating", className }: CallCenterButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [showChat, setShowChat] = useState(false);
   const { toast } = useToast();
   const isAgentAvailable = true;
+
+  const handleCall = () => {
+    window.location.href = "tel:+212522123456";
+  };
+
+  const handleCallbackRequest = () => {
+    if (!phoneNumber) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez entrer votre numéro de téléphone",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    toast({
+      title: "Demande envoyée",
+      description: "Un agent vous rappellera dans les plus brefs délais",
+    });
+    setPhoneNumber("");
+    setIsOpen(false);
+  };
 
   const handleEmailSupport = () => {
     window.location.href = "mailto:support@efoncier.ma";
@@ -94,7 +116,37 @@ export const CallCenterButton = ({ variant = "floating", className }: CallCenter
                   Parler avec l'assistant virtuel
                 </Button>
 
-                <AgentContactButton variant="inline" className="w-full" />
+                <Button 
+                  variant="default" 
+                  className="w-full justify-start gap-2"
+                  onClick={handleCall}
+                >
+                  <Phone className="h-4 w-4" />
+                  Appeler maintenant
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    +212 5 22 123 456
+                  </span>
+                </Button>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Demander un rappel</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="phone"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder="Votre numéro de téléphone"
+                      type="tel"
+                    />
+                    <Button 
+                      variant="secondary"
+                      size="icon"
+                      onClick={handleCallbackRequest}
+                    >
+                      <Clock className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
 
                 <Button 
                   variant="outline" 
