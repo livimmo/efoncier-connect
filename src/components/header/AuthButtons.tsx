@@ -69,22 +69,30 @@ export const AuthButtons = ({ onLoginClick, onRegisterClick }: AuthButtonsProps)
     <div className="flex items-center gap-2">
       {!isMobile && (
         <Button 
-          variant="ghost" 
+          variant="destructive" 
           onClick={onLoginClick}
-          className="gap-2"
+          className="font-semibold"
         >
-          <User className="h-4 w-4" />
-          Se Connecter
+          Connexion
         </Button>
       )}
       {!isMobile && (
-        <Button onClick={onRegisterClick}>
+        <Button 
+          variant="ghost" 
+          onClick={onRegisterClick}
+          className="gap-2"
+        >
+          <User className="h-4 w-4" />
           S'inscrire
         </Button>
       )}
       {isMobile && (
-        <Button onClick={onLoginClick} variant="ghost">
-          Se Connecter
+        <Button 
+          variant="destructive" 
+          onClick={onLoginClick}
+          className="font-semibold"
+        >
+          Connexion
         </Button>
       )}
     </div>
