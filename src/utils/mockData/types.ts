@@ -14,7 +14,7 @@ export interface City {
 }
 
 export type PropertyType = 'RESIDENTIAL' | 'COMMERCIAL' | 'INDUSTRIAL' | 'AGRICULTURAL';
-export type ZoneType = 'URBAN' | 'RURAL' | 'INDUSTRIAL' | 'MIXED';
+export type ZoneType = 'E3' | 'E4' | 'SD1' | 'BT2' | 'I2S12';
 export type TaxStatus = 'PAID' | 'PENDING' | 'OVERDUE';
 export type PropertyStatus = 'AVAILABLE' | 'UNAVAILABLE' | 'IN_TRANSACTION';
 export type FiscalStatus = 'COMPLIANT' | 'NON_COMPLIANT' | 'UNDER_REVIEW';
@@ -39,24 +39,14 @@ export interface ParcelInput {
   owner: string;
   status: PropertyStatus;
   taxStatus: TaxStatus;
-  zone: string;
-  price?: number;
-  city?: string;
-  titleDeedNumber?: string;
-  ownerName?: string;
-  phone?: string;
-  email?: string;
-  fiscalStatus?: FiscalStatus;
-  tnbInfo?: TNBInfo;
+  zone: ZoneType;
+  city: string;
+  titleDeedNumber: string;
+  ownerName: string;
 }
 
 export interface Parcel extends ParcelInput {
   price: number;
-  city: string;
-  titleDeedNumber: string;
-  ownerName: string;
-  phone?: string;
-  email?: string;
   fiscalStatus: FiscalStatus;
   tnbInfo: TNBInfo;
 }

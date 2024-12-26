@@ -9,7 +9,7 @@ export interface Property {
   price: number;
   type: "RESIDENTIAL" | "COMMERCIAL" | "INDUSTRIAL" | "AGRICULTURAL";
   status: "AVAILABLE" | "UNAVAILABLE" | "IN_TRANSACTION";
-  zone: "URBAN" | "RURAL" | "INDUSTRIAL" | "MIXED";
+  zone: "E3" | "E4" | "SD1" | "BT2" | "I2S12";
   surface: number;
   owner: string;
   titleDeedNumber: string;
