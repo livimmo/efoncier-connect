@@ -23,6 +23,8 @@ const PropertiesPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [settings] = useState<MapSettings>({
+    center: { lat: 33.5731, lng: -7.5898 },
+    zoom: 12,
     theme: 'light',
     unit: 'metric',
     showLabels: true,
