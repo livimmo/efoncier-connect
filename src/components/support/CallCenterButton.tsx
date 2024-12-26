@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Bot } from "lucide-react";
+import { Headset, Phone, Mail, MessageSquare, Bot, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,11 +8,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { ChatWindow } from "../chat/ChatWindow";
-import { CallButton } from "./components/CallButton";
-import { CallOptions } from "./components/CallOptions";
+import { AgentContactButton } from "./AgentContactButton";
 
 interface CallCenterButtonProps {
   variant?: "header" | "floating";
@@ -20,23 +23,9 @@ interface CallCenterButtonProps {
 
 export const CallCenterButton = ({ variant = "floating", className }: CallCenterButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [showChat, setShowChat] = useState(false);
   const { toast } = useToast();
   const isAgentAvailable = true;
-
-  const handleCall = () => {
-    window.location.href = "tel:+212522123456";
-  };
-
-  const handleCallbackRequest = () => {
-    toast({
-      title: "Demande envoyée",
-      description: "Un agent vous rappellera dans les plus brefs délais",
-    });
-    setPhoneNumber("");
-    setIsOpen(false);
-  };
 
   const handleEmailSupport = () => {
     window.location.href = "mailto:support@efoncier.ma";
@@ -45,12 +34,32 @@ export const CallCenterButton = ({ variant = "floating", className }: CallCenter
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <CallButton
-          variant={variant}
-          className={className}
-          isAgentAvailable={isAgentAvailable}
-          onClick={() => setIsOpen(true)}
-        />
+        <Button
+          variant="ghost"
+          size={variant === "header" ? "icon" : "lg"}
+          className={cn(
+            variant === "floating" && "fixed bottom-20 right-4 z-50 rounded-full shadow-lg",
+            "group",
+            className
+          )}
+        >
+          {variant === "header" ? (
+            <Headset className="h-5 w-5" />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Headset className="h-6 w-6" />
+              <span className="hidden group-hover:inline-block">
+                Support Client
+              </span>
+            </div>
+          )}
+          {isAgentAvailable && (
+            <Badge 
+              variant="default" 
+              className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-green-500 p-0"
+            />
+          )}
+        </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
@@ -58,7 +67,7 @@ export const CallCenterButton = ({ variant = "floating", className }: CallCenter
           <>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
+                <Headset className="h-5 w-5 text-primary" />
                 Contactez notre support client
               </DialogTitle>
             </DialogHeader>
@@ -66,7 +75,7 @@ export const CallCenterButton = ({ variant = "floating", className }: CallCenter
             <div className="grid gap-4 py-4">
               {isAgentAvailable ? (
                 <p className="text-sm text-green-600 flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-green-500" />
+                  <Badge variant="default" className="h-2 w-2 rounded-full bg-green-500 p-0" />
                   Nos agents sont disponibles pour vous aider
                 </p>
               ) : (
@@ -75,15 +84,30 @@ export const CallCenterButton = ({ variant = "floating", className }: CallCenter
                 </p>
               )}
 
-              <CallOptions
-                phoneNumber={phoneNumber}
-                setPhoneNumber={setPhoneNumber}
-                onCall={handleCall}
-                onEmailSupport={handleEmailSupport}
-                onCallbackRequest={handleCallbackRequest}
-                onChatStart={() => setShowChat(true)}
-                isAgentAvailable={isAgentAvailable}
-              />
+              <div className="grid grid-cols-1 gap-3">
+                <Button 
+                  variant="default" 
+                  className="w-full justify-start gap-2"
+                  onClick={() => setShowChat(true)}
+                >
+                  <Bot className="h-4 w-4" />
+                  Parler avec l'assistant virtuel
+                </Button>
+
+                <AgentContactButton variant="inline" className="w-full" />
+
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-2"
+                  onClick={handleEmailSupport}
+                >
+                  <Mail className="h-4 w-4" />
+                  Envoyer un email
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    support@efoncier.ma
+                  </span>
+                </Button>
+              </div>
             </div>
           </>
         ) : (
