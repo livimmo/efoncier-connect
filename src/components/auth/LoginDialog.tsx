@@ -7,6 +7,9 @@ import { EmailLoginForm } from "./EmailLoginForm";
 import { SocialLoginButtons } from "./SocialLoginButtons";
 import { UserRole } from "@/types/auth";
 import { RegisterDialog } from "./RegisterDialog";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface LoginDialogProps {
   open: boolean;
@@ -19,6 +22,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const [showRegister, setShowRegister] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +75,16 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     <>
       <Dialog open={open && !showRegister} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[425px]">
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4 rounded-full"
+              onClick={() => onOpenChange(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
           <DialogHeader>
             <DialogTitle>Connexion à eFoncier</DialogTitle>
             <DialogDescription>
