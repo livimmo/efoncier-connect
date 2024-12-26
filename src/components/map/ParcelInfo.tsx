@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatCurrency } from "@/utils/format";
-import { MapPin, User, Ruler, CreditCard, FileText, Building } from "lucide-react";
+import { MapPin, User, Ruler, CreditCard, Building } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LoginDialog } from "@/components/auth/LoginDialog";
 import { Parcel } from '@/utils/mockData/types';
@@ -24,11 +24,6 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
   const [loginOpen, setLoginOpen] = useState(false);
   const isAuthenticated = !!profile;
   const isMobile = useMediaQuery("(max-width: 768px)");
-
-  const handleLoginClick = () => {
-    setLoginOpen(true);
-    onClose();
-  };
 
   return (
     <>
@@ -76,27 +71,10 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
               )}
 
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">Statut Fiscal: {parcel.taxStatus}</span>
-              </div>
-
-              <div className="flex items-center gap-2">
                 <Building className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm">Type: {parcel.type}</span>
               </div>
             </div>
-
-            {!isAuthenticated && (
-              <div className="pt-4 border-t">
-                <Button 
-                  variant="default" 
-                  className="w-full"
-                  onClick={handleLoginClick}
-                >
-                  Se connecter pour voir plus de détails
-                </Button>
-              </div>
-            )}
 
             {isAuthenticated && (
               <div className="space-y-3 pt-4 border-t">
