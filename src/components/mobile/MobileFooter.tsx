@@ -7,9 +7,11 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { LoginDialog } from "@/components/auth/LoginDialog";
 
 export const MobileFooter = () => {
   const [showMore, setShowMore] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -17,6 +19,14 @@ export const MobileFooter = () => {
   const { profile } = useAuth();
 
   if (!isMobile) return null;
+
+  const handleProfileClick = () => {
+    if (profile) {
+      navigate("/profile");
+    } else {
+      setShowLoginDialog(true);
+    }
+  };
 
   const menuItems = [
     {
@@ -35,6 +45,10 @@ export const MobileFooter = () => {
       path: "/notifications",
       badge: true,
       onClick: () => {
+        if (!profile) {
+          setShowLoginDialog(true);
+          return;
+        }
         navigate("/notifications");
         toast({
           title: "Notifications",
@@ -51,13 +65,7 @@ export const MobileFooter = () => {
       icon: User,
       label: "Profil",
       path: "/profile",
-      onClick: () => {
-        navigate("/profile");
-        toast({
-          title: "Profil",
-          description: "Chargement de votre profil...",
-        });
-      },
+      onClick: handleProfileClick,
     },
   ];
 
@@ -89,6 +97,11 @@ export const MobileFooter = () => {
           ))}
         </div>
       </nav>
+
+      <LoginDialog 
+        open={showLoginDialog} 
+        onOpenChange={setShowLoginDialog}
+      />
     </>
   );
 };
