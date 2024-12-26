@@ -8,6 +8,66 @@ import { CreditCard, Building2, Wallet } from "lucide-react";
 import { useState } from "react";
 import { Property } from "@/types";
 
+const mockProperties: Property[] = [
+  {
+    id: "1",
+    title: "Villa Moderne - Californie",
+    location: {
+      address: "15 Boulevard de l'Océan, Californie",
+      lat: 33.5731,
+      lng: -7.5898
+    },
+    price: 15000,
+    type: "RESIDENTIAL",
+    status: "AVAILABLE",
+    zone: "URBAN",
+    surface: 450,
+    owner: "Ahmed El Fassi",
+    titleDeedNumber: "TF123456/C",
+    ownerName: "Ahmed El Fassi",
+    fiscalStatus: "NON_COMPLIANT",
+    taxStatus: "OVERDUE"
+  },
+  {
+    id: "2",
+    title: "Appartement - Gauthier",
+    location: {
+      address: "45 Rue Jean Jaurès, Gauthier",
+      lat: 33.5850,
+      lng: -7.6328
+    },
+    price: 8000,
+    type: "RESIDENTIAL",
+    status: "AVAILABLE",
+    zone: "URBAN",
+    surface: 180,
+    owner: "Karim Benjelloun",
+    titleDeedNumber: "TF345678/C",
+    ownerName: "Karim Benjelloun",
+    fiscalStatus: "NON_COMPLIANT",
+    taxStatus: "OVERDUE"
+  },
+  {
+    id: "3",
+    title: "Local Commercial - Maarif",
+    location: {
+      address: "156 Rue Zerktouni, Maarif",
+      lat: 33.5876,
+      lng: -7.6331
+    },
+    price: 12000,
+    type: "COMMERCIAL",
+    status: "AVAILABLE",
+    zone: "URBAN",
+    surface: 120,
+    owner: "Société Retail Plus",
+    titleDeedNumber: "TF567890/C",
+    ownerName: "Société Retail Plus",
+    fiscalStatus: "NON_COMPLIANT",
+    taxStatus: "OVERDUE"
+  }
+];
+
 const Payment = () => {
   const [selectedProperties, setSelectedProperties] = useState<Property[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);

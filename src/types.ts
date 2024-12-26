@@ -1,19 +1,34 @@
 export interface Property {
-  created_at: string;
-  description: string;
-  fiscal_status: "compliant" | "non_compliant" | "under_review";
   id: string;
-  is_for_sale: boolean;
+  title: string;
   location: {
     address: string;
     lat: number;
     lng: number;
   };
-  owner_id: string;
   price: number;
-  property_type: string;
-  status: string;
-  surface_area: number;
-  title: string;
-  updated_at: string;
+  type: "RESIDENTIAL" | "COMMERCIAL" | "INDUSTRIAL" | "AGRICULTURAL";
+  status: "AVAILABLE" | "UNAVAILABLE" | "IN_TRANSACTION";
+  zone: "URBAN" | "RURAL" | "INDUSTRIAL" | "MIXED";
+  surface: number;
+  owner: string;
+  titleDeedNumber: string;
+  ownerName: string;
+  fiscalStatus: "COMPLIANT" | "NON_COMPLIANT" | "UNDER_REVIEW";
+  taxStatus: "PAID" | "PENDING" | "OVERDUE";
+}
+
+export interface PaymentDetails {
+  id: string;
+  location: string;
+  area: number;
+  type: string;
+  amount: number;
+  dueDate: string;
+  status: "paid" | "unpaid" | "pending";
+}
+
+export interface PaymentProps {
+  parcelId?: string;
+  hideHeader?: boolean;
 }
