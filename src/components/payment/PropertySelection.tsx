@@ -9,6 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Property } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PropertySelectionProps {
   onPropertySelect: (property: Property, isSelected: boolean) => void;
@@ -17,6 +19,7 @@ interface PropertySelectionProps {
 
 export const PropertySelection = ({ onPropertySelect, selectedProperties }: PropertySelectionProps) => {
   const { toast } = useToast();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ['unpaid-properties'],
@@ -41,12 +44,12 @@ export const PropertySelection = ({ onPropertySelect, selectedProperties }: Prop
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-4'}`}>
         <div className="space-y-2">
           <Label>Numéro TF</Label>
           <div className="relative">
-            <Input placeholder="Ex: TF-12345" />
-            <Search className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Ex: TF-12345" className="pl-10" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           </div>
         </div>
 
@@ -97,40 +100,42 @@ export const PropertySelection = ({ onPropertySelect, selectedProperties }: Prop
           <CardTitle>Biens à Payer</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {properties?.map((property) => (
-              <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <Checkbox
-                    checked={selectedProperties.some(p => p.id === property.id)}
-                    onCheckedChange={(checked) => onPropertySelect(property, checked as boolean)}
-                  />
-                  <div className="space-y-1">
-                    <div className="font-medium">{property.title}</div>
-                    <div className="text-sm text-muted-foreground flex items-center">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {property.location.address}
-                    </div>
-                    <div className="text-sm text-muted-foreground flex items-center">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      {new Date().getFullYear()}
+          <ScrollArea className={isMobile ? "h-[50vh]" : "h-auto"}>
+            <div className="space-y-4">
+              {properties?.map((property) => (
+                <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <Checkbox
+                      checked={selectedProperties.some(p => p.id === property.id)}
+                      onCheckedChange={(checked) => onPropertySelect(property, checked as boolean)}
+                    />
+                    <div className="space-y-1">
+                      <div className="font-medium">{property.title}</div>
+                      <div className="text-sm text-muted-foreground flex items-center">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {property.location.address}
+                      </div>
+                      <div className="text-sm text-muted-foreground flex items-center">
+                        <Calendar className="w-4 h-4 mr-1" />
+                        {new Date().getFullYear()}
+                      </div>
                     </div>
                   </div>
+                  <div className="text-right space-y-2">
+                    <div className="font-bold">{property.price} MAD</div>
+                    <Badge variant="destructive">
+                      Impayé
+                    </Badge>
+                  </div>
                 </div>
-                <div className="text-right space-y-2">
-                  <div className="font-bold">{property.price} MAD</div>
-                  <Badge variant="destructive">
-                    Impayé
-                  </Badge>
+              ))}
+              {properties?.length === 0 && (
+                <div className="text-center text-muted-foreground py-8">
+                  Aucun bien à payer
                 </div>
-              </div>
-            ))}
-            {properties?.length === 0 && (
-              <div className="text-center text-muted-foreground py-8">
-                Aucun bien à payer
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </ScrollArea>
         </CardContent>
       </Card>
     </div>
