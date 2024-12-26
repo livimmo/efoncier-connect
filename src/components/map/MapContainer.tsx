@@ -39,12 +39,13 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
     lastPaymentDate: null,
     fiscalStatus: '',
     maxPrice: 0,
+    minPrice: 0,
     tnbReference: '',
     searchQuery: '',
     zoning: '',
     paymentStatus: '',
     tnbStatus: '',
-    propertyStatus: '' // Added this field with empty string as default
+    propertyStatus: ''
   });
 
   const filteredParcels = useMemo(() => {
@@ -72,6 +73,7 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
       if (parcel.surface < filters.size[0] || parcel.surface > filters.size[1]) return false;
       if (filters.ownerName && !parcel.ownerName.toLowerCase().includes(filters.ownerName.toLowerCase())) return false;
       if (filters.titleDeedNumber && !parcel.titleDeedNumber.toLowerCase().includes(filters.titleDeedNumber.toLowerCase())) return false;
+      if (filters.fiscalStatus && parcel.taxStatus !== filters.fiscalStatus) return false;
       return true;
     });
   }, [filters, userRole]);
@@ -87,6 +89,8 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
   };
 
   const settings = {
+    center: { lat: 33.5731, lng: -7.5898 },
+    zoom: 12,
     showLabels: true,
     showBoundaries: true,
     showTerrain: false,

@@ -1,6 +1,5 @@
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapFilters } from "../types";
 import { Badge } from "@/components/ui/badge";
 import { PropertyFiltersProps } from "./types";
 
@@ -11,13 +10,13 @@ const PROPERTY_STATUS_OPTIONS = [
 ];
 
 const FISCAL_STATUS_OPTIONS = [
-  { value: "compliant", label: "Conforme", variant: "success" as const },
-  { value: "non_compliant", label: "Non Conforme", variant: "destructive" as const },
-  { value: "under_review", label: "En Révision", variant: "warning" as const },
+  { value: "PAID", label: "Payé", variant: "success" as const },
+  { value: "PENDING", label: "En attente", variant: "warning" as const },
+  { value: "OVERDUE", label: "En retard", variant: "destructive" as const },
 ];
 
 export const PropertyFilters = ({ filters, setFilters, onFilterChange }: PropertyFiltersProps) => {
-  const getStatusBadge = (status: string, options: typeof PROPERTY_STATUS_OPTIONS) => {
+  const getStatusBadge = (status: string, options: typeof PROPERTY_STATUS_OPTIONS | typeof FISCAL_STATUS_OPTIONS) => {
     const option = options.find(opt => opt.value === status);
     if (!option) return null;
     
@@ -33,15 +32,15 @@ export const PropertyFilters = ({ filters, setFilters, onFilterChange }: Propert
       <div className="space-y-2">
         <Label>Statut du bien</Label>
         <Select
-          value={filters.status}
+          value={filters.propertyStatus}
           onValueChange={(value) => {
-            setFilters({ ...filters, status: value });
-            onFilterChange('status', value);
+            setFilters({ ...filters, propertyStatus: value });
+            onFilterChange('propertyStatus', value);
           }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Sélectionner un statut">
-              {filters.status && getStatusBadge(filters.status, PROPERTY_STATUS_OPTIONS)}
+              {filters.propertyStatus && getStatusBadge(filters.propertyStatus, PROPERTY_STATUS_OPTIONS)}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
