@@ -30,7 +30,7 @@ export const AgentContactButton = ({ variant = "inline", className }: AgentConta
   const [phoneNumber, setPhoneNumber] = useState("");
   const [timeSlot, setTimeSlot] = useState("");
   const { toast } = useToast();
-  const isAgentAvailable = true;
+  const isAgentAvailable = true; // À connecter à un vrai service de disponibilité
 
   const handleCall = () => {
     window.location.href = "tel:+212522123456";
@@ -45,6 +45,7 @@ export const AgentContactButton = ({ variant = "inline", className }: AgentConta
       title: "Chat en cours d'ouverture",
       description: "Un agent va prendre en charge votre demande.",
     });
+    // Implémenter la logique d'ouverture du chat
   };
 
   const handleCallback = () => {
@@ -75,7 +76,7 @@ export const AgentContactButton = ({ variant = "inline", className }: AgentConta
           className={cn(
             variant === "floating" && "fixed bottom-20 right-4 z-50 rounded-full shadow-lg",
             "group relative",
-            isAgentAvailable ? "bg-green-500 hover:bg-green-600 text-white" : "bg-gray-400 text-white",
+            isAgentAvailable ? "bg-green-500 hover:bg-green-600" : "bg-gray-400",
             className
           )}
         >
