@@ -6,11 +6,56 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Search, MapPin, Calendar } from "lucide-react";
 import { SelectFilter } from "@/components/map/filters/SelectFilter";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { Property } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
+// Données de simulation pour les propriétés
+const mockProperties = [
+  {
+    id: "P001",
+    title: "Villa Californie",
+    location: {
+      address: "15 Boulevard de l'Océan, Californie",
+      lat: 33.5731,
+      lng: -7.5898
+    },
+    surface: 450,
+    price: 4500,
+    fiscal_status: "non_compliant",
+    type: "RESIDENTIAL",
+    year: 2024
+  },
+  {
+    id: "P002",
+    title: "Appartement Gauthier",
+    location: {
+      address: "45 Rue Jean Jaurès, Gauthier",
+      lat: 33.5850,
+      lng: -7.6328
+    },
+    surface: 180,
+    price: 1800,
+    fiscal_status: "non_compliant",
+    type: "RESIDENTIAL",
+    year: 2024
+  },
+  {
+    id: "P003",
+    title: "Local Commercial Maarif",
+    location: {
+      address: "156 Rue Zerktouni, Maarif",
+      lat: 33.5876,
+      lng: -7.6331
+    },
+    surface: 120,
+    price: 2400,
+    fiscal_status: "non_compliant",
+    type: "COMMERCIAL",
+    year: 2024
+  }
+];
 
 interface PropertySelectionProps {
   onPropertySelect: (property: Property, isSelected: boolean) => void;
@@ -24,21 +69,9 @@ export const PropertySelection = ({ onPropertySelect, selectedProperties }: Prop
   const { data: properties, isLoading } = useQuery({
     queryKey: ['unpaid-properties'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('fiscal_status', 'non_compliant');
-
-      if (error) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger les biens",
-          variant: "destructive",
-        });
-        throw error;
-      }
-
-      return data as Property[];
+      // Simuler un délai de chargement
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return mockProperties;
     },
   });
 
@@ -107,7 +140,7 @@ export const PropertySelection = ({ onPropertySelect, selectedProperties }: Prop
                   <div className="flex items-center space-x-4">
                     <Checkbox
                       checked={selectedProperties.some(p => p.id === property.id)}
-                      onCheckedChange={(checked) => onPropertySelect(property, checked as boolean)}
+                      onCheckedChange={(checked) => onPropertySelect(property as any, checked as boolean)}
                     />
                     <div className="space-y-1">
                       <div className="font-medium">{property.title}</div>
@@ -117,7 +150,7 @@ export const PropertySelection = ({ onPropertySelect, selectedProperties }: Prop
                       </div>
                       <div className="text-sm text-muted-foreground flex items-center">
                         <Calendar className="w-4 h-4 mr-1" />
-                        {new Date().getFullYear()}
+                        {property.year}
                       </div>
                     </div>
                   </div>
