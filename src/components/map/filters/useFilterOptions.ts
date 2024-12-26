@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { PROPERTY_TYPES, ZONE_TYPES } from './constants';
 import { REGIONS } from '@/utils/mockData/locations';
 import { mockParcels } from '@/utils/mockData/parcels';
+import { Region } from '@/types';
 
 export const useFilterOptions = (selectedRegion: string) => {
   const propertyTypeOptions = useMemo(() => 
@@ -20,8 +21,8 @@ export const useFilterOptions = (selectedRegion: string) => {
 
   const availableCommunes = useMemo(() => {
     if (!selectedRegion) return [];
-    const region = REGIONS.find(r => r.id === selectedRegion);
-    return region ? region.communes : [];
+    const region = REGIONS.find(r => r.id === selectedRegion) as Region;
+    return region?.cities?.[0]?.communes || [];
   }, [selectedRegion]);
 
   const statusCounts = useMemo(() => {
