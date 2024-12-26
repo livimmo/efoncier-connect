@@ -51,12 +51,19 @@ export const MobileFooter = () => {
       icon: User,
       label: "Profil",
       path: "/profile",
+      onClick: () => {
+        navigate("/profile");
+        toast({
+          title: "Profil",
+          description: "Chargement de votre profil...",
+        });
+      },
     },
   ];
 
   return (
     <>
-      <div className="h-16 md:hidden" /> {/* Spacer */}
+      <div className="h-16 md:hidden fixed bottom-0 left-0 right-0 z-50" /> {/* Spacer */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
         <div className="flex h-16 items-center justify-around px-4">
           {menuItems.map((item) => (
