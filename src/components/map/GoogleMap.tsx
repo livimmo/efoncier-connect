@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
 import { useToast } from "@/hooks/use-toast";
 import type { Parcel } from '@/utils/mockData/types';
 import { UserRole } from '@/types/auth';
-
-const GOOGLE_MAPS_API_KEY = 'AIzaSyBpyx3FTnDuj6a2XEKerIKFt87wxQYRov8';
-const DEFAULT_CENTER = { lat: 33.5731, lng: -7.5898 }; // Casablanca
-const DEFAULT_ZOOM = 12;
+import { getGoogleMapsLoader } from '@/utils/googleMapsLoader';
 
 interface GoogleMapProps {
   onMarkerClick: (parcel: Parcel, position: { x: number, y: number }) => void;
@@ -25,8 +21,8 @@ export const GoogleMap = ({
   theme, 
   setMapInstance, 
   userRole,
-  center,
-  zoom = DEFAULT_ZOOM,
+  center = { lat: 33.5731, lng: -7.5898 },
+  zoom = 12,
   getMarkerColor
 }: GoogleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -49,45 +45,52 @@ export const GoogleMap = ({
 
   useEffect(() => {
     const initMap = async () => {
-      const loader = new Loader({
-        apiKey: GOOGLE_MAPS_API_KEY,
-        version: 'weekly',
-      });
+      if (!mapRef.current) return;
 
       try {
-        const google = await loader.load();
-        if (mapRef.current) {
-          const mapInstance = new google.maps.Map(mapRef.current, {
-            center: center || DEFAULT_CENTER,
-            zoom: zoom,
-            styles: theme === 'dark' ? [
-              { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-              { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-              { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-            ] : [
-              { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#7c93a3" }] },
-              { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#E3F2FD" }] },
-              { featureType: "landscape", elementType: "geometry.fill", stylers: [{ color: "#F5F5F5" }] },
-            ],
-            mapTypeControl: true,
-            streetViewControl: true,
-            fullscreenControl: true,
-            gestureHandling: "greedy",
-          });
+        const loader = getGoogleMapsLoader();
+        await loader.load();
 
-          setMap(mapInstance);
-          setMapInstance(mapInstance);
-          
-          if (center) {
-            new google.maps.Marker({
-              position: center,
-              map: mapInstance,
-              animation: google.maps.Animation.DROP,
-            });
-          } else {
-            createMarkers(parcels, mapInstance);
-          }
+        const mapInstance = new google.maps.Map(mapRef.current, {
+          center,
+          zoom,
+          styles: theme === 'dark' ? [
+            { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+          ] : [
+            { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#7c93a3" }] },
+            { featureType: "water", elementType: "geometry.fill", stylers: [{ color: "#E3F2FD" }] },
+            { featureType: "landscape", elementType: "geometry.fill", stylers: [{ color: "#F5F5F5" }] },
+          ],
+          mapTypeControl: true,
+          streetViewControl: true,
+          fullscreenControl: true,
+          gestureHandling: "greedy",
+        });
+
+        setMap(mapInstance);
+        setMapInstance(mapInstance);
+        
+        if (center) {
+          new google.maps.Marker({
+            position: center,
+            map: mapInstance,
+            animation: google.maps.Animation.DROP,
+          });
+        } else {
+          createMarkers(parcels, mapInstance);
         }
+
+        // Add click listener to close info windows when clicking on the map
+        mapInstance.addListener('click', (e: google.maps.MapMouseEvent) => {
+          // Only close if we didn't click on a marker
+          if (e.placeId) return;
+          
+          // Trigger close action
+          onMarkerClick({} as Parcel, { x: 0, y: 0 });
+        });
+
       } catch (error) {
         console.error("Erreur lors du chargement de la carte:", error);
         toast({

@@ -27,6 +27,9 @@ export interface Property {
   owner_id?: string;
   created_at?: string;
   updated_at?: string;
+  city?: string;
+  address?: string;
+  tnbInfo: TNBInfo;
 }
 
 export interface PaymentDetails {
@@ -87,7 +90,7 @@ export interface TNBInfo {
   pricePerMeter: number;
   totalAmount: number;
   lastPaymentDate?: string;
-  lastUpdate?: string;
+  lastUpdate: string;
   status: TaxStatus;
 }
 
@@ -135,7 +138,7 @@ export interface Transaction {
   amount: number;
   status: string;
   date: string;
-  type?: string;
+  type: string;
 }
 
 export interface User {
@@ -145,7 +148,7 @@ export interface User {
   role: string;
   properties: string[];
   phone?: string;
-  status?: string;
+  status: string;
 }
 
 export interface Region {
@@ -156,7 +159,7 @@ export interface Region {
     lng: number;
   };
   cities: City[];
-  communes?: string[];
+  communes: string[];
 }
 
 export interface City {
