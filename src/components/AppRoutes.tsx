@@ -6,6 +6,9 @@ import Map from "@/components/Map";
 import Dashboard from "@/pages/Dashboard";
 import Register from "@/pages/Register";
 import GuestPayment from "@/pages/GuestPayment";
+import Privacy from "@/pages/Privacy";
+import Terms from "@/pages/Terms";
+import Legal from "@/pages/Legal";
 import DeveloperDashboard from "@/pages/developer/Dashboard";
 import DeveloperProperties from "@/pages/developer/Properties";
 import DeveloperFavorites from "@/pages/developer/Favorites";
@@ -32,6 +35,9 @@ export const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/support" element={<Support />} />
       <Route path="/guest-payment" element={<GuestPayment />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/legal" element={<Legal />} />
       
       {/* Common Dashboard Route - Will redirect to role-specific dashboard */}
       <Route
