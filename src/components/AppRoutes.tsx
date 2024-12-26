@@ -102,6 +102,14 @@ export const AppRoutes = () => {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/owner/payment"
+        element={
+          <PrivateRoute allowedRoles={["owner"] as UserRole[]}>
+            <Payment />
+          </PrivateRoute>
+        }
+      />
 
       {/* Admin Routes */}
       <Route
