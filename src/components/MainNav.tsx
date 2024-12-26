@@ -63,7 +63,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
     <nav 
       className={cn(
         "flex items-center space-x-4 lg:space-x-6", 
-        isMobile && "flex-wrap justify-center gap-2",
+        isMobile && "flex-col items-start space-y-4 w-full",
         className
       )} 
       {...props}
@@ -73,19 +73,15 @@ export function MainNav({ className, ...props }: MainNavProps) {
           key={href}
           onClick={() => handleNavigation(href)}
           className={cn(
-            "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary relative group cursor-pointer",
+            "flex items-center space-x-3 text-sm font-medium transition-colors hover:text-primary relative group cursor-pointer w-full",
             location.pathname === href 
-              ? "text-primary after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-0.5 after:bg-primary" 
+              ? "text-primary" 
               : "text-muted-foreground",
-            isMobile && "flex-col items-center justify-center space-y-1 space-x-0 text-xs p-2"
+            isMobile && "px-4 py-2 hover:bg-accent rounded-md"
           )}
         >
-          <Icon className="h-5 w-5" />
-          {!isMobile ? (
-            <span>{label}</span>
-          ) : (
-            <span className="text-center whitespace-nowrap">{label}</span>
-          )}
+          <Icon className="h-5 w-5 flex-shrink-0" />
+          <span className="flex-1">{label}</span>
         </div>
       ))}
     </nav>

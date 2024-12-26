@@ -1,4 +1,4 @@
-import { Key, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -67,21 +67,23 @@ export const AuthButtons = ({ onLoginClick, onRegisterClick }: AuthButtonsProps)
 
   return (
     <div className="flex items-center gap-2">
-      <Button 
-        variant="ghost" 
-        onClick={onLoginClick}
-        className="gap-2"
-      >
-        <Key className="h-4 w-4" />
-        {!isMobile && "Se Connecter"}
-      </Button>
+      {!isMobile && (
+        <Button 
+          variant="ghost" 
+          onClick={onLoginClick}
+          className="gap-2"
+        >
+          <User className="h-4 w-4" />
+          Se Connecter
+        </Button>
+      )}
       {!isMobile && (
         <Button onClick={onRegisterClick}>
           S'inscrire
         </Button>
       )}
       {isMobile && (
-        <Button onClick={onLoginClick}>
+        <Button onClick={onLoginClick} variant="ghost">
           Se Connecter
         </Button>
       )}
