@@ -21,7 +21,7 @@ const PrivateLogin = () => {
     setIsLoading(true);
 
     // Test credentials
-    if (username === "admin" && password === "password123") {
+    if (username === "efoncier" && password === "efonciermz") {
       toast({
         title: "Connexion réussie",
         description: "Bienvenue sur eFoncier",
