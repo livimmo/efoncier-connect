@@ -37,7 +37,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
     },
     {
       href: "/about",
-      label: "Qui sommes nous",
+      label: "À propos",
       icon: Contact
     },
     {
@@ -68,7 +68,7 @@ export function MainNav({ className, ...props }: MainNavProps) {
           key={href}
           onClick={() => handleNavigation(href)}
           className={cn(
-            "flex items-center space-x-3 text-sm font-medium transition-colors hover:text-primary relative group cursor-pointer w-full",
+            "flex items-center space-x-3 text-sm font-medium transition-colors hover:text-primary whitespace-nowrap relative group cursor-pointer w-full",
             location.pathname === href 
               ? "text-primary" 
               : "text-muted-foreground",
