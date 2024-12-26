@@ -1,4 +1,4 @@
-import { Home, User, CreditCard, Building2, FileText, Bell, Settings, LogOut, Star, History } from "lucide-react";
+import { Home, User, Building2, FileText, Bell, Settings, LogOut, Star, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -20,7 +20,6 @@ const getRoleSpecificMenuItems = (role: string) => {
   const items = {
     owner: [
       { icon: Building2, label: "Mes Biens", href: "/owner/properties" },
-      { icon: CreditCard, label: "Paiements", href: "/owner/payments" },
     ],
     developer: [
       { icon: Building2, label: "Mes Projets", href: "/developer/properties" },
@@ -28,7 +27,6 @@ const getRoleSpecificMenuItems = (role: string) => {
     ],
     commune: [
       { icon: Building2, label: "Gestion des Biens", href: "/commune/properties" },
-      { icon: CreditCard, label: "Paiements", href: "/commune/payments" },
     ],
     admin: [
       { icon: Building2, label: "Gestion des Biens", href: "/admin/properties" },
