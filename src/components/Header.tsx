@@ -14,6 +14,7 @@ import { NotificationsArea } from "./header/NotificationsArea";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Search } from "lucide-react";
+import { CallCenterButton } from "./support/CallCenterButton";
 
 export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -52,6 +53,7 @@ export const Header = () => {
           </Button>
           
           {profile && !isMobile && <NotificationsArea />}
+          <CallCenterButton variant="header" />
           <ModeToggle />
           {profile ? (
             <UserMenu />
