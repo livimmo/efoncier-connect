@@ -170,8 +170,16 @@ export const PropertyChat = ({ propertyId, propertyTitle }: PropertyChatProps) =
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
+          <DialogHeader className="flex flex-row items-center justify-between">
             <DialogTitle>Discussion - {propertyTitle}</DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(false)}
+              className="h-6 w-6 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </DialogHeader>
           {renderContent()}
         </DialogContent>

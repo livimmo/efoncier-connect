@@ -62,14 +62,15 @@ export const MobileSearchSheet = () => {
         <SheetHeader className="space-y-4 relative">
           <div className="flex items-center justify-between">
             <SheetTitle>Recherche</SheetTitle>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={clearSearch}
-              className="absolute right-0 top-0"
-            >
-              <X className="h-5 w-5" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={clearSearch}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
           <MobileSearchBar
             query={query}
