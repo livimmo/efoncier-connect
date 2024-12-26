@@ -42,11 +42,11 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
-        return <Badge variant="success">🟢 Disponible</Badge>;
+        return <Badge variant="success" className="inline-flex items-center">🟢 <span className="ml-1">Disponible</span></Badge>;
       case 'UNAVAILABLE':
-        return <Badge variant="destructive">🔴 Indisponible</Badge>;
+        return <Badge variant="destructive" className="inline-flex items-center">🔴 <span className="ml-1">Indisponible</span></Badge>;
       case 'IN_TRANSACTION':
-        return <Badge variant="warning">🟡 En Transaction</Badge>;
+        return <Badge variant="warning" className="inline-flex items-center">🟡 <span className="ml-1">En Transaction</span></Badge>;
       default:
         return null;
     }
@@ -55,11 +55,11 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const getFiscalStatusBadge = (status: string) => {
     switch (status) {
       case 'COMPLIANT':
-        return <Badge variant="outline" className="bg-green-500/10 text-green-500">✅ Payé</Badge>;
+        return <Badge variant="outline" className="bg-green-500/10 text-green-500 inline-flex items-center">✅ <span className="ml-1">Payé</span></Badge>;
       case 'NON_COMPLIANT':
-        return <Badge variant="outline" className="bg-red-500/10 text-red-500">❌ Impayé</Badge>;
+        return <Badge variant="outline" className="bg-red-500/10 text-red-500 inline-flex items-center">❌ <span className="ml-1">Impayé</span></Badge>;
       case 'UNDER_REVIEW':
-        return <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500">⏳ En révision</Badge>;
+        return <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 inline-flex items-center">⏳ <span className="ml-1">En révision</span></Badge>;
       default:
         return null;
     }
