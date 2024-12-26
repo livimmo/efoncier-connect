@@ -2,11 +2,43 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Search, MapPin, Calendar } from "lucide-react";
 import { SelectFilter } from "@/components/map/filters/SelectFilter";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Property } from "@/types";
+import { useToast } from "@/hooks/use-toast";
 
-export const PropertySelection = () => {
+interface PropertySelectionProps {
+  onPropertySelect: (property: Property, isSelected: boolean) => void;
+  selectedProperties: Property[];
+}
+
+export const PropertySelection = ({ onPropertySelect, selectedProperties }: PropertySelectionProps) => {
+  const { toast } = useToast();
+
+  const { data: properties, isLoading } = useQuery({
+    queryKey: ['unpaid-properties'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('fiscal_status', 'non_compliant');
+
+      if (error) {
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les biens",
+          variant: "destructive",
+        });
+        throw error;
+      }
+
+      return data as Property[];
+    },
+  });
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">
@@ -40,7 +72,6 @@ export const PropertySelection = () => {
             options={[
               { value: "unpaid", label: "Impayé" },
               { value: "partial", label: "Partiellement payé" },
-              { value: "paid", label: "Payé" },
             ]}
             placeholder="Filtrer par statut"
           />
@@ -67,47 +98,38 @@ export const PropertySelection = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[
-              {
-                id: "TF-00123",
-                location: "Casablanca",
-                year: "2024",
-                amount: 5000,
-                status: "unpaid"
-              },
-              {
-                id: "TF-00567",
-                location: "Rabat",
-                year: "2023",
-                amount: 3200,
-                status: "partial"
-              }
-            ].map((property) => (
+            {properties?.map((property) => (
               <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-1">
-                  <div className="font-medium">{property.id}</div>
-                  <div className="text-sm text-muted-foreground flex items-center">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {property.location}
-                  </div>
-                  <div className="text-sm text-muted-foreground flex items-center">
-                    <Calendar className="w-4 h-4 mr-1" />
-                    Année {property.year}
+                <div className="flex items-center space-x-4">
+                  <Checkbox
+                    checked={selectedProperties.some(p => p.id === property.id)}
+                    onCheckedChange={(checked) => onPropertySelect(property, checked as boolean)}
+                  />
+                  <div className="space-y-1">
+                    <div className="font-medium">{property.title}</div>
+                    <div className="text-sm text-muted-foreground flex items-center">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {property.location.address}
+                    </div>
+                    <div className="text-sm text-muted-foreground flex items-center">
+                      <Calendar className="w-4 h-4 mr-1" />
+                      {new Date().getFullYear()}
+                    </div>
                   </div>
                 </div>
                 <div className="text-right space-y-2">
-                  <div className="font-bold">{property.amount} DHS</div>
-                  <Badge variant={property.status === "unpaid" ? "destructive" : "warning"}>
-                    {property.status === "unpaid" ? "Impayé" : "Partiellement payé"}
+                  <div className="font-bold">{property.price} MAD</div>
+                  <Badge variant="destructive">
+                    Impayé
                   </Badge>
-                  <div>
-                    <Button size="sm">
-                      Payer
-                    </Button>
-                  </div>
                 </div>
               </div>
             ))}
+            {properties?.length === 0 && (
+              <div className="text-center text-muted-foreground py-8">
+                Aucun bien à payer
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
