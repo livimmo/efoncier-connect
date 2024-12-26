@@ -56,24 +56,30 @@ export const SurfaceFilter = ({ filters, onFilterChange, setFilters }: SurfaceFi
         onValueChange={handleSliderChange}
         className="mt-2"
       />
-      <div className="flex justify-between text-sm text-muted-foreground">
+      <div className="flex justify-between gap-2">
         <Input
           type="text"
           value={minSurface.toLocaleString()}
           onChange={(e) => handleMinSurfaceInputChange(e.target.value)}
-          className="w-32 h-7 text-right"
-          placeholder="Surface min"
+          className="w-32 h-8 text-right"
+          placeholder="Min m²"
         />
         {showCustomInput ? (
           <Input
             type="text"
             value={maxSurface.toLocaleString()}
             onChange={(e) => handleMaxSurfaceInputChange(e.target.value)}
-            className="w-32 h-7 text-right"
-            placeholder="Surface max"
+            className="w-32 h-8 text-right"
+            placeholder="Max m²"
           />
         ) : (
-          <span>{maxSurface.toLocaleString()} m²</span>
+          <Input
+            type="text"
+            value={maxSurface.toLocaleString()}
+            onChange={(e) => handleMaxSurfaceInputChange(e.target.value)}
+            className="w-32 h-8 text-right"
+            placeholder="Max m²"
+          />
         )}
       </div>
     </div>

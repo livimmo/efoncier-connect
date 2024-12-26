@@ -66,12 +66,12 @@ export const PriceFilter = ({ filters, onFilterChange, setFilters }: PriceFilter
         onValueChange={handleSliderChange}
         className="mt-2"
       />
-      <div className="flex justify-between text-sm text-muted-foreground">
+      <div className="flex justify-between gap-2">
         <Input
           type="text"
           value={minPrice.toLocaleString()}
           onChange={(e) => handleMinPriceInputChange(e.target.value)}
-          className="w-32 h-7 text-right"
+          className="w-32 h-8 text-right"
           placeholder="Prix min"
         />
         {showCustomInput ? (
@@ -79,11 +79,17 @@ export const PriceFilter = ({ filters, onFilterChange, setFilters }: PriceFilter
             type="text"
             value={maxPrice.toLocaleString()}
             onChange={(e) => handleMaxPriceInputChange(e.target.value)}
-            className="w-32 h-7 text-right"
+            className="w-32 h-8 text-right"
             placeholder="Prix max"
           />
         ) : (
-          <span>{formatCurrency(maxPrice)} MAD</span>
+          <Input
+            type="text"
+            value={maxPrice.toLocaleString()}
+            onChange={(e) => handleMaxPriceInputChange(e.target.value)}
+            className="w-32 h-8 text-right"
+            placeholder="Prix max"
+          />
         )}
       </div>
     </div>
