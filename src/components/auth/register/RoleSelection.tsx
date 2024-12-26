@@ -18,7 +18,7 @@ export const RoleSelection = ({ selectedRole, onRoleChange }: RoleSelectionProps
     },
     {
       id: "developer",
-      title: "Promoteur",
+      title: "Investisseur",
       description: "Recherchez et négociez les terrains disponibles",
       icon: Building,
     },

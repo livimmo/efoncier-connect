@@ -20,7 +20,7 @@ const Login = () => {
     },
     {
       id: "developer",
-      title: "Promoteur",
+      title: "Investisseur",
       description: "Visualisez et négociez les biens disponibles",
       icon: Building,
     },
