@@ -8,7 +8,6 @@ import { useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { formatCurrency } from "@/utils/format";
 import { PropertyChat } from "@/components/chat/PropertyChat";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DocumentsDialog } from "./DocumentsDialog";
 import type { Parcel } from "@/utils/mockData/types";
 
@@ -21,7 +20,6 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const { toast } = useToast();
   const { profile } = useAuth();
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
-  const [chatOpen, setChatOpen] = useState(false);
   const [documentsOpen, setDocumentsOpen] = useState(false);
 
   const handleViewDetails = (parcelId: string) => {
@@ -30,11 +28,6 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
 
   const handleViewOnMap = (parcelId: string) => {
     navigate(`/map?parcel=${parcelId}`);
-  };
-
-  const handleOpenChat = (parcel: Parcel) => {
-    setSelectedParcel(parcel);
-    setChatOpen(true);
   };
 
   const handleViewDocuments = (parcel: Parcel) => {
@@ -70,17 +63,6 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
 
   return (
     <>
-      <Dialog open={chatOpen} onOpenChange={setChatOpen}>
-        <DialogContent className="max-w-md">
-          {selectedParcel && (
-            <PropertyChat
-              propertyId={selectedParcel.id}
-              propertyTitle={selectedParcel.title}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-
       {selectedParcel && (
         <DocumentsDialog
           open={documentsOpen}
@@ -138,13 +120,10 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                     >
                       <FileText className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handleOpenChat(parcel)}
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                    </Button>
+                    <PropertyChat
+                      propertyId={parcel.id}
+                      propertyTitle={parcel.title}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

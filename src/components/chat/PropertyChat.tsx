@@ -119,7 +119,7 @@ export const PropertyChat = ({ propertyId, propertyTitle }: PropertyChatProps) =
             </ScrollArea>
 
             <div className="p-4 border-t space-y-4">
-              <ScrollArea className="w-full" orientation="horizontal">
+              <ScrollArea className="w-full">
                 <div className="flex gap-2 pb-2">
                   {QUICK_MESSAGES.map((msg, index) => (
                     <Button
