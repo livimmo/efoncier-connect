@@ -28,18 +28,6 @@ export const MapView = ({
 }: MapViewProps) => {
   const { toast } = useToast();
 
-  const handleMapClick = (e: google.maps.MapMouseEvent) => {
-    // Si le clic vient d'un marqueur, ne pas fermer la fenêtre
-    if (e.domEvent.target instanceof Element && 
-        (e.domEvent.target.closest('.marker') || 
-         e.domEvent.target.closest('.parcel-info'))) {
-      return;
-    }
-    
-    // Fermer la fenêtre d'information
-    onParcelSelect(null);
-  };
-
   return (
     <div className="relative flex-1 h-full">
       <div className="absolute inset-0">
@@ -49,7 +37,6 @@ export const MapView = ({
           theme={settings.theme}
           setMapInstance={setMapInstance}
           userRole={userRole}
-          onMapClick={handleMapClick}
         />
       </div>
 
