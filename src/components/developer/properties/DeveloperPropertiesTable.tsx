@@ -9,6 +9,8 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { formatCurrency } from "@/utils/format";
 import { PropertyChat } from "@/components/chat/PropertyChat";
 import { DocumentsDialog } from "./DocumentsDialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { PropertyLocationMap } from "./PropertyLocationMap";
 import type { Parcel } from "@/utils/mockData/types";
 
 interface DeveloperPropertiesTableProps {
@@ -21,13 +23,15 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   const { profile } = useAuth();
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [documentsOpen, setDocumentsOpen] = useState(false);
+  const [locationOpen, setLocationOpen] = useState(false);
 
   const handleViewDetails = (parcelId: string) => {
     navigate(`/property/${parcelId}`);
   };
 
-  const handleViewOnMap = (parcelId: string) => {
-    navigate(`/map?parcel=${parcelId}`);
+  const handleViewOnMap = (parcel: Parcel) => {
+    setSelectedParcel(parcel);
+    setLocationOpen(true);
   };
 
   const handleViewDocuments = (parcel: Parcel) => {
@@ -64,11 +68,19 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
   return (
     <>
       {selectedParcel && (
-        <DocumentsDialog
-          open={documentsOpen}
-          onOpenChange={setDocumentsOpen}
-          parcelId={selectedParcel.id}
-        />
+        <>
+          <Dialog open={locationOpen} onOpenChange={setLocationOpen}>
+            <DialogContent className="max-w-3xl">
+              <PropertyLocationMap parcel={selectedParcel} />
+            </DialogContent>
+          </Dialog>
+
+          <DocumentsDialog
+            open={documentsOpen}
+            onOpenChange={setDocumentsOpen}
+            parcelId={selectedParcel.id}
+          />
+        </>
       )}
 
       <div className="rounded-md border">
@@ -109,7 +121,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => handleViewOnMap(parcel.id)}
+                      onClick={() => handleViewOnMap(parcel)}
                     >
                       <MapPin className="h-4 w-4" />
                     </Button>
