@@ -75,9 +75,16 @@ export const AuthButtons = ({ onLoginClick, onRegisterClick }: AuthButtonsProps)
         <Key className="h-4 w-4" />
         {!isMobile && "Se Connecter"}
       </Button>
-      <Button onClick={onRegisterClick}>
-        {isMobile ? "Inscription" : "S'inscrire"}
-      </Button>
+      {!isMobile && (
+        <Button onClick={onRegisterClick}>
+          S'inscrire
+        </Button>
+      )}
+      {isMobile && (
+        <Button onClick={onLoginClick}>
+          Se Connecter
+        </Button>
+      )}
     </div>
   );
 };
