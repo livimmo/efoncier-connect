@@ -57,7 +57,7 @@ export const DraggableParcelInfo = ({
           "fixed transition-all duration-300 ease-out",
           isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
           "hover:shadow-lg will-change-transform",
-          isMobile ? "w-[95vw] max-w-[400px] left-1/2 bottom-24" : "w-[400px]",
+          isMobile ? "w-[95vw] max-w-[400px] left-1/2 bottom-24" : "w-[400px]", // Ajusté bottom-24 pour laisser de l'espace pour la barre de menu
           !isMobile && "absolute",
           isMinimized ? "z-[40]" : "z-[100]",
           className
