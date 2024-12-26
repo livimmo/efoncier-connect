@@ -48,9 +48,9 @@ export const ParcelInfo = ({
         isExpanded ? "scale-100" : "scale-95",
         className
       )}>
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
           <h3 className="text-lg font-semibold flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-primary" />
+            <MapPin className="h-5 w-5" />
             Détails du Bien {parcel.titleDeedNumber}
           </h3>
           <div className="flex items-center gap-2">
@@ -59,7 +59,7 @@ export const ParcelInfo = ({
                 variant="ghost"
                 size="icon"
                 onClick={onToggleExpand}
-                className="hover:bg-accent"
+                className="hover:bg-primary-foreground/20 text-primary-foreground"
               >
                 {isExpanded ? (
                   <ChevronDown className="h-4 w-4" />
@@ -72,7 +72,7 @@ export const ParcelInfo = ({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="hover:bg-accent"
+              className="hover:bg-primary-foreground/20 text-primary-foreground"
             >
               <X className="h-4 w-4" />
             </Button>
