@@ -4,7 +4,11 @@ export interface Property {
   fiscal_status: "compliant" | "non_compliant" | "under_review";
   id: string;
   is_for_sale: boolean;
-  location: any;
+  location: {
+    address: string;
+    lat: number;
+    lng: number;
+  };
   owner_id: string;
   price: number;
   property_type: string;
