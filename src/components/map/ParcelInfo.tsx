@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatCurrency } from "@/utils/format";
-import { MapPin, User, Ruler, CreditCard, FileText, Building } from "lucide-react";
+import { MapPin, User, Ruler, CreditCard, FileText, Building, X, ChevronDown, ChevronUp } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LoginDialog } from "@/components/auth/LoginDialog";
 import { Parcel } from '@/utils/mockData/types';
@@ -11,15 +11,25 @@ import { UserRole } from '@/types/auth';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ParcelStatusBadges } from "./parcel-info/ParcelStatusBadges";
 import { BlurredField } from "./parcel-info/BlurredField";
+import { cn } from "@/lib/utils";
 
 export interface ParcelInfoProps {
   parcel: Parcel;
   onClose: () => void;
   className?: string;
   userRole?: UserRole;
+  isExpanded?: boolean;
+  onToggleExpand?: () => void;
 }
 
-export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoProps) => {
+export const ParcelInfo = ({ 
+  parcel, 
+  onClose, 
+  className, 
+  userRole,
+  isExpanded,
+  onToggleExpand 
+}: ParcelInfoProps) => {
   const { profile } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const isAuthenticated = !!profile;
@@ -27,27 +37,60 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
 
   const handleLoginClick = () => {
     setLoginOpen(true);
-    onClose();
   };
 
   return (
     <>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
-      <Card className={`overflow-hidden animate-fade-in ${className}`}>
-        <ScrollArea className={`${isMobile ? 'max-h-[70vh]' : 'max-h-[600px]'} px-6 py-4`}>
-          <div className="space-y-4">
+      <Card className={cn(
+        "overflow-hidden animate-in fade-in-0 zoom-in-95",
+        "transition-all duration-200 ease-in-out",
+        isExpanded ? "scale-100" : "scale-95",
+        className
+      )}>
+        <div className="flex items-center justify-between p-4 border-b">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-primary" />
+            Détails du Bien {parcel.titleDeedNumber}
+          </h3>
+          <div className="flex items-center gap-2">
+            {onToggleExpand && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onToggleExpand}
+                className="hover:bg-accent"
+              >
+                {isExpanded ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronUp className="h-4 w-4" />
+                )}
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="hover:bg-accent"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <ScrollArea className={cn(
+          "transition-all duration-200",
+          isMobile ? 'max-h-[70vh]' : isExpanded ? 'max-h-[600px]' : 'max-h-[400px]',
+          "px-6 py-4"
+        )}>
+          <div className="space-y-6">
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">
-                <BlurredField value={parcel.title} />
-              </h3>
               <ParcelStatusBadges 
                 status={parcel.status}
                 taxStatus={parcel.taxStatus}
                 fiscalStatus={parcel.fiscalStatus}
               />
-              <p className="text-sm text-muted-foreground">
-                Référence: <BlurredField value={parcel.titleDeedNumber} />
-              </p>
             </div>
 
             <div className="grid gap-4">
@@ -93,8 +136,11 @@ export const ParcelInfo = ({ parcel, onClose, className, userRole }: ParcelInfoP
                   className="w-full"
                   onClick={handleLoginClick}
                 >
-                  Se connecter pour voir plus de détails
+                  🔍 Voir Plus de Détails
                 </Button>
+                <p className="text-sm text-muted-foreground text-center mt-2">
+                  Créez un compte pour accéder aux informations complètes du bien
+                </p>
               </div>
             )}
 
