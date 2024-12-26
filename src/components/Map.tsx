@@ -20,26 +20,28 @@ const Map = () => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const [filters, setFilters] = useState<MapFiltersType>({
-    region: '',
-    commune: '',
-    propertyType: '',
-    zoneType: '',
-    size: [0, 15000],
-    status: '',
-    ownerName: '',
-    titleDeedNumber: '',
-    lastPaymentDate: null,
-    fiscalStatus: '',
-    maxPrice: 20000000,
-    minPrice: 0,
-    tnbReference: '',
-    searchQuery: '',
-    zoning: '',
-    paymentStatus: '',
-    tnbStatus: '',
-    propertyStatus: ''
-  });
+
+const [filters, setFilters] = useState<MapFiltersType>({
+  region: '',
+  commune: '',
+  city: '',
+  propertyType: '',
+  zoneType: '',
+  size: [0, 15000],
+  status: '',
+  ownerName: '',
+  titleDeedNumber: '',
+  lastPaymentDate: null,
+  fiscalStatus: '',
+  maxPrice: 20000000,
+  minPrice: 0,
+  tnbReference: '',
+  searchQuery: '',
+  zoning: '',
+  paymentStatus: '',
+  tnbStatus: '',
+  propertyStatus: ''
+});
 
   const handleParcelSelect = (parcelId: string) => {
     if (!profile) {

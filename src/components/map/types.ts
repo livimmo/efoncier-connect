@@ -1,6 +1,7 @@
 export interface MapFilters {
   region: string;
   commune: string;
+  city: string;
   propertyType: string;
   zoneType: string;
   size: [number, number];
