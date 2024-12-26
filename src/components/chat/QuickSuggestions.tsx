@@ -1,64 +1,29 @@
-import { Button } from "@/components/ui/button";
-import { Search, CreditCard, HelpCircle, MessageSquare, Settings, Home } from "lucide-react";
-
 interface QuickSuggestionsProps {
-  onSelect: (message: string) => void;
+  onSelect: (suggestion: string) => void;
 }
 
 export const QuickSuggestions = ({ onSelect }: QuickSuggestionsProps) => {
   const suggestions = [
-    {
-      text: "Rechercher un bien",
-      icon: Search,
-      message: "Je cherche un bien à Casablanca",
-    },
-    {
-      text: "Voir mes paiements",
-      icon: CreditCard,
-      message: "Quels sont mes paiements en attente ?",
-    },
-    {
-      text: "Messages",
-      icon: MessageSquare,
-      message: "Montre-moi mes messages récents",
-    },
-    {
-      text: "Mes biens",
-      icon: Home,
-      message: "Je veux voir mes biens",
-    },
-    {
-      text: "Paramètres",
-      icon: Settings,
-      message: "Accéder à mes paramètres",
-    },
-    {
-      text: "Aide",
-      icon: HelpCircle,
-      message: "J'ai besoin d'aide",
-    },
+    "Comment payer ma taxe TNB ?",
+    "Je souhaite consulter mes biens",
+    "Quels documents sont requis pour une transaction ?",
+    "Quand dois-je renouveler ma taxe TNB ?",
+    "Je veux contacter un agent humain",
   ];
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-foreground mb-4">
-        Comment puis-je vous aider aujourd'hui ?
-      </p>
-      <div className="grid grid-cols-2 gap-2">
-        {suggestions.map((suggestion, index) => {
-          const Icon = suggestion.icon;
-          return (
-            <Button
-              key={index}
-              variant="outline"
-              className="w-full justify-start text-left hover:bg-muted"
-              onClick={() => onSelect(suggestion.message)}
-            >
-              <Icon className="w-4 h-4 mr-2" />
-              <span className="text-foreground">{suggestion.text}</span>
-            </Button>
-          );
-        })}
+      <p className="text-sm text-muted-foreground">Questions fréquentes :</p>
+      <div className="flex flex-wrap gap-2">
+        {suggestions.map((suggestion, index) => (
+          <button
+            key={index}
+            onClick={() => onSelect(suggestion)}
+            className="text-sm bg-secondary/50 hover:bg-secondary px-3 py-1.5 rounded-full text-secondary-foreground transition-colors"
+          >
+            {suggestion}
+          </button>
+        ))}
       </div>
     </div>
   );
