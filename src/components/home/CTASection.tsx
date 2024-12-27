@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ChatBubble } from "@/components/chat/ChatBubble";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ChatWindow } from "@/components/chat/ChatWindow";
 
 export const CTASection = () => {
   const [showChat, setShowChat] = useState(false);
@@ -37,6 +39,12 @@ export const CTASection = () => {
           </Button>
         </div>
       </div>
+
+      <Dialog open={showChat} onOpenChange={setShowChat}>
+        <DialogContent className="sm:max-w-[425px] p-0">
+          <ChatWindow onClose={() => setShowChat(false)} />
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
