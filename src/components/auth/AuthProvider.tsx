@@ -24,6 +24,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Gestionnaire pour la fermeture de la fenêtre
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("isPrivateAuthenticated");
+    };
+
+    // Gestionnaire pour la visibilité de la page
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        localStorage.removeItem("isPrivateAuthenticated");
+      }
+    };
+
+    // Ajout des écouteurs d'événements
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -39,17 +55,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(parsedUser);
     }
     setLoading(false);
+
+    // Nettoyage des écouteurs d'événements
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const signOut = async () => {
     try {
       localStorage.removeItem('user');
+      localStorage.removeItem("isPrivateAuthenticated");
       setUser(null);
       toast({
         title: "Déconnexion réussie",
         description: "À bientôt !",
       });
-      navigate('/');
+      navigate('/private-login');
     } catch (error: any) {
       console.error("Sign out error:", error);
       toast({
