@@ -58,7 +58,7 @@ export const PropertyActions = ({
                 className="bg-primary hover:bg-primary/90"
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                Créer un compte investisseur
+                Se connecter
               </Button>
               <Badge 
                 variant="secondary" 
