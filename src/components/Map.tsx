@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MapContainer } from './map/MapContainer';
 import { Header } from './Header';
+import { Footer } from './home/Footer';
 import { useAuth } from './auth/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
 import { DeveloperPropertiesTable } from './developer/properties/DeveloperPropertiesTable';
@@ -21,27 +22,27 @@ const Map = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(isMobile);
 
-const [filters, setFilters] = useState<MapFiltersType>({
-  region: '',
-  commune: '',
-  city: '',
-  propertyType: '',
-  zoneType: '',
-  size: [0, 15000],
-  status: '',
-  ownerName: '',
-  titleDeedNumber: '',
-  lastPaymentDate: null,
-  fiscalStatus: '',
-  maxPrice: 20000000,
-  minPrice: 0,
-  tnbReference: '',
-  searchQuery: '',
-  zoning: '',
-  paymentStatus: '',
-  tnbStatus: '',
-  propertyStatus: ''
-});
+  const [filters, setFilters] = useState<MapFiltersType>({
+    region: '',
+    commune: '',
+    city: '',
+    propertyType: '',
+    zoneType: '',
+    size: [0, 15000],
+    status: '',
+    ownerName: '',
+    titleDeedNumber: '',
+    lastPaymentDate: null,
+    fiscalStatus: '',
+    maxPrice: 20000000,
+    minPrice: 0,
+    tnbReference: '',
+    searchQuery: '',
+    zoning: '',
+    paymentStatus: '',
+    tnbStatus: '',
+    propertyStatus: ''
+  });
 
   const handleParcelSelect = (parcelId: string) => {
     if (!profile) {
@@ -98,9 +99,9 @@ const [filters, setFilters] = useState<MapFiltersType>({
   });
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col relative">
         <div className="p-4 flex justify-between items-center">
           <Button
             variant="ghost"
@@ -132,8 +133,8 @@ const [filters, setFilters] = useState<MapFiltersType>({
           </div>
         </div>
         
-        <div className="flex-1 p-4">
-          <div className="grid lg:grid-cols-[auto,1fr] gap-4 h-full relative">
+        <div className="flex-1 relative">
+          <div className="grid lg:grid-cols-[auto,1fr] h-full relative">
             <div className={cn(
               "absolute lg:relative z-[5] bg-background/95 backdrop-blur-sm lg:backdrop-blur-none transition-all duration-300 ease-in-out",
               isMobile ? (
@@ -166,7 +167,7 @@ const [filters, setFilters] = useState<MapFiltersType>({
                 mapInstance={mapInstance}
               />
             </div>
-            <div className="h-[600px] relative">
+            <div className="h-full">
               {viewMode === 'map' ? (
                 <MapContainer 
                   userRole={profile?.role} 
@@ -180,7 +181,8 @@ const [filters, setFilters] = useState<MapFiltersType>({
             </div>
           </div>
         </div>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };

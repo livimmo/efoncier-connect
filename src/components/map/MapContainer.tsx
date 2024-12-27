@@ -100,7 +100,7 @@ export const MapContainer = ({ userRole, onParcelSelect, mapInstance, setMapInst
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col bg-background">
+    <div className="h-full flex flex-col bg-background">
       <WelcomeDialog />
       
       <div className="flex-1 relative">
