@@ -59,9 +59,13 @@ export const MinimizedParcelInfo = ({ parcel, onClose }: MinimizedParcelInfoProp
         dialogOpen={dialogOpen}
         paymentOpen={paymentOpen}
         receiptOpen={receiptOpen}
+        loginOpen={loginOpen}
+        registerOpen={false}
         setDialogOpen={setDialogOpen}
         setPaymentOpen={setPaymentOpen}
         setReceiptOpen={setReceiptOpen}
+        setLoginOpen={setLoginOpen}
+        setRegisterOpen={() => {}}
       />
 
       <LoginDialog 
