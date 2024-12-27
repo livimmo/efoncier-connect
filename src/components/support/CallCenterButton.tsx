@@ -39,25 +39,23 @@ export const CallCenterButton = ({ variant = "floating", className }: CallCenter
           size={variant === "header" ? "icon" : "lg"}
           className={cn(
             variant === "floating" && "fixed bottom-20 right-4 z-50 rounded-full shadow-lg",
-            "group",
+            "group relative",
             className
           )}
         >
-          {variant === "header" ? (
+          <div className="relative">
             <Headset className="h-5 w-5" />
-          ) : (
-            <div className="flex items-center gap-2">
-              <Headset className="h-6 w-6" />
-              <span className="hidden group-hover:inline-block">
-                Support Client
-              </span>
-            </div>
-          )}
-          {isAgentAvailable && (
-            <Badge 
-              variant="default" 
-              className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-green-500 p-0"
-            />
+            {isAgentAvailable && (
+              <Badge 
+                variant="default" 
+                className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-green-500 p-0 border-2 border-background"
+              />
+            )}
+          </div>
+          {variant === "floating" && (
+            <span className="hidden group-hover:inline-block ml-2">
+              Support Client
+            </span>
           )}
         </Button>
       </DialogTrigger>
