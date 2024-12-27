@@ -16,12 +16,6 @@ const PrivateLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Vérifier si déjà authentifié
-  if (sessionStorage.getItem("isPrivateAuthenticated") === "true") {
-    navigate("/");
-    return null;
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -32,7 +26,7 @@ const PrivateLogin = () => {
         title: "Connexion réussie",
         description: "Bienvenue sur eFoncier",
       });
-      sessionStorage.setItem("isPrivateAuthenticated", "true");
+      localStorage.setItem("isPrivateAuthenticated", "true");
       navigate("/");
     } else {
       toast({
