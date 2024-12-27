@@ -59,7 +59,7 @@ export const PropertyActions = ({
                 className="bg-primary hover:bg-primary/90"
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                Se connecter
+                Inscription
               </Button>
               <Badge 
                 variant="secondary" 
