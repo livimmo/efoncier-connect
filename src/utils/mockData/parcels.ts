@@ -9,8 +9,12 @@ import { agadirParcels } from './parcels/agadir';
 import { marrakechParcels } from './parcels/marrakech';
 import { beniMellalParcels } from './parcels/benimellal';
 import { meknesParcels } from './parcels/meknes';
+import { generateRandomParcels } from './generators/randomParcels';
+
+const randomParcels = generateRandomParcels();
 
 export const mockParcels = [
+  ...randomParcels,
   ...residentialParcels,
   ...commercialParcels,
   ...industrialParcels,
