@@ -3,6 +3,7 @@ import { UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/utils/format";
 import { BlurredField } from "../BlurredField";
+import { Parcel } from "@/utils/mockData/types";
 
 interface PropertyActionsProps {
   parcel: Parcel;
