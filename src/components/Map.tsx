@@ -45,12 +45,8 @@ const Map = () => {
   });
 
   const handleParcelSelect = (parcelId: string) => {
+    // Removed the toast notification for non-authenticated users
     if (!profile) {
-      toast({
-        title: "Connexion requise",
-        description: "Veuillez vous connecter pour accéder à plus de détails.",
-        variant: "destructive",
-      });
       return;
     }
   };
