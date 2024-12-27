@@ -26,13 +26,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     // Gestionnaire pour la fermeture de la fenêtre
     const handleBeforeUnload = () => {
-      localStorage.removeItem("isPrivateAuthenticated");
+      sessionStorage.removeItem("isPrivateAuthenticated");
     };
 
     // Gestionnaire pour la visibilité de la page
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        localStorage.removeItem("isPrivateAuthenticated");
+        sessionStorage.removeItem("isPrivateAuthenticated");
       }
     };
 
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       localStorage.removeItem('user');
-      localStorage.removeItem("isPrivateAuthenticated");
+      sessionStorage.removeItem("isPrivateAuthenticated");
       setUser(null);
       toast({
         title: "Déconnexion réussie",

@@ -6,7 +6,7 @@ interface PrivateRouteProps {
 }
 
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
-  const isAuthenticated = localStorage.getItem("isPrivateAuthenticated") === "true";
+  const isAuthenticated = sessionStorage.getItem("isPrivateAuthenticated") === "true";
 
   if (!isAuthenticated) {
     return <Navigate to="/private-login" replace />;
