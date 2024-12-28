@@ -26,7 +26,7 @@ const PrivateLogin = () => {
         title: "Connexion réussie",
         description: "Bienvenue sur eFoncier",
       });
-      localStorage.setItem("isPrivateAuthenticated", "true");
+      sessionStorage.setItem("isPrivateAuthenticated", "true");
       navigate("/");
     } else {
       toast({
