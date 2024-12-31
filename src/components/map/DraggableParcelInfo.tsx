@@ -49,7 +49,7 @@ export const DraggableParcelInfo = ({
           opacity: 1, 
           scale: 1,
           x: isMobile ? '-50%' : position.x,
-          y: isMobile ? 0 : position.y,
+          y: isMobile ? 'calc(-100% - 100px)' : position.y, // Ajusté pour afficher plus haut sur mobile
         }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ type: "spring", duration: 0.5 }}
@@ -57,19 +57,22 @@ export const DraggableParcelInfo = ({
           "fixed transition-all duration-300 ease-out",
           isDragging ? "cursor-grabbing scale-[0.98] opacity-90" : !isMobile && "cursor-grab",
           "hover:shadow-lg will-change-transform",
-          isMobile ? "w-[90vw] max-w-[320px] left-1/2 bottom-24" : "w-[320px]", // Réduit la largeur maximale
+          isMobile ? "w-[90vw] max-w-[320px] left-1/2 bottom-32" : "w-[320px]",
           !isMobile && "absolute",
           isMinimized ? "z-[40]" : "z-[100]",
           className
         )}
         style={!isMobile ? {
-          maxHeight: isMinimized ? 'auto' : '70vh', // Réduit la hauteur maximale
+          maxHeight: isMinimized ? 'auto' : '70vh',
           overflow: isMinimized ? 'visible' : 'auto'
         } : undefined}
       >
         <motion.div
           layout
-          className="bg-background rounded-lg shadow-lg border border-border"
+          className={cn(
+            "bg-background rounded-lg shadow-lg border border-border",
+            "backdrop-blur-sm"
+          )}
         >
           <ParcelInfoHeader
             title={parcel.title}
