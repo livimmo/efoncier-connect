@@ -11,12 +11,16 @@ interface DeveloperPropertiesTableProps {
 
 const getStatusBadgeVariant = (status: string) => {
   switch (status) {
-    case 'AVAILABLE':
+    case 'DISPONIBLE':
       return 'success';
-    case 'UNAVAILABLE':
+    case 'INDISPONIBLE':
       return 'destructive';
-    case 'IN_TRANSACTION':
+    case 'EN_TRANSACTION':
       return 'warning';
+    case 'VENDU':
+      return 'secondary';
+    case 'LITIGE':
+      return 'destructive';
     default:
       return 'secondary';
   }
@@ -44,7 +48,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Localisation</TableHead>
+            <TableHead>Ville</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Zonage</TableHead>
             <TableHead>Surface (m²)</TableHead>
@@ -57,7 +61,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
         <TableBody>
           {data.map((property) => (
             <TableRow key={property.id}>
-              <TableCell>{`${property.location.address}, ${property.city || 'N/A'}`}</TableCell>
+              <TableCell>{property.location.city || 'N/A'}</TableCell>
               <TableCell>{property.type}</TableCell>
               <TableCell>{property.zone}</TableCell>
               <TableCell>{property.surface}</TableCell>

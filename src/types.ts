@@ -3,6 +3,7 @@ export interface Property {
   title: string;
   location: {
     address: string;
+    city: string;
     lat: number;
     lng: number;
   };
