@@ -10,31 +10,31 @@ export const ParcelStatusBadges = ({ status, taxStatus }: ParcelStatusBadgesProp
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "AVAILABLE":
-        return <Badge variant="success" className="w-full justify-center mb-2">Disponible</Badge>;
+        return <Badge variant="success" className="justify-center">Disponible</Badge>;
       case "SOLD":
-        return <Badge variant="destructive" className="w-full justify-center mb-2">Vendu</Badge>;
+        return <Badge variant="destructive" className="justify-center">Vendu</Badge>;
       case "IN_TRANSACTION":
-        return <Badge variant="warning" className="w-full justify-center mb-2">En Transaction</Badge>;
+        return <Badge variant="warning" className="justify-center">En Transaction</Badge>;
       default:
-        return <Badge variant="secondary" className="w-full justify-center mb-2">{status}</Badge>;
+        return <Badge variant="secondary" className="justify-center">{status}</Badge>;
     }
   };
 
   const getTaxStatusBadge = (status: string) => {
     switch (status) {
       case "PAID":
-        return <Badge variant="success" className="w-full justify-center">TNB Payée</Badge>;
+        return <Badge variant="success" className="justify-center">TNB Payée</Badge>;
       case "OVERDUE":
-        return <Badge variant="destructive" className="w-full justify-center">TNB En retard</Badge>;
+        return <Badge variant="destructive" className="justify-center">TNB En retard</Badge>;
       case "PENDING":
-        return <Badge variant="warning" className="w-full justify-center">TNB En attente</Badge>;
+        return <Badge variant="warning" className="justify-center">TNB En attente</Badge>;
       default:
-        return <Badge variant="secondary" className="w-full justify-center">{status}</Badge>;
+        return <Badge variant="secondary" className="justify-center">{status}</Badge>;
     }
   };
 
   return (
-    <div className="flex flex-col w-full gap-1">
+    <div className="flex flex-wrap gap-2">
       {getStatusBadge(status)}
       {getTaxStatusBadge(taxStatus)}
     </div>
