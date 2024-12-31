@@ -16,7 +16,7 @@ export const PaymentFilters = ({ filters, setFilters, userRole, onFilterChange }
       <div className="space-y-2">
         <Label>Statut TNB</Label>
         <Select
-          value={filters.tnbStatus}
+          value={filters.tnbStatus || "all"}
           onValueChange={(value) => {
             setFilters({ ...filters, tnbStatus: value });
             onFilterChange('tnbStatus', value);
@@ -26,7 +26,7 @@ export const PaymentFilters = ({ filters, setFilters, userRole, onFilterChange }
             <SelectValue placeholder="Sélectionner un statut TNB" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Tous les statuts</SelectItem>
+            <SelectItem value="all">Tous les statuts</SelectItem>
             <SelectItem value="PAID">Payé</SelectItem>
             <SelectItem value="PENDING">En attente</SelectItem>
             <SelectItem value="OVERDUE">En retard</SelectItem>
@@ -38,7 +38,7 @@ export const PaymentFilters = ({ filters, setFilters, userRole, onFilterChange }
       <div className="space-y-2">
         <Label>Statut de paiement</Label>
         <Select
-          value={filters.paymentStatus}
+          value={filters.paymentStatus || "all"}
           onValueChange={(value) => {
             setFilters({ ...filters, paymentStatus: value });
             onFilterChange('paymentStatus', value);
@@ -48,7 +48,7 @@ export const PaymentFilters = ({ filters, setFilters, userRole, onFilterChange }
             <SelectValue placeholder="Sélectionner un statut" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Tous les statuts</SelectItem>
+            <SelectItem value="all">Tous les statuts</SelectItem>
             <SelectItem value="PAID">Payé</SelectItem>
             <SelectItem value="PENDING">En attente</SelectItem>
             <SelectItem value="OVERDUE">En retard</SelectItem>
