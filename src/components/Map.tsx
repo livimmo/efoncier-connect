@@ -6,7 +6,7 @@ import { useAuth } from './auth/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
 import { DeveloperPropertiesTable } from './developer/properties/DeveloperPropertiesTable';
 import { Button } from './ui/button';
-import { Map as MapIcon, List, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Map as MapIcon, List, ChevronLeft, ChevronRight, X, Filter } from 'lucide-react';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { MapFilters } from './map/MapFilters';
 import { REGIONS } from '@/utils/mockData/locations';
@@ -108,7 +108,14 @@ const Map = () => {
             )}
             onClick={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
           >
-            {isFiltersCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {isFiltersCollapsed ? (
+              <div className="relative">
+                <Filter className="h-4 w-4" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full" />
+              </div>
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
           </Button>
           
           <div className="flex gap-2">
@@ -138,7 +145,7 @@ const Map = () => {
                   ? "-translate-x-full opacity-0" 
                   : "translate-x-0 opacity-100"
               ) : "",
-              "lg:w-[300px]"
+              "lg:w-[300px] h-full"
             )}>
               {!isFiltersCollapsed && (
                 <Button
@@ -163,7 +170,11 @@ const Map = () => {
                 mapInstance={mapInstance}
               />
             </div>
-            <div className="h-full">
+            <div className={cn(
+              "h-full transition-all duration-300",
+              isFiltersCollapsed ? "lg:ml-0" : "lg:ml-0",
+              "w-full"
+            )}>
               {viewMode === 'map' ? (
                 <MapContainer 
                   userRole={profile?.role} 
@@ -172,7 +183,9 @@ const Map = () => {
                   setMapInstance={setMapInstance}
                 />
               ) : (
-                <DeveloperPropertiesTable data={filteredParcels} />
+                <div className="p-4 overflow-x-auto w-full">
+                  <DeveloperPropertiesTable data={filteredParcels} />
+                </div>
               )}
             </div>
           </div>
