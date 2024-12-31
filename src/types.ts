@@ -20,14 +20,45 @@ export interface Property {
   phone?: string;
   email?: string;
   isFavorite?: boolean;
-  property_type?: string;
-  surface_area?: number;
-  fiscal_status?: string;
   description?: string;
-  is_for_sale?: boolean;
-  owner_id?: string;
-  created_at?: string;
-  updated_at?: string;
+  lastUpdate?: string;
+  tnbInfo: TNBInfo;
+}
+
+export type PropertyType = 
+  | "RESIDENTIAL" 
+  | "COMMERCIAL" 
+  | "INDUSTRIAL" 
+  | "AGRICULTURAL";
+
+export type ZoneType = 
+  | "E3" 
+  | "E4" 
+  | "SD1" 
+  | "BT2" 
+  | "I2S12";
+
+export type PropertyStatus = 
+  | "AVAILABLE" 
+  | "IN_TRANSACTION" 
+  | "SOLD";
+
+export type FiscalStatus = 
+  | "COMPLIANT" 
+  | "NON_COMPLIANT" 
+  | "UNDER_REVIEW";
+
+export type TaxStatus = 
+  | "PAID" 
+  | "PENDING" 
+  | "OVERDUE";
+
+export interface TNBInfo {
+  pricePerMeter: number;
+  totalAmount: number;
+  lastPaymentDate?: string;
+  lastUpdate?: string;
+  status: TaxStatus;
 }
 
 export interface PaymentDetails {
@@ -43,53 +74,6 @@ export interface PaymentDetails {
 export interface PaymentProps {
   parcelId?: string;
   hideHeader?: boolean;
-}
-
-export type PropertyType = 
-  | "RESIDENTIAL" 
-  | "COMMERCIAL" 
-  | "INDUSTRIAL" 
-  | "AGRICULTURAL" 
-  | "MIXED" 
-  | "SEASIDE" 
-  | "HOUSE" 
-  | "APARTMENT";
-
-export type ZoneType = 
-  | "E3" 
-  | "E4" 
-  | "SD1" 
-  | "BT2" 
-  | "I2S12" 
-  | "CONSTRUCTIBLE" 
-  | "PROTECTED";
-
-export type PropertyStatus = 
-  | "AVAILABLE" 
-  | "UNAVAILABLE" 
-  | "IN_TRANSACTION" 
-  | "SOLD" 
-  | "DISPUTED";
-
-export type FiscalStatus = 
-  | "COMPLIANT" 
-  | "NON_COMPLIANT" 
-  | "UNDER_REVIEW";
-
-export type TaxStatus = 
-  | "PAID" 
-  | "PENDING" 
-  | "OVERDUE" 
-  | "LOW" 
-  | "AVERAGE" 
-  | "HIGH";
-
-export interface TNBInfo {
-  pricePerMeter: number;
-  totalAmount: number;
-  lastPaymentDate?: string;
-  lastUpdate?: string;
-  status: TaxStatus;
 }
 
 export interface MapFilters {
