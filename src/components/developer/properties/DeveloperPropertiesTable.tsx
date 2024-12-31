@@ -19,6 +19,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
           <TableRow>
             <TableHead>Localisation</TableHead>
             <TableHead>Type</TableHead>
+            <TableHead>Zonage</TableHead>
             <TableHead>Surface (m²)</TableHead>
             <TableHead>Prix</TableHead>
             <TableHead>Titre Foncier</TableHead>
@@ -28,8 +29,9 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
         <TableBody>
           {data.map((property) => (
             <TableRow key={property.id}>
-              <TableCell>{property.location.address}</TableCell>
+              <TableCell>{`${property.location.address}, ${property.city || 'N/A'}`}</TableCell>
               <TableCell>{property.type}</TableCell>
+              <TableCell>{property.zone}</TableCell>
               <TableCell>{property.surface}</TableCell>
               <TableCell>{formatCurrency(property.price)}</TableCell>
               <TableCell>
