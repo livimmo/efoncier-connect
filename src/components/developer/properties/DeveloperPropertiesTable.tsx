@@ -39,9 +39,36 @@ const getFiscalStatusBadgeVariant = (status: string) => {
   }
 };
 
+const getFiscalStatusLabel = (status: string) => {
+  switch (status) {
+    case 'COMPLIANT':
+      return 'Conforme';
+    case 'NON_COMPLIANT':
+      return 'Non Conforme';
+    case 'UNDER_REVIEW':
+      return 'En Révision';
+    default:
+      return status;
+  }
+};
+
 export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps) => {
   const { profile } = useAuth();
   const isAuthenticated = !!profile;
+
+  const getMockCity = (index: number) => {
+    const cities = [
+      'Casablanca',
+      'Rabat',
+      'Marrakech',
+      'Tanger',
+      'Agadir',
+      'Fès',
+      'Meknès',
+      'Oujda'
+    ];
+    return cities[index % cities.length];
+  };
 
   return (
     <div className="rounded-md border">
@@ -59,9 +86,9 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((property) => (
+          {data.map((property, index) => (
             <TableRow key={property.id}>
-              <TableCell>{property.location.city || 'N/A'}</TableCell>
+              <TableCell>{property.location.city || getMockCity(index)}</TableCell>
               <TableCell>{property.type}</TableCell>
               <TableCell>{property.zone}</TableCell>
               <TableCell>{property.surface}</TableCell>
@@ -80,7 +107,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
               </TableCell>
               <TableCell>
                 <Badge variant={getFiscalStatusBadgeVariant(property.fiscalStatus)}>
-                  {property.fiscalStatus}
+                  {getFiscalStatusLabel(property.fiscalStatus)}
                 </Badge>
               </TableCell>
             </TableRow>
