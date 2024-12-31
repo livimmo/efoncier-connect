@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { NotificationType, NotificationPriority, Notification } from "@/types/notifications";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export interface NotificationCardProps {
   notification: Notification;
@@ -27,9 +29,12 @@ export const NotificationCard = ({
   notification,
   onClick,
 }: NotificationCardProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
   if (!notification) return null;
 
-  const { type, priority, status, title, message, date, metadata, actions } = notification;
+  const { type, priority, status, title, message, date, metadata } = notification;
 
   const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
@@ -70,6 +75,40 @@ export const NotificationCard = ({
     }
   };
 
+  const handleAction = (actionType: string) => {
+    switch (actionType) {
+      case "payment":
+        navigate("/payment", { 
+          state: { 
+            titleDeedNumber: metadata?.titleDeedNumber,
+            amount: metadata?.amount
+          }
+        });
+        break;
+      case "history":
+        navigate("/history");
+        break;
+      case "document":
+        if (metadata?.documentUrl) {
+          window.open(metadata.documentUrl, '_blank');
+        } else {
+          navigate("/documents");
+        }
+        break;
+      case "property":
+        navigate(`/map?property=${metadata?.titleDeedNumber}`);
+        break;
+      case "message":
+        navigate("/messages");
+        break;
+      case "fiscal":
+        navigate(`/owner/properties?tf=${metadata?.titleDeedNumber}`);
+        break;
+      default:
+        onClick?.();
+    }
+  };
+
   const getDefaultActions = (type: NotificationType) => {
     switch (type) {
       case "PAYMENT":
@@ -77,25 +116,29 @@ export const NotificationCard = ({
         return {
           primary: {
             label: "Payer maintenant",
-            icon: <DollarSign className="h-4 w-4" />
+            icon: <DollarSign className="h-4 w-4" />,
+            action: () => handleAction("payment")
           },
           secondary: {
             label: "Voir l'historique",
-            icon: <Eye className="h-4 w-4" />
+            icon: <Eye className="h-4 w-4" />,
+            action: () => handleAction("history")
           }
         };
       case "FISCAL_STATUS":
         return {
           primary: {
             label: "Voir les détails",
-            icon: <Eye className="h-4 w-4" />
+            icon: <Eye className="h-4 w-4" />,
+            action: () => handleAction("fiscal")
           }
         };
       case "MESSAGE":
         return {
           primary: {
             label: "Répondre",
-            icon: <MessageSquare className="h-4 w-4" />
+            icon: <MessageSquare className="h-4 w-4" />,
+            action: () => handleAction("message")
           }
         };
       case "DOCUMENT":
@@ -103,11 +146,23 @@ export const NotificationCard = ({
         return {
           primary: {
             label: "Télécharger",
-            icon: <Download className="h-4 w-4" />
+            icon: <Download className="h-4 w-4" />,
+            action: () => handleAction("document")
           },
           secondary: {
             label: "Aperçu",
-            icon: <Eye className="h-4 w-4" />
+            icon: <Eye className="h-4 w-4" />,
+            action: () => handleAction("document")
+          }
+        };
+      case "PROPERTY":
+      case "PROPERTY_UPDATE":
+      case "NEW_PROPERTY":
+        return {
+          primary: {
+            label: "Voir sur la carte",
+            icon: <MapPin className="h-4 w-4" />,
+            action: () => handleAction("property")
           }
         };
       default:
@@ -152,27 +207,30 @@ export const NotificationCard = ({
           )}
           
           <div className="flex gap-2 mt-3 flex-wrap">
-            {(actions?.primary || defaultActions.primary) && (
-              <Button size="sm" onClick={(e) => {
-                e.stopPropagation();
-                actions?.primary?.action?.();
-              }}>
-                {defaultActions.primary?.icon}
-                <span className="ml-2">{actions?.primary?.label || defaultActions.primary?.label}</span>
+            {defaultActions.primary && (
+              <Button 
+                size="sm" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  defaultActions.primary.action();
+                }}
+              >
+                {defaultActions.primary.icon}
+                <span className="ml-2">{defaultActions.primary.label}</span>
               </Button>
             )}
             
-            {(actions?.secondary || defaultActions.secondary) && (
+            {defaultActions.secondary && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  actions?.secondary?.action?.();
+                  defaultActions.secondary.action();
                 }}
               >
-                {defaultActions.secondary?.icon}
-                <span className="ml-2">{actions?.secondary?.label || defaultActions.secondary?.label}</span>
+                {defaultActions.secondary.icon}
+                <span className="ml-2">{defaultActions.secondary.label}</span>
               </Button>
             )}
           </div>
