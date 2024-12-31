@@ -11,16 +11,12 @@ interface DeveloperPropertiesTableProps {
 
 const getStatusBadgeVariant = (status: string) => {
   switch (status) {
-    case 'DISPONIBLE':
+    case 'AVAILABLE':
       return 'success';
-    case 'INDISPONIBLE':
+    case 'SOLD':
       return 'destructive';
-    case 'EN_TRANSACTION':
+    case 'IN_TRANSACTION':
       return 'warning';
-    case 'VENDU':
-      return 'secondary';
-    case 'LITIGE':
-      return 'destructive';
     default:
       return 'secondary';
   }
@@ -28,25 +24,38 @@ const getStatusBadgeVariant = (status: string) => {
 
 const getFiscalStatusBadgeVariant = (status: string) => {
   switch (status) {
-    case 'COMPLIANT':
+    case 'PAID':
       return 'success';
-    case 'NON_COMPLIANT':
-      return 'destructive';
-    case 'UNDER_REVIEW':
+    case 'PENDING':
       return 'warning';
+    case 'OVERDUE':
+      return 'destructive';
     default:
       return 'secondary';
   }
 };
 
+const getStatusLabel = (status: string) => {
+  switch (status) {
+    case 'AVAILABLE':
+      return 'Disponible';
+    case 'SOLD':
+      return 'Vendu';
+    case 'IN_TRANSACTION':
+      return 'En Transaction';
+    default:
+      return status;
+  }
+};
+
 const getFiscalStatusLabel = (status: string) => {
   switch (status) {
-    case 'COMPLIANT':
-      return 'Conforme';
-    case 'NON_COMPLIANT':
-      return 'Non Conforme';
-    case 'UNDER_REVIEW':
-      return 'En Révision';
+    case 'PAID':
+      return 'Payé';
+    case 'PENDING':
+      return 'En Attente';
+    case 'OVERDUE':
+      return 'En Retard';
     default:
       return status;
   }
@@ -81,8 +90,8 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
             <TableHead>Surface (m²)</TableHead>
             <TableHead>Prix</TableHead>
             <TableHead>Titre Foncier</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Statut Fiscal</TableHead>
+            <TableHead>Statut du bien</TableHead>
+            <TableHead>Statut fiscal</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -102,7 +111,7 @@ export const DeveloperPropertiesTable = ({ data }: DeveloperPropertiesTableProps
               </TableCell>
               <TableCell>
                 <Badge variant={getStatusBadgeVariant(property.status)}>
-                  {property.status}
+                  {getStatusLabel(property.status)}
                 </Badge>
               </TableCell>
               <TableCell>
