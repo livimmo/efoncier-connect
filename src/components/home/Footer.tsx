@@ -1,26 +1,16 @@
 import { Facebook, Instagram, Twitter, Linkedin, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
 
-interface FooterProps {
-  className?: string;
-}
-
-export const Footer = ({ className }: FooterProps) => {
+export const Footer = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className={cn(
-      "bg-muted/30 pt-8 pb-4",
-      "fixed bottom-0 left-0 right-0 z-40",
-      "border-t border-border/50",
-      className
-    )}>
+    <footer className="bg-muted/30 pt-16 pb-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Navigation Rapide */}
           <div>
             <h3 className="font-semibold mb-4">Navigation Rapide</h3>
@@ -74,7 +64,8 @@ export const Footer = ({ className }: FooterProps) => {
           </div>
         </div>
 
-        <div className="border-t pt-4 flex flex-col md:flex-row justify-between items-center">
+        {/* Copyright et Retour en Haut */}
+        <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground mb-4 md:mb-0">
             © 2024 eFoncier. Tous droits réservés.
           </p>

@@ -6,14 +6,13 @@ import { useAuth } from './auth/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
 import { DeveloperPropertiesTable } from './developer/properties/DeveloperPropertiesTable';
 import { Button } from './ui/button';
-import { Map as MapIcon, List, ChevronLeft, ChevronRight, X, Maximize2, Minimize2 } from 'lucide-react';
+import { Map as MapIcon, List, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { mockParcels } from '@/utils/mockData/parcels';
 import { MapFilters } from './map/MapFilters';
 import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 
 const Map = () => {
   const { profile } = useAuth();
@@ -22,7 +21,6 @@ const Map = () => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(isMobile);
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
@@ -47,6 +45,7 @@ const Map = () => {
   });
 
   const handleParcelSelect = (parcelId: string) => {
+    // Removed the toast notification for non-authenticated users
     if (!profile) {
       return;
     }
@@ -95,10 +94,6 @@ const Map = () => {
     return true;
   });
 
-  const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -108,7 +103,7 @@ const Map = () => {
             variant="ghost"
             size="icon"
             className={cn(
-              "lg:hidden z-50",
+              "lg:hidden",
               isFiltersCollapsed ? "ml-0" : "ml-[300px]"
             )}
             onClick={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
@@ -135,63 +130,47 @@ const Map = () => {
         </div>
         
         <div className="flex-1 relative">
-          <div className={cn(
-            "grid transition-all duration-300 ease-in-out h-full relative",
-            isFiltersCollapsed ? "lg:grid-cols-[60px,1fr]" : "lg:grid-cols-[300px,1fr]"
-          )}>
-            <AnimatePresence>
-              <motion.div
-                initial={false}
-                animate={{
-                  width: isFiltersCollapsed ? 60 : 300,
-                  opacity: isFiltersCollapsed ? 0 : 1
-                }}
-                className={cn(
-                  "absolute lg:relative z-[5] bg-background/95 backdrop-blur-sm lg:backdrop-blur-none h-full",
-                  "transition-all duration-300 ease-in-out overflow-hidden",
-                  isMobile && isFiltersCollapsed && "translate-x-[-100%]"
-                )}
-              >
-                <MapFilters 
-                  onRegionChange={handleRegionChange}
-                  onCityChange={handleCityChange}
-                  onDistrictChange={handleDistrictChange}
-                  filters={filters}
-                  setFilters={setFilters}
-                  onApplyFilters={handleApplyFilters}
-                  userRole={profile?.role}
-                  isCollapsed={isFiltersCollapsed}
-                  onToggleCollapse={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
-                  mapInstance={mapInstance}
-                />
-              </motion.div>
-            </AnimatePresence>
-
+          <div className="grid lg:grid-cols-[auto,1fr] h-full relative">
             <div className={cn(
-              "h-full transition-all duration-300",
-              isFiltersCollapsed && "col-span-2"
+              "absolute lg:relative z-[5] bg-background/95 backdrop-blur-sm lg:backdrop-blur-none transition-all duration-300 ease-in-out",
+              isMobile ? (
+                isFiltersCollapsed 
+                  ? "-translate-x-full opacity-0" 
+                  : "translate-x-0 opacity-100"
+              ) : "",
+              "lg:w-[300px]"
             )}>
+              {!isFiltersCollapsed && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 lg:hidden"
+                  onClick={() => setIsFiltersCollapsed(true)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+              <MapFilters 
+                onRegionChange={handleRegionChange}
+                onCityChange={handleCityChange}
+                onDistrictChange={handleDistrictChange}
+                filters={filters}
+                setFilters={setFilters}
+                onApplyFilters={handleApplyFilters}
+                userRole={profile?.role}
+                isCollapsed={!isMobile && isFiltersCollapsed}
+                onToggleCollapse={() => setIsFiltersCollapsed(!isFiltersCollapsed)}
+                mapInstance={mapInstance}
+              />
+            </div>
+            <div className="h-full">
               {viewMode === 'map' ? (
-                <div className="relative h-full">
-                  <MapContainer 
-                    userRole={profile?.role} 
-                    onParcelSelect={handleParcelSelect}
-                    mapInstance={mapInstance}
-                    setMapInstance={setMapInstance}
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="absolute top-4 right-4 z-10"
-                    onClick={toggleFullscreen}
-                  >
-                    {isFullscreen ? (
-                      <Minimize2 className="h-4 w-4" />
-                    ) : (
-                      <Maximize2 className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
+                <MapContainer 
+                  userRole={profile?.role} 
+                  onParcelSelect={handleParcelSelect}
+                  mapInstance={mapInstance}
+                  setMapInstance={setMapInstance}
+                />
               ) : (
                 <DeveloperPropertiesTable data={filteredParcels} />
               )}
@@ -199,7 +178,7 @@ const Map = () => {
           </div>
         </div>
       </main>
-      <Footer className="mt-auto" />
+      <Footer />
     </div>
   );
 };
