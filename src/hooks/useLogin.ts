@@ -30,16 +30,24 @@ export const useLogin = () => {
       };
 
       localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("isPrivateAuthenticated", "true");
 
       toast({
         title: "Connexion réussie",
         description: "Bienvenue sur votre espace personnel",
       });
 
-      if (credentials.role === "developer") {
-        navigate("/developer/dashboard");
-      } else if (credentials.role === "admin") {
-        navigate("/admin/dashboard");
+      // Redirection selon le rôle
+      const dashboardRoutes = {
+        developer: "/developer/dashboard",
+        owner: "/owner/dashboard",
+        commune: "/commune/dashboard",
+        admin: "/admin/dashboard",
+      };
+
+      const route = dashboardRoutes[credentials.role];
+      if (route) {
+        navigate(route);
       } else {
         navigate("/dashboard");
       }
