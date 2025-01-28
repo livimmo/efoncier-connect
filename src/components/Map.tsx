@@ -13,7 +13,6 @@ import { REGIONS } from '@/utils/mockData/locations';
 import { MapFilters as MapFiltersType } from './map/types';
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
-import { LoginDialog } from './auth/LoginDialog';
 
 const Map = () => {
   const { profile } = useAuth();
@@ -22,7 +21,6 @@ const Map = () => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(isMobile);
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   const [filters, setFilters] = useState<MapFiltersType>({
     region: '',
@@ -47,8 +45,8 @@ const Map = () => {
   });
 
   const handleParcelSelect = (parcelId: string) => {
+    // Removed the toast notification for non-authenticated users
     if (!profile) {
-      setShowLoginDialog(true);
       return;
     }
   };
@@ -194,11 +192,6 @@ const Map = () => {
         </div>
       </main>
       <Footer />
-
-      <LoginDialog 
-        open={showLoginDialog} 
-        onOpenChange={setShowLoginDialog}
-      />
     </div>
   );
 };
