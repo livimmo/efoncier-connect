@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "./use-toast";
 import { UserRole } from "@/components/auth/AuthProvider";
 
@@ -12,12 +12,13 @@ interface LoginCredentials {
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const login = async (credentials: LoginCredentials): Promise<boolean> => {
     setIsLoading(true);
     try {
-      if (credentials.password !== "password123") {
+      if (credentials.password !== "efonciermzz") {
         throw new Error("Identifiants invalides");
       }
 
@@ -37,19 +38,26 @@ export const useLogin = () => {
         description: "Bienvenue sur votre espace personnel",
       });
 
-      // Redirection selon le rôle
-      const dashboardRoutes = {
-        developer: "/developer/dashboard",
-        owner: "/owner/dashboard",
-        commune: "/commune/dashboard",
-        admin: "/admin/dashboard",
-      };
-
-      const route = dashboardRoutes[credentials.role];
-      if (route) {
-        navigate(route);
+      // Get the return path from the location state or use role-specific dashboard
+      const returnPath = location.state?.from?.pathname;
+      
+      if (returnPath && returnPath !== '/login' && returnPath !== '/') {
+        navigate(returnPath);
       } else {
-        navigate("/dashboard");
+        // Redirection selon le rôle si pas de page de retour
+        const dashboardRoutes = {
+          developer: "/developer/dashboard",
+          owner: "/owner/dashboard",
+          commune: "/commune/dashboard",
+          admin: "/admin/dashboard",
+        };
+
+        const route = dashboardRoutes[credentials.role];
+        if (route) {
+          navigate(route);
+        } else {
+          navigate("/dashboard");
+        }
       }
 
       return true;
