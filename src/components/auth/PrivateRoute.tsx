@@ -1,25 +1,15 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "./AuthProvider";
+import { Navigate } from "react-router-dom";
+import { ReactNode } from "react";
 
 interface PrivateRouteProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
-  const { profile, loading } = useAuth();
-  const location = useLocation();
+  const isAuthenticated = sessionStorage.getItem("isPrivateAuthenticated") === "true";
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    // Save the attempted URL for redirecting after login
-    return <Navigate to="/private-login" state={{ from: location }} replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/private-login" replace />;
   }
 
   return <>{children}</>;
