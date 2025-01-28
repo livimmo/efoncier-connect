@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./auth/PrivateRoute";
 import PrivateLogin from "@/pages/PrivateLogin";
+import Login from "@/pages/Login";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Map from "@/components/Map";
@@ -31,6 +32,7 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/private-login" element={<PrivateLogin />} />
+      <Route path="/login" element={<Login />} />
       
       {/* Protected Routes */}
       <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
