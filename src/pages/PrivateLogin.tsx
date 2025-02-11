@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -21,7 +22,7 @@ const PrivateLogin = () => {
     setIsLoading(true);
 
     // Test credentials
-    if (username === "efoncier" && password === "efonciermzzz") {
+    if (username === "efoncier" && password === "efonciermzz") {
       toast({
         title: "Connexion réussie",
         description: "Bienvenue sur eFoncier",
